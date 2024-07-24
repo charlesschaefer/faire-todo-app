@@ -10,7 +10,7 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <a class="pi pi-bars"></a>
+      <p-button icon="pi pi-bars" (click)="toggleRightPanel()" />
     </div>
   </p-toolbar>
 </header>
@@ -20,7 +20,7 @@
 </section>
 
 <section class="right-panel">
-  <app-right-panel />
+  <app-right-panel [visible]="showRightPanel" (changeVisibility)="showRightPanel = $event" />
 </section>
 
 <footer class="footer">

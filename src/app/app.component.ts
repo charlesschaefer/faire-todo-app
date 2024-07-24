@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { invoke } from "@tauri-apps/api/core";
 import { ToolbarModule } from 'primeng/toolbar';
-
-import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 
 import { RightPanelComponent } from './right-panel/right-panel.component';
 import { ThemeService } from './services/theme.service';
@@ -17,12 +15,14 @@ import { ThemeService } from './services/theme.service';
         RouterOutlet,
         RightPanelComponent,
         ToolbarModule,
-        CardModule
+        ButtonModule,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+
+    showRightPanel: boolean = !false;
 
     constructor(
         private themeService: ThemeService,
@@ -47,4 +47,7 @@ export class AppComponent implements OnInit {
         } */
     }
 
+    toggleRightPanel() {
+        this.showRightPanel = !this.showRightPanel;
+    }
 }
