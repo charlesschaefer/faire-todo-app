@@ -1,0 +1,49 @@
+
+img#logo-icon {
+    display:none;
+}
+
+img#logo {
+    height: 40px;
+}
+
+p-toolbar {
+    position: fixed;
+    width: 100%;
+    margin-bottom: 20px;
+    z-index: 1000;
+}
+
+.main {
+    padding-bottom: 40px;
+    padding-top: 62px;
+}
+
+footer {
+    position: absolute;
+    bottom:0px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+@media (max-width: 600px) {
+    img#logo {
+        display: none;
+    }
+
+    img#logo-icon {
+        display:block;
+        width: 50px;
+    }
+}
+
+
+@media (max-width: 420px) {
+    :host ::ng-deep p-toastitem .p-toast-message {
+        width: 95vw;
+    }
+    :host ::ng-deep .p-toast-top-right {
+        left: 0px;
+    }
+}

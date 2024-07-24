@@ -1,24 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { invoke } from "@tauri-apps/api/core";
+import { ToolbarModule } from 'primeng/toolbar';
+
+import { CardModule } from 'primeng/card';
+
+import { RightPanelComponent } from './right-panel/right-panel.component';
+import { ThemeService } from './services/theme.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [CommonModule, RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    standalone: true,
+    imports: [
+        CommonModule, 
+        RouterOutlet,
+        RightPanelComponent,
+        ToolbarModule,
+        CardModule
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
-export class AppComponent {
-  greetingMessage = "";
+export class AppComponent implements OnInit {
 
-  greet(event: SubmitEvent, name: string): void {
-    event.preventDefault();
+    constructor(
+        private themeService: ThemeService,
+    ) {}
+    
+    ngOnInit(): void {
+        //invoke("set_frontend_complete");
 
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    invoke<string>("greet", { name }).then((text) => {
-      this.greetingMessage = text;
-    });
-  }
+        let currentTheme = this.themeService.getCurrentTheme();
+        let userTheme = localStorage.getItem('theme');
+        if (!userTheme) {
+            userTheme = currentTheme;
+        }
+        if (userTheme != currentTheme) {
+            console.log(userTheme, currentTheme);
+            this.themeService.switchTheme(userTheme);
+        }
+
+        /* const sawGuidedTour = this.cookieService.get('sawGuidedTour');
+        if (!sawGuidedTour) {
+            this.initializeGuidedTour();
+        } */
+    }
+
 }
