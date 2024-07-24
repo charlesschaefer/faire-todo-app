@@ -1,0 +1,35 @@
+{
+  "productName": "faire-todo-app",
+  "version": "0.0.0",
+  "identifier": "com.tauri.dev",
+  "build": {
+    "beforeDevCommand": "npm run start -- --host $HOST --public-host $HOST",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist/faire-todo-app/browser"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Faire - Your todo app",
+        "width": 500,
+        "height": 750,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
