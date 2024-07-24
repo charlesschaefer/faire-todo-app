@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 
-import { RightPanelComponent } from './right-panel/right-panel.component';
 import { ThemeService } from './services/theme.service';
 
 @Component({
@@ -13,9 +13,9 @@ import { ThemeService } from './services/theme.service';
     imports: [
         CommonModule, 
         RouterOutlet,
-        RightPanelComponent,
         ToolbarModule,
         ButtonModule,
+        MenuModule,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
@@ -23,6 +23,14 @@ import { ThemeService } from './services/theme.service';
 export class AppComponent implements OnInit {
 
     showRightPanel: boolean = !false;
+
+    menuItems = [
+        { label: $localize `Add task`, icon: 'pi pi-plus-circle' },
+        { label: $localize `Search`, icon: 'pi pi-search' },
+        { label: $localize `Inbox`, icon: 'pi pi-inbox' },
+        { label: $localize `Today`, icon: 'pi pi-calendar' },
+        { label: $localize `Upcoming`, icon: 'pi pi-clock' },
+    ];
 
     constructor(
         private themeService: ThemeService,
@@ -47,7 +55,4 @@ export class AppComponent implements OnInit {
         } */
     }
 
-    toggleRightPanel() {
-        this.showRightPanel = !this.showRightPanel;
-    }
 }

@@ -10,17 +10,14 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <p-button icon="pi pi-bars" (click)="toggleRightPanel()" />
+      <p-menu #menu [popup]="true" [model]="menuItems" />
+      <p-button icon="pi pi-bars" (click)="menu.toggle($event)" />
     </div>
   </p-toolbar>
 </header>
 
 <section class="main">
   <router-outlet />
-</section>
-
-<section class="right-panel">
-  <app-right-panel [visible]="showRightPanel" (changeVisibility)="showRightPanel = $event" />
 </section>
 
 <footer class="footer">
