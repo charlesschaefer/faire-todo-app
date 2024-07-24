@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 
 import { ThemeService } from './services/theme.service';
+import { routes } from './app.routes';
 
 @Component({
     selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
     menuItems = [
         { label: $localize `Add task`, icon: 'pi pi-plus-circle' },
         { label: $localize `Search`, icon: 'pi pi-search' },
-        { label: $localize `Inbox`, icon: 'pi pi-inbox' },
+        { label: $localize `Inbox`, icon: 'pi pi-inbox', routerLink: '/inbox' },
         { label: $localize `Today`, icon: 'pi pi-calendar' },
         { label: $localize `Upcoming`, icon: 'pi pi-clock' },
     ];

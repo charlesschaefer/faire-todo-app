@@ -16,7 +16,8 @@ p-toolbar {
 
 .main {
     padding-bottom: 40px;
-    padding-top: 62px;
+    padding-top: 82px;
+    padding-left: 20px;
 }
 
 footer {
@@ -26,6 +27,7 @@ footer {
     justify-content: center;
     width: 100%;
 }
+
 
 @media (max-width: 600px) {
     img#logo {
