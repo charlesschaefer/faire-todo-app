@@ -2,25 +2,46 @@
 <p-dataView #dv [value]="tasks">
   <ng-template pTemplate="list" let-tasks>
     <div class="tasks-container">
-      @for (task of tasks; track task.id) {
-        <div class="task-item">
-          <div class="task-item-header">
+      <ul class="tasks-list">
+        @for (task of tasks; track task.id) {
+          <li class="task-item">
             <div class="task-item-handle"><i class="pi pi-equals"></i></div>
-            <div class="task-item-mark-complete">
-              <input type="radio" name="mark-task-complete-{{task.id}}" [value]="task.id" id="mark-task-complete-{{task.id}}" />
+            <div class="task-item-row">
+              <div class="task-item-row-first">
+                <div class="task-item-mark-complete">
+                  <p-radioButton
+                    #rbutton
+                    name="mark-task-complete-{{task.id}}" 
+                    [value]="task.id"
+                    inputId="mark-task-complete-{{task.id}}" 
+                    [(ngModel)]="completedTasks[task.id]"
+                  />
+                  
+                </div>
+                <div class="task-item-content">
+                  <div class="task-item-title">
+                    {{task.title}}
+                  </div>
+                  <div class="task-item-description">
+                    {{task.description}}
+                  </div>
+                </div>
+              </div>
+              <div class="task-item-row-second">
+                <div class="task-item-attributes">
+                  <div class="task-item-attributes-duedate">
+                    <i class="pi pi-calendar"></i> {{task.dueDate.toFormat("dd/MM")}}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="task-item-title">
-              {{task.title}}
+            <div class="task-item-menu">
+              <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" />
             </div>
-          </div>
-          <div class="task-item-attributes">
-            <div class="task-item-attributes-duedate">
-              <i class="pi pi-calendar"></i> {{task.dueDate.toFormat("dd/MM")}}
-            </div>
-          </div>
-        </div>
-      }
-      <div class="task-add-line">
+          </li>
+        }
+      </ul>
+      <div class="task-add-line" (click)="taskAddOp.toggle($event)">
         <div class="task-add-button">
           <i class="pi pi-plus"></i>
         </div>
@@ -31,3 +52,27 @@
     </div>
   </ng-template>
 </p-dataView>
+
+<!-- Task add overlay panel -->
+<p-overlayPanel #taskAddOp>
+  <p-card class="task-add">
+    <div class="task-add-title">
+      <input pInputText name="title" placeholder="Task title" i18n-placeholder />
+    </div>
+    <div class="task-add-description">
+      <textarea
+        pInputTextarea
+        placeholder="Description"
+        i18n-placeholder
+      ></textarea>
+    </div>
+    <div class="task-add-menu">
+      <p-button 
+        severity="secondary"
+        icon="pi pi-calendar"
+        label="Due date"
+        i18n-label
+      />
+    </div>
+  </p-card>
+</p-overlayPanel>

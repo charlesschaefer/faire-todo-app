@@ -1,3 +1,6 @@
+body {
+    font-size: 14px;
+}
 
 img#logo-icon {
     display:none;
@@ -26,6 +29,10 @@ footer {
     display: flex;
     justify-content: center;
     width: 100%;
+}
+
+:host ::ng-deep .page-title {
+    padding-left: 20px;
 }
 
 
