@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
@@ -17,5 +17,9 @@ import { TaskDto } from '../dto/task-dto';
 })
 export class TaskListComponent {
   @Input() tasks!: TaskDto[];
-  @Input() taskAddOp!: OverlayPanel;
+  @Output() showTaskAdd = new EventEmitter<Event>();
+
+  showTaskAddPanel(event: Event) {
+    this.showTaskAdd.emit(event);
+  }
 }

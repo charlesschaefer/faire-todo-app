@@ -8,3 +8,5 @@ export interface TaskDto {
     category: number | null;
     project: number | null;
 }
+
+export type TaskAddDto = Omit<TaskDto, "id">;

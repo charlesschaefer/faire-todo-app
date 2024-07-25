@@ -1,0 +1,71 @@
+li.task-item {
+    list-style: none;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    width: calc(100% - 20px);
+    align-items: center;
+    padding: 15px 0px;
+    cursor: pointer;
+    color: #333;
+}
+
+.task-item-handle {
+    width: 10px;
+}
+
+.task-item-handle i {
+    display: none;
+    font-size: 10px;
+}
+
+li.task-item:hover .task-item-handle i {
+    display: inherit;
+}
+
+.task-item-menu {
+    display: none;
+}
+
+li.task-item:hover .task-item-menu {
+    display: inherit;
+}
+
+:host ::ng-deep .task-item-menu .p-button.p-button-icon-only {
+    width: 20px;
+}
+
+.task-item-row {
+    width: calc(100% - 60px);
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.task-item-row-first {
+    display: flex;
+    line-height: 30px;
+}
+
+.task-item-content {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+.task-item-description {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.task-item-attributes {
+    font-size: 12px;
+    padding-left: 30px;
+}
+
+.task-item-attributes .pi {
+    font-size: 10px;
+}
+
+.task-item-attributes-duedate {
+    color: #058527;
+}
