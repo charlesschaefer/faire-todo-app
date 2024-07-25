@@ -12,6 +12,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ChipsModule } from 'primeng/chips';
 import { CardModule } from 'primeng/card';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DividerModule } from 'primeng/divider';
+import { CalendarModule } from 'primeng/calendar';
 
 
 @Component({
@@ -31,6 +33,8 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
         ChipsModule,
         CardModule,
         InputTextareaModule,
+        DividerModule,
+        CalendarModule,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'

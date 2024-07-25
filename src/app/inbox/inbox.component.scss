@@ -87,5 +87,14 @@ li.task-item:hover .task-item-menu {
 
 .task-add-button i {
     font-size: 12px;
+}
 
+.task-add-description {
+    min-height: 50px;
+}
+
+.task-add-description textarea, .task-add-title .task-title-input {
+    width: 280px;
+    min-height: 50px;
+    border: none;
 }

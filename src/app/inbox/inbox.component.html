@@ -55,24 +55,48 @@
 
 <!-- Task add overlay panel -->
 <p-overlayPanel #taskAddOp>
-  <p-card class="task-add">
-    <div class="task-add-title">
-      <input pInputText name="title" placeholder="Task title" i18n-placeholder />
-    </div>
-    <div class="task-add-description">
-      <textarea
-        pInputTextarea
-        placeholder="Description"
-        i18n-placeholder
-      ></textarea>
-    </div>
-    <div class="task-add-menu">
-      <p-button 
-        severity="secondary"
-        icon="pi pi-calendar"
-        label="Due date"
-        i18n-label
-      />
+  <p-card>
+    <div  class="task-add flex flex-column gap-3">
+      <div class="task-add-title">
+        <input 
+          class="task-title-input font-semibold" 
+          pInputText 
+          name="title"
+          placeholder="Task title" 
+          i18n-placeholder 
+        />
+      </div>
+      <div class="task-add-description">
+        <textarea
+          pInputTextarea
+          placeholder="Description"
+          i18n-placeholder
+          [autoResize]="true"
+          rows="1"
+          class="text-sm"
+        ></textarea>
+      </div>
+      <div class="task-add-menu">
+        <p-calendar
+          [showIcon]="true"
+          [showButtonBar]="true"
+          [showTime]="true"
+          [stepMinute]="10"
+          inputId="task-add-due-date"
+          placeholder="Due date"
+          i18n-placeholder
+        />
+        
+      </div>
+      <p-divider />
+      <div class="task-add-buttons flex flex-row justify-content-end gap-1">
+        <div>
+          <p-button label="Cancel" i18n-label (onClick)="taskAddOp.toggle($event)" severity="secondary" />
+        </div>
+        <div>
+          <p-button label="Save" i18n-save />
+        </div>
+      </div>
     </div>
   </p-card>
 </p-overlayPanel>
