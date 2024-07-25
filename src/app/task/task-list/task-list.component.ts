@@ -3,7 +3,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
 import { TaskComponent } from '../task/task.component';
-import { TaskDto } from '../dto/task-dto';
+import { TaskDto } from '../../dto/task-dto';
 
 @Component({
   selector: 'app-task-list',

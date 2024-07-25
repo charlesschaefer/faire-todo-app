@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateTime } from 'luxon';
+import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -14,10 +15,10 @@ import { CardModule } from 'primeng/card';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DividerModule } from 'primeng/divider';
 import { CalendarModule } from 'primeng/calendar';
-import { TaskListComponent } from "../task-list/task-list.component";
+
+import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskDto } from '../dto/task-dto';
-import { TaskAddComponent } from '../task-add/task-add.component';
-import { Subject } from 'rxjs';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
 
 
 @Component({
