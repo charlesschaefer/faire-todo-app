@@ -1,0 +1,21 @@
+import { Component, Input } from '@angular/core';
+import { DataViewModule } from 'primeng/dataview';
+import { OverlayPanel } from 'primeng/overlaypanel';
+
+import { TaskComponent } from '../task/task.component';
+import { TaskDto } from '../dto/task-dto';
+
+@Component({
+  selector: 'app-task-list',
+  standalone: true,
+  imports: [
+    DataViewModule,
+    TaskComponent,
+  ],
+  templateUrl: './task-list.component.html',
+  styleUrl: './task-list.component.scss'
+})
+export class TaskListComponent {
+  @Input() tasks!: TaskDto[];
+  @Input() taskAddOp!: OverlayPanel;
+}

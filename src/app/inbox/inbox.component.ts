@@ -14,36 +14,39 @@ import { CardModule } from 'primeng/card';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DividerModule } from 'primeng/divider';
 import { CalendarModule } from 'primeng/calendar';
+import { TaskListComponent } from "../task-list/task-list.component";
+import { TaskDto } from '../dto/task-dto';
 
 
 @Component({
     selector: 'app-inbox',
     standalone: true,
     imports: [
-        DataViewModule,
-        CommonModule,
-        ButtonModule,
-        RadioButtonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        OverlayPanelModule, 
-        InputGroupModule, 
-        InputGroupAddonModule, 
-        InputTextModule, 
-        ChipsModule,
-        CardModule,
-        InputTextareaModule,
-        DividerModule,
-        CalendarModule,
-    ],
+    DataViewModule,
+    CommonModule,
+    ButtonModule,
+    RadioButtonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    OverlayPanelModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    ChipsModule,
+    CardModule,
+    InputTextareaModule,
+    DividerModule,
+    CalendarModule,
+    TaskListComponent
+],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
 })
 export class InboxComponent {
-    tasks = [
-        {id: 1, title: 'Task 1', dueDate: DateTime.fromJSDate(new Date), description: "Description task 1", project: null, tag: null, category: null},
-        {id: 2, title: 'Task 2', dueDate: DateTime.fromJSDate(new Date), description: "Description task 2", project: null, tag: null, category: null},
-        {id: 3, title: 'Task 3', dueDate: DateTime.fromJSDate(new Date), description: "Description task 3", project: null, tag: null, category: null},
+    tasks: TaskDto[] = [
+        {id: 1, title: 'Task 1', dueDate: DateTime.fromJSDate(new Date), description: "Description task 1", project: null, category: null},
+        {id: 2, title: 'Task 2', dueDate: DateTime.fromJSDate(new Date), description: "Description task 2", project: null, category: null},
+        {id: 3, title: 'Task 3', dueDate: DateTime.fromJSDate(new Date), description: "Description task 3", project: null, category: null},
     ];
 
     completedTasks: {[key: number]: number | null} = {

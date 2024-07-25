@@ -1,0 +1,35 @@
+<li class="task-item">
+    <div class="task-item-handle"><i class="pi pi-equals"></i></div>
+    <div class="task-item-row">
+        <div class="task-item-row-first">
+        <div class="task-item-mark-complete">
+            <p-radioButton
+            #rbutton
+            name="mark-task-complete-{{task.id}}" 
+            [value]="task.id"
+            inputId="mark-task-complete-{{task.id}}" 
+            [(ngModel)]="completed"
+            />
+            
+        </div>
+        <div class="task-item-content">
+            <div class="task-item-title">
+            {{task.title}}
+            </div>
+            <div class="task-item-description">
+            {{task.description}}
+            </div>
+        </div>
+        </div>
+        <div class="task-item-row-second">
+        <div class="task-item-attributes">
+            <div class="task-item-attributes-duedate">
+            <i class="pi pi-calendar"></i> {{task.dueDate.toFormat("dd/MM")}}
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="task-item-menu">
+        <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" />
+    </div>
+</li>

@@ -1,0 +1,19 @@
+<p-dataView #dv [value]="tasks">
+  <ng-template pTemplate="list" let-tasks>
+    <div class="tasks-container">
+      <ul class="tasks-list">
+        @for (task of tasks; track task.id) {
+          <app-task [task]="task" />
+        }
+      </ul>
+      <div class="task-add-line" (click)="taskAddOp.toggle($event)">
+        <div class="task-add-button">
+          <i class="pi pi-plus"></i>
+        </div>
+        <div class="task-add-title">
+          <ng-container i18n>Add task</ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataView>
