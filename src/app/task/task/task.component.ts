@@ -77,8 +77,8 @@ export class TaskComponent implements OnDestroy {
             },
         });
 
-        this.dialogRef.onClose.subscribe((data: any) => {
-            if (data != undefined) {
+        this.dialogRef.onClose.subscribe((data: TaskDto) => {
+            if (data != undefined && data.title != undefined) {
                 this.task = data as TaskDto;
             }
         });

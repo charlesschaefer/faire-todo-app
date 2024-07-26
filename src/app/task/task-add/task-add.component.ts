@@ -83,6 +83,12 @@ export class TaskAddComponent implements OnInit {
                 });
                 this.taskAddOp.hide();
                 this.onAddTask.emit();
+                this.taskForm.patchValue({
+                    title: null,
+                    description: null,
+                    dueDate: null,
+                    dueTime: null,
+                });
             },
             error: (err) => {
                 this.messageService.add({

@@ -16,16 +16,13 @@ export class TaskEditFooterComponent {
     constructor(
         public ref: DynamicDialogRef,
         private config: DynamicDialogConfig,
-    ) {
-        console.log("Footer Data: ", config.data);
-    }
+    ) {}
 
     closeDialog(data: any) {
         this.ref.close(data);
     }
 
     submitForm() {
-        console.log("Vamos submeter o formulário");
         this.config.data.saveSubject$.next();
     }
 }
