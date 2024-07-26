@@ -48,9 +48,9 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 })
 export class InboxComponent {
     tasks: TaskDto[] = [
-        {id: 1, title: 'Task 1', dueDate: DateTime.fromJSDate(new Date), description: "Description task 1", project: null, category: null},
-        {id: 2, title: 'Task 2', dueDate: DateTime.fromJSDate(new Date), description: "Description task 2", project: null, category: null},
-        {id: 3, title: 'Task 3', dueDate: DateTime.fromJSDate(new Date), description: "Description task 3", project: null, category: null},
+        {id: 1, title: 'Task 1', dueDate: DateTime.fromJSDate(new Date), dueTime: null, description: "Description task 1", project: null, category: null},
+        {id: 2, title: 'Task 2', dueDate: DateTime.fromJSDate(new Date), dueTime: null, description: "Description task 2", project: null, category: null},
+        {id: 3, title: 'Task 3', dueDate: DateTime.fromJSDate(new Date), dueTime: DateTime.fromJSDate(new Date), description: "Description task 3", project: null, category: null},
     ];
 
     completedTasks: {[key: number]: number | null} = {

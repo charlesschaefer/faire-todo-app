@@ -1,3 +1,4 @@
+<p-toast />
 <p-overlayPanel #taskAddOp (onHide)="onClose($event)">
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()">
     <p-card>
@@ -9,6 +10,7 @@
             name="title"
             placeholder="Task title" 
             i18n-placeholder 
+            formControlName="title"
           />
         </div>
         <div class="task-add-description">
@@ -19,17 +21,27 @@
             [autoResize]="true"
             rows="1"
             class="text-sm"
+            formControlName="description"
           ></textarea>
         </div>
         <div class="task-add-menu">
           <p-calendar
             [showIcon]="true"
             [showButtonBar]="true"
-            [showTime]="true"
-            [stepMinute]="10"
             inputId="task-add-due-date"
             placeholder="Due date"
             i18n-placeholder
+            formControlName="dueDate"
+          />
+
+          <p-calendar
+            [showIcon]="true"
+            icon="pi pi-clock"
+            inputId="task-add-due-time"
+            [timeOnly]="true"
+            placeholder="Due time"
+            i18n-placeholder
+            formControlName="dueTime"
           />
           
         </div>

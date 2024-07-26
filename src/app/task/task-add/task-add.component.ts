@@ -5,7 +5,10 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { Subject } from 'rxjs';
+
 import { TaskService } from '../../services/task.service';
 import { TaskAddDto, TaskDto } from '../../dto/task-dto';
 
@@ -19,6 +22,10 @@ import { TaskAddDto, TaskDto } from '../../dto/task-dto';
         CalendarModule,
         InputTextareaModule,
         DividerModule,
+        ToastModule,
+    ],
+    providers: [
+        MessageService,
     ],
     templateUrl: './task-add.component.html',
     styleUrl: './task-add.component.scss'
@@ -33,10 +40,12 @@ export class TaskAddComponent implements OnInit {
         title: [null, Validators.required],
         description: [null],
         dueDate: [null],
+        dueTime: [null],
     });
 
     constructor(
-        private taskService: TaskService<TaskAddDto>
+        private taskService: TaskService<TaskAddDto>,
+        private messageService: MessageService,
     ) {}
 
     ngOnInit(): void {
@@ -53,6 +62,33 @@ export class TaskAddComponent implements OnInit {
     }
 
     saveTask() {
+        const form = this.taskForm.value;
+        
+        const saveData: TaskAddDto = {
+            title: form.title as unknown as string,
+            description: form.description || null,
+            dueDate: form.dueDate || null,
+            dueTime: form.dueTime || null,
+            category: null,
+            project: null,
+        };
 
+        this.taskService.add(saveData).subscribe({
+            complete: () => {
+                this.messageService.add({
+                    summary: $localize `Saved successfully`,
+                    detail: $localize `The task was saved successfully`,
+                    severity: "success"
+                });
+                this.taskAddOp.hide();
+            },
+            error: (err) => {
+                this.messageService.add({
+                    summary: $localize `Error`,
+                    detail: $localize `Couldn't save the task. ${err}`,
+                    severity: "error"
+                });
+            }
+        });
     }
 }

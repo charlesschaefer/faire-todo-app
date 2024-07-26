@@ -24,7 +24,8 @@ export const dbConfig: DBConfig = {
             storeSchema: [
                 { name: 'title', keypath: 'title', options: { unique: false }},
                 { name: 'description', keypath: 'description', options: { unique: false }},
-                { name: 'due_date', keypath: 'due_date', options: { unique: false }},
+                { name: 'dueDate', keypath: 'dueDate', options: { unique: false }},
+                { name: 'dueTime', keypath: 'dueTime', options: { unique: false }},
                 { name: 'project', keypath: 'project', options: { unique: false }},
             ]
         },
