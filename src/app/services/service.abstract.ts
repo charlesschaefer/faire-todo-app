@@ -56,6 +56,21 @@ export abstract class ServiceAbstract<T> {
         return this.dbService.getAllByIndex(this.storeName, field, IDBKeyRange.only(value)) as Observable<T[]>;
     }
 
+    getByDate(field: string, minDate?: Date, maxDate?: Date): Observable<T[]> {
+        if (!minDate && !maxDate) {
+            throw new Error("You should provide at least one of minDate or maxDate parameters!");
+        }
+        let keyRange: IDBKeyRange;
+        if (!minDate) {
+            keyRange = IDBKeyRange.upperBound(maxDate);
+        } else if (!maxDate) {
+            keyRange = IDBKeyRange.lowerBound(minDate);
+        } else {
+            keyRange = IDBKeyRange.bound(minDate, maxDate);
+        }
+        return this.dbService.getAllByIndex(this.storeName, field, keyRange) as Observable<T[]>;
+    }
+
     // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
     slowStringSearch(field: string, value: string): Observable<T[]> {
         let results: T[] = [];

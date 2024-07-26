@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
         { label: $localize `Search`, icon: 'pi pi-search' },
         { label: $localize `Inbox`, icon: 'pi pi-inbox', routerLink: '/inbox' },
         { label: $localize `Today`, icon: 'pi pi-calendar', routerLink: '/today' },
-        { label: $localize `Upcoming`, icon: 'pi pi-clock' },
+        { label: $localize `Upcoming`, icon: 'pi pi-clock', routerLink: '/upcoming' },
     ];
 
     constructor(

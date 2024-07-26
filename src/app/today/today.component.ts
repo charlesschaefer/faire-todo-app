@@ -25,10 +25,6 @@ export class TodayComponent extends InboxComponent implements OnInit {
 
     override ngOnInit(): void {
         this.getTasks();
-
-        this.taskService.slowStringSearch('title', 'today').subscribe(results => {
-            console.log("Results final: ", results);
-        })
     }
 
     override getTasks(): void {
