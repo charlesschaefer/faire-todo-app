@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateTime } from 'luxon';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -62,8 +62,11 @@ export class InboxComponent implements OnInit {
         protected taskService: TaskService<TaskDto>,
     ) {}
     
-    ngOnInit(): void {
+    async ngOnInit() {
         this.getTasks();
+
+        let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
+        console.log("Count: ", count);
     }
 
     onShowTaskAddOverlay(event: Event) {

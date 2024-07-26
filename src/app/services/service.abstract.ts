@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { NgxIndexedDBService } from "ngx-indexed-db";
-import { BehaviorSubject, Observable, Subject, catchError, map, throwError } from "rxjs";
+import { BehaviorSubject, Observable, Subject, catchError, count, map, reduce, throwError } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
@@ -56,6 +56,15 @@ export abstract class ServiceAbstract<T> {
         return this.dbService.getAllByIndex(this.storeName, field, IDBKeyRange.only(value)) as Observable<T[]>;
     }
 
+    countByField(field: string, value: any): Observable<number> {
+        let data$ = this.getByField(field, value);
+        return data$.pipe(
+            map((value) => {
+                return value.length;
+            })
+        );
+    }
+
     getByDate(field: string, minDate?: Date, maxDate?: Date): Observable<T[]> {
         if (!minDate && !maxDate) {
             throw new Error("You should provide at least one of minDate or maxDate parameters!");
@@ -101,6 +110,8 @@ export abstract class ServiceAbstract<T> {
         this.clearCache();
         return this.dbService.deleteByKey(this.storeName, id);
     }
+
+
 
     clear(): Observable<any> {
         this.clearCache();

@@ -16,7 +16,7 @@ import { InboxComponent } from '../inbox/inbox.component';
     styleUrl: './upcoming.component.scss'
 })
 export class UpcomingComponent extends InboxComponent implements OnInit {
-    override ngOnInit(): void {
+    override async ngOnInit() {
         this.getTasks();
     }
 

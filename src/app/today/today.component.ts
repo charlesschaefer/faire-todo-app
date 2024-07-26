@@ -23,7 +23,7 @@ export class TodayComponent extends InboxComponent implements OnInit {
     
     today = DateTime.fromJSDate(new Date());
 
-    override ngOnInit(): void {
+    override async ngOnInit() {
         this.getTasks();
     }
 

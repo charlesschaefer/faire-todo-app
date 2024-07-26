@@ -7,7 +7,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { Subject } from 'rxjs';
+import { firstValueFrom, Subject } from 'rxjs';
 
 import { TaskService } from '../../services/task.service';
 import { TaskAddDto, TaskDto } from '../../dto/task-dto';
@@ -65,7 +65,7 @@ export class TaskAddComponent implements OnInit {
         this.showOverlay$Change.emit(this.showOverlay$);
     }
 
-    saveTask() {
+    async saveTask() {
         const form = this.taskForm.value;
         let dueDate:Date | null | undefined = form.dueDate;
         if (this.router.url == '/today') {
@@ -75,6 +75,8 @@ export class TaskAddComponent implements OnInit {
             dueDate.setSeconds(0);
             dueDate.setMilliseconds(0);
         }
+
+        let order = await firstValueFrom(this.taskAddService.countByField('completed', 0));
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,
@@ -83,7 +85,7 @@ export class TaskAddComponent implements OnInit {
             dueTime: form.dueTime || null,
             project: null,
             completed: 0,
-            order: 0,
+            order: order,
         };
 
         this.taskAddService.add(saveData).subscribe({
