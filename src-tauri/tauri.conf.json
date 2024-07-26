@@ -1,7 +1,7 @@
 {
-  "productName": "faire-todo-app",
-  "version": "0.0.0",
-  "identifier": "com.tauri.dev",
+  "productName": "Faire Todo App",
+  "version": "0.0.1",
+  "identifier": "com.fairetodoapp",
   "build": {
     "beforeDevCommand": "npm run start -- --host $HOST --public-host $HOST",
     "devUrl": "http://localhost:1420",
