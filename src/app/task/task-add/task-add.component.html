@@ -1,4 +1,5 @@
 <p-overlayPanel #taskAddOp (onHide)="onClose($event)">
+  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()">
     <p-card>
       <div  class="task-add flex flex-column gap-3">
         <div class="task-add-title">
@@ -38,9 +39,10 @@
             <p-button label="Cancel" i18n-label (onClick)="taskAddOp.toggle($event)" severity="secondary" />
           </div>
           <div>
-            <p-button label="Save" i18n-label />
+            <p-button label="Save" i18n-label type="submit" />
           </div>
         </div>
       </div>
     </p-card>
-  </p-overlayPanel>
+  </form>
+</p-overlayPanel>
