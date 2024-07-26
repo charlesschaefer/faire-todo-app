@@ -4,7 +4,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { DateTime } from 'luxon';
 import { Subject } from 'rxjs';
 
@@ -22,10 +23,12 @@ import { TaskService } from '../../services/task.service';
         FormsModule,
         ButtonModule,
         MenuModule,
+        ConfirmDialogModule,
     ],
     providers: [
         MessageService,
         DialogService,
+        ConfirmationService,
     ],
     templateUrl: './task.component.html',
     styleUrl: './task.component.scss'
@@ -46,7 +49,7 @@ export class TaskComponent implements OnDestroy {
                     label: $localize `Delete`,
                     icon: 'pi pi-trash',
                     command: () => {
-                        this.deleteTask();
+                        this.confirmDeleteTask();
                     }
                 }
             ]
@@ -57,6 +60,7 @@ export class TaskComponent implements OnDestroy {
         private dialogService: DialogService,
         private messageService: MessageService,
         private taskService: TaskService<TaskDto>,
+        private confirmationService: ConfirmationService,
     ) {}
 
     showTaskEditDialog(task: TaskDto) {
@@ -80,6 +84,19 @@ export class TaskComponent implements OnDestroy {
         this.dialogRef.onClose.subscribe((data: TaskDto) => {
             if (data != undefined && data.title != undefined) {
                 this.task = data as TaskDto;
+            }
+        });
+    }
+
+    confirmDeleteTask() {
+        this.confirmationService.confirm({
+            header: $localize `Are you sure?`,
+            message: $localize `Are you sure you want to delete this task?`,
+            icon: "pi pi-exclamation-triangle",
+            acceptIcon: "none",
+            rejectIcon: "none",
+            accept: () => {
+                this.deleteTask();
             }
         });
     }

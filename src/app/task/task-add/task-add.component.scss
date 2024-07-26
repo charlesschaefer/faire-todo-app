@@ -9,6 +9,15 @@
     border: none;
 }
 
+.task-add-title .task-title-input {
+    outline: none;
+}
+
+.task-add-title .task-title-input:focus {
+    outline: 1px solid var(--p-focus-ring-color);;
+    border-radius: 6px;
+}
+
 .task-add-menu {
     display: flex;
 }
