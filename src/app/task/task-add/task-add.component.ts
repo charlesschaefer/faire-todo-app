@@ -32,6 +32,7 @@ import { TaskAddDto, TaskDto } from '../../dto/task-dto';
 })
 export class TaskAddComponent implements OnInit {
     @Input() showOverlay$!: Subject<Event>;
+    @Output() onAddTask = new EventEmitter<any>;
     @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
     @ViewChild('taskAddOp') taskAddOp!: OverlayPanel;
 
@@ -44,16 +45,17 @@ export class TaskAddComponent implements OnInit {
     });
 
     constructor(
-        private taskService: TaskService<TaskAddDto>,
+        private taskAddService: TaskService<TaskAddDto>,
         private messageService: MessageService,
     ) {}
 
     ngOnInit(): void {
+        // subscribes to the parent Subject to exhibit the overlay component
         this.showOverlay$.subscribe(event => {
             if (event) {
                 this.taskAddOp.show(event);
             }
-        })
+        });
     }
 
     onClose(event: Event) {
@@ -73,7 +75,7 @@ export class TaskAddComponent implements OnInit {
             project: null,
         };
 
-        this.taskService.add(saveData).subscribe({
+        this.taskAddService.add(saveData).subscribe({
             complete: () => {
                 this.messageService.add({
                     summary: $localize `Saved successfully`,
@@ -81,6 +83,7 @@ export class TaskAddComponent implements OnInit {
                     severity: "success"
                 });
                 this.taskAddOp.hide();
+                this.onAddTask.emit();
             },
             error: (err) => {
                 this.messageService.add({

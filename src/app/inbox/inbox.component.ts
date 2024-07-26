@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DateTime } from 'luxon';
 import { Subject } from 'rxjs';
@@ -19,6 +19,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskDto } from '../dto/task-dto';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
+import { TaskService } from '../services/task.service';
 
 
 @Component({
@@ -46,12 +47,8 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
 })
-export class InboxComponent {
-    tasks: TaskDto[] = [
-        {id: 1, title: 'Task 1', dueDate: DateTime.fromJSDate(new Date), dueTime: null, description: "Description task 1", project: null, category: null},
-        {id: 2, title: 'Task 2', dueDate: DateTime.fromJSDate(new Date), dueTime: null, description: "Description task 2", project: null, category: null},
-        {id: 3, title: 'Task 3', dueDate: DateTime.fromJSDate(new Date), dueTime: DateTime.fromJSDate(new Date), description: "Description task 3", project: null, category: null},
-    ];
+export class InboxComponent implements OnInit {
+    tasks!: TaskDto[];
 
     completedTasks: {[key: number]: number | null} = {
         1: null,
@@ -61,8 +58,34 @@ export class InboxComponent {
 
     showTaskAddOverlay$ = new Subject<Event>();
 
+    constructor(
+        private taskService: TaskService<TaskDto>,
+    ) {}
+    
+    ngOnInit(): void {
+        this.getTasks();
+    }
+
     onShowTaskAddOverlay(event: Event) {
         console.log("Teste");
         this.showTaskAddOverlay$.next(event);
+    }
+
+    getTasks() {
+        this.taskService.list().subscribe(tasks => {
+            /* const viewTasks = tasks.map(task => {
+                const viewTask = {
+                    title: task.title,
+                    description: task.description,
+                    dueDate: 
+                }
+            }) */
+            this.tasks = tasks
+        });
+    }
+
+    onAddTask() {
+        console.log("Está chegando no onAddTask");
+        this.getTasks();
     }
 }

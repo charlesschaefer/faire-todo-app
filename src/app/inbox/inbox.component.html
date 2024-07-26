@@ -2,4 +2,4 @@
 <app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" />
 
 <!-- Task add overlay panel -->
-<app-task-add [(showOverlay$)]="showTaskAddOverlay$" />
+<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" />

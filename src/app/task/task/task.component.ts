@@ -8,6 +8,7 @@ import { MessageService } from 'primeng/api';
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { DateTime } from 'luxon';
 
 
 @Component({
@@ -28,6 +29,7 @@ import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit
 export class TaskComponent implements OnDestroy {
     @Input() task!: TaskDto;
     completed!: number;
+    dateTimeHandler = DateTime;
 
     dialogRef: DynamicDialogRef | undefined;
 
