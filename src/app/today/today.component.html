@@ -1,1 +1,5 @@
-<p>today works!</p>
+<h2 i18n class="page-title">Inbox</h2>
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" />
+
+<!-- Task add overlay panel -->
+<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" />

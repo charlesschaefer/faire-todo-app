@@ -59,7 +59,7 @@ export class InboxComponent implements OnInit {
     showTaskAddOverlay$ = new Subject<Event>();
 
     constructor(
-        private taskService: TaskService<TaskDto>,
+        protected taskService: TaskService<TaskDto>,
     ) {}
     
     ngOnInit(): void {
@@ -85,7 +85,6 @@ export class InboxComponent implements OnInit {
     }
 
     onAddTask() {
-        console.log("Está chegando no onAddTask");
         this.getTasks();
     }
 }

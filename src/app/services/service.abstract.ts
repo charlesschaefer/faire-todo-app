@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { NgxIndexedDBService } from "ngx-indexed-db";
-import { BehaviorSubject, Observable, catchError, map, throwError } from "rxjs";
+import { BehaviorSubject, Observable, Subject, catchError, map, throwError } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
@@ -54,6 +54,32 @@ export abstract class ServiceAbstract<T> {
 
     getByField(field: string, value: any): Observable<T[]> {
         return this.dbService.getAllByIndex(this.storeName, field, IDBKeyRange.only(value)) as Observable<T[]>;
+    }
+
+    // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
+    slowStringSearch(field: string, value: string): Observable<T[]> {
+        let results: T[] = [];
+        const searchResult$ = new Subject<T[]>;
+        this.dbService.openCursor(this.storeName).subscribe({
+            next: event => {
+                let cursor = (event.target as IDBOpenDBRequest).result as unknown as IDBCursorWithValue;
+                if (cursor) {
+                    let tValue = cursor.value as T;
+                    let fieldValue = tValue[field as keyof T] as string;
+                    console.log(`Achou ${value} em ${fieldValue}`);
+                    if (fieldValue.match(value)) {
+                        results.push(cursor.value as T);
+                    }
+                    console.log("Cursor: ", cursor);
+                    cursor.advance(1);
+                } else {
+                    console.log("Todos exibidos");
+                }
+            },
+            complete: () => searchResult$.next(results),
+            error: (err) => console.error(err)
+        });
+        return searchResult$;
     }
 
     remove(id: number): Observable<any> {
