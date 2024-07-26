@@ -23,4 +23,15 @@ export class TaskListComponent {
     showTaskAddPanel(event: Event) {
         this.showTaskAdd.emit(event);
     }
+
+    onTaskRemoved(id: number) {
+        console.log("On task removed Id: ", id);
+        let newTasks:TaskDto[] = [];
+        this.tasks.forEach(task => {
+            if (task.id != id) {
+                newTasks.push(task);
+            }
+        });
+        this.tasks = newTasks;
+    }
 }

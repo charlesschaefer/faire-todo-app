@@ -1,6 +1,6 @@
-<li class="task-item" (click)="showTaskEditDialog(task)">
+<li class="task-item">
   <div class="task-item-handle"><i class="pi pi-equals"></i></div>
-  <div class="task-item-row">
+  <div class="task-item-row" (click)="showTaskEditDialog(task)">
     <div class="task-item-row-first">
       <div class="task-item-mark-complete">
         <p-radioButton
@@ -35,6 +35,7 @@
     </div>
   </div>
   <div class="task-item-menu">
-    <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" />
+    <p-menu #menu [model]="taskMenuItems" [popup]="true" />
+    <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
   </div>
 </li>

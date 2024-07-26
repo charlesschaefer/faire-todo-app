@@ -4,7 +4,7 @@
       @if (tasks?.length) {
       <ul class="tasks-list">
         @for (task of tasks; track task.id) {
-          <app-task [task]="task" />
+          <app-task [task]="task" (onTaskRemoved)="onTaskRemoved($event)" />
         }
       </ul>
       }
