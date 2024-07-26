@@ -9,6 +9,7 @@ import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { DateTime } from 'luxon';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -36,9 +37,11 @@ export class TaskComponent implements OnDestroy {
     constructor(
         private dialogService: DialogService,
         private messageService: MessageService,
-    ) {}
+    ) {
 
-    showTaskEditDialog() {
+    }
+
+    showTaskEditDialog(task: TaskDto) {
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
             header: $localize `Edit Task`,
             width: '80%',
@@ -47,13 +50,19 @@ export class TaskComponent implements OnDestroy {
                 '500px': '90%',
                 '400px': '100%'
             },
+            data: {
+                task: task,
+                saveSubject$: new Subject<any>(),
+            },
             templates: {
                 footer: TaskEditFooterComponent
-            }
+            },
         });
 
         this.dialogRef.onClose.subscribe((data: any) => {
-            
+            if (data != undefined) {
+                this.task = data as TaskDto;
+            }
         });
     }
 

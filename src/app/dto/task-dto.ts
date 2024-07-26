@@ -6,7 +6,6 @@ export interface TaskDto {
     description: string | null;
     dueDate: Date | null;
     dueTime: Date | null;
-    category: number | null;
     project: number | null;
 }
 

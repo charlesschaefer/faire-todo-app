@@ -1,35 +1,49 @@
 <p-card>
-  <div  class="task-add flex flex-column gap-3">
-    <div class="task-add-title">
-      <input 
-        class="task-title-input font-semibold" 
-        pInputText 
-        name="title"
-        placeholder="Task title" 
-        i18n-placeholder 
-      />
+  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" id="task-edit-form">
+    <div  class="task-add flex flex-column gap-3">
+      <div class="task-add-title">
+        <input 
+          class="task-title-input font-semibold" 
+          pInputText 
+          name="title"
+          placeholder="Task title" 
+          i18n-placeholder 
+          formControlName="title"
+        />
+      </div>
+      <div class="task-add-description">
+        <textarea
+          pInputTextarea
+          placeholder="Description"
+          i18n-placeholder
+          [autoResize]="true"
+          rows="1"
+          class="text-sm"
+          formControlName="description"
+        ></textarea>
+      </div>
+      <div class="task-add-menu">
+        <p-calendar
+          [showIcon]="true"
+          [showButtonBar]="true"
+          [showTime]="true"
+          [stepMinute]="10"
+          inputId="task-add-due-date"
+          placeholder="Due date"
+          i18n-placeholder
+          formControlName="dueDate"
+        />
+        <p-calendar
+          [showIcon]="true"
+          icon="pi pi-clock"
+          inputId="task-add-due-time"
+          [timeOnly]="true"
+          placeholder="Due time"
+          i18n-placeholder
+          formControlName="dueTime"
+        />
+        
+      </div>
     </div>
-    <div class="task-add-description">
-      <textarea
-        pInputTextarea
-        placeholder="Description"
-        i18n-placeholder
-        [autoResize]="true"
-        rows="1"
-        class="text-sm"
-      ></textarea>
-    </div>
-    <div class="task-add-menu">
-      <p-calendar
-        [showIcon]="true"
-        [showButtonBar]="true"
-        [showTime]="true"
-        [stepMinute]="10"
-        inputId="task-add-due-date"
-        placeholder="Due date"
-        i18n-placeholder
-      />
-      
-    </div>
-  </div>
+  </form>
 </p-card>

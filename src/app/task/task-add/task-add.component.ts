@@ -71,7 +71,6 @@ export class TaskAddComponent implements OnInit {
             description: form.description || null,
             dueDate: form.dueDate || null,
             dueTime: form.dueTime || null,
-            category: null,
             project: null,
         };
 
