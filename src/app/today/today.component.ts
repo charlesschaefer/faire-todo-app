@@ -39,7 +39,8 @@ export class TodayComponent extends InboxComponent implements OnInit {
         date.setMilliseconds(0);
         this.taskService.getByField('dueDate', date).subscribe(tasks => {
             // now filter only tasks not completed
-            this.tasks = tasks.filter(task => task.completed == 0);
+            let filteredTasks = tasks.filter(task => task.completed == 0);
+            this.tasks = this.taskService.orderTasks(filteredTasks);
         });
     }
 }

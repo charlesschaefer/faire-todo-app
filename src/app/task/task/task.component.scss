@@ -13,6 +13,13 @@ li.task-item:hover {
     background-color: #fafafa;
 }
 
+.task-item-drag-placeholder {
+    background: #fafafa;
+    border: dotted 3px #333;
+    min-height: 60px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
 .task-item-handle {
     width: 10px;
 }

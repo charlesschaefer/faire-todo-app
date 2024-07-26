@@ -8,6 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DateTime } from 'luxon';
 import { Subject } from 'rxjs';
+import { CdkDrag, CdkDragDrop, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
@@ -24,6 +25,8 @@ import { TaskService } from '../../services/task.service';
         ButtonModule,
         MenuModule,
         ConfirmDialogModule,
+        CdkDrag,
+        CdkDragPlaceholder ,
     ],
     providers: [
         MessageService,

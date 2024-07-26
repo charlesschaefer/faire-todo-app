@@ -72,7 +72,9 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-        this.taskService.getByField('completed', 0).subscribe(tasks => this.tasks = tasks);
+        this.taskService.getByField('completed', 0).subscribe(tasks => {
+            this.tasks = this.taskService.orderTasks(tasks)
+        });
         //this.taskService.list().subscribe(tasks => this.tasks = tasks);
     }
 

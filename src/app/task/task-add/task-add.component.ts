@@ -82,7 +82,8 @@ export class TaskAddComponent implements OnInit {
             dueDate: dueDate || null,
             dueTime: form.dueTime || null,
             project: null,
-            completed: 0
+            completed: 0,
+            order: 0,
         };
 
         this.taskAddService.add(saveData).subscribe({
