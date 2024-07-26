@@ -72,16 +72,8 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-        this.taskService.list().subscribe(tasks => {
-            /* const viewTasks = tasks.map(task => {
-                const viewTask = {
-                    title: task.title,
-                    description: task.description,
-                    dueDate: 
-                }
-            }) */
-            this.tasks = tasks
-        });
+        this.taskService.getByField('completed', 0).subscribe(tasks => this.tasks = tasks);
+        //this.taskService.list().subscribe(tasks => this.tasks = tasks);
     }
 
     onAddTask() {

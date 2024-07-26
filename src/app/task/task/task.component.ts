@@ -104,6 +104,28 @@ export class TaskComponent implements OnDestroy {
         })
     }
 
+    markTaskAsCompleted() {
+        let task = this.task;
+        task.completed = 1;
+        this.taskService.edit(task).subscribe({
+            complete: () => {
+                this.messageService.add({
+                    summary: $localize `Marked as complete`,
+                    detail: $localize `Task marked as complete`,
+                    severity: 'contrast'
+                });
+                this.onTaskRemoved.emit(this.task.id);
+            },
+            error: (err) => {
+                this.messageService.add({
+                    summary: $localize `Error`,
+                    detail: $localize `Error marking task as complete. ${err}`,
+                    severity: 'error'
+                });
+            }
+        })
+    }
+
     ngOnDestroy(): void {
         this.dialogRef?.close();
     }

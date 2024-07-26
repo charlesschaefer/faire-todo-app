@@ -33,10 +33,6 @@ footer {
     padding-left: 20px;
 }
 
-:host ::ng-deep .main {
-    margin-bottom: 20px;
-}
-
 @media (max-width: 600px) {
     img#logo {
         display: none;

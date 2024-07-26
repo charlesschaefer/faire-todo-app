@@ -1,17 +1,18 @@
 <li class="task-item">
   <div class="task-item-handle"><i class="pi pi-equals"></i></div>
+  <div class="task-item-mark-complete">
+    <p-radioButton
+      #rbutton
+      name="mark-task-complete-{{task.id}}" 
+      [value]="task.id"
+      inputId="mark-task-complete-{{task.id}}" 
+      [(ngModel)]="completed"
+      (onClick)="markTaskAsCompleted()"
+    />
+    
+  </div>
   <div class="task-item-row" (click)="showTaskEditDialog(task)">
     <div class="task-item-row-first">
-      <div class="task-item-mark-complete">
-        <p-radioButton
-        #rbutton
-        name="mark-task-complete-{{task.id}}" 
-        [value]="task.id"
-        inputId="mark-task-complete-{{task.id}}" 
-        [(ngModel)]="completed"
-        />
-        
-      </div>
       <div class="task-item-content">
         <div class="task-item-title">
           {{task.title}}
@@ -35,7 +36,7 @@
     </div>
   </div>
   <div class="task-item-menu">
-    <p-menu #menu [model]="taskMenuItems" [popup]="true" />
+    <p-menu #menu [model]="taskMenuItems" [popup]="true" appendTo="body" />
     <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
   </div>
 </li>

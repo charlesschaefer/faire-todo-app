@@ -9,6 +9,10 @@ li.task-item {
     color: #333;
 }
 
+li.task-item:hover {
+    background-color: #fafafa;
+}
+
 .task-item-handle {
     width: 10px;
 }
@@ -16,6 +20,11 @@ li.task-item {
 .task-item-handle i {
     display: none;
     font-size: 10px;
+}
+
+.task-item-mark-complete {
+    margin-right: -10px;
+    margin-left: 10px;
 }
 
 li.task-item:hover .task-item-handle i {

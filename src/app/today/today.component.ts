@@ -5,6 +5,7 @@ import { TaskDto } from '../dto/task-dto';
 import { Subject } from 'rxjs';
 import { TaskService } from '../services/task.service';
 import { InboxComponent } from '../inbox/inbox.component';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app-today',
@@ -20,16 +21,25 @@ import { InboxComponent } from '../inbox/inbox.component';
 // Extends InboxComponent to receive the same methods that we're going to use here
 export class TodayComponent extends InboxComponent implements OnInit {
     
+    today = DateTime.fromJSDate(new Date());
+
     override ngOnInit(): void {
+        this.getTasks();
+
+        this.taskService.slowStringSearch('title', 'today').subscribe(results => {
+            console.log("Results final: ", results);
+        })
+    }
+
+    override getTasks(): void {
         let date = new Date();
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
-        this.taskService.getByField('dueDate', date).subscribe(tasks => this.tasks = tasks);
-
-        this.taskService.slowStringSearch('title', 'today').subscribe(results => {
-            console.log("Results final: ", results);
-        })
+        this.taskService.getByField('dueDate', date).subscribe(tasks => {
+            // now filter only tasks not completed
+            this.tasks = tasks.filter(task => task.completed == 0);
+        });
     }
 }

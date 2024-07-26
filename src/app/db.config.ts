@@ -2,7 +2,7 @@ import { DBConfig, NgxIndexedDBModule } from "ngx-indexed-db";
 
 export const dbConfig: DBConfig = {
     name: 'faire-todo-app',
-    version: 4,
+    version: 5,
     objectStoresMeta: [
         {
             store: 'project',
@@ -27,6 +27,7 @@ export const dbConfig: DBConfig = {
                 { name: 'dueDate', keypath: 'dueDate', options: { unique: false }},
                 { name: 'dueTime', keypath: 'dueTime', options: { unique: false }},
                 { name: 'project', keypath: 'project', options: { unique: false }},
+                { name: 'completed', keypath: 'completed', options: { unique: false }},
             ]
         },
         {

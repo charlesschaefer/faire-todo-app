@@ -41,11 +41,11 @@ export abstract class ServiceAbstract<T> {
 
     edit(data: T): Observable<T> {
         this.clearCache();
-        return this.dbService.update(this.storeName, data)
+        return this.dbService.update(this.storeName, data);/* 
             .pipe(
                 map((response: T) => response),
                 catchError((error: T) => throwError(error))
-            );
+            ); */
     }
 
     get(id: number): Observable<T> {

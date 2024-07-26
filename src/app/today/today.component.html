@@ -1,4 +1,9 @@
-<h2 i18n class="page-title">Inbox</h2>
+<h2 i18n class="page-title">
+    Today 
+    <span class="text-sm">
+        {{today.toFormat('dd/MM')}}
+    </span>
+</h2>
 <app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" />
 
 <!-- Task add overlay panel -->

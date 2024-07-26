@@ -32,6 +32,7 @@
             placeholder="Due date"
             i18n-placeholder
             formControlName="dueDate"
+            class="task-add-dueDate"
           />
 
           <p-calendar
@@ -39,16 +40,17 @@
             icon="pi pi-clock"
             inputId="task-add-due-time"
             [timeOnly]="true"
-            placeholder="Due time"
+            placeholder="Time"
             i18n-placeholder
             formControlName="dueTime"
+            class="task-add-dueTime"
           />
           
         </div>
         <p-divider />
         <div class="task-add-buttons flex flex-row justify-content-end gap-1">
           <div>
-            <p-button label="Cancel" i18n-label (onClick)="taskAddOp.toggle($event)" severity="secondary" />
+            <p-button label="Cancel" i18n-label (onClick)="clearForm() && taskAddOp.toggle($event) " severity="secondary" />
           </div>
           <div>
             <p-button label="Save" i18n-label type="submit" />

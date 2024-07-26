@@ -61,6 +61,7 @@ export class TaskEditComponent implements OnInit {
             dueDate: form.dueDate || null,
             dueTime: form.dueTime || null,
             project: null,
+            completed: 0
         };
 
         this.taskService.edit(saveData).subscribe({

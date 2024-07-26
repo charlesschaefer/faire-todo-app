@@ -11,6 +11,7 @@ import { Subject } from 'rxjs';
 
 import { TaskService } from '../../services/task.service';
 import { TaskAddDto, TaskDto } from '../../dto/task-dto';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-task-add',
@@ -47,6 +48,7 @@ export class TaskAddComponent implements OnInit {
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
         private messageService: MessageService,
+        private router: Router,
     ) {}
 
     ngOnInit(): void {
@@ -65,13 +67,22 @@ export class TaskAddComponent implements OnInit {
 
     saveTask() {
         const form = this.taskForm.value;
+        let dueDate:Date | null | undefined = form.dueDate;
+        if (this.router.url == '/today') {
+            dueDate = new Date();
+            dueDate.setHours(0);
+            dueDate.setMinutes(0);
+            dueDate.setSeconds(0);
+            dueDate.setMilliseconds(0);
+        }
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,
             description: form.description || null,
-            dueDate: form.dueDate || null,
+            dueDate: dueDate || null,
             dueTime: form.dueTime || null,
             project: null,
+            completed: 0
         };
 
         this.taskAddService.add(saveData).subscribe({
@@ -83,12 +94,7 @@ export class TaskAddComponent implements OnInit {
                 });
                 this.taskAddOp.hide();
                 this.onAddTask.emit();
-                this.taskForm.patchValue({
-                    title: null,
-                    description: null,
-                    dueDate: null,
-                    dueTime: null,
-                });
+                this.clearForm();
             },
             error: (err) => {
                 this.messageService.add({
@@ -98,5 +104,15 @@ export class TaskAddComponent implements OnInit {
                 });
             }
         });
+    }
+
+    clearForm(): boolean {
+        this.taskForm.patchValue({
+            title: null,
+            description: null,
+            dueDate: null,
+            dueTime: null,
+        });
+        return true;
     }
 }

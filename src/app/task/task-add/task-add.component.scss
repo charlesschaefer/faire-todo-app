@@ -8,3 +8,20 @@
     min-height: 50px;
     border: none;
 }
+
+.task-add-menu {
+    display: flex;
+}
+
+.task-add-menu p-calendar {
+    display: block;
+}
+
+.task-add-dueDate {
+    width: 170px;
+}
+
+.task-add-dueTime {
+    width: 110px;
+    margin-left: 10px;
+}
