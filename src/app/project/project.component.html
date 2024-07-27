@@ -1,0 +1,77 @@
+<h2 translate class="page-title">Projects</h2>
+<p-card [header]="projects.length + (' projects' | translate)" class="project-list">
+
+  <ul class="project-items">
+    @for (project of projects; track project.id) {
+      <li class="project-item">
+        <div class="project-item-name">
+          {{project.name}}
+        </div>
+        <div class="project-item-menu">
+          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteProject(project.id)" [rounded]="true" />
+          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editProjectDialog(project.id)" [rounded]="true" />
+        </div>
+      </li>
+    }
+  </ul>
+  <div class="project-add-line" (click)="showProjectAddPanel($event)">
+    <div class="project-add-button">
+      <i class="pi pi-plus"></i>
+    </div>
+    <div class="project-add-title">
+      <ng-container translate>Add project</ng-container>
+    </div>
+  </div>
+</p-card>
+
+<p-overlayPanel #projectAddOp>
+  <form [formGroup]="projectForm" novalidate (ngSubmit)="saveProject()">
+    <p-card>
+      <div  class="project-add flex flex-column gap-3">
+        <div class="project-add-name">
+          <input 
+            class="project-name-input" 
+            pInputText 
+            name="name"
+            [placeholder]="'Project name' | translate" 
+            formControlName="name"
+            autocomplete="off"
+          />
+        </div>
+        <p-divider />
+        <div class="project-add-buttons flex flex-row justify-content-end gap-1">
+          <div>
+            <p-button [label]="'Cancel' | translate" (onClick)="clearForm() && projectAddOp.toggle($event) " severity="secondary" />
+          </div>
+          <div>
+            <p-button [label]="'Save' | translate" type="submit" />
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </form>
+</p-overlayPanel>
+<p-confirmDialog />
+<p-dialog [header]="'Edit Profile' | translate" [modal]="true" [(visible)]="editProjectVisible" [style]="{ width: '25rem' }">
+  <form novalidate [formGroup]="projectEditForm" (ngSubmit)="editProject()">
+    <div class="">
+      <input 
+        type="hidden" 
+        name="id" 
+        formControlName="id"
+      />
+      <input 
+        class="project-name-input" 
+        pInputText 
+        name="name"
+        [placeholder]="'Project name' | translate" 
+        formControlName="name"
+        autocomplete="off"
+      />
+    </div>
+    <div class="flex justify-content-end gap-2">
+        <p-button label="Cancel" severity="secondary" (onClick)="editProjectVisible = false" />
+        <p-button label="Save" type="submit" />
+    </div>
+  </form>
+</p-dialog>

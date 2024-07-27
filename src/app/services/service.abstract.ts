@@ -111,7 +111,9 @@ export abstract class ServiceAbstract<T> {
         return this.dbService.deleteByKey(this.storeName, id);
     }
 
-
+    bulkRemove(ids: number[]) {
+        return this.dbService.bulkDelete(this.storeName, ids);
+    }
 
     clear(): Observable<any> {
         this.clearCache();

@@ -1,0 +1,57 @@
+:host ::ng-deep .p-card {
+    max-width: 600px
+}
+
+ul.project-items {
+    padding-inline-start: 20px;
+}
+
+.project-add-line {
+    display: flex;
+    color: #999;
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.project-add-button {
+    padding-right: 10px;
+    color: var(--indigo-600)
+}
+
+.project-add-button i {
+    font-size: 12px;
+}
+
+li.project-item {
+    list-style: none;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    width: calc(100% - 20px);
+    align-items: center;
+    padding: 15px 0px;
+    cursor: pointer;
+    color: #333;
+}
+
+li.project-item:hover {
+    background-color: #fafafa;
+}
+
+.project-item-menu {
+    display: none;
+}
+
+li.project-item:hover .project-item-menu {
+    display: inherit;
+}
+
+:host ::ng-deep .project-item-menu .p-button.p-button-icon-only {
+    margin-right: 10px;
+}
+
+.project-item-name {
+    width: calc(100% - 60px);
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
