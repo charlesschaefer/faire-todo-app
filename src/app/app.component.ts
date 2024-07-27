@@ -31,6 +31,11 @@ export class AppComponent implements OnInit {
         { label: $localize `Inbox`, icon: 'pi pi-inbox', routerLink: '/inbox' },
         { label: $localize `Today`, icon: 'pi pi-calendar', routerLink: '/today' },
         { label: $localize `Upcoming`, icon: 'pi pi-clock', routerLink: '/upcoming' },
+        { label: $localize `Projects`, icon: 'pi pi-clipboard', routerLink: '/project' },
+        {
+            separator: true
+        },
+        { label: "Mudar tema", command: () => this.switchTheme(), icon: "pi pi-moon" },
     ];
 
     constructor(
@@ -49,11 +54,13 @@ export class AppComponent implements OnInit {
             console.log(userTheme, currentTheme);
             this.themeService.switchTheme(userTheme);
         }
+    }
 
-        /* const sawGuidedTour = this.cookieService.get('sawGuidedTour');
-        if (!sawGuidedTour) {
-            this.initializeGuidedTour();
-        } */
+    switchTheme() {
+        this.themeService.switchTheme();
+
+        let currentTheme = this.themeService.getCurrentTheme();
+        localStorage.setItem('theme', currentTheme);
     }
 
 }
