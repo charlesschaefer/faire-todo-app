@@ -14,12 +14,7 @@
         }
       },
       "i18n": {
-        "sourceLocale": "en-US",
-        "locales": {
-          "pt-BR": {
-            "translation": "src/locale/messages.pt-BR.xlf"
-          }
-        }
+        "sourceLocale": "en-US"
       },
       "root": "",
       "sourceRoot": "src",
@@ -28,7 +23,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "localize": true,
             "outputPath": "dist/faire-todo-app",
             "index": "src/index.html",
             "browser": "src/main.ts",
