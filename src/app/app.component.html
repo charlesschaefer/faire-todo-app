@@ -10,7 +10,7 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <p-menu #menu [popup]="true" [model]="menuItems" />
+      <p-tieredMenu #menu [popup]="true" [model]="menuItems" />
       <p-button icon="pi pi-bars" (click)="menu.toggle($event)" />
     </div>
   </p-toolbar>
