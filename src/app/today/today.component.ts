@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { TaskService } from '../services/task.service';
 import { InboxComponent } from '../inbox/inbox.component';
 import { DateTime } from 'luxon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-today',
@@ -13,6 +14,7 @@ import { DateTime } from 'luxon';
     imports: [
         TaskListComponent,
         TaskAddComponent,
+        TranslateModule,
     ],
     templateUrl: './today.component.html',
     styleUrl: './today.component.scss'

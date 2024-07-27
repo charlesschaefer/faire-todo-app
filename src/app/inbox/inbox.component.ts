@@ -50,12 +50,6 @@ import { TaskService } from '../services/task.service';
 export class InboxComponent implements OnInit {
     tasks!: TaskDto[];
 
-    completedTasks: {[key: number]: number | null} = {
-        1: null,
-        2: null,
-        3: null
-    };
-
     showTaskAddOverlay$ = new Subject<Event>();
 
     constructor(
@@ -66,11 +60,9 @@ export class InboxComponent implements OnInit {
         this.getTasks();
 
         let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
-        console.log("Count: ", count);
     }
 
     onShowTaskAddOverlay(event: Event) {
-        console.log("Teste");
         this.showTaskAddOverlay$.next(event);
     }
 
@@ -78,7 +70,6 @@ export class InboxComponent implements OnInit {
         this.taskService.getByField('completed', 0).subscribe(tasks => {
             this.tasks = this.taskService.orderTasks(tasks)
         });
-        //this.taskService.list().subscribe(tasks => this.tasks = tasks);
     }
 
     onAddTask() {

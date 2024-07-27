@@ -1,8 +1,8 @@
 <div class="task-add-buttons flex flex-row justify-content-end gap-1">
   <div>
-    <p-button label="Cancel" i18n-label (onClick)="closeDialog($event)" severity="secondary" />
+    <p-button [label]="'Cancel' | translate" (onClick)="closeDialog($event)" severity="secondary" />
   </div>
   <div>
-    <p-button label="Save" i18n-label type="submit" (onClick)="submitForm()" />
+    <p-button [label]="'Save' | translate" type="submit" (onClick)="submitForm()" />
   </div>
 </div>

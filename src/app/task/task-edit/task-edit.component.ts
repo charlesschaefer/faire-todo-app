@@ -4,11 +4,13 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TaskDto } from '../../dto/task-dto';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { MessageService } from 'primeng/api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-task-edit',
@@ -20,6 +22,7 @@ import { MessageService } from 'primeng/api';
         InputTextareaModule,
         DividerModule,
         DynamicDialogModule,
+        TranslateModule,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -35,6 +38,7 @@ export class TaskEditComponent implements OnInit {
         private taskService: TaskService<TaskDto>,
         private messageService: MessageService,
         private dynamicDialogRef: DynamicDialogRef,
+        private translate: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -66,18 +70,18 @@ export class TaskEditComponent implements OnInit {
         };
 
         this.taskService.edit(saveData).subscribe({
-            complete: () => {
+            complete: async () => {
                 this.messageService.add({
-                    summary: $localize `Saved successfully`,
-                    detail: $localize `The task was saved successfully`,
+                    summary: await firstValueFrom(this.translate.get(`Saved successfully`)),
+                    detail: await firstValueFrom(this.translate.get(`The task was saved successfully`)),
                     severity: "success"
                 });
                 this.dynamicDialogRef.close(saveData);
             },
-            error: (err) => {
+            error: async (err) => {
                 this.messageService.add({
-                    summary: $localize `Error`,
-                    detail: $localize `Couldn't save the task. ${err}`,
+                    summary: await firstValueFrom(this.translate.get(`Error`)),
+                    detail: await firstValueFrom(this.translate.get(`Couldn't save the task.`)) + err,
                     severity: "error"
                 });
             }

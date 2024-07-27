@@ -5,15 +5,16 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DateTime } from 'luxon';
-import { Subject } from 'rxjs';
-import { CdkDrag, CdkDragDrop, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { firstValueFrom, Subject } from 'rxjs';
+import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskService } from '../../services/task.service';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -44,31 +45,38 @@ export class TaskComponent implements OnDestroy {
 
     dialogRef: DynamicDialogRef | undefined;
 
-    taskMenuItems = [
-        {
-            label: $localize `Options`,
-            items: [
-                {
-                    label: $localize `Delete`,
-                    icon: 'pi pi-trash',
-                    command: () => {
-                        this.confirmDeleteTask();
-                    }
-                }
-            ]
-        }
-    ]
-
+    taskMenuItems!: MenuItem[];
+    
     constructor(
         private dialogService: DialogService,
         private messageService: MessageService,
         private taskService: TaskService<TaskDto>,
         private confirmationService: ConfirmationService,
-    ) {}
+        private translate: TranslateService,
+    ) {
+        this.setTaskMenuItems();
+    }
 
-    showTaskEditDialog(task: TaskDto) {
+    async setTaskMenuItems() {
+        this.taskMenuItems = [
+            {
+                label: await firstValueFrom(this.translate.get(`Options`)),
+                items: [
+                    {
+                        label: await firstValueFrom(this.translate.get(`Delete`)),
+                        icon: 'pi pi-trash',
+                        command: () => {
+                            this.confirmDeleteTask();
+                        }
+                    } as MenuItem
+                ]
+            }  as MenuItem
+        ]
+    }
+
+    async showTaskEditDialog(task: TaskDto) {
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
-            header: $localize `Edit Task`,
+            header: await firstValueFrom(this.translate.get(`Edit Task`)),
             width: '80%',
             height: '80%',
             breakpoints: {
@@ -91,10 +99,10 @@ export class TaskComponent implements OnDestroy {
         });
     }
 
-    confirmDeleteTask() {
+    async confirmDeleteTask() {
         this.confirmationService.confirm({
-            header: $localize `Are you sure?`,
-            message: $localize `Are you sure you want to delete this task?`,
+            header: await firstValueFrom(this.translate.get(`Are you sure?`)),
+            message: await firstValueFrom(this.translate.get(`Are you sure you want to delete this task?`)),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -106,18 +114,18 @@ export class TaskComponent implements OnDestroy {
 
     deleteTask() {
         this.taskService.remove(this.task.id).subscribe({
-            complete: () => {
+            complete: async () => {
                 this.messageService.add({
-                    summary: $localize `Removed`,
-                    detail: $localize `Task removed successfully`,
+                    summary: await firstValueFrom(this.translate.get(`Removed`)),
+                    detail: await firstValueFrom(this.translate.get(`Task removed successfully`)),
                     severity: "success"
                 });
                 this.onTaskRemoved.emit(this.task.id);
             }, 
-            error: (err) => {
+            error: async (err) => {
                 this.messageService.add({
-                    summary: $localize `Error`,
-                    detail: $localize `Error removing task. ${err}`,
+                    summary: await firstValueFrom(this.translate.get(`Error`)) + err,
+                    detail: await firstValueFrom(this.translate.get(`Error removing task.`)) + err,
                     severity: "error"
                 })
             }
@@ -128,18 +136,18 @@ export class TaskComponent implements OnDestroy {
         let task = this.task;
         task.completed = 1;
         this.taskService.edit(task).subscribe({
-            complete: () => {
+            complete: async () => {
                 this.messageService.add({
-                    summary: $localize `Marked as complete`,
-                    detail: $localize `Task marked as complete`,
+                    summary: await firstValueFrom(this.translate.get(`Marked as complete`)),
+                    detail: await firstValueFrom(this.translate.get(`Task marked as complete`)),
                     severity: 'contrast'
                 });
                 this.onTaskRemoved.emit(this.task.id);
             },
-            error: (err) => {
+            error: async (err) => {
                 this.messageService.add({
-                    summary: $localize `Error`,
-                    detail: $localize `Error marking task as complete. ${err}`,
+                    summary: await firstValueFrom(this.translate.get(`Error`)),
+                    detail: await firstValueFrom(this.translate.get(`Error marking task as complete.`)) + err,
                     severity: 'error'
                 });
             }

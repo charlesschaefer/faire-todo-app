@@ -8,6 +8,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { firstValueFrom, Subject } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TaskService } from '../../services/task.service';
 import { TaskAddDto, TaskDto } from '../../dto/task-dto';
@@ -24,6 +25,7 @@ import { Router } from '@angular/router';
         InputTextareaModule,
         DividerModule,
         ToastModule,
+        TranslateModule,
     ],
     providers: [
         MessageService,
@@ -49,6 +51,7 @@ export class TaskAddComponent implements OnInit {
         private taskAddService: TaskService<TaskAddDto>,
         private messageService: MessageService,
         private router: Router,
+        private translate: TranslateService,
     ) {}
 
     ngOnInit(): void {
@@ -89,20 +92,20 @@ export class TaskAddComponent implements OnInit {
         };
 
         this.taskAddService.add(saveData).subscribe({
-            complete: () => {
+            complete: async () => {
                 this.messageService.add({
-                    summary: $localize `Saved successfully`,
-                    detail: $localize `The task was saved successfully`,
+                    summary: await firstValueFrom(this.translate.get(`Saved successfully`)),
+                    detail: await firstValueFrom(this.translate.get(`The task was saved successfully`)),
                     severity: "success"
                 });
                 this.taskAddOp.hide();
                 this.onAddTask.emit();
                 this.clearForm();
             },
-            error: (err) => {
+            error: async (err) => {
                 this.messageService.add({
-                    summary: $localize `Error`,
-                    detail: $localize `Couldn't save the task. ${err}`,
+                    summary: await firstValueFrom(this.translate.get(`Error`)),
+                    detail: await firstValueFrom(this.translate.get(`Couldn't save the task.`)) + err,
                     severity: "error"
                 });
             }

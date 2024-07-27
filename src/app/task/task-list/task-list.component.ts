@@ -31,7 +31,6 @@ export class TaskListComponent {
     }
 
     onTaskRemoved(id: number) {
-        console.log("On task removed Id: ", id);
         let newTasks:TaskDto[] = [];
         this.tasks.forEach(task => {
             if (task.id != id) {
@@ -42,7 +41,6 @@ export class TaskListComponent {
     }
 
     onTaskOrder(event: CdkDragDrop<TaskDto[]>) {
-        console.log("OnTaskORder");
         moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
         this.tasks.forEach((task, index) => {
             task.order = index;

@@ -6,16 +6,14 @@
           class="task-title-input font-semibold" 
           pInputText 
           name="title"
-          placeholder="Task title" 
-          i18n-placeholder 
+          [placeholder]="'Task title' | translate" 
           formControlName="title"
         />
       </div>
       <div class="task-add-description">
         <textarea
           pInputTextarea
-          placeholder="Description"
-          i18n-placeholder
+          [placeholder]="'Description' | translate"
           [autoResize]="true"
           rows="1"
           class="text-sm"
@@ -28,8 +26,7 @@
           [showButtonBar]="true"
           [showTime]="false"
           inputId="task-add-due-date"
-          placeholder="Due date"
-          i18n-placeholder
+          [placeholder]="'Due date' | translate"
           formControlName="dueDate"
           class="task-add-dueDate"
         />
@@ -38,8 +35,7 @@
           icon="pi pi-clock"
           inputId="task-add-due-time"
           [timeOnly]="true"
-          placeholder="Time"
-          i18n-placeholder
+          [placeholder]="'Time' | translate"
           formControlName="dueTime"
           class="task-add-dueTime"
         />
