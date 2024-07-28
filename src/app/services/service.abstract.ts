@@ -79,8 +79,10 @@ export abstract class ServiceAbstract<T> {
 
     // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
     slowStringSearch(field: string, value: string) {
-        return from(this.table.filter((item:T) => {
-            return (item[field as keyof T] as string).match(value);
+        return from(liveQuery(() => {
+            return this.table.filter((item:T) => {
+                return (item[field as keyof T] as string).match(value);
+            }).toArray()
         }));
     }
 
