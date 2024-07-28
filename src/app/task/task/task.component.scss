@@ -77,6 +77,11 @@ li.task-item:hover .task-item-menu {
     color: #aaa;
 }
 
+.task-item-description pre {
+    font-family: var(--font-family);
+    line-height: 1.3em;
+}
+
 .task-item-attributes {
     font-size: 12px;
     padding-left: 30px;

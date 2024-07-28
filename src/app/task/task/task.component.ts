@@ -154,7 +154,7 @@ export class TaskComponent implements OnDestroy, OnInit {
 
     markTaskAsCompleted() {
         let task = this.task;
-        task.completed = 1;
+        task.completed = this.completed ? 1 : 0;
         this.taskService.edit(task.id, task).subscribe({
             complete: async () => {
                 this.messageService.add({
