@@ -23,3 +23,24 @@
 <footer class="footer">
   <p>Faire todo app - 2024 - <a href="https://github.com/charlesschaefer/faire-todo-app/blob/main/LICENSE">License</a></p>
 </footer>
+
+<!-- <p-toast position="bottom-left" /> -->
+<p-toast position="bottom-left" #toast>
+  <ng-template let-message pTemplate="message">
+    <div class="flex flex-column align-items-start" style="flex: 1">
+        <div class="flex align-items-center gap-2">
+            <span class="font-bold text-900">
+              {{ message.summary }}
+            </span>
+        </div>
+        <div class="text-base my-3 text-900 flex flex-row gap-3">
+          <div class="h-3-rem">
+            {{ message.detail }}
+          </div> 
+          <div class="">
+            <a href="javascript:;" p-button class="text-sm w-min" severity="info" size="small" (click)="undo()" translate>Undo</a>
+          </div>
+        </div>
+    </div>
+</ng-template>
+</p-toast>

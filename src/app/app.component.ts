@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import {TranslateService} from '@ngx-translate/core';
+import { ToastModule } from 'primeng/toast';
 
 
 import { ThemeService } from './services/theme.service';
 import { routes } from './app.routes';
-import { firstValueFrom } from 'rxjs';
-import { MenuItem } from 'primeng/api';
+import { UndoService, UndoItem } from './services/undo.service';
 
 @Component({
     selector: 'app-root',
@@ -21,6 +23,11 @@ import { MenuItem } from 'primeng/api';
         ToolbarModule,
         ButtonModule,
         TieredMenuModule,
+        ToastModule,
+        TranslateModule,
+    ],
+    providers: [
+        MessageService,
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
@@ -34,6 +41,8 @@ export class AppComponent implements OnInit {
     constructor(
         private themeService: ThemeService,
         private translate: TranslateService,
+        private undoService: UndoService,
+        private messageService: MessageService,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
@@ -89,7 +98,30 @@ export class AppComponent implements OnInit {
             this.themeService.switchTheme(userTheme);
         }
 
-        
+        // watches for undo calls, so we exhibit a toast to the user
+        this.undoService.watch().subscribe(item => {
+            console.log("Chegou do undo.watch()");
+            // exhibits the toast with a link to the undo() method
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Undo', 
+                detail: 'Action completed.',
+                life: 15000
+            });
+        })
+    }
+
+    testeUndo() {
+        let undoData:UndoItem = {
+            data: {nada: 'não'},
+            type: 'app.testeUndo'
+        };
+        this.undoService.register(undoData).subscribe((undo: UndoItem) => {
+            console.log("register.subscribe: ", undo);
+            if (undo.type == 'app.testeUndo') {
+                console.log("Aqui deveríamos desfazer a ação");
+            }
+        });
     }
 
     switchTheme() {
@@ -103,6 +135,11 @@ export class AppComponent implements OnInit {
         this.translate.use(language);
         localStorage.setItem('language', language);
         console.log("Trocando a língua para ", language)
+    }
+
+    undo() {
+        this.messageService.clear();
+        this.undoService.undo();
     }
 
 }

@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { TranslateService } from '@ngx-translate/core';
+import { DateTime } from 'luxon';
+import { firstValueFrom, Subject } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -8,15 +11,14 @@ import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { DateTime } from 'luxon';
-import { firstValueFrom, Subject } from 'rxjs';
+import { ToastModule } from 'primeng/toast';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskService } from '../../services/task.service';
-import { TranslateService } from '@ngx-translate/core';
 import { ProjectDto } from '../../dto/project-dto';
+import { UndoItem, UndoService } from '../../services/undo.service';
 
 
 @Component({
@@ -31,6 +33,7 @@ import { ProjectDto } from '../../dto/project-dto';
         CdkDrag,
         CdkDragPlaceholder,
         CheckboxModule,
+        ToastModule,
     ],
     providers: [
         MessageService,
@@ -62,6 +65,7 @@ export class TaskComponent implements OnDestroy, OnInit {
         private taskService: TaskService<TaskDto>,
         private confirmationService: ConfirmationService,
         private translate: TranslateService,
+        private undoService: UndoService,
     ) {
         this.setTaskMenuItems();
     }
@@ -133,6 +137,11 @@ export class TaskComponent implements OnDestroy, OnInit {
     }
 
     deleteTask() {
+        let undoData = Object.assign({}, this.task);
+        const undo: UndoItem = {
+            type: 'task.delete',
+            data: undoData
+        };
         this.taskService.remove(this.task.id).subscribe({
             complete: async () => {
                 this.messageService.add({
@@ -141,6 +150,9 @@ export class TaskComponent implements OnDestroy, OnInit {
                     severity: "success"
                 });
                 this.onTaskRemoved.emit(this.task.id);
+                this.undoService.register(undo).subscribe(data => {
+                    this.undoDelete(data);
+                });
             }, 
             error: async (err) => {
                 this.messageService.add({
@@ -152,17 +164,47 @@ export class TaskComponent implements OnDestroy, OnInit {
         })
     }
 
+    undoDelete(undoData: UndoItem) {
+        if (undoData.type == 'task.delete') {
+            let task = undoData.data as TaskDto;
+            this.taskService.add(task).subscribe({
+                complete: async () => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translate.get(`Undone`)),
+                        detail: await firstValueFrom(this.translate.get(`Your delete action was undone successfully.`)),
+                        severity: "success"
+                    });
+                }, 
+                error: async (err) => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translate.get(`Error`)) + err,
+                        detail: await firstValueFrom(this.translate.get(`Error trying to recover task.`)) + err,
+                        severity: "error"
+                    });
+                }
+            });
+        }
+    }
+
     markTaskAsCompleted() {
         let task = this.task;
+        let undoData = Object.assign({}, task);
+        const undo: UndoItem = {
+            type: 'task.markComplete',
+            data: undoData
+        };
         task.completed = this.completed ? 1 : 0;
         this.taskService.edit(task.id, task).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Marked as complete`)),
                     detail: await firstValueFrom(this.translate.get(`Task marked as complete`)),
-                    severity: 'contrast'
+                    severity: 'success'
                 });
                 this.onTaskRemoved.emit(this.task.id);
+                this.undoService.register(undo).subscribe((data) => {
+                    this.undoMarkAsComplete(data);
+                });
             },
             error: async (err) => {
                 this.messageService.add({
@@ -172,6 +214,28 @@ export class TaskComponent implements OnDestroy, OnInit {
                 });
             }
         })
+    }
+
+    undoMarkAsComplete(undoData: UndoItem) {
+        if (undoData.type == 'task.markComplete') {
+            const task = undoData.data as TaskDto;
+            this.taskService.edit(task.id, task).subscribe({
+                complete: async () => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translate.get(`Undone`)),
+                        detail: await firstValueFrom(this.translate.get(`Task got back to it's initial state`)),
+                        severity: 'success'
+                    });
+                },
+                error: async (err) => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translate.get(`Error`)),
+                        detail: await firstValueFrom(this.translate.get(`Error trying to undo marking task as complete.`)) + err,
+                        severity: 'error'
+                    });
+                }
+            });
+        }
     }
 
     ngOnDestroy(): void {
