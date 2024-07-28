@@ -18,7 +18,7 @@
         [value]="task.id"
         inputId="mark-task-complete-{{task.id}}" 
         [(ngModel)]="completed"
-        (onClick)="markTaskAsCompleted()"
+        (onChange)="markTaskAsCompleted()"
         [binary]="true"
       />
       
