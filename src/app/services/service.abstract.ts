@@ -56,6 +56,10 @@ export abstract class ServiceAbstract<T> {
         return this.dbService.getAllByIndex(this.storeName, field, IDBKeyRange.only(value)) as Observable<T[]>;
     }
 
+    count(): Observable<number> {
+        return this.dbService.count(this.storeName);
+    }
+
     countByField(field: string, value: any): Observable<number> {
         let data$ = this.getByField(field, value);
         return data$.pipe(

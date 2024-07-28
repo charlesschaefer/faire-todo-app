@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstValueFrom, Subject } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -7,12 +9,13 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { firstValueFrom, Subject } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { TaskService } from '../../services/task.service';
-import { TaskAddDto, TaskDto } from '../../dto/task-dto';
+import { TaskAddDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
+import { ProjectService } from '../../services/project.service';
+import { ProjectDto } from '../../dto/project-dto';
 
 @Component({
     selector: 'app-task-add',
@@ -26,6 +29,7 @@ import { Router } from '@angular/router';
         DividerModule,
         ToastModule,
         TranslateModule,
+        DropdownModule,
     ],
     providers: [
         MessageService,
@@ -45,13 +49,17 @@ export class TaskAddComponent implements OnInit {
         description: [null],
         dueDate: [null],
         dueTime: [null],
+        project: []
     });
+
+    projects!: ProjectDto[];
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
         private messageService: MessageService,
         private router: Router,
         private translate: TranslateService,
+        private projectService: ProjectService<ProjectDto>,
     ) {}
 
     ngOnInit(): void {
@@ -60,6 +68,14 @@ export class TaskAddComponent implements OnInit {
             if (event) {
                 this.taskAddOp.show(event);
             }
+        });
+
+        this.projectService.list().subscribe(projects => {
+            projects.unshift({
+                id: 0,
+                name: "Inbox"
+            });
+            this.projects = projects;
         });
     }
 
@@ -79,14 +95,14 @@ export class TaskAddComponent implements OnInit {
             dueDate.setMilliseconds(0);
         }
 
-        let order = await firstValueFrom(this.taskAddService.countByField('completed', 0));
+        let order = await firstValueFrom(this.taskAddService.count());
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,
             description: form.description || null,
             dueDate: dueDate || null,
             dueTime: form.dueTime || null,
-            project: null,
+            project: form.project || null,
             completed: 0,
             order: order,
         };
@@ -118,6 +134,7 @@ export class TaskAddComponent implements OnInit {
             description: null,
             dueDate: null,
             dueTime: null,
+            project: null,
         });
         return true;
     }

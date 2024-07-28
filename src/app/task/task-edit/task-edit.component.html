@@ -39,6 +39,16 @@
           formControlName="dueTime"
           class="task-add-dueTime"
         />
+
+        <p-dropdown 
+          [options]="projects"
+          optionLabel="name"
+          optionValue="id"
+          formControlName="project"
+          name="project"
+          [placeholder]="'Project' | translate" 
+          class="task-add-project"
+        />
         
       </div>
     </div>

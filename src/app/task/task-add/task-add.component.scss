@@ -20,6 +20,7 @@
 
 .task-add-menu {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .task-add-menu p-calendar {
@@ -28,9 +29,14 @@
 
 .task-add-dueDate {
     width: 170px;
+    margin: 5px;
 }
 
 .task-add-dueTime {
     width: 110px;
-    margin-left: 10px;
+    margin: 5px;
+}
+
+.task-add-project {
+    margin: 5px;
 }

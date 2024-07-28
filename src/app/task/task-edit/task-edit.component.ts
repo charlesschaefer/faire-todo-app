@@ -1,16 +1,19 @@
-import { AfterContentInit, AfterViewInit, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { TaskDto } from '../../dto/task-dto';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
+import { ProjectService } from '../../services/project.service';
+import { ProjectDto } from '../../dto/project-dto';
 
 @Component({
     selector: 'app-task-edit',
@@ -23,12 +26,15 @@ import { firstValueFrom } from 'rxjs';
         DividerModule,
         DynamicDialogModule,
         TranslateModule,
+        DropdownModule,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
 })
 export class TaskEditComponent implements OnInit {
     task!: TaskDto;
+
+    projects!: ProjectDto[];
     
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
@@ -39,6 +45,7 @@ export class TaskEditComponent implements OnInit {
         private messageService: MessageService,
         private dynamicDialogRef: DynamicDialogRef,
         private translate: TranslateService,
+        private projectService: ProjectService<ProjectDto>,
     ) {}
 
     ngOnInit(): void {
@@ -48,11 +55,21 @@ export class TaskEditComponent implements OnInit {
             description: [this.task.description],
             dueDate: [this.task.dueDate],
             dueTime: [this.task.dueTime],
-            project: [this.task.project],
+            project: [this.task.project != null ? this.task.project : 0],
         });
-
+        
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
             this.saveTask();
+        });
+
+        this.projectService.list().subscribe(projects => {
+            if (projects[0].id != 0) {
+                projects.unshift({
+                    id: 0,
+                    name: "Inbox"
+                });
+            }
+            this.projects = projects;
         });
     }
 
@@ -64,7 +81,7 @@ export class TaskEditComponent implements OnInit {
             description: form.description || null,
             dueDate: form.dueDate || null,
             dueTime: form.dueTime || null,
-            project: null,
+            project: form.project || null,
             completed: 0,
             order: this.task.order,
         };
