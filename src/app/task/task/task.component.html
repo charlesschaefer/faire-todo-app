@@ -41,15 +41,23 @@
         </div>
       </div>
       <div class="task-item-row-second">
-        <div class="task-item-attributes">
+        <div class="task-item-attributes gap-3">
+          <div class="task-item-attributes-project">
+            @if (task.project && projects) {
+                <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}
+            } @else {
+              <i class="pi pi-inbox"></i><span translate>Inbox</span>
+            }
+          </div>
           @if (task.dueDate) {
           <div class="task-item-attributes-duedate">
-            <i class="pi pi-calendar"></i> {{dateTimeHandler.fromJSDate(task.dueDate).toFormat("dd/MM")}}
+            <i class="pi pi-calendar"></i>{{dateTimeHandler.fromJSDate(task.dueDate).toFormat("dd/MM")}}
             @if (task.dueTime) {
-            <i class="pi pi-clock"></i> {{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
+            <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
             }
           </div>
           }
+          
         </div>
       </div>
     </div>

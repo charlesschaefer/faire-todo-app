@@ -16,6 +16,7 @@ import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskService } from '../../services/task.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ProjectDto } from '../../dto/project-dto';
 
 
 @Component({
@@ -41,6 +42,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class TaskComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
+    @Input() projects!: Map<number, ProjectDto>;
+
     @Output() onTaskRemoved = new EventEmitter<number>();
     @Output() onEditTask = new EventEmitter<Event>();
 

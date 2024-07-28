@@ -80,10 +80,13 @@ li.task-item:hover .task-item-menu {
 .task-item-attributes {
     font-size: 12px;
     padding-left: 30px;
+    display: flex;
+    flex-direction: row;
 }
 
 .task-item-attributes .pi {
     font-size: 10px;
+    margin-right: 5px;
 }
 
 .task-item-attributes-duedate {

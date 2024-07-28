@@ -8,6 +8,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TaskComponent } from '../task/task.component';
 import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../../services/task.service';
+import { ProjectService } from '../../services/project.service';
+import { ProjectDto } from '../../dto/project-dto';
 
 @Component({
     selector: 'app-task-list',
@@ -22,7 +24,7 @@ import { TaskService } from '../../services/task.service';
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.scss'
 })
-export class TaskListComponent {
+export class TaskListComponent implements OnInit {
     @Input() tasks!: TaskDto[];
     @Input() completedTasks!: TaskDto[];
 
@@ -30,9 +32,20 @@ export class TaskListComponent {
     @Output() onEditTask = new EventEmitter();
     @Input() showAddTask: boolean = true;
 
+    projects!: Map<number, ProjectDto>;
+
     constructor(
         private taskService: TaskService<TaskDto>,
+        private projectService: ProjectService<ProjectDto>,
     ) {}
+
+    ngOnInit(): void {
+        this.projectService.list().subscribe((projects: ProjectDto[]) => {
+            let indexedProjects:Map<number, ProjectDto> = new Map();
+            projects.forEach(project => indexedProjects.set(project.id, project));
+            this.projects = indexedProjects;
+        });
+    }
 
     showTaskAddPanel(event: Event) {
         this.showTaskAdd.emit(event);
