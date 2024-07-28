@@ -15,4 +15,4 @@
   </div>
 </div>
 
-<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" [showAddTask]="false" />
+<app-task-list [tasks]="tasks" [completedTasks]="completedTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" [showAddTask]="false" />

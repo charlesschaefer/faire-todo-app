@@ -50,4 +50,13 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             return this.table.where('dueDate').above(minDate).and((task: TaskDto) => task.completed == 0).toArray();
         }));
     }
+
+    orderTasksByCompletion(tasks: TaskDto[]): TaskDto[] {
+        tasks.sort((a, b) => {
+            if (a.completed == 0) return -1;
+            if (b.completed == 0) return 1;
+            return 0;
+        });
+        return tasks;
+    }
 }

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { PanelModule } from 'primeng/panel';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { TaskComponent } from '../task/task.component';
 import { TaskDto } from '../../dto/task-dto';
@@ -14,12 +16,16 @@ import { TaskService } from '../../services/task.service';
         DataViewModule,
         TaskComponent,
         CdkDropList,
+        PanelModule,
+        TranslateModule,
     ],
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.scss'
 })
 export class TaskListComponent {
     @Input() tasks!: TaskDto[];
+    @Input() completedTasks!: TaskDto[];
+
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() onEditTask = new EventEmitter();
     @Input() showAddTask: boolean = true;

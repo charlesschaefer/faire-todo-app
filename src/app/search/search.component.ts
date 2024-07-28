@@ -32,6 +32,8 @@ import { TaskDto } from '../dto/task-dto';
 export class SearchComponent extends InboxComponent {
     searchValue!: string;
 
+    completedTasks!: TaskDto[];
+
     constructor(
         protected override taskService: TaskService<TaskDto>,
     ) {
@@ -42,6 +44,21 @@ export class SearchComponent extends InboxComponent {
 
     search() {
         console.log('chamou search', this.searchValue);
-        this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => this.tasks = tasks as TaskDto[]);
+        this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => {
+            let completedTasks: TaskDto[] = [];
+            tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
+            // we trust that all the completed tasks are going to be in the end of the array
+            // and that when we find an incomplete task all tasks before will be incomplete (so we break the loop)
+            for (let i = tasks.length - 1; i >= 0; i--) {
+                if (tasks[i].completed) {
+                    let task = tasks.pop();
+                    completedTasks.push(task);
+                } else {
+                    break;
+                }
+            }
+            this.tasks = tasks;
+            this.completedTasks = completedTasks;
+        });
     }
 }
