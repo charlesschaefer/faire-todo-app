@@ -3,6 +3,7 @@ import { TodayComponent } from "./today/today.component";
 import { InboxComponent } from "./inbox/inbox.component";
 import { UpcomingComponent } from "./upcoming/upcoming.component";
 import { ProjectComponent } from "./project/project.component";
+import { ProjectTasksComponent } from "./project/project-tasks/project-tasks.component";
 
 export const routes: Routes = [
     {path: '', redirectTo: 'today', pathMatch: 'full'},
@@ -10,4 +11,5 @@ export const routes: Routes = [
     {path: "inbox", component: InboxComponent},
     {path: "upcoming", component: UpcomingComponent},
     {path: "project", component: ProjectComponent},
+    {path: "project/:id/tasks", component: ProjectTasksComponent}
 ];

@@ -17,6 +17,7 @@ import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
 import { TaskService } from '../services/task.service';
 import { TaskDto } from '../dto/task-dto';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-project',
@@ -67,6 +68,7 @@ export class ProjectComponent implements OnInit {
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private taskService: TaskService<TaskDto>,
+        protected router: Router,
     ) { }
 
     ngOnInit() {
@@ -176,5 +178,9 @@ export class ProjectComponent implements OnInit {
             name: null
         });
         return true;
+    }
+
+    buildUrl(id: number) {
+        return `/project/${id}/tasks`;
     }
 }

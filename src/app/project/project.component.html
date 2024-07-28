@@ -3,7 +3,7 @@
 
   <ul class="project-items">
     @for (project of projects; track project.id) {
-      <li class="project-item">
+      <li class="project-item" (click)="router.navigate([buildUrl(project.id)])">
         <div class="project-item-name">
           {{project.name}}
         </div>
