@@ -63,13 +63,15 @@ export class TaskEditComponent implements OnInit {
         });
 
         this.projectService.list().subscribe(projects => {
-            if (projects[0].id != 0) {
-                projects.unshift({
+            let cloneProjects = projects.slice();
+
+            if (cloneProjects[0].id != 0) {
+                cloneProjects.unshift({
                     id: 0,
                     name: "Inbox"
                 });
             }
-            this.projects = projects;
+            this.projects = cloneProjects;
         });
     }
 
@@ -81,7 +83,7 @@ export class TaskEditComponent implements OnInit {
             description: form.description || null,
             dueDate: form.dueDate || null,
             dueTime: form.dueTime || null,
-            project: form.project || null,
+            project: form.project || 0,
             completed: 0,
             order: this.task.order,
         };

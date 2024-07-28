@@ -42,7 +42,7 @@ export abstract class ServiceAbstract<T> {
     }
 
     get(id: number) {
-        return from(liveQuery(() => this.table.where({id: id})));
+        return from(liveQuery(() => this.table.where({id: id}).first()));
     }
 
     getByField(field: string, value: any): Observable<T[]> {

@@ -21,11 +21,9 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
     }
 
     override getTasks(): void {
-        let minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
-        this.taskService.getByDate('dueDate', minDate).subscribe(tasks => {
+        this.taskService.getUpcoming().subscribe(tasks => {
             // now filter only tasks not completed
-            let filteredTasks = tasks.filter(task => task.completed == 0);
-            this.tasks = this.taskService.orderTasks(filteredTasks);
+            this.tasks = this.taskService.orderTasks(tasks);
         });
     }
 }

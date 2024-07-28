@@ -30,15 +30,8 @@ export class TodayComponent extends InboxComponent implements OnInit {
     }
 
     override getTasks(): void {
-        let date = new Date();
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        this.taskService.getByField('dueDate', date).subscribe(tasks => {
-            // now filter only tasks not completed
-            let filteredTasks = tasks.filter(task => task.completed == 0);
-            this.tasks = this.taskService.orderTasks(filteredTasks);
+        this.taskService.getForToday().subscribe(tasks => {
+            this.tasks = this.taskService.orderTasks(tasks);
         });
     }
 }
