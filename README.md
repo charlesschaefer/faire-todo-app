@@ -2,6 +2,25 @@
 
 Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser.
 
+Fair is the infinitive verb in french equivalent to "to do".
+
+# Features
+
+- [x] Tasks (of course)
+- [x] Works 100% offline.
+- [x] Projects, where you can group tasks by project or themes.
+- [x] An inbox area, where you can register all tasks before moving to projects or prioritizing
+- [x] Due date and Due time for the tasks
+- [x] View of tasks for today
+- [x] View of upcoming tasks
+- [x] Search tasks
+- [x] Allow undoing when deleting a task or marking it as complete.
+- [x] Manual task ordering, for prioritization
+- [ ] Tags for tasks
+- [ ] Notifications of tasks reaching their due time.
+- [ ] Subtasks
+
+
 # Building
 
 ```
