@@ -98,7 +98,7 @@ export class ProjectComponent implements OnInit {
             complete: () => {
                 this.taskService.getByField('project', id).subscribe(tasks => {
                     let tasksIds: number[] = [];
-                    tasks.forEach(task => tasksIds.push(task.id));
+                    tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
                     // then deletes the tasks of the project
                     this.taskService.bulkRemove(tasksIds);
                     this.messageService.add({
@@ -161,7 +161,7 @@ export class ProjectComponent implements OnInit {
                 detail: await firstValueFrom(this.translate.get("Project saved successfully")),
                 severity: 'success'
             }),
-            error: async (err) => this.messageService.add({
+            error: async (err: Error) => this.messageService.add({
                 summary: await firstValueFrom(this.translate.get("Error")),
                 detail: await firstValueFrom(this.translate.get("Couldn't save the Project.")) + err,
                 severity: 'error'

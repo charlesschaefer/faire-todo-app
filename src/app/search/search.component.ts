@@ -42,6 +42,6 @@ export class SearchComponent extends InboxComponent {
 
     search() {
         console.log('chamou search', this.searchValue);
-        this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => this.tasks = tasks);
+        //this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => this.tasks = tasks);
     }
 }

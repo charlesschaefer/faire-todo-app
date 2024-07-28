@@ -6,5 +6,8 @@ import { ServiceAbstract } from './service.abstract';
 })
 export class TaskTagService<T> extends ServiceAbstract<T> {
     storeName = "task_tag";
-    
+    constructor() {
+        super();
+        this.table = this.dbService.task_tag;
+    }
 }

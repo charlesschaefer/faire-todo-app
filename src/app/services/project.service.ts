@@ -6,4 +6,9 @@ import { ServiceAbstract } from './service.abstract';
 })
 export class ProjectService<T> extends ServiceAbstract<T> {
     storeName = "project";
+
+    constructor() {
+        super();
+        this.table = this.dbService.project;
+    }
 }

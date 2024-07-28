@@ -118,7 +118,7 @@ export class TaskAddComponent implements OnInit {
                 this.onAddTask.emit();
                 this.clearForm();
             },
-            error: async (err) => {
+            error: async (err: Error) => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Error`)),
                     detail: await firstValueFrom(this.translate.get(`Couldn't save the task.`)) + err,
