@@ -87,11 +87,11 @@ export abstract class ServiceAbstract<T> {
     }
 
     remove(id: number): Observable<any> {
-        return from(this.table.deleteByKey(id));
+        return from(this.table.delete(id));
     }
 
     bulkRemove(ids: number[]) {
-        return from(this.table.bulkDelete(ids));
+        return from(this.table.where('id').anyOf(ids).delete());
     }
 
     clear(): Observable<any> {
