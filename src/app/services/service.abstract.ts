@@ -88,14 +88,30 @@ export abstract class ServiceAbstract<T> {
     slowStringSearch(field: string, value: string): Observable<T[]> {
         let results: T[] = [];
         const searchResult$ = new Subject<T[]>;
-        this.dbService.openCursor(this.storeName).subscribe({
+        this.dbService.openCursor(this.storeName).subscribe(event => {
+            const cursor = (event.target as IDBOpenDBRequest).result as unknown as IDBCursorWithValue;
+            console.log(cursor.value);
+            
+            /* while (cursor.value) {
+                let tValue = cursor.value as T;
+                let fieldValue = tValue[field as keyof T] as string;
+                console.log(`Procurando ${value} em ${fieldValue}`);
+                if (fieldValue.match(value)) {
+                    console.log(`Achou ${value} em ${fieldValue}`);
+                    results.push(cursor.value as T);
+                }
+                console.log("Cursor: ", cursor);
+                cursor.continue();
+            } */
+        })/* {
             next: event => {
                 let cursor = (event.target as IDBOpenDBRequest).result as unknown as IDBCursorWithValue;
                 if (cursor) {
                     let tValue = cursor.value as T;
                     let fieldValue = tValue[field as keyof T] as string;
-                    console.log(`Achou ${value} em ${fieldValue}`);
+                    console.log(`Procurando ${value} em ${fieldValue}`);
                     if (fieldValue.match(value)) {
+                        console.log(`Achou ${value} em ${fieldValue}`);
                         results.push(cursor.value as T);
                     }
                     console.log("Cursor: ", cursor);
@@ -106,7 +122,7 @@ export abstract class ServiceAbstract<T> {
             },
             complete: () => searchResult$.next(results),
             error: (err) => console.error(err)
-        });
+        }); */
         return searchResult$;
     }
 

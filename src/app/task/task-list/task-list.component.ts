@@ -22,6 +22,7 @@ export class TaskListComponent {
     @Input() tasks!: TaskDto[];
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() onEditTask = new EventEmitter();
+    @Input() showAddTask: boolean = true;
 
     constructor(
         private taskService: TaskService<TaskDto>,

@@ -8,6 +8,7 @@
         }
       </ul>
       }
+      @if (showAddTask) {
       <div class="task-add-line" (click)="showTaskAddPanel($event)">
         <div class="task-add-button">
           <i class="pi pi-plus"></i>
@@ -16,6 +17,7 @@
           <ng-container translate>Add task</ng-container>
         </div>
       </div>
+    }
     </div>
   </ng-template>
 </p-dataView>

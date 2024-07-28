@@ -1,0 +1,18 @@
+<h2 translate class="page-title">Search</h2>
+
+<div class="search">
+  <div class="search-box">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <input 
+        type="text" 
+        pInputText 
+        [placeholder]="'Search' | translate"
+        [(ngModel)]="searchValue"
+      />
+    </p-iconField>
+    <p-button [label]="'Search' | translate" (onClick)="search()" />
+  </div>
+</div>
+
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" [showAddTask]="false" />
