@@ -23,7 +23,7 @@
       />
       
     </div>
-    <div class="task-item-row" (click)="showTaskEditDialog(task)">
+    <div class="task-item-row" (click)="showTaskEditDialog(task)" #taskRow>
       <div class="task-item-row-first">
         <div class="task-item-content">
           <div class="task-item-title text-sm">
@@ -68,3 +68,4 @@
 </li>
 <p-confirmDialog />
 <p-toast />
+<p-contextMenu [target]="taskRow" [model]="taskMenuItems" appendTo="body" />

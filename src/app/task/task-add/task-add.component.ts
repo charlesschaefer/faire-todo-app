@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,8 @@ import { ProjectDto } from '../../dto/project-dto';
 })
 export class TaskAddComponent implements OnInit {
     @Input() showOverlay$!: Subject<Event>;
+    @Input() project!: ProjectDto;
+
     @Output() onAddTask = new EventEmitter<any>;
     @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
     @ViewChild('taskAddOp') taskAddOp!: OverlayPanel;
@@ -49,7 +51,7 @@ export class TaskAddComponent implements OnInit {
         description: [null],
         dueDate: [null],
         dueTime: [null],
-        project: []
+        project: [this.project?.id || null]
     });
 
     projects!: ProjectDto[];
@@ -60,7 +62,9 @@ export class TaskAddComponent implements OnInit {
         private router: Router,
         private translate: TranslateService,
         private projectService: ProjectService<ProjectDto>,
-    ) {}
+    ) {
+        console.log(this.project);
+    }
 
     ngOnInit(): void {
         // subscribes to the parent Subject to exhibit the overlay component
@@ -81,6 +85,11 @@ export class TaskAddComponent implements OnInit {
             }
             this.projects = cloneProjects;
         });
+
+        if (this.project) {
+            this.taskForm.patchValue({project: this.project.id});
+            console.log("project", this.project, "form project", this.taskForm.value.project);
+        }
     }
 
     onClose(event: Event) {

@@ -12,6 +12,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
@@ -34,6 +35,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
         CdkDragPlaceholder,
         CheckboxModule,
         ToastModule,
+        ContextMenuModule,
     ],
     providers: [
         MessageService,
@@ -91,6 +93,13 @@ export class TaskComponent implements OnDestroy, OnInit {
                         command: () => {
                             this.confirmDeleteTask();
                         }
+                    } as MenuItem,
+                    {
+                        label: await firstValueFrom(this.translate.get(`Edit`)),
+                        icon: 'pi pi-pencil',
+                        command: () => {
+                            this.showTaskEditDialog(this.task);
+                        },
                     } as MenuItem
                 ]
             }  as MenuItem

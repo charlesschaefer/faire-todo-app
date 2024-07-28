@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+
 
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskAddComponent } from '../../task/task-add/task-add.component';
@@ -9,7 +11,7 @@ import { ProjectDto } from '../../dto/project-dto';
 import { TaskService } from '../../services/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
-import { firstValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-project-tasks',
@@ -18,6 +20,7 @@ import { firstValueFrom } from 'rxjs';
         TaskListComponent,
         TaskAddComponent,
         TranslateModule,
+        CommonModule,
     ],
     templateUrl: './project-tasks.component.html',
     styleUrl: './project-tasks.component.scss'
