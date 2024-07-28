@@ -4,7 +4,7 @@
   <ul class="project-items">
     @for (project of projects; track project.id) {
       <li class="project-item" (click)="router.navigate([buildUrl(project.id)])">
-        <div class="project-item-name">
+        <div class="project-item-name text-sm">
           {{project.name}}
         </div>
         <div class="project-item-menu">
@@ -67,6 +67,7 @@
         [placeholder]="'Project name' | translate" 
         formControlName="name"
         autocomplete="off"
+        [autofocus]="true"
       />
     </div>
     <div class="flex justify-content-end gap-2">

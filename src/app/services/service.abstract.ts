@@ -81,7 +81,7 @@ export abstract class ServiceAbstract<T> {
     slowStringSearch(field: string, value: string) {
         return from(liveQuery(() => {
             return this.table.filter((item:T) => {
-                return (item[field as keyof T] as string).match(value);
+                return (item[field as keyof T] as string).toLowerCase().match(value.toLowerCase());
             }).toArray()
         }));
     }
