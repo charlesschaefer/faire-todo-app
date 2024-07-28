@@ -32,9 +32,9 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.bulkAdd(data as T & {key?: any}[]));
     }
 
-    edit(data: T) {
+    edit(id: number, data: T) {
         this.clearCache();
-        return from(this.table.update(data));/* 
+        return from(this.table.update(id, data));/* 
             .pipe(
                 map((response: T) => response),
                 catchError((error: T) => throwError(error))
@@ -68,18 +68,20 @@ export abstract class ServiceAbstract<T> {
         
         let query = this.table.where(field);
         if (minDate && maxDate) {
-            query.between(minDate, maxDate);
+            query = query.between(minDate, maxDate);
         } else if (minDate) {
-            query.above(minDate);
+            query = query.above(minDate);
         } else {
-            query.below(maxDate);
+            query = query.below(maxDate);
         }
         return from(liveQuery(() => query.toArray()));
     }
 
     // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
     slowStringSearch(field: string, value: string) {
-        
+        return from(this.table.filter((item:T) => {
+            return (item[field as keyof T] as string).match(value);
+        }));
     }
 
     remove(id: number): Observable<any> {

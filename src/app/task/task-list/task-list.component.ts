@@ -46,7 +46,7 @@ export class TaskListComponent {
         moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
         this.tasks.forEach((task, index) => {
             task.order = index;
-            this.taskService.edit(task).subscribe({
+            this.taskService.edit(task.id, task).subscribe({
                 error: err => console.error(err)
             });
         });

@@ -146,7 +146,7 @@ export class TaskComponent implements OnDestroy, OnInit {
     markTaskAsCompleted() {
         let task = this.task;
         task.completed = 1;
-        this.taskService.edit(task).subscribe({
+        this.taskService.edit(task.id, task).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Marked as complete`)),

@@ -86,7 +86,7 @@ export class TaskEditComponent implements OnInit {
             order: this.task.order,
         };
 
-        this.taskService.edit(saveData).subscribe({
+        this.taskService.edit(this.task.id, saveData).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Saved successfully`)),

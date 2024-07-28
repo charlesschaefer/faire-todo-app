@@ -132,7 +132,7 @@ export class ProjectComponent implements OnInit {
             id: form.id,
             name: form.name
         } as ProjectDto;
-        this.projectService.edit(formData).subscribe({
+        this.projectService.edit(form.id as number, formData).subscribe({
             complete: () => {
                 this.editProjectVisible = false;
                 this.getProjects();
