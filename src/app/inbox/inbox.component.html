@@ -1,5 +1,5 @@
 <h2 translate class="page-title">Inbox</h2>
-<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" />
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
 
 <!-- Task add overlay panel -->
 <app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" />

@@ -75,4 +75,8 @@ export class InboxComponent implements OnInit {
     onAddTask() {
         this.getTasks();
     }
+    
+    onEditTask() {
+        this.getTasks();
+    }
 }

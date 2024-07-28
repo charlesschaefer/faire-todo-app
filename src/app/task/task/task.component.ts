@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ButtonModule } from 'primeng/button';
@@ -37,9 +37,13 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: './task.component.html',
     styleUrl: './task.component.scss'
 })
-export class TaskComponent implements OnDestroy {
+export class TaskComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Output() onTaskRemoved = new EventEmitter<number>();
+    @Output() onEditTask = new EventEmitter<Event>();
+
+    onSaveEditTask$ = new Subject();
+
     completed!: number;
     dateTimeHandler = DateTime;
 
@@ -55,6 +59,12 @@ export class TaskComponent implements OnDestroy {
         private translate: TranslateService,
     ) {
         this.setTaskMenuItems();
+    }
+
+    ngOnInit() {
+        this.onSaveEditTask$.subscribe(value => {
+            this.onEditTask.emit();
+        });
     }
 
     async setTaskMenuItems() {
@@ -85,7 +95,8 @@ export class TaskComponent implements OnDestroy {
             },
             data: {
                 task: task,
-                saveSubject$: new Subject<any>(),
+                saveSubject$: new Subject(),
+                onSaveEditTask$: this.onSaveEditTask$,
             },
             templates: {
                 footer: TaskEditFooterComponent

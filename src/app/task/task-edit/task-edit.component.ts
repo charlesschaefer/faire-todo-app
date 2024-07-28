@@ -94,6 +94,8 @@ export class TaskEditComponent implements OnInit {
                     severity: "success"
                 });
                 this.dynamicDialogRef.close(saveData);
+                // triggers a chain of events until it reaches Inbox class
+                this.dynamicDialogConfig.data.onSaveEditTask$.next();
             },
             error: async (err) => {
                 this.messageService.add({

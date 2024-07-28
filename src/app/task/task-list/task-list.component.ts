@@ -21,6 +21,7 @@ import { TaskService } from '../../services/task.service';
 export class TaskListComponent {
     @Input() tasks!: TaskDto[];
     @Output() showTaskAdd = new EventEmitter<Event>();
+    @Output() onEditTask = new EventEmitter();
 
     constructor(
         private taskService: TaskService<TaskDto>,
@@ -48,5 +49,9 @@ export class TaskListComponent {
                 error: err => console.error(err)
             });
         });
+    }
+
+    onTaskEdit() {
+        this.onEditTask.emit();
     }
 }
