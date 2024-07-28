@@ -68,6 +68,10 @@ li.task-item:hover .task-item-menu {
     padding-left: 10px;
 }
 
+.task-item-title-completed {
+    text-decoration: line-through;
+}
+
 .task-item-description {
     font-size: 12px;
     color: #aaa;

@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
-import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
@@ -27,7 +28,8 @@ import { TranslateService } from '@ngx-translate/core';
         MenuModule,
         ConfirmDialogModule,
         CdkDrag,
-        CdkDragPlaceholder ,
+        CdkDragPlaceholder,
+        CheckboxModule,
     ],
     providers: [
         MessageService,
@@ -44,7 +46,7 @@ export class TaskComponent implements OnDestroy, OnInit {
 
     onSaveEditTask$ = new Subject();
 
-    completed!: number;
+    completed: boolean = false;
     dateTimeHandler = DateTime;
 
     dialogRef: DynamicDialogRef | undefined;
@@ -65,6 +67,10 @@ export class TaskComponent implements OnDestroy, OnInit {
         this.onSaveEditTask$.subscribe(value => {
             this.onEditTask.emit();
         });
+        if (this.task.completed) {
+            console.log(`Task ${this.task.title} completed`);
+            this.completed = true;
+        }
     }
 
     async setTaskMenuItems() {
