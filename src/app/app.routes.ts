@@ -8,11 +8,11 @@ import { ProjectTasksComponent } from "./project/project-tasks/project-tasks.com
 import { SearchComponent } from "./search/search.component";
 
 export const routes: Routes = [
-    {path: '', redirectTo: 'today', pathMatch: 'full'},
     {path: "today", component: TodayComponent},
     {path: "inbox", component: InboxComponent},
     {path: "upcoming", component: UpcomingComponent},
     {path: "project", component: ProjectComponent},
     {path: "project/:id/tasks", component: ProjectTasksComponent},
     {path: "search", component: SearchComponent},
+    {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];

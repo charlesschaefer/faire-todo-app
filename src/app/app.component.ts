@@ -6,13 +6,16 @@ import { firstValueFrom } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
-import { TieredMenuModule } from 'primeng/tieredmenu';
+import { MenuModule } from 'primeng/menu';
 import { ToastModule } from 'primeng/toast';
+import { SidebarModule } from 'primeng/sidebar';
 
 
 import { ThemeService } from './services/theme.service';
 import { routes } from './app.routes';
 import { UndoService, UndoItem } from './services/undo.service';
+import { ProjectService } from './services/project.service';
+import { ProjectDto } from './dto/project-dto';
 
 @Component({
     selector: 'app-root',
@@ -22,9 +25,10 @@ import { UndoService, UndoItem } from './services/undo.service';
         RouterOutlet,
         ToolbarModule,
         ButtonModule,
-        TieredMenuModule,
+        MenuModule,
         ToastModule,
         TranslateModule,
+        SidebarModule,
     ],
     providers: [
         MessageService,
@@ -34,20 +38,23 @@ import { UndoService, UndoItem } from './services/undo.service';
 })
 export class AppComponent implements OnInit {
 
-    showRightPanel: boolean = !false;
+    showSidebar: boolean = false;
 
     menuItems!: MenuItem[];
+    settingsMenuItems!: MenuItem[];
 
     constructor(
         private themeService: ThemeService,
         private translate: TranslateService,
         private undoService: UndoService,
         private messageService: MessageService,
+        private projectService: ProjectService<ProjectDto>,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
 
         this.setMenuItems();
+        this.setProjectMenuItems();
 
         let userLanguage = localStorage.getItem('language');
         if (!userLanguage) {
@@ -58,16 +65,25 @@ export class AppComponent implements OnInit {
     }
 
     async setMenuItems() {
-        this.menuItems = [
-            { label: await firstValueFrom(this.translate.get("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
-            { label: await firstValueFrom(this.translate.get(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
-            { label: await firstValueFrom(this.translate.get(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-            { label: await firstValueFrom(this.translate.get(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
-            { label: await firstValueFrom(this.translate.get(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
+        this.menuItems = [{
+            label: " ",
+            items: [
+                { label: await firstValueFrom(this.translate.get("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
+                { label: await firstValueFrom(this.translate.get(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
+                { label: await firstValueFrom(this.translate.get(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
+                { label: await firstValueFrom(this.translate.get(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
+                { label: await firstValueFrom(this.translate.get(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
+            ],
+            /* , */
+        }];
+
+        this.settingsMenuItems = [
             {
-                separator: true
+                label: await firstValueFrom(this.translate.get("Theme")),
+                items: [
+                    { label: await firstValueFrom(this.translate.get("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
+                ],
             },
-            { label: await firstValueFrom(this.translate.get("Mudar tema")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
             { 
                 label: await firstValueFrom(this.translate.get("Language")), 
                 icon: "pi pi-flag",
@@ -81,8 +97,30 @@ export class AppComponent implements OnInit {
                         command: () => this.switchLanguage('pt-BR')
                     }
                 ]
-            } as MenuItem,
+            } as MenuItem
         ];
+    }
+
+    async setProjectMenuItems() {
+        this.projectService.list().subscribe(async (projects) => {
+            console.log("Projetos: ", projects);
+            if (!projects.length) return;
+            let projectItems: MenuItem[] = [];
+            projects.forEach((project: ProjectDto) => {
+                projectItems.push({
+                    label: project.name, 
+                    icon: 'pi pi-hashtag',
+                    routerLink: `/project/${project.id}/tasks`
+                });
+            });
+            let projectMenuItems = {
+                label: await firstValueFrom(this.translate.get("Projects")),
+                items: projectItems
+            };
+            console.log("MenuItems", this.menuItems, "ProjectMenuItems: ", projectMenuItems);
+            this.menuItems.push({separator: true});
+            this.menuItems.push(projectMenuItems);
+        })
     }
     
     ngOnInit(): void {
@@ -108,7 +146,8 @@ export class AppComponent implements OnInit {
                 detail: 'Action completed.',
                 life: 15000
             });
-        })
+        });
+
     }
 
     testeUndo() {

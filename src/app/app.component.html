@@ -10,8 +10,8 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <p-tieredMenu #menu [popup]="true" [model]="menuItems" />
-      <p-button icon="pi pi-bars" (click)="menu.toggle($event)" />
+      <!-- <p-tieredMenu #menu [popup]="true" [model]="menuItems" /> -->
+      <p-button icon="pi pi-bars" (click)="showSidebar = true" />
     </div>
   </p-toolbar>
 </header>
@@ -44,3 +44,13 @@
     </div>
 </ng-template>
 </p-toast>
+
+<p-sidebar [(visible)]="showSidebar" position="right">
+  <ng-template pTemplate="footer">
+    <div class="flex align-items-center justify-content-end gap-2">
+        <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
+    </div>
+    <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" class="side-bar-header-menu" appendTo="body" />
+  </ng-template>
+  <p-menu #menu [model]="menuItems" class="side-bar-menu" />
+</p-sidebar>

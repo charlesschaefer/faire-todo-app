@@ -33,6 +33,19 @@ footer {
     padding-left: 20px;
 }
 
+:host ::ng-deep .side-bar-menu .p-menu {
+    border: none;
+    width: 100%;
+}
+
+:host ::ng-deep .side-bar-menu .p-menuitem {
+    height: 40px;
+}
+
+:host ::ng-deep .side-bar-menu .p-menuitem-separator {
+    margin: 10px 0;
+}
+
 @media (max-width: 600px) {
     img#logo {
         display: none;

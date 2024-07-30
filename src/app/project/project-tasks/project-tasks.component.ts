@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,6 +12,7 @@ import { TaskService } from '../../services/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
 import { CommonModule } from '@angular/common';
+
 
 @Component({
     selector: 'app-project-tasks',
@@ -33,11 +34,14 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
         protected override taskService: TaskService<TaskDto>,
         private route: ActivatedRoute,
+        private router: Router,
     ) {
         super(taskService);
     }
 
     override async ngOnInit() {
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+
         const projectId = Number(this.route.snapshot.paramMap.get("id"));
         this.project = await firstValueFrom(this.projectService.get(projectId));
         this.getTasks();
