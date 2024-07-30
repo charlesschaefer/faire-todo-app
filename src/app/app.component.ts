@@ -53,8 +53,6 @@ export class AppComponent implements OnInit {
         translate.setDefaultLang('en');
         //translate.use('en');
 
-        this.setMenuItems();
-        this.setProjectMenuItems();
 
         let userLanguage = localStorage.getItem('language');
         if (!userLanguage) {
@@ -64,8 +62,8 @@ export class AppComponent implements OnInit {
         this.translate.use(userLanguage);
     }
 
-    async setMenuItems() {
-        this.menuItems = [{
+    async setMenuItems(additionalItems: MenuItem[]) {
+        let menuItems: MenuItem[] = [{
             label: " ",
             items: [
                 { label: await firstValueFrom(this.translate.get("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
@@ -76,6 +74,11 @@ export class AppComponent implements OnInit {
             ],
             /* , */
         }];
+        for (let item of additionalItems) {
+            menuItems.push(item);
+        }
+
+        this.menuItems = menuItems;
 
         this.settingsMenuItems = [
             {
@@ -101,30 +104,37 @@ export class AppComponent implements OnInit {
         ];
     }
 
-    async setProjectMenuItems() {
-        this.projectService.list().subscribe(async (projects) => {
-            console.log("Projetos: ", projects);
-            if (!projects.length) return;
-            let projectItems: MenuItem[] = [];
-            projects.forEach((project: ProjectDto) => {
-                projectItems.push({
-                    label: project.name, 
-                    icon: 'pi pi-hashtag',
-                    routerLink: `/project/${project.id}/tasks`
-                });
+    async getProjectMenuItems(): Promise<MenuItem[]> {
+        let projects = await firstValueFrom(this.projectService.list())
+        console.log("Projetos: ", projects);
+        if (!projects.length) return [];
+        let projectItems: MenuItem[] = [];
+        for (let project of projects) {
+            projectItems.push({
+                label: project.name, 
+                icon: 'pi pi-hashtag',
+                routerLink: `/project/${project.id}/tasks`
             });
-            let projectMenuItems = {
-                label: await firstValueFrom(this.translate.get("Projects")),
-                items: projectItems
-            };
-            console.log("MenuItems", this.menuItems, "ProjectMenuItems: ", projectMenuItems);
-            this.menuItems.push({separator: true});
-            this.menuItems.push(projectMenuItems);
-        })
+        }
+        let projectMenuItems = {
+            label: await firstValueFrom(this.translate.get("Projects")),
+            items: projectItems
+        };
+        console.log("MenuItems", this.menuItems, "ProjectMenuItems: ", projectMenuItems);
+        return [
+            {separator: true},
+            projectMenuItems,
+        ];
     }
     
-    ngOnInit(): void {
+    async ngOnInit() {
         //invoke("set_frontend_complete");
+
+        let projectItems = await this.getProjectMenuItems();
+        await this.setMenuItems(projectItems);
+        
+
+        console.log("Menu Items now: ", this.menuItems);
 
         let currentTheme = this.themeService.getCurrentTheme();
         let userTheme = localStorage.getItem('theme');

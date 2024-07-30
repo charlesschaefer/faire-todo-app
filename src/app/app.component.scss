@@ -20,7 +20,15 @@ p-toolbar {
 .main {
     padding-bottom: 40px;
     padding-top: 82px;
-    padding-left: 20px;
+    padding-left: 5px;
+    min-width: 300px;
+    display: flex;
+    justify-content: center;
+}
+
+.content {
+    max-width: 900px;
+    width: 100%;
 }
 
 footer {
