@@ -97,3 +97,7 @@ li.task-item:hover .task-item-menu {
 .task-item-attributes-duedate {
     color: #058527;
 }
+
+.task-item-attributes-duedate:has(> .task-item-attributes-past-dueDate) {
+    color: #bb1919;
+}

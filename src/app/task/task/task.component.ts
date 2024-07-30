@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslateService } from '@ngx-translate/core';
@@ -57,6 +57,9 @@ export class TaskComponent implements OnDestroy, OnInit {
     completed: boolean = false;
     dateTimeHandler = DateTime;
 
+    today!: Date;
+    due: boolean = false;
+
     dialogRef: DynamicDialogRef | undefined;
 
     taskMenuItems!: MenuItem[];
@@ -70,6 +73,12 @@ export class TaskComponent implements OnDestroy, OnInit {
         private undoService: UndoService,
     ) {
         this.setTaskMenuItems();
+
+        this.today = new Date();
+        this.today.setHours(0);
+        this.today.setMinutes(0);
+        this.today.setSeconds(0);
+        this.today.setMilliseconds(0);
     }
 
     ngOnInit() {
@@ -80,6 +89,35 @@ export class TaskComponent implements OnDestroy, OnInit {
             console.log(`Task ${this.task.title} completed`);
             this.completed = true;
         }
+
+        this.checkTaskIsDue();
+    }
+
+    checkTaskIsDue() {
+        if (!this.task.dueDate) {
+            this.due = false;
+            return;
+        }
+        
+        let dueDate = DateTime.fromJSDate(this.task.dueDate);
+        const today = DateTime.fromJSDate(this.today);
+
+        if (dueDate.diff(today).as('seconds') < 0 ) {
+            this.due = true;
+            return;
+        }
+        if (this.task.dueTime) {
+            dueDate = dueDate.set({
+                hour: this.task.dueTime.getHours(),
+                minute: this.task.dueTime.getMinutes()
+            });
+            if (dueDate.diffNow().as('seconds') < 0) {
+                console.log("diff: ", dueDate.diffNow().as('seconds'));
+                this.due = true;
+                return;
+            }
+        }
+        this.due = false;
     }
 
     async setTaskMenuItems() {
@@ -128,6 +166,7 @@ export class TaskComponent implements OnDestroy, OnInit {
         this.dialogRef.onClose.subscribe((data: TaskDto) => {
             if (data != undefined && data.title != undefined) {
                 this.task = data as TaskDto;
+                this.checkTaskIsDue();
             }
         });
     }

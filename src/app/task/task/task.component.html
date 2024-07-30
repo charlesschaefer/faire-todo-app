@@ -51,6 +51,9 @@
           </div>
           @if (task.dueDate) {
           <div class="task-item-attributes-duedate">
+            @if (due) {
+              <div class="task-item-attributes-past-dueDate"></div>
+            }
             <i class="pi pi-calendar"></i>{{dateTimeHandler.fromJSDate(task.dueDate).toFormat("dd/MM")}}
             @if (task.dueTime) {
             <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
