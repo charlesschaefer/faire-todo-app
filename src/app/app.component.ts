@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { first, firstValueFrom } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -22,6 +22,14 @@ import { UndoService, UndoItem } from './services/undo.service';
 import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
+import { TaskService } from './services/task.service';
+
+
+export enum NotificationType {
+    DueTask,
+    TodayTasks
+}
+
 
 @Component({
     selector: 'app-root',
@@ -55,6 +63,7 @@ export class AppComponent implements OnInit {
         private undoService: UndoService,
         private messageService: MessageService,
         private projectService: ProjectService<ProjectDto>,
+        private taskService: TaskService<TaskDto>,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
@@ -77,7 +86,6 @@ export class AppComponent implements OnInit {
                 { label: await firstValueFrom(this.translate.get(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
                 { label: await firstValueFrom(this.translate.get(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
             ],
-            /* , */
         }];
         for (let item of additionalItems) {
             menuItems.push(item);
@@ -86,6 +94,12 @@ export class AppComponent implements OnInit {
         this.menuItems = menuItems;
 
         this.settingsMenuItems = [
+            {
+                label: await firstValueFrom(this.translate.get("Settings")),
+                items: [
+                    { label: await firstValueFrom(this.translate.get("User Settings")), routerLink: '/settings' } as MenuItem,
+                ]
+            },
             {
                 label: await firstValueFrom(this.translate.get("Theme")),
                 items: [
@@ -166,7 +180,11 @@ export class AppComponent implements OnInit {
             // Create a new
             const worker = new Worker(new URL('./app.worker', import.meta.url));
             worker.onmessage = ({ data }) => {
-                this.notifyDueingTask(data.task);
+                if (data.type == NotificationType.DueTask) {
+                    this.notifyDuingTask(data.task);
+                } else if (data.type == NotificationType.TodayTasks) {
+                    this.notifyTasksDuingToday();
+                }
             };
             worker.postMessage('hello');
           } else {
@@ -194,7 +212,7 @@ export class AppComponent implements OnInit {
         this.undoService.undo();
     }
 
-    async notifyDueingTask(task: TaskDto) {
+    async notifyDuingTask(task: TaskDto) {
         // Do you have permission to send a notification?
         let permissionGranted = await isPermissionGranted();
 
@@ -207,8 +225,28 @@ export class AppComponent implements OnInit {
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
             sendNotification({
-                title: await firstValueFrom(this.translate.get('Task due')),
+                title: await firstValueFrom(this.translate.get('Task duing')),
                 body: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: task.title}))
+            });
+        }
+    }
+
+    async notifyTasksDuingToday() {
+        // Do you have permission to send a notification?
+        let permissionGranted = await isPermissionGranted();
+
+        // If not we need to request it
+        if (!permissionGranted) {
+            const permission = await requestPermission();
+            permissionGranted = permission === 'granted';
+        }
+
+        // Once permission has been granted we can send the notification
+        if (permissionGranted) {
+            let duingToday = await firstValueFrom(this.taskService.countForToday());
+            sendNotification({
+                title: await firstValueFrom(this.translate.get('Tasks duing today')),
+                body: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {total: duingToday}))
             });
         }
     }
