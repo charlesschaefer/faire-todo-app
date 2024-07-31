@@ -64,7 +64,6 @@ export class AppComponent implements OnInit {
         if (!userLanguage) {
             userLanguage = 'en';
         }
-        console.log("Definindo a língua em ", userLanguage);
         this.translate.use(userLanguage);
     }
 
@@ -112,7 +111,6 @@ export class AppComponent implements OnInit {
 
     async getProjectMenuItems(): Promise<MenuItem[]> {
         let projects = await firstValueFrom(this.projectService.list())
-        console.log("Projetos: ", projects);
         if (!projects.length) return [];
         let projectItems: MenuItem[] = [];
         for (let project of projects) {
@@ -126,35 +124,34 @@ export class AppComponent implements OnInit {
             label: await firstValueFrom(this.translate.get("Projects")),
             items: projectItems
         };
-        console.log("MenuItems", this.menuItems, "ProjectMenuItems: ", projectMenuItems);
+
         return [
             {separator: true},
             projectMenuItems,
         ];
     }
+
+    async setupMenu() {
+        let projectItems = await this.getProjectMenuItems();
+        await this.setMenuItems(projectItems);
+    }
     
     async ngOnInit() {
         //invoke("set_frontend_complete");
 
-        let projectItems = await this.getProjectMenuItems();
-        await this.setMenuItems(projectItems);
+        this.setupMenu();
         
-
-        console.log("Menu Items now: ", this.menuItems);
-
         let currentTheme = this.themeService.getCurrentTheme();
         let userTheme = localStorage.getItem('theme');
         if (!userTheme) {
             userTheme = currentTheme;
         }
         if (userTheme != currentTheme) {
-            console.log(userTheme, currentTheme);
             this.themeService.switchTheme(userTheme);
         }
 
         // watches for undo calls, so we exhibit a toast to the user
         this.undoService.watch().subscribe(item => {
-            console.log("Chegou do undo.watch()");
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
                 severity: 'info',
@@ -178,19 +175,6 @@ export class AppComponent implements OnInit {
           }
     }
 
-    testeUndo() {
-        let undoData:UndoItem = {
-            data: {nada: 'não'},
-            type: 'app.testeUndo'
-        };
-        this.undoService.register(undoData).subscribe((undo: UndoItem) => {
-            console.log("register.subscribe: ", undo);
-            if (undo.type == 'app.testeUndo') {
-                console.log("Aqui deveríamos desfazer a ação");
-            }
-        });
-    }
-
     switchTheme() {
         this.themeService.switchTheme();
 
@@ -199,9 +183,10 @@ export class AppComponent implements OnInit {
     }
 
     switchLanguage(language: 'en' | 'pt-BR') {
+        console.log("Changing language to ", language)
         this.translate.use(language);
         localStorage.setItem('language', language);
-        console.log("Trocando a língua para ", language)
+        this.setupMenu();
     }
 
     undo() {
@@ -210,24 +195,21 @@ export class AppComponent implements OnInit {
     }
 
     async notifyDueingTask(task: TaskDto) {
-        console.log("Received the task", task);
         // Do you have permission to send a notification?
         let permissionGranted = await isPermissionGranted();
-        console.log("Permission granted?", permissionGranted);
+
         // If not we need to request it
         if (!permissionGranted) {
             const permission = await requestPermission();
             permissionGranted = permission === 'granted';
         }
-        console.log("Permission acquired?", permissionGranted);
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
             sendNotification({
-                title: 'Task due',
-                body: `The task "${task.title}" is dueing now.`
+                title: await firstValueFrom(this.translate.get('Task due')),
+                body: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: task.title}))
             });
         }
     }
-
 }

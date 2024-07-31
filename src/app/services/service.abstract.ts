@@ -18,7 +18,6 @@ export abstract class ServiceAbstract<T> {
      * @returns Observable<BaseDto[]>
      */
     list() {
-        console.log("called list");
         let subject = new Subject<any>();
         return from(liveQuery(() => this.table.toArray()));
     }

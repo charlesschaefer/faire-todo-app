@@ -43,7 +43,6 @@ export class SearchComponent extends InboxComponent {
     override async ngOnInit() { }
 
     search() {
-        console.log('chamou search', this.searchValue);
         this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => {
             let completedTasks: TaskDto[] = [];
             tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);

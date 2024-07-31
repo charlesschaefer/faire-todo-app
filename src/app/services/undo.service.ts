@@ -24,7 +24,6 @@ export class UndoService {
 
     register(item: UndoItem) {
         this.undoQueue.items.push(item);
-        console.log("Chamando quem estava assistindo o undoWatch$");
         this.undoWatch$.next(item);
         return this.undo$;
     }

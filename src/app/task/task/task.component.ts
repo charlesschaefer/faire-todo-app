@@ -86,7 +86,6 @@ export class TaskComponent implements OnDestroy, OnInit {
             this.onEditTask.emit();
         });
         if (this.task.completed) {
-            console.log(`Task ${this.task.title} completed`);
             this.completed = true;
         }
 
@@ -112,7 +111,6 @@ export class TaskComponent implements OnDestroy, OnInit {
                 minute: this.task.dueTime.getMinutes()
             });
             if (dueDate.diffNow().as('seconds') < 0) {
-                console.log("diff: ", dueDate.diffNow().as('seconds'));
                 this.due = true;
                 return;
             }

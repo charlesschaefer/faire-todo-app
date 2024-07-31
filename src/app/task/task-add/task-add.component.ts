@@ -62,9 +62,7 @@ export class TaskAddComponent implements OnInit {
         private router: Router,
         private translate: TranslateService,
         private projectService: ProjectService<ProjectDto>,
-    ) {
-        console.log(this.project);
-    }
+    ) {}
 
     ngOnInit(): void {
         // subscribes to the parent Subject to exhibit the overlay component
@@ -88,7 +86,6 @@ export class TaskAddComponent implements OnInit {
 
         if (this.project) {
             this.taskForm.patchValue({project: this.project.id});
-            console.log("project", this.project, "form project", this.taskForm.value.project);
         }
     }
 

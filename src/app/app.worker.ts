@@ -24,9 +24,7 @@ function checkDueTasks() {
     let taskService = new TaskService<TaskDto>();
     taskService.getByField('dueDate', date).subscribe(tasks => {
         tasks.forEach(task => {
-            console.log("Checking task ", task.id, "at", `${time.getHours()}:${time.getMinutes()}:${time.getSeconds()}`);
             if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
-                console.log("Task dueing, sending to AppComponent");
                 // task dueing now, notifying the user
                 postMessage({
                     task: task
