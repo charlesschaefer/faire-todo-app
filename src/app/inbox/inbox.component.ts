@@ -20,6 +20,7 @@ import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskDto } from '../dto/task-dto';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskService } from '../services/task.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 @Component({
@@ -43,6 +44,7 @@ import { TaskService } from '../services/task.service';
         CalendarModule,
         TaskListComponent,
         TaskAddComponent,
+        TranslateModule,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
