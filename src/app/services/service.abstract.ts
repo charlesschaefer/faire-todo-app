@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, from, map } from "rxjs";
-import { liveQuery, Table } from "dexie";
+import { liveQuery, Table, UpdateSpec } from "dexie";
 
 import { AppDb, db } from "../db";
 
@@ -10,7 +10,7 @@ export abstract class ServiceAbstract<T> {
     private useCache: boolean = true;
     abstract storeName: string;
     dbService = db;
-    table!: any;
+    table!: Table;
 
     /**
      * Gets a cached list of accounts
@@ -28,12 +28,12 @@ export abstract class ServiceAbstract<T> {
 
     bulkAdd(data: T[]) {
         this.clearCache();
-        return from(this.table.bulkAdd(data as T & {key?: any}[]));
+        return from(this.table.bulkAdd(data));
     }
 
     edit(id: number, data: T) {
         this.clearCache();
-        return from(this.table.update(id, data));/* 
+        return from(this.table.update(id, data as Object));/* 
             .pipe(
                 map((response: T) => response),
                 catchError((error: T) => throwError(error))
@@ -65,13 +65,13 @@ export abstract class ServiceAbstract<T> {
             throw new Error("You should provide at least one of minDate or maxDate parameters!");
         }
         
-        let query = this.table.where(field);
+        let query;
         if (minDate && maxDate) {
-            query = query.between(minDate, maxDate);
+            query = this.table.where(field).between(minDate, maxDate);
         } else if (minDate) {
-            query = query.above(minDate);
+            query = this.table.where(field).above(minDate);
         } else {
-            query = query.below(maxDate);
+            query = this.table.where(field).below(maxDate);
         }
         return from(liveQuery(() => query.toArray()));
     }
@@ -80,7 +80,7 @@ export abstract class ServiceAbstract<T> {
     slowStringSearch(field: string, value: string) {
         return from(liveQuery(() => {
             return this.table.filter((item:T) => {
-                return (item[field as keyof T] as string).toLowerCase().match(value.toLowerCase());
+                return Boolean((item[field as keyof T] as string).toLowerCase().match(value.toLowerCase()));
             }).toArray()
         }));
     }

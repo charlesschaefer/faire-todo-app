@@ -3,6 +3,7 @@
     "Today": "Today",
     "Upcoming": "Upcoming",
     "Projects": "Projects",
+    "Search": "Search",
     " projects": " projects",
     "Add project": "Add project",
     "Project name": "Project name",
@@ -33,5 +34,18 @@
     "Upcoming tasks": "Upcoming tasks",
     "English": "English",
     "Portuguese": "Portuguese",
-    "Project:": "Project:"
+    "Project:": "Project:",
+    "Settings": "Settings",
+    "User Settings": "User Settings",
+    "Theme": "Theme",
+    "Change Theme": "Change Theme",
+    "Language": "Language",
+    "Task duing": "Task duing",
+    "The task \"{{title}}\" is dueing now.": "The task \"{{title}}\" is dueing now.",
+    "Tasks duing today": "Tasks duing today",
+    "You have {{total}} tasks duing today.": "You have {{total}} tasks duing today.",
+    "Notifications": "Notifications",
+    "Receive app Notifications?": "Receive app Notifications?",
+    "Notify tasks due today?": "Notify tasks due today?",
+    "Time to notify today tasks:": "Time to notify today tasks:"
   }

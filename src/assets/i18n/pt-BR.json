@@ -3,6 +3,7 @@
     "Today": "Hoje",
     "Upcoming": "Futuras",
     "Projects": "Projetos",
+    "Search": "Busca",
     " projects": " projetos",
     "Add project": "Adicionar projeto",
     "Project name": "Nome do projeto",
@@ -33,5 +34,18 @@
     "Upcoming tasks": "Próximas tarefas",
     "English": "Inglês",
     "Portuguese": "Português",
-    "Project:": "Projeto:"
+    "Project:": "Projeto:",
+    "Settings": "Configurações",
+    "User Settings": "Configurações do usuário",
+    "Theme": "Tema",
+    "Change Theme": "Mudar Tema",
+    "Language": "Idioma",
+    "Task duing": "Tarefa vencendo",
+    "The task \"{{title}}\" is dueing now.": "A tarefa \"{{title}}\" está vencendo agora.",
+    "Tasks duing today": "Tarefas vencendo hoje",
+    "You have {{total}} tasks duing today.": "Você tem {{total}} tarefas vencendo hoje.",
+    "Notifications": "Notificações",
+    "Receive app Notifications?": "Receber notificações do app?",
+    "Notify tasks due today?": "Notificar tarefas vencendo hoje?",
+    "Time to notify today tasks:": "Horário para notificar as tarefas do dia:"
   }

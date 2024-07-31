@@ -44,6 +44,17 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         }));
     }
 
+    countForToday() {
+        let date = new Date;
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return from(liveQuery(() => {
+            return this.table.where('dueDate').equals(date).and((task: TaskDto) => task.completed == 0).count();
+        }));
+    }
+
     getUpcoming() {
         let minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
         return from(liveQuery(() => {

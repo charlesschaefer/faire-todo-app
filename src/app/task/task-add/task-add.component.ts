@@ -73,6 +73,7 @@ export class TaskAddComponent implements OnInit {
         });
 
         this.projectService.list().subscribe(projects => {
+            if (!projects.length) return;
             let cloneProjects = projects.slice();
 
             if (cloneProjects[0].id != 0) {

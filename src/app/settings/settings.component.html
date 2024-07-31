@@ -1,0 +1,52 @@
+<h2 translate class="page-title">Settings</h2>
+
+<div class="settings">
+  <p-card>
+    <form [formGroup]="settingsForm" novalidate (submit)="saveSettings()">
+      <h4 translation>Notifications</h4>
+      <div class="field">
+        <label for="notifications">
+          <p-checkbox 
+            name="notifications"
+            [binary]="true"
+            inputId="notifications"
+            formControlName="notifications"
+            class="settings-item-checkbox"
+            (onChange)="receiveNotificationChanged()"
+          />
+          <span translate>Receive app Notifications?</span>
+        </label>
+      </div>
+      <div class="field">
+        <label for="today-notifications">
+          <p-checkbox
+            name="today-notifications"
+            [binary]="true"
+            inputId="today-notifications"
+            formControlName="todayNotifications"
+            class="settings-item-checkbox"
+            (onChange)="todayNotificationsChanged()"
+          />
+          <span translate>Notify tasks due today?</span>
+        </label>
+      </div>
+      <div class="field">
+        <label for="notification-time" translate>
+          <span translate>Time to notify today tasks:</span>
+          <p-calendar
+            [showIcon]="true"
+            icon="pi pi-clock"
+            inputId="notification-time"
+            [timeOnly]="true"
+            stepMinute="10"
+            [placeholder]="'Time' | translate"
+            formControlName="notificationTime"
+          />
+        </label>
+      </div>
+      <p-button [label]="'Save' | translate" type="submit" />
+    </form>
+  </p-card>
+</div>
+
+<!-- Setttings: notifications, hide on close (win/lin), today tasks notification time -->
