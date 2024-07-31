@@ -23,9 +23,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="px"
-     inkscape:zoom="1.0958333"
-     inkscape:cx="605.93156"
-     inkscape:cy="639.23955"
+     inkscape:zoom="0.19371779"
+     inkscape:cx="180.6752"
+     inkscape:cy="348.44502"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
@@ -38,55 +38,6 @@
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <g
-       id="g6-8-5-2-8"
-       style="stroke:#3a4ce4;stroke-opacity:0.89803922"
-       transform="matrix(0.51119017,-0.00441664,0.00442478,0.51024884,517.87161,60.66764)">
-      <path
-         style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="M 406.55222,191.59015 232.17808,363.0011"
-         id="path3-1-0-7-2"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="m 345.51196,251.59313 86.36159,87.85453"
-         id="path4-1-6-4-4"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="M 406.57464,191.56811 520.44399,307.40593"
-         id="path4-5-0-8-2-0" />
-    </g>
-    <g
-       id="g5-3-3-4-3-6"
-       transform="matrix(-0.36151081,-0.36078275,0.36144835,-0.3608451,734.69971,508.17522)"
-       style="stroke:#e9be35;stroke-opacity:0.89803922">
-      <path
-         style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="M 287.42352,231.25804 V 475.774"
-         id="path3-5-2-0-2-0"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="M 287.42352,316.85168 H 410.61744"
-         id="path4-2-2-5-6-1"
-         sodipodi:nodetypes="cc" />
-      <path
-         style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
-         d="M 287.42352,231.2266 H 449.85698"
-         id="path4-5-9-7-3-2-9" />
-    </g>
-    <text
-       xml:space="preserve"
-       style="font-size:192px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
-       x="835.36456"
-       y="305.35803"
-       id="text6-7-0-6"><tspan
-         sodipodi:role="line"
-         id="tspan6-7-4-4"
-         x="835.36456"
-         y="305.35803"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:192px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1">Faire</tspan></text>
     <g
        id="g6-8-5-2-8-4"
        style="stroke:#3a4ce4;stroke-opacity:0.89803922"
@@ -173,9 +124,9 @@
        id="g6-8-5-2-8-4-1-9"
        style="stroke:#3a4ce4;stroke-opacity:0.89803922"
        transform="matrix(0.51119017,-0.00441664,0.00442478,0.51024884,-35.75913,4.10248)"
-       inkscape:export-filename="..\src\assets\icon.png"
-       inkscape:export-xdpi="25.430748"
-       inkscape:export-ydpi="25.430748">
+       inkscape:export-filename="..\..\..\..\..\..\Users\charles\Desktop\icone-faire.png"
+       inkscape:export-xdpi="260.41086"
+       inkscape:export-ydpi="260.41086">
       <path
          style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
          d="M 406.55222,191.59015 232.17808,363.0011"
@@ -222,27 +173,237 @@
          y="817.16827"
          style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:192px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1">Faire</tspan></text>
     <g
-       id="g9-3"
-       transform="translate(165.83608,-106.99437)">
+       id="g1">
+      <g
+         id="g6-8-5-2-8"
+         style="stroke:#3a4ce4;stroke-opacity:0.89803922"
+         transform="matrix(0.51119017,-0.00441664,0.00442478,0.51024884,517.87161,60.66764)">
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="M 406.55222,191.59015 232.17808,363.0011"
+           id="path3-1-0-7-2"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="m 345.51196,251.59313 86.36159,87.85453"
+           id="path4-1-6-4-4"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="M 406.57464,191.56811 520.44399,307.40593"
+           id="path4-5-0-8-2-0" />
+      </g>
+      <g
+         id="g5-3-3-4-3-6"
+         transform="matrix(-0.36151081,-0.36078275,0.36144835,-0.3608451,734.69971,508.17522)"
+         style="stroke:#e9be35;stroke-opacity:0.89803922">
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="M 287.42352,231.25804 V 475.774"
+           id="path3-5-2-0-2-0"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="M 287.42352,316.85168 H 410.61744"
+           id="path4-2-2-5-6-1"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.89803922"
+           d="M 287.42352,231.2266 H 449.85698"
+           id="path4-5-9-7-3-2-9" />
+      </g>
       <text
          xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:45.3333px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
-         x="767.41998"
-         y="473.62714"
-         id="text7-6"><tspan
+         style="font-size:192px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
+         x="835.36456"
+         y="305.35803"
+         id="text6-7-0-6"><tspan
            sodipodi:role="line"
-           id="tspan7-3"
+           id="tspan6-7-4-4"
+           x="835.36456"
+           y="305.35803"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:192px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1">Faire</tspan></text>
+      <g
+         id="g9-3"
+         transform="translate(165.83608,-106.99437)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:45.3333px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
            x="767.41998"
            y="473.62714"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.3333px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, '">Your todo app</tspan></text>
-      <path
-         style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-         d="m 685.77947,462.13514 h 69.80988"
-         id="path7-1" />
-      <path
-         style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
-         d="m 1042.0152,462.13514 h 69.8099"
-         id="path7-7-7" />
+           id="text7-6"><tspan
+             sodipodi:role="line"
+             id="tspan7-3"
+             x="767.41998"
+             y="473.62714"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.3333px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, '">Your todo app</tspan></text>
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 685.77947,462.13514 h 69.80988"
+           id="path7-1" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 1042.0152,462.13514 h 69.8099"
+           id="path7-7-7" />
+      </g>
+    </g>
+    <g
+       id="g2-3"
+       transform="translate(127.39177,-792.85285)"
+       inkscape:export-filename="..\..\..\..\..\..\Users\charles\Desktop\logo-1024-500.png"
+       inkscape:export-xdpi="125.89484"
+       inkscape:export-ydpi="125.89484">
+      <g
+         id="g6-8-5-2-8-8"
+         style="stroke:#3a4ce4;stroke-opacity:0.898039"
+         transform="matrix(0.51119017,-0.00441664,0.00442478,0.51024884,517.87161,60.66764)">
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 406.55222,191.59015 232.17808,363.0011"
+           id="path3-1-0-7-2-1"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="m 345.51196,251.59313 86.36159,87.85453"
+           id="path4-1-6-4-4-5"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 406.57464,191.56811 520.44399,307.40593"
+           id="path4-5-0-8-2-0-8" />
+      </g>
+      <g
+         id="g5-3-3-4-3-6-1"
+         transform="matrix(-0.36151081,-0.36078275,0.36144835,-0.3608451,734.69971,508.17522)"
+         style="stroke:#e9be35;stroke-opacity:0.898039">
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,231.25804 V 475.774"
+           id="path3-5-2-0-2-0-52"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,316.85168 H 410.61744"
+           id="path4-2-2-5-6-1-2"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,231.2266 H 449.85698"
+           id="path4-5-9-7-3-2-9-0" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:192px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
+         x="835.36456"
+         y="305.35803"
+         id="text6-7-0-6-1"><tspan
+           sodipodi:role="line"
+           id="tspan6-7-4-4-0"
+           x="835.36456"
+           y="305.35803"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:192px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1">Faire</tspan></text>
+      <g
+         id="g9-3-5"
+         transform="translate(165.83608,-106.99437)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:45.3333px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
+           x="767.41998"
+           y="473.62714"
+           id="text7-6-7"><tspan
+             sodipodi:role="line"
+             id="tspan7-3-4"
+             x="767.41998"
+             y="473.62714"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.3333px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, '">Your todo app</tspan></text>
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 685.77947,462.13514 h 69.80988"
+           id="path7-1-8" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 1042.0152,462.13514 h 69.8099"
+           id="path7-7-7-6" />
+      </g>
+    </g>
+    <g
+       id="g2"
+       transform="translate(-1784.7132,-295.77251)"
+       inkscape:export-filename="..\..\..\..\..\..\Users\charles\Desktop\faire-logo.png"
+       inkscape:export-xdpi="70.298515"
+       inkscape:export-ydpi="70.298515">
+      <g
+         id="g6-8-5-2-8-2"
+         style="stroke:#3a4ce4;stroke-opacity:0.898039"
+         transform="matrix(0.51119017,-0.00441664,0.00442478,0.51024884,517.87161,60.66764)">
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 406.55222,191.59015 232.17808,363.0011"
+           id="path3-1-0-7-2-6"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="m 345.51196,251.59313 86.36159,87.85453"
+           id="path4-1-6-4-4-8"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#3a4ce4;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 406.57464,191.56811 520.44399,307.40593"
+           id="path4-5-0-8-2-0-7" />
+      </g>
+      <g
+         id="g5-3-3-4-3-6-3"
+         transform="matrix(-0.36151081,-0.36078275,0.36144835,-0.3608451,734.69971,508.17522)"
+         style="stroke:#e9be35;stroke-opacity:0.898039">
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,231.25804 V 475.774"
+           id="path3-5-2-0-2-0-4"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,316.85168 H 410.61744"
+           id="path4-2-2-5-6-1-6"
+           sodipodi:nodetypes="cc" />
+        <path
+           style="fill:none;stroke:#e9be35;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.898039"
+           d="M 287.42352,231.2266 H 449.85698"
+           id="path4-5-9-7-3-2-9-9" />
+      </g>
+      <text
+         xml:space="preserve"
+         style="font-size:192px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, ';fill:#000000;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
+         x="835.36456"
+         y="305.35803"
+         id="text6-7-0-6-2"><tspan
+           sodipodi:role="line"
+           id="tspan6-7-4-4-4"
+           x="835.36456"
+           y="305.35803"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:192px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1">Faire</tspan></text>
+      <g
+         id="g9-3-4"
+         transform="translate(165.83608,-106.99437)">
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:600;font-stretch:normal;font-size:45.3333px;font-family:Quicksand;-inkscape-font-specification:'Quicksand Semi-Bold';fill:#555555;fill-opacity:1;stroke:none;stroke-width:43;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.9"
+           x="767.41998"
+           y="473.62714"
+           id="text7-6-9"><tspan
+             sodipodi:role="line"
+             id="tspan7-3-8"
+             x="767.41998"
+             y="473.62714"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:45.3333px;font-family:'Source Sans 3';-inkscape-font-specification:'Source Sans 3, '">Your todo app</tspan></text>
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 685.77947,462.13514 h 69.80988"
+           id="path7-1-0" />
+        <path
+           style="fill:none;fill-opacity:1;stroke:#555555;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+           d="m 1042.0152,462.13514 h 69.8099"
+           id="path7-7-7-7" />
+      </g>
     </g>
     <rect
        style="fill:#ffffff;fill-opacity:0.0152027;stroke:none;stroke-width:1.764;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.898039"
@@ -251,5 +412,19 @@
        height="188.74789"
        x="72.79734"
        y="87.961166" />
+    <rect
+       style="fill:#ffffff;fill-opacity:0.0152027;stroke-width:1.52662;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.898039"
+       id="rect2"
+       width="699.18976"
+       height="699.18976"
+       x="-1179.5509"
+       y="-384.58005" />
+    <rect
+       style="fill:#ffffff;fill-opacity:0.0152027;stroke-width:1.52509;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:0.898039"
+       id="rect3"
+       width="780.84216"
+       height="381.2706"
+       x="691.72791"
+       y="-722.70081" />
   </g>
 </svg>
