@@ -14,7 +14,8 @@
     "resources:default",
     "menu:default",
     "tray:default",
-    "shell:allow-open",
-    "notification:default"
+    "notification:default",
+    "notification:allow-notify",
+    "notification:allow-show"
   ]
 }

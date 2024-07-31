@@ -9,6 +9,11 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { ToastModule } from 'primeng/toast';
 import { SidebarModule } from 'primeng/sidebar';
+import {
+    isPermissionGranted,
+    requestPermission,
+    sendNotification,
+  } from '@tauri-apps/plugin-notification';
 
 
 import { ThemeService } from './services/theme.service';
@@ -16,6 +21,7 @@ import { routes } from './app.routes';
 import { UndoService, UndoItem } from './services/undo.service';
 import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
+import { TaskDto } from './dto/task-dto';
 
 @Component({
     selector: 'app-root',
@@ -158,6 +164,18 @@ export class AppComponent implements OnInit {
             });
         });
 
+        // starts the notification worker
+        if (typeof Worker !== 'undefined') {
+            // Create a new
+            const worker = new Worker(new URL('./app.worker', import.meta.url));
+            worker.onmessage = ({ data }) => {
+                this.notifyDueingTask(data.task);
+            };
+            worker.postMessage('hello');
+          } else {
+              // Web Workers are not supported in this environment.
+              // You should add a fallback so that your program still executes correctly.
+          }
     }
 
     testeUndo() {
@@ -189,6 +207,27 @@ export class AppComponent implements OnInit {
     undo() {
         this.messageService.clear();
         this.undoService.undo();
+    }
+
+    async notifyDueingTask(task: TaskDto) {
+        console.log("Received the task", task);
+        // Do you have permission to send a notification?
+        let permissionGranted = await isPermissionGranted();
+        console.log("Permission granted?", permissionGranted);
+        // If not we need to request it
+        if (!permissionGranted) {
+            const permission = await requestPermission();
+            permissionGranted = permission === 'granted';
+        }
+        console.log("Permission acquired?", permissionGranted);
+
+        // Once permission has been granted we can send the notification
+        if (permissionGranted) {
+            sendNotification({
+                title: 'Task due',
+                body: `The task "${task.title}" is dueing now.`
+            });
+        }
     }
 
 }
