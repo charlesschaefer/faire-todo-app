@@ -30,7 +30,7 @@ li.project-item {
     align-items: center;
     padding: 15px 0px;
     cursor: pointer;
-    color: #333;
+    color: var(--text-color);
 }
 
 li.project-item:hover {
