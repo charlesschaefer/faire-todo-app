@@ -145,7 +145,7 @@ export class TaskAddComponent implements OnInit {
             description: null,
             dueDate: null,
             dueTime: null,
-            project: null,
+            project: this.project?.id,
         });
         return true;
     }

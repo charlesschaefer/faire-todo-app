@@ -18,6 +18,7 @@ import { firstValueFrom } from 'rxjs';
 import { TaskService } from '../services/task.service';
 import { TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-project',
@@ -35,6 +36,7 @@ import { Router } from '@angular/router';
         TranslateModule,
         ConfirmDialogModule,
         DialogModule,
+        ToastModule,
     ],
     providers: [
         MessageService,
@@ -106,7 +108,7 @@ export class ProjectComponent implements OnInit {
                         detail: "Project and it's tasks removed successfully!",
                         severity: "success"
                     });
-                    this.getProjects();
+                    setTimeout(() => window.location.reload(), 2000);
                 });
             },
             error: (err) => this.messageService.add({
@@ -135,7 +137,7 @@ export class ProjectComponent implements OnInit {
         this.projectService.edit(form.id as number, formData).subscribe({
             complete: () => {
                 this.editProjectVisible = false;
-                this.getProjects();
+                setTimeout(() => window.location.reload(), 2000);
             },
             error: (err) => this.messageService.add({
                 summary: "Error",
@@ -156,11 +158,14 @@ export class ProjectComponent implements OnInit {
         } as ProjectAddDto;
 
         this.projectAddService.add(projectData).subscribe({
-            complete: async () => this.messageService.add({
-                summary: await firstValueFrom(this.translate.get("Saved successfully")),
-                detail: await firstValueFrom(this.translate.get("Project saved successfully")),
-                severity: 'success'
-            }),
+            complete: async () => {
+                this.messageService.add({
+                    summary: await firstValueFrom(this.translate.get("Saved successfully")),
+                    detail: await firstValueFrom(this.translate.get("Project saved successfully")),
+                    severity: 'success'
+                });
+                setTimeout(() => window.location.reload(), 2000);
+            },
             error: async (err: Error) => this.messageService.add({
                 summary: await firstValueFrom(this.translate.get("Error")),
                 detail: await firstValueFrom(this.translate.get("Couldn't save the Project.")) + err,
