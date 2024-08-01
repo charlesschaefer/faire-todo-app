@@ -9,10 +9,13 @@
         pInputText 
         [placeholder]="'Search' | translate"
         [(ngModel)]="searchValue"
+        class="search-box-input"
       />
     </p-iconField>
     <p-button [label]="'Search' | translate" (onClick)="search()" />
   </div>
 </div>
 
-<app-task-list [tasks]="tasks" [completedTasks]="completedTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" [showAddTask]="false" />
+@if (tasks?.length) {
+  <app-task-list [tasks]="tasks" [completedTasks]="completedTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" [showAddTask]="false" />
+}
