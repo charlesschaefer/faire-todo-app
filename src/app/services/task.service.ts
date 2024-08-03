@@ -71,13 +71,18 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    countTasksSubtasks(tasks: TaskDto[]): Map<number, number> {
+    async countTasksSubtasks(tasks: TaskDto[]) {
         let countMap:Map<number, number> = new Map();
-        tasks.forEach(async task => {
+        for (let task of tasks) {
             let count = await firstValueFrom(this.countByField('parent', task.id));
             countMap.set(task.id, count);
-        });
-    
+        };
         return countMap;
+    }
+
+    getTaskSubtasks(task: TaskDto) {
+        return from(liveQuery(() => {
+            return this.table.where('parent').equals(task.id).toArray();
+        }));
     }
 }

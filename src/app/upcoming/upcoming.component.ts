@@ -21,6 +21,7 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
         this.taskService.getUpcoming().subscribe(tasks => {
             // now filter only tasks not completed
             this.tasks = this.taskService.orderTasks(tasks);
+            this.countSubtasks();
         });
     }
 }

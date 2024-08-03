@@ -1,10 +1,10 @@
-import { AfterContentInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +13,7 @@ import { MenuModule } from 'primeng/menu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { TreeModule } from 'primeng/tree';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
@@ -36,6 +37,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
         CheckboxModule,
         ToastModule,
         ContextMenuModule,
+        TreeModule,
     ],
     providers: [
         MessageService,
@@ -45,10 +47,10 @@ import { UndoItem, UndoService } from '../../services/undo.service';
     templateUrl: './task.component.html',
     styleUrl: './task.component.scss'
 })
-export class TaskComponent implements OnDestroy, OnInit {
+export class TaskComponent implements OnDestroy, OnInit, OnChanges {
     @Input() task!: TaskDto;
     @Input() projects!: Map<number, ProjectDto>;
-    @Input() subtasksCount: number | undefined;
+    @Input() subtasksCount!: number | undefined;
 
     @Output() onTaskRemoved = new EventEmitter<number>();
     @Output() onEditTask = new EventEmitter<Event>();
@@ -64,6 +66,8 @@ export class TaskComponent implements OnDestroy, OnInit {
     dialogRef: DynamicDialogRef | undefined;
 
     taskMenuItems!: MenuItem[];
+
+    subtasks!: TreeNode[];
     
     constructor(
         private dialogService: DialogService,
@@ -91,6 +95,15 @@ export class TaskComponent implements OnDestroy, OnInit {
         }
 
         this.checkTaskIsDue();
+
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['subtasksCount']) {
+            this.subtasks = [{
+                key: '0',
+                label: `${this.subtasksCount} tasks`
+            }];
+        }
     }
 
     checkTaskIsDue() {

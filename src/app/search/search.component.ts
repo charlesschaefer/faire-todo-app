@@ -58,6 +58,7 @@ export class SearchComponent extends InboxComponent {
             }
             this.tasks = tasks;
             this.completedTasks = completedTasks;
+            this.countSubtasks();
         });
     }
 }

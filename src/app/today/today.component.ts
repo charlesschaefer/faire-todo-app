@@ -28,6 +28,7 @@ export class TodayComponent extends InboxComponent implements OnInit {
     override getTasks(): void {
         this.taskService.getForToday().subscribe(tasks => {
             this.tasks = this.taskService.orderTasks(tasks);
+            this.countSubtasks();
         });
     }
 }

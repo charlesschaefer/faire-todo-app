@@ -53,6 +53,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
             // now filter only tasks not completed
             let filteredTasks = tasks.filter(task => task.completed == 0);
             this.tasks = this.taskService.orderTasks(filteredTasks);
+            this.countSubtasks();
         });
     }
 

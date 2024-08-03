@@ -61,7 +61,7 @@ export class InboxComponent implements OnInit {
     
     async ngOnInit() {
         this.getTasks();
-        this.countSubtasks();
+        //this.countSubtasks();
 
         //let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
     }
@@ -72,12 +72,15 @@ export class InboxComponent implements OnInit {
 
     getTasks() {
         this.taskService.getFromProject(0).subscribe(tasks => {
-            this.tasks = this.taskService.orderTasks(tasks)
+            this.tasks = this.taskService.orderTasks(tasks);
+            this.countSubtasks();
         });
     }
 
     countSubtasks() {
-        this.subtasksCount = this.taskService.countTasksSubtasks(this.tasks);
+        if (this.tasks) {
+            this.taskService.countTasksSubtasks(this.tasks).then(count => this.subtasksCount = count);
+        }
     }
 
     onAddTask() {

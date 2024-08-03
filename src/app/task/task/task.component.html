@@ -39,7 +39,11 @@
             <pre>{{task.description}}</pre>
           </div>
           <div class="task-item-subtasks-count">
-            <!-- {{subtasksCount || 0}} subtarefas -->
+            <p-tree 
+              class="" 
+              [value]="subtasks" 
+              loadingMode="icon"  />
+              <!-- (onNodeExpand)="onNodeExpand2($event)" /> -->
           </div>
         </div>
       </div>
