@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { InboxComponent } from '../inbox/inbox.component';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-upcoming',
@@ -17,11 +18,11 @@ import { InboxComponent } from '../inbox/inbox.component';
 })
 export class UpcomingComponent extends InboxComponent implements OnInit {
 
-    override getTasks(): void {
-        this.taskService.getUpcoming().subscribe(tasks => {
-            // now filter only tasks not completed
-            this.tasks = this.taskService.orderTasks(tasks);
-            this.countSubtasks();
-        });
+    override async getTasks() {
+        let tasks = await firstValueFrom(this.taskService.getUpcoming());
+    
+        // now filter only tasks not completed
+        this.tasks = this.taskService.orderTasks(tasks);
+        this.countSubtasks();
     }
 }

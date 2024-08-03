@@ -21,6 +21,7 @@ import { TaskDto } from '../dto/task-dto';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskService } from '../services/task.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -57,10 +58,12 @@ export class InboxComponent implements OnInit {
 
     constructor(
         protected taskService: TaskService<TaskDto>,
+        protected activatedRoute: ActivatedRoute,
     ) {}
     
-    async ngOnInit() {
+    ngOnInit() {
         this.getTasks();
+        console.log("tasks: ", this.tasks)
         //this.countSubtasks();
 
         //let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
@@ -71,16 +74,17 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-        this.taskService.getFromProject(0).subscribe(tasks => {
-            this.tasks = this.taskService.orderTasks(tasks);
-            this.countSubtasks();
+         this.activatedRoute.data.subscribe(({ inboxResolvedData }) => {
+            this.tasks = inboxResolvedData.tasks;
+            this.subtasksCount = inboxResolvedData.subtasksCount;
         });
     }
 
-    countSubtasks() {
+    async countSubtasks() {
         if (this.tasks) {
-            this.taskService.countTasksSubtasks(this.tasks).then(count => this.subtasksCount = count);
+            this.subtasksCount = await this.taskService.countTasksSubtasks(this.tasks);
         }
+        console.log("tasks", this.tasks, "subtasksCount", this.subtasksCount)
     }
 
     onAddTask() {
