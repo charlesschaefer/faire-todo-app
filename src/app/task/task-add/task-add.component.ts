@@ -116,6 +116,7 @@ export class TaskAddComponent implements OnInit {
             project: form.project || 0,
             completed: 0,
             order: order,
+            parent: null,
         };
 
         this.taskAddService.add(saveData).subscribe({

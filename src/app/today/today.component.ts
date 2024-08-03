@@ -25,10 +25,6 @@ export class TodayComponent extends InboxComponent implements OnInit {
     
     today = DateTime.fromJSDate(new Date());
 
-    override async ngOnInit() {
-        this.getTasks();
-    }
-
     override getTasks(): void {
         this.taskService.getForToday().subscribe(tasks => {
             this.tasks = this.taskService.orderTasks(tasks);

@@ -51,6 +51,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class InboxComponent implements OnInit {
     tasks!: TaskDto[];
+    subtasksCount!: Map<number, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
 
@@ -60,8 +61,9 @@ export class InboxComponent implements OnInit {
     
     async ngOnInit() {
         this.getTasks();
+        this.countSubtasks();
 
-        let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
+        //let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
     }
 
     onShowTaskAddOverlay(event: Event) {
@@ -72,6 +74,10 @@ export class InboxComponent implements OnInit {
         this.taskService.getFromProject(0).subscribe(tasks => {
             this.tasks = this.taskService.orderTasks(tasks)
         });
+    }
+
+    countSubtasks() {
+        this.subtasksCount = this.taskService.countTasksSubtasks(this.tasks);
     }
 
     onAddTask() {

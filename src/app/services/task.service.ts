@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { from } from 'rxjs';
+import { firstValueFrom, from } from 'rxjs';
 import { DateTime } from 'luxon';
 
 @Injectable({
@@ -69,5 +69,15 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             return 0;
         });
         return tasks;
+    }
+
+    countTasksSubtasks(tasks: TaskDto[]): Map<number, number> {
+        let countMap:Map<number, number> = new Map();
+        tasks.forEach(async task => {
+            let count = await firstValueFrom(this.countByField('parent', task.id));
+            countMap.set(task.id, count);
+        });
+    
+        return countMap;
     }
 }

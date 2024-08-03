@@ -27,6 +27,7 @@ import { ProjectDto } from '../../dto/project-dto';
 export class TaskListComponent implements OnInit {
     @Input() tasks!: TaskDto[];
     @Input() completedTasks!: TaskDto[];
+    @Input() subtasksCount!: Map<number, number>;
 
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() onEditTask = new EventEmitter();

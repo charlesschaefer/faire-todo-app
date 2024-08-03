@@ -9,6 +9,7 @@ export interface TaskDto {
     project: number | null;
     completed: number; // number because indexeddb doesn't accept boolean as keys
     order: number;
+    parent: number | null;
 }
 
 export type TaskAddDto = Omit<TaskDto, "id">;

@@ -48,6 +48,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
 export class TaskComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Input() projects!: Map<number, ProjectDto>;
+    @Input() subtasksCount: number | undefined;
 
     @Output() onTaskRemoved = new EventEmitter<number>();
     @Output() onEditTask = new EventEmitter<Event>();

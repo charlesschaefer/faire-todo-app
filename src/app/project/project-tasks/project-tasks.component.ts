@@ -44,7 +44,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
         const projectId = Number(this.route.snapshot.paramMap.get("id"));
         this.project = await firstValueFrom(this.projectService.get(projectId));
-        this.getTasks();
+        super.ngOnInit();
     }
 
     override getTasks(): void {

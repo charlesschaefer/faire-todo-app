@@ -24,6 +24,9 @@ export class AppDb extends Dexie {
         this.version(7).stores({
             settings: '++id,notifications,todayNotifications,notificationTime'
         });
+        this.version(8).stores({
+            task: '++id, title, description, dueDate, dueTime, project, completed, order, parent',
+        })
         this.on('populate', () => this.populate());
     }
 
