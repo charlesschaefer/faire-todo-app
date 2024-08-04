@@ -35,6 +35,8 @@ pub async fn discover_service() -> String {
                     }
                 }
                 let ipv4 = info.get_addresses_v4().into_iter().next().unwrap();
+                // closes the connection, since we found the service
+                mdns.shutdown().unwrap();
                 return ipv4.to_string();
             }
             other_event => {
