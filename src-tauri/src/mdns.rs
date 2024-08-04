@@ -34,8 +34,8 @@ pub async fn discover_service() -> String {
                         continue 'outer;
                     }
                 }
-                
-                return my_ip;
+                let ipv4 = info.get_addresses_v4().into_iter().next().unwrap();
+                return ipv4.to_string();
             }
             other_event => {
                 dbg!("Received other event: {:?}", &other_event);
