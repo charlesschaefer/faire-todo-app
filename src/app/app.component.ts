@@ -259,7 +259,7 @@ export class AppComponent implements OnInit {
         invoke('search_network_sync_services').then(host => {
             alert(`Máquina descoberta: ${host}`);
             console.log("Vamos chamar o servidor http");
-            this.httpClient.post('/handshake', {
+            this.httpClient.post(`http://${host}:9099/handshake`, {
                 headers: {
                     'X-SIGNED-TOKEN': 'ABC123ABC123'
                 }

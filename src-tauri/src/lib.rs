@@ -16,7 +16,7 @@ fn greet(name: &str) -> String {
 pub fn run() {
     // broadcasts and discover mdns services in the network
     //mdns::discover_service();
-    mdns::broadcast_service();
+    //mdns::broadcast_service();
 
 
     tauri::Builder::default()
