@@ -8,6 +8,7 @@ import { ProjectTasksComponent } from "./project/project-tasks/project-tasks.com
 import { SearchComponent } from "./search/search.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { AllTasksComponent } from "./all-tasks/all-tasks.component";
+import { SynchronizationComponent } from "./synchronization/synchronization.component";
 
 export const routes: Routes = [
     {path: "today", component: TodayComponent},
@@ -18,5 +19,6 @@ export const routes: Routes = [
     {path: "all-tasks", component: AllTasksComponent},
     {path: "search", component: SearchComponent},
     {path: "settings", component: SettingsComponent},
+    {path: "sync", component: SynchronizationComponent},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];

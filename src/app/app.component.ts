@@ -105,6 +105,15 @@ export class AppComponent implements OnInit {
                 ]
             },
             {
+                lable: await firstValueFrom(this.translate.get("Synchronize")),
+                items: [
+                    { 
+                        label: await firstValueFrom(this.translate.get("Synchronize other devices")),
+                        routerLink: '/sync'
+                    } as MenuItem
+                ]
+            },
+            {
                 label: await firstValueFrom(this.translate.get("Theme")),
                 items: [
                     { label: await firstValueFrom(this.translate.get("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
