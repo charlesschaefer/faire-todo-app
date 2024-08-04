@@ -3,6 +3,8 @@ mod desktop;
 #[cfg(not(desktop))]
 mod android;
 
+mod mdns;
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -11,6 +13,11 @@ fn greet(name: &str) -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    // broadcasts and discover mdns services in the network
+    mdns::broadcast_service();
+    mdns::discover_service();
+
+
     tauri::Builder::default()
         .plugin(tauri_plugin_notification::init())
         .setup(|app| {
