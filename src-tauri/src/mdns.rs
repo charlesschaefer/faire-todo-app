@@ -35,7 +35,7 @@ pub async fn discover_service() -> String {
                     }
                 }
                 
-                return info.get_hostname().to_string();
+                return my_ip;
             }
             other_event => {
                 dbg!("Received other event: {:?}", &other_event);
