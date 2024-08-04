@@ -24,6 +24,7 @@ import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke } from '@tauri-apps/api/core';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 
 
 export enum NotificationType {
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit {
         private messageService: MessageService,
         private projectService: ProjectService<ProjectDto>,
         private taskService: TaskService<TaskDto>,
+        private httpClient: HttpClient,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
@@ -253,9 +255,23 @@ export class AppComponent implements OnInit {
         }
     }
 
-    startSynchronization() {
+    startSynchronizationAsClient() {
         invoke('search_network_sync_services').then(host => {
             alert(`Máquina descoberta: ${host}`);
+            console.log("Vamos chamar o servidor http");
+            this.httpClient.post('/handshake', {
+                headers: {
+                    'X-SIGNED-TOKEN': 'ABC123ABC123'
+                }
+            }).subscribe(results => {
+                console.log("Result received from server: ", results);
+            })
+        })
+    }
+
+    startSynchronizationAsServer() {
+        invoke('broadcast_network_sync_services').then(() => {
+            invoke('start_http_server');
         })
     }
 }

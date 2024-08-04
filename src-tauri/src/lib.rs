@@ -4,16 +4,12 @@ mod desktop;
 mod android;
 
 mod mdns;
+mod http;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-#[tauri::command]
-async fn search_network_sync_services() -> String {
-    mdns::discover_service().await
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -34,7 +30,12 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet, search_network_sync_services])
+        .invoke_handler(tauri::generate_handler![
+            greet, 
+            mdns::search_network_sync_services,
+            mdns::broadcast_network_sync_services,
+            http::start_http_server
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

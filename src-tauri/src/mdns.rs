@@ -1,7 +1,15 @@
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use local_ip_address::local_ip;
 
+#[tauri::command]
+pub async fn search_network_sync_services() -> String {
+    discover_service().await
+}
 
+#[tauri::command]
+pub async fn broadcast_network_sync_services() {
+    broadcast_service();
+}
 
 pub async fn discover_service() -> String {
     // Create a daemon
