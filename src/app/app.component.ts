@@ -23,6 +23,7 @@ import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
+import { invoke } from '@tauri-apps/api/core';
 
 
 export enum NotificationType {
@@ -250,5 +251,11 @@ export class AppComponent implements OnInit {
                 body: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {total: duingToday}))
             });
         }
+    }
+
+    startSynchronization() {
+        invoke('search_network_sync_services').then(host => {
+            alert(`Máquina descoberta: ${host}`);
+        })
     }
 }

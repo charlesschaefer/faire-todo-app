@@ -11,11 +11,16 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+#[tauri::command]
+async fn search_network_sync_services() -> String {
+    mdns::discover_service().await
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     // broadcasts and discover mdns services in the network
+    //mdns::discover_service();
     mdns::broadcast_service();
-    mdns::discover_service();
 
 
     tauri::Builder::default()
@@ -29,7 +34,7 @@ pub fn run() {
 
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, search_network_sync_services])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
