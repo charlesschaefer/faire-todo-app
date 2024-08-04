@@ -1,4 +1,4 @@
-use tiny_http::{Request, Response, ResponseBox};
+use tiny_http::{Request, Response, ResponseBox, Header};
 
 #[tauri::command]
 pub fn start_http_server() {
@@ -15,7 +15,8 @@ fn start_server() {
         // waits for the handshake connection
         let request = match server.recv() {
             Ok(req) => {
-                if req.method().as_str() != "POST" {
+                let method = req.method().as_str();
+                if method != "POST" && method != "OPTIONS" {
                     dbg!("Wrong url or method");
                     // without a response, tiny_http returns a 505 HTTP ERROR
                     continue;
@@ -38,6 +39,15 @@ fn start_server() {
 }
 
 fn handle_incoming_request(request: &Request) -> Option<ResponseBox> {
+    if request.method().as_str() == "OPTIONS" {
+        let header1 = Header::from_bytes(&b"Access-Control-Allow-Origin"[..], &b"*"[..]).unwrap();
+        let header2 = Header::from_bytes(&b"Access-Control-Allow-Headers"[..], &b"*"[..]).unwrap();
+        let response = Response::from_string("")
+            .with_header(header1)
+            .with_header(header2)
+            .boxed();
+        return Some(response);
+    }
     if request.url() == "/handshake" {
         return handshake(request);
     }
@@ -45,12 +55,15 @@ fn handle_incoming_request(request: &Request) -> Option<ResponseBox> {
 }
 
 fn handshake(request: &Request) -> Option<ResponseBox> {
-    let otp_token = request.headers().into_iter().find_map(|header| {
-        if header.field.as_str() == "X-SIGNED-TOKEN" {
-            return Some(header.value.as_str());
-        }
-        None
-    }).unwrap();
+    let otp_token = request
+        .headers()
+        .into_iter()
+        .find_map(|header| {
+            if header.field.as_str() == "X-SIGNED-TOKEN" {
+                return Some(header.value.as_str());
+            }
+            Some("")
+        }).unwrap();
 
     if otp_token.len() == 0 {
         let response = Response::from_string("Empty token".to_string())

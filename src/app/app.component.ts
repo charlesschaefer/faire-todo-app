@@ -24,7 +24,7 @@ import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke } from '@tauri-apps/api/core';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, provideHttpClient } from '@angular/common/http';
 
 
 export enum NotificationType {
@@ -259,7 +259,7 @@ export class AppComponent implements OnInit {
         invoke('search_network_sync_services').then(host => {
             alert(`Máquina descoberta: ${host}`);
             console.log("Vamos chamar o servidor http");
-            this.httpClient.post(`http://${host}:9099/handshake`, {
+            this.httpClient.post(`http://${host}:9099/handshake`, {}, {
                 headers: {
                     'X-SIGNED-TOKEN': 'ABC123ABC123'
                 }
@@ -272,6 +272,14 @@ export class AppComponent implements OnInit {
     startSynchronizationAsServer() {
         invoke('broadcast_network_sync_services').then(() => {
             invoke('start_http_server');
+        })
+    }
+
+    testeHTTP() {
+        this.httpClient.post("/", {}, {
+            headers: new HttpHeaders({'X-SIGNED-TOKEN': 'ABC123ABC123'})
+        }).subscribe(results => {
+            console.log("Resultados do teste: ", results);
         })
     }
 }
