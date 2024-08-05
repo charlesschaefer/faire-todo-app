@@ -68,7 +68,7 @@ export class SynchronizationComponent {
         this.otpData = otp;
         console.log("OTP Data: ", otp);
         this.backupService.backupData(otp).subscribe(cryptedBackup => {
-            console.log("Data backed up. broadcasting...");
+            console.log("Data backed up. broadcasting...", cryptedBackup);
             invoke('broadcast_network_sync_services').then(() => {
                 console.log("Service broadcasted. Starting http server...");
                 invoke('start_http_server', { otpCode: otp, backupData: cryptedBackup });

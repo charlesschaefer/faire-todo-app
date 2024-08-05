@@ -96,7 +96,7 @@ impl HttpServer {
                         .with_status_code(500).boxed();
             return Some(response);
         }
-        self.response_with_cors_headers("{\"data\": \"Json data\"}")
+        self.response_with_cors_headers(&self.json_data.as_str())
     }
 
     fn response_with_cors_headers(&self, resp: &str) -> Option<ResponseBox> {

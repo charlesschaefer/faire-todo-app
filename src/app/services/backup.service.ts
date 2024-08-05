@@ -43,13 +43,12 @@ export class BackupService {
                 this.settingsService.list().subscribe(settings => {
                     this.tagService.list().subscribe(tag => {
                         this.taskTagService.list().subscribe(taskTag => {
-                            let backupData = {
+                            backupObj = {
                                 task, project, settings, tag, taskTag
                             } as BackupData;
-                            console.log("Backup data: ", backupData);
-                            const jsonBackup = JSON.stringify(backupObj);
-                            const encryptedBackup = AES.encrypt(jsonBackup, encryptKey);
-                            backupSubject$.next(encryptedBackup.toString());
+                             const jsonBackup = JSON.stringify(backupObj);
+                             const encryptedBackup = AES.encrypt(jsonBackup, encryptKey);
+                             backupSubject$.next(encryptedBackup.toString());
                         })
                     })
                 })
@@ -89,6 +88,7 @@ export class BackupService {
 
     restoreBackup(encryptedData: string, decryptKey: string) {
         let jsonBackup;
+        console.log("Encrypted data: ", encryptedData, "decryptKey", decryptKey);
         try {
             const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
             
