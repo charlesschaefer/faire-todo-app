@@ -71,7 +71,7 @@ export class SynchronizationComponent {
             console.log("Data backed up. broadcasting...");
             invoke('broadcast_network_sync_services').then(() => {
                 console.log("Service broadcasted. Starting http server...");
-                invoke('start_http_server', { otp_code: otp, backup_data: cryptedBackup });
+                invoke('start_http_server', { otpCode: otp, backupData: cryptedBackup });
             });
         });
     }

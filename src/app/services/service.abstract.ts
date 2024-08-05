@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, from, map } from "rxjs";
-import { liveQuery, Table, UpdateSpec } from "dexie";
+import { BehaviorSubject, Observable, from } from "rxjs";
+import { liveQuery, Table } from "dexie";
 
-import { AppDb, db } from "../db";
+import { db } from "../db";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
@@ -18,7 +18,6 @@ export abstract class ServiceAbstract<T> {
      * @returns Observable<BaseDto[]>
      */
     list() {
-        let subject = new Subject<any>();
         return from(liveQuery(() => this.table.toArray()));
     }
 

@@ -36,8 +36,28 @@ export class BackupService {
     
     backupData(encryptKey: string): Subject<string> {
         let backupObj: BackupData;
+        let backupSubject$ = new Subject<string>();
 
-        const backupData$ = forkJoin({
+        this.taskService.list().subscribe(task => {
+            this.projectService.list().subscribe(project => {
+                this.settingsService.list().subscribe(settings => {
+                    this.tagService.list().subscribe(tag => {
+                        this.taskTagService.list().subscribe(taskTag => {
+                            let backupData = {
+                                task, project, settings, tag, taskTag
+                            } as BackupData;
+                            console.log("Backup data: ", backupData);
+                            const jsonBackup = JSON.stringify(backupObj);
+                            const encryptedBackup = AES.encrypt(jsonBackup, encryptKey);
+                            backupSubject$.next(encryptedBackup.toString());
+                        })
+                    })
+                })
+            })
+        })
+
+        // FIXME: for some reason forkJoin isn't working so we used the list() chained above
+        /*const backupData$ = forkJoin({
             task: this.taskService.list(),
             project: this.projectService.list(),
             settings: this.settingsService.list(),
@@ -45,18 +65,24 @@ export class BackupService {
             taskTag: this.taskTagService.list(),
         });
 
-        let backupSubject$ = new Subject<string>();
+        console.log(backupData$);
 
+        console.log("Subscribing backupData$");
         backupData$.subscribe({
             next: (result) => {
+                console.log("Triggered next");
                 backupObj = result as BackupData
             },
             complete: () => {
+                console.log("Triggered complete");
                 const jsonBackup = JSON.stringify(backupObj);
                 const encryptedBackup = AES.encrypt(jsonBackup, encryptKey);
                 backupSubject$.next(encryptedBackup.toString());
-            }
-        });
+            },
+            error: (err) => {
+                console.log("Error: ", err);
+            },
+        });*/
 
         return backupSubject$;
     }
