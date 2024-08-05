@@ -94,14 +94,16 @@ export class SynchronizationComponent {
         
         // encrypts the otp and sends to the server 
         let encryptedOtp = AES.encrypt(otp , otp);
-
-        this.httpClient.post<string>(`http://${this.serverIp}:9099/handshake`, {}, {
+        let options = {
             headers: {
                 'X-SIGNED-TOKEN': encryptedOtp.toString()
-            }
-        }).subscribe(backupData => {
+            },
+            responseType: 'text' as 'json' // HACK because angular @types has the type of responseType fixed as 'json' :shrug:
+        };
+
+        this.httpClient.post<string>(`http://${this.serverIp}:9099/handshake`, {}, options).subscribe(backupData => {
             console.log("Data sent and backup received. Restoring backup...")
-            this.backupService.restoreBackup(backupData, this.otpData).subscribe({
+            this.backupService.restoreBackup(backupData, otp).subscribe({
                 complete: async () => {
                     console.log("Backup restored. Showing messages");
                     this.messageService.add({
