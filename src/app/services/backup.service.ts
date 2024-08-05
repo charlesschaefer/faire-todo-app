@@ -91,18 +91,23 @@ export class BackupService {
             taskTag: this.taskTagService.bulkAdd(jsonBackup.taskTag)
         });
 
+        const backupResponse$ = new Subject();
+
         savedData$.subscribe({
             next: (result) => {
                 console.log("Emitindo o próximo", result);
             },
             complete: () =>  {
                 console.log("Finished restauring the backup");
+                backupResponse$.complete();
             },
             error: (err) => {
                 console.log("Couldn't save the backup: ", err);
-                throw err;
+                backupResponse$.error(err);
             }
-        })
+        });
+
+        return backupResponse$;
 
     }
 

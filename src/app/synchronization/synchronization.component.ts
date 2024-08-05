@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { invoke } from '@tauri-apps/api/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,8 @@ import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
 import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'primeng/api';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-synchronization',
@@ -46,6 +48,8 @@ export class SynchronizationComponent {
         private otpGenerator: OtpGeneratorService,
         private backupService: BackupService,
         private httpClient: HttpClient,
+        private messageService: MessageService,
+        private translateService: TranslateService,
     ) {}
 
     openFromOthers() {
@@ -93,7 +97,23 @@ export class SynchronizationComponent {
                 'X-SIGNED-TOKEN': encryptedOtp.toString()
             }
         }).subscribe(backupData => {
-            const decryptedData = AES.decrypt(backupData, this.otpData)
-        })
+            this.backupService.restoreBackup(backupData, this.otpData).subscribe({
+                complete: async () => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translateService.get("Synchronized successfully")),
+                        detail: await firstValueFrom(this.translateService.get("Your data was synchronized successfully.")),
+                        severity: "success",
+                        life: 4000,
+                    });
+                    await this.httpClient.post(`http://${this.serverIp}:9099/disconnect`, {});
+                },
+                error: async (err) => {
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translateService.get("Error synchronizing")),
+                        detail: await firstValueFrom(this.translateService.get(`Error trying to synchronize data: `)) + err.toString()
+                    });
+                }
+            });
+        });
     }
 }

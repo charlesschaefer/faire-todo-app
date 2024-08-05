@@ -50,8 +50,10 @@ impl HttpServer {
             if let Some(response) = response {
                 let _ = request.respond(response);
                 continue;
+            } else {
+                // finishes the listening loop
+                break;
             }
-
         }
     }
 
@@ -62,9 +64,15 @@ impl HttpServer {
             dbg!("Returned the response");
             return response;
         }
+        
         if request.url() == "/handshake" {
             dbg!("Received a POST method on /handshake url");
             return self.handshake(request);
+        }
+
+        if request.url() == "/disconnect" {
+            dbg!("Received the disconnect command");
+            return None;
         }
         None
     }
@@ -82,6 +90,7 @@ impl HttpServer {
                 None
             }).unwrap();
         dbg!("Valor to token: {:?}", &otp_token);
+
         if otp_token.len() == 0 {
             let response = Response::from_string("Empty token".to_string())
                         .with_status_code(500).boxed();
