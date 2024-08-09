@@ -94,6 +94,7 @@ export class BackupService {
             
             console.log("Received the data and here it is after decrypting: ");
             console.log(decryptedBackup.toString(enc.Utf8));
+            console.log("Total bytes: ", decryptedBackup.toString(enc.Utf8).length);
             jsonBackup = JSON.parse(decryptedBackup.toString(enc.Utf8)) as BackupData;
         } catch (error) {
             console.log("Error trying to decrypt or convert json: ", error);
@@ -139,7 +140,12 @@ export class BackupService {
 
     rehydrateDateFields(jsonBackup: BackupData): BackupData {
         jsonBackup.task.forEach((value, index) => {
-            jsonBackup.task[index].dueDate = new Date(value.dueDate as unknown as string);
+            if (value.dueDate) {
+                jsonBackup.task[index].dueDate = new Date(value.dueDate as unknown as string);
+                if (jsonBackup.task[index].dueDate?.getFullYear() == 1969) {
+                    jsonBackup.task[index].dueDate = null;
+                }
+            }
         });
 
         return jsonBackup;

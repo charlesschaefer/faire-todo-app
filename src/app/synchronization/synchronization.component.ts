@@ -13,6 +13,7 @@ import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-synchronization',
@@ -24,6 +25,7 @@ import { firstValueFrom } from 'rxjs';
         CommonModule,
         ReactiveFormsModule,
         InputOtpModule,
+        ToastModule,
     ],
     providers: [],
     templateUrl: './synchronization.component.html',

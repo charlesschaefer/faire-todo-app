@@ -1,5 +1,4 @@
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
-use local_ip_address::local_ip;
 
 #[tauri::command]
 pub async fn search_network_sync_services() -> String {
