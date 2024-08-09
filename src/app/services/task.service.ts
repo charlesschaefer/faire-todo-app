@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { firstValueFrom, from } from 'rxjs';
+import { Observable, firstValueFrom, from } from 'rxjs';
 import { DateTime } from 'luxon';
 
 @Injectable({
@@ -24,7 +24,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    getFromProject(project: number) {
+    getFromProject(project: number): Observable<T[]> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,

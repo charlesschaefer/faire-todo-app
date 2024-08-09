@@ -17,7 +17,7 @@ Fair is the infinitive verb in french equivalent to "to do".
 - [x] Allow undoing when deleting a task or marking it as complete.
 - [x] Manual task ordering, for prioritization
 - [ ] Tags for tasks
-- [ ] Notifications of tasks reaching their due time.
+- [x] Notifications of tasks reaching their due time (Windows and Linux only)
 - [ ] Subtasks
 
 

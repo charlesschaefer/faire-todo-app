@@ -35,8 +35,9 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         protected override taskService: TaskService<TaskDto>,
         private route: ActivatedRoute,
         private router: Router,
+        protected override activatedRoute: ActivatedRoute,
     ) {
-        super(taskService);
+        super(taskService, activatedRoute);
     }
 
     override async ngOnInit() {
@@ -47,14 +48,12 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         super.ngOnInit();
     }
 
-    override getTasks(): void {
-        this.taskService.getByField('project', this.project.id).subscribe(tasks => {
-
-            // now filter only tasks not completed
-            let filteredTasks = tasks.filter(task => task.completed == 0);
-            this.tasks = this.taskService.orderTasks(filteredTasks);
-            this.countSubtasks();
-        });
+    override async getTasks() {
+        let tasks = await firstValueFrom(this.taskService.getByField('project', this.project.id));
+        // now filter only tasks not completed
+        let filteredTasks = tasks.filter(task => task.completed == 0);
+        this.tasks = this.taskService.orderTasks(filteredTasks);
+        this.countSubtasks();
     }
 
 }

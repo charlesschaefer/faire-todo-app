@@ -21,6 +21,7 @@ import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
+import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 
 
 @Component({
@@ -38,6 +39,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
         ToastModule,
         ContextMenuModule,
         TreeModule,
+        DateShortenerPipe
     ],
     providers: [
         MessageService,
@@ -68,6 +70,8 @@ export class TaskComponent implements OnDestroy, OnInit, OnChanges {
     taskMenuItems!: MenuItem[];
 
     subtasks!: TreeNode[];
+
+    isMobile!: boolean;
     
     constructor(
         private dialogService: DialogService,
@@ -96,6 +100,7 @@ export class TaskComponent implements OnDestroy, OnInit, OnChanges {
 
         this.checkTaskIsDue();
 
+        this.isMobile = Boolean(navigator.userAgent.toLowerCase().match(/(android|iphone|android|iemobile|ipad)/i));
     }
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['subtasksCount']) {

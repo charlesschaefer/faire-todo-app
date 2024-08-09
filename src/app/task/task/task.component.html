@@ -1,4 +1,4 @@
-<li class="task-item" cdkDrag [cdkDragStartDelay]="500">
+<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100">
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
     <div class="task-item-handle"><i class="pi pi-equals"></i></div>
@@ -38,13 +38,13 @@
           <div class="task-item-description">
             <pre>{{task.description}}</pre>
           </div>
-          <div class="task-item-subtasks-count">
+          <!-- <div class="task-item-subtasks-count">
             <p-tree 
               class="" 
               [value]="subtasks" 
               loadingMode="icon"  />
-              <!-- (onNodeExpand)="onNodeExpand2($event)" /> -->
-          </div>
+              < !-- (onNodeExpand)="onNodeExpand2($event)" /> -- >
+          </div> -->
         </div>
       </div>
       <div class="task-item-row-second">
@@ -61,7 +61,7 @@
             @if (due) {
               <div class="task-item-attributes-past-dueDate"></div>
             }
-            <i class="pi pi-calendar"></i>{{dateTimeHandler.fromJSDate(task.dueDate).toFormat("dd/MM")}}
+            <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
             @if (task.dueTime) {
             <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
             }

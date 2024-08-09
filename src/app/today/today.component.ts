@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskDto } from '../dto/task-dto';
-import { Subject } from 'rxjs';
+import { Subject, firstValueFrom } from 'rxjs';
 import { TaskService } from '../services/task.service';
 import { InboxComponent } from '../inbox/inbox.component';
 import { DateTime } from 'luxon';
@@ -25,10 +25,9 @@ export class TodayComponent extends InboxComponent implements OnInit {
     
     today = DateTime.fromJSDate(new Date());
 
-    override getTasks(): void {
-        this.taskService.getForToday().subscribe(tasks => {
-            this.tasks = this.taskService.orderTasks(tasks);
-            this.countSubtasks();
-        });
+    override async getTasks() {
+        let tasks = await firstValueFrom(this.taskService.getForToday());
+        this.tasks = this.taskService.orderTasks(tasks);
+        this.countSubtasks();
     }
 }

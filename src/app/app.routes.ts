@@ -9,10 +9,11 @@ import { SearchComponent } from "./search/search.component";
 import { SettingsComponent } from "./settings/settings.component";
 import { AllTasksComponent } from "./all-tasks/all-tasks.component";
 import { SynchronizationComponent } from "./synchronization/synchronization.component";
+import { InboxResolver } from "./inbox/inbox.resolver";
 
 export const routes: Routes = [
     {path: "today", component: TodayComponent},
-    {path: "inbox", component: InboxComponent},
+    {path: "inbox", component: InboxComponent, resolve: InboxResolver},
     {path: "upcoming", component: UpcomingComponent},
     {path: "project", component: ProjectComponent},
     {path: "project/:id/tasks", component: ProjectTasksComponent},

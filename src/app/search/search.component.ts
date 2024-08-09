@@ -12,6 +12,8 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { InboxComponent } from '../inbox/inbox.component';
 import { TaskService } from '../services/task.service';
 import { TaskDto } from '../dto/task-dto';
+import { firstValueFrom } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-search',
@@ -36,29 +38,30 @@ export class SearchComponent extends InboxComponent {
 
     constructor(
         protected override taskService: TaskService<TaskDto>,
+        protected override activatedRoute: ActivatedRoute,
     ) {
-        super(taskService);
+        super(taskService, activatedRoute);
     }
 
     override async ngOnInit() { }
 
-    search() {
-        this.taskService.slowStringSearch('title', this.searchValue).subscribe(tasks => {
-            let completedTasks: TaskDto[] = [];
-            tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
-            // we trust that all the completed tasks are going to be in the end of the array
-            // and that when we find an incomplete task all tasks before will be incomplete (so we break the loop)
-            for (let i = tasks.length - 1; i >= 0; i--) {
-                if (tasks[i].completed) {
-                    let task = tasks.pop();
-                    completedTasks.push(task);
-                } else {
-                    break;
-                }
+    async search() {
+        let tasks = await firstValueFrom(this.taskService.slowStringSearch('title', this.searchValue));
+        
+        let completedTasks: TaskDto[] = [];
+        tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
+        // we trust that all the completed tasks are going to be in the end of the array
+        // and that when we find an incomplete task all tasks before will be incomplete (so we break the loop)
+        for (let i = tasks.length - 1; i >= 0; i--) {
+            if (tasks[i].completed) {
+                let task = tasks.pop();
+                completedTasks.push(task);
+            } else {
+                break;
             }
-            this.tasks = tasks;
-            this.completedTasks = completedTasks;
-            this.countSubtasks();
-        });
+        }
+        this.tasks = tasks;
+        this.completedTasks = completedTasks;
+        this.countSubtasks();
     }
 }

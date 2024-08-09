@@ -86,7 +86,7 @@ export class TaskEditComponent implements OnInit {
             project: form.project || 0,
             completed: 0,
             order: this.task.order,
-            parent: 0,
+            parent: null,
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({
