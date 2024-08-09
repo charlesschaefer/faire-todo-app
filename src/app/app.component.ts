@@ -284,11 +284,22 @@ export class AppComponent implements OnInit {
         })
     }
 
-    testeHTTP() {
-        this.httpClient.post("/", {}, {
-            headers: new HttpHeaders({'X-SIGNED-TOKEN': 'ABC123ABC123'})
-        }).subscribe(results => {
-            console.log("Resultados do teste: ", results);
-        })
+    async addNotification() {
+        // Do you have permission to send a notification?
+        let permissionGranted = await isPermissionGranted();
+    
+        // If not we need to request it
+        if (!permissionGranted) {
+            const permission = await requestPermission();
+            permissionGranted = permission === 'granted';
+        }
+        //alert(`Permission granted: ${permissionGranted}`);
+
+        invoke('add_notification', {title: 'Tauri', body: 'Tauri is awesome!'});
+    
+        // Once permission has been granted we can send the notification
+        if (permissionGranted) {
+            //sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
+        }
     }
 }

@@ -8,6 +8,7 @@ pub async fn search_network_sync_services() -> String {
 
 #[tauri::command]
 pub async fn broadcast_network_sync_services() {
+    dbg!("Let's call broadcast_service()");
     broadcast_service();
 }
 
@@ -19,7 +20,7 @@ pub async fn discover_service() -> String {
     let service_type = "_faire._udp.local.";
     let receiver = mdns.browse(service_type).expect("Failed to browse");
 
-    let my_ip = local_ip().unwrap().to_string();
+    let my_ip = local_ip_addr::get_local_ip_address().unwrap();
 
     // Receive the browse events in sync or async. Here is
     // an example of using a thread. Users can call `receiver.recv_async().await`
@@ -53,8 +54,7 @@ pub async fn discover_service() -> String {
 pub fn broadcast_service() {
     // Create a daemon
     let mdns = ServiceDaemon::new().expect("Failed to create daemon");
-    let my_local_ip = local_ip().unwrap();
-    let ip_string = my_local_ip.clone().to_string();
+    let ip_string = local_ip_addr::get_local_ip_address().unwrap();
     let host = hostname::get().unwrap();
     let mut host_string = host.to_str().unwrap().to_string();
     host_string.push_str(".local.");
@@ -75,11 +75,9 @@ pub fn broadcast_service() {
         port,
         &properties[..],
     ).unwrap();
-    
     // Register with the daemon, which publishes the service.
     mdns.register(my_service).expect("Failed to register our service");
 
-    dbg!("Registering the service");
 
     // Gracefully shutdown the daemon
     std::thread::sleep(std::time::Duration::from_secs(1));

@@ -6,16 +6,7 @@
     "main"
   ],
   "permissions": [
-    "path:default",
-    "event:default",
-    "window:default",
-    "app:default",
-    "image:default",
-    "resources:default",
-    "menu:default",
-    "tray:default",
-    "notification:default",
-    "notification:allow-notify",
-    "notification:allow-show"
+    "core:default",
+    "notification:default"
   ]
 }
