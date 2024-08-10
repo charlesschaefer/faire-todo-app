@@ -12,8 +12,9 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
-    tauri::Builder::default()
-        .plugin(tauri_plugin_notification::init())
+    let mut builder = tauri::Builder::default();
+
+    builder.plugin(tauri_plugin_notification::init())
         .setup(|app| {
             #[cfg(desktop)]
             desktop::setup_system_tray_icon(app);

@@ -205,6 +205,8 @@ export class AppComponent implements OnInit {
               // Web Workers are not supported in this environment.
               // You should add a fallback so that your program still executes correctly.
           }
+
+          this.listenToTauriEvents();
     }
 
     switchTheme() {
@@ -283,5 +285,33 @@ export class AppComponent implements OnInit {
         invoke('broadcast_network_sync_services').then(() => {
             invoke('start_http_server');
         })
+    }
+
+    async addNotification() {
+        // Do you have permission to send a notification?
+        let permissionGranted = await isPermissionGranted();
+    
+        // If not we need to request it
+        if (!permissionGranted) {
+            const permission = await requestPermission();
+            permissionGranted = permission === 'granted';
+        }
+        //alert(`Permission granted: ${permissionGranted}`);
+
+        invoke('add_notification', {title: 'Tauri', body: 'Tauri is awesome!'});
+    
+        // Once permission has been granted we can send the notification
+        if (permissionGranted) {
+            //sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
+        }
+    }
+
+    msgs: string[] = [];
+
+    async listenToTauriEvents() {
+        listen('msg', (event) => {
+            this.msgs.push(event.payload as string);
+        });
+        this.msgs.push("Início do log aberto");
     }
 }
