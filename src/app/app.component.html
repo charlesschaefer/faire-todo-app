@@ -57,4 +57,9 @@
   <p-menu #menu [model]="menuItems" class="side-bar-menu" />
 </p-sidebar>
 
-<!-- <button (click)="addNotification()">Testar Notificação</button> -->
+<div class="debug-msgs">
+  @for (msg of msgs; track msg) {
+    <p>{{ msg }}</p>
+  }
+</div>
+<button (click)="addNotification()">Testar Notificação</button>

@@ -14,6 +14,7 @@ import {
     requestPermission,
     sendNotification,
   } from '@tauri-apps/plugin-notification';
+import { listen } from '@tauri-apps/api/event';
 
 
 import { ThemeService } from './services/theme.service';
@@ -89,6 +90,8 @@ export class AppComponent implements OnInit {
                 { label: await firstValueFrom(this.translate.get(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
                 { label: await firstValueFrom(this.translate.get(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
                 { label: await firstValueFrom(this.translate.get(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
+                { separator: true },
+                { label: await firstValueFrom(this.translate.get(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
             ],
         }];
         for (let item of additionalItems) {
@@ -204,6 +207,8 @@ export class AppComponent implements OnInit {
               // Web Workers are not supported in this environment.
               // You should add a fallback so that your program still executes correctly.
           }
+
+          this.listenToTauriEvents();
     }
 
     switchTheme() {
@@ -301,5 +306,14 @@ export class AppComponent implements OnInit {
         if (permissionGranted) {
             //sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
         }
+    }
+
+    msgs: string[] = [];
+
+    async listenToTauriEvents() {
+        listen('msg', (event) => {
+            this.msgs.push(event.payload as string);
+        });
+        this.msgs.push("Início do log aberto");
     }
 }
