@@ -1,4 +1,4 @@
-use tauri::Manager;
+use tauri::{Manager, Emitter};
 
 #[cfg(desktop)]
 mod desktop;
@@ -12,9 +12,9 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
+    let mut builder = tauri::Builder::default();
 
-    tauri::Builder::default()
-        .plugin(tauri_plugin_notification::init())
+    builder.plugin(tauri_plugin_notification::init())
         .setup(|app| {
             #[cfg(desktop)]
             desktop::setup_system_tray_icon(app);
@@ -29,6 +29,7 @@ pub fn run() {
             mdns::broadcast_network_sync_services,
             http::start_http_server,
             add_notification,
+            close_app,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -37,10 +38,21 @@ pub fn run() {
 #[tauri::command]
 fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
     use tauri_plugin_notification::NotificationExt;
-    app_handle.notification()
-        .builder()
-        .title(title)
-        .body(body)
-        .show()
-        .unwrap();
+    let _ = app_handle.emit("msg", "Building the notification").unwrap();
+    let mut notification = app_handle.notification().builder();
+    let _ = app_handle.emit("msg", "Let's add title").unwrap();
+    notification = notification.title(title);
+    let _ = app_handle.emit("msg", "Now let's add body").unwrap();
+    notification = notification.body(body);
+    let _ = app_handle.emit("msg", "Notification built. Lets show it").unwrap();
+    let results = notification.show();
+    let _ = app_handle.emit("msg", "Notification showed. Let's check its results").unwrap();
+    results.unwrap();
+    let _ = app_handle.emit("msg", "Everything ok with notifications").unwrap();
+}
+
+
+#[tauri::command]
+fn close_app(app_handle: tauri::AppHandle) {
+    app_handle.exit(0);
 }
