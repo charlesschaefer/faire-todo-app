@@ -13,7 +13,7 @@ import { InboxResolver } from "./inbox/inbox.resolver";
 
 export const routes: Routes = [
     {path: "today", component: TodayComponent},
-    {path: "inbox", component: InboxComponent},
+    {path: "inbox", component: InboxComponent, resolve: {tasks: InboxResolver}},
     {path: "upcoming", component: UpcomingComponent},
     {path: "project", component: ProjectComponent},
     {path: "project/:id/tasks", component: ProjectTasksComponent},
