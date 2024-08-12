@@ -57,3 +57,8 @@
 .task-add-button i {
     font-size: 12px;
 }
+
+:host ::ng-deep .task-add-list-subtasks .p-accordion-header-text {
+    font-size: 13px;
+    font-weight: 500;
+}

@@ -55,7 +55,7 @@
       @if (subTasks?.length) {
       <div class="task-add-list-subtasks">
         <p-accordion>
-          <p-accordionTab [header]="'Subtasks' | translate">
+          <p-accordionTab [header]="subtasksTitle()">
             <div>
             @for (task of subTasks; track task.id) {
               <app-subtask [task]="task" />
