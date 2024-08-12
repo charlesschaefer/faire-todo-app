@@ -47,5 +47,6 @@
     "Notifications": "Notifications",
     "Receive app Notifications?": "Receive app Notifications?",
     "Notify tasks due today?": "Notify tasks due today?",
-    "Time to notify today tasks:": "Time to notify today tasks:"
+    "Time to notify today tasks:": "Time to notify today tasks:",
+    "Add subtask": "Add subtask"
   }
