@@ -16,7 +16,10 @@ import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { TaskDto } from '../../dto/task-dto';
+import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
+
+console.log("TaskComponent2", TaskComponent);
 
 @Component({
     selector: 'app-task-edit',
@@ -32,7 +35,8 @@ import { SubtaskComponent } from '../subtask/subtask.component';
         DropdownModule,
         TaskAddComponent,
         SubtaskComponent,
-        AccordionModule
+        AccordionModule,
+        TaskComponent
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
