@@ -4,6 +4,7 @@ import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
 import { Observable, firstValueFrom, from } from 'rxjs';
 import { DateTime } from 'luxon';
+import { TaskComponent } from '../task/task/task.component';
 
 @Injectable({
     providedIn: 'root'
@@ -108,3 +109,5 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         }))
     }
 }
+
+console.log("TaskComponent", TaskComponent);

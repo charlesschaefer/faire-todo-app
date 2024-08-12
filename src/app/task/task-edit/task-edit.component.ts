@@ -1,19 +1,22 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { CalendarModule } from 'primeng/calendar';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DropdownModule } from 'primeng/dropdown';
-
-import { TaskDto } from '../../dto/task-dto';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TaskService } from '../../services/task.service';
-import { MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
+import { DividerModule } from 'primeng/divider';
+import { firstValueFrom, Subject } from 'rxjs';
+import { MessageService, TreeNode } from 'primeng/api';
+import { CardModule } from 'primeng/card';
+import { AccordionModule } from 'primeng/accordion';
+
+import { TaskAddComponent } from '../task-add/task-add.component';
 import { ProjectService } from '../../services/project.service';
+import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
+import { TaskDto } from '../../dto/task-dto';
+import { SubtaskComponent } from '../subtask/subtask.component';
 
 @Component({
     selector: 'app-task-edit',
@@ -27,12 +30,18 @@ import { ProjectDto } from '../../dto/project-dto';
         DynamicDialogModule,
         TranslateModule,
         DropdownModule,
+        TaskAddComponent,
+        SubtaskComponent,
+        AccordionModule
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
 })
 export class TaskEditComponent implements OnInit {
     task!: TaskDto;
+    subTasks!: TaskDto[];
+
+    nodes!: TreeNode[];
     
     @Output() showTaskAdd = new EventEmitter<Event>();
 
@@ -41,6 +50,8 @@ export class TaskEditComponent implements OnInit {
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
 
+    showTaskAddOverlay$ = new Subject<Event>();
+
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
         private taskService: TaskService<TaskDto>,
@@ -48,9 +59,11 @@ export class TaskEditComponent implements OnInit {
         private dynamicDialogRef: DynamicDialogRef,
         private translate: TranslateService,
         private projectService: ProjectService<ProjectDto>,
-    ) {}
+    ) {
 
-    ngOnInit(): void {
+    }
+
+    async ngOnInit() {
         this.task = this.dynamicDialogConfig.data.task;
         this.taskForm = this.fb.group({
             title: [this.task.title, Validators.required],
@@ -75,6 +88,17 @@ export class TaskEditComponent implements OnInit {
             }
             this.projects = cloneProjects;
         });
+
+        this.taskService.getTaskSubtasks(this.task).subscribe(subtasks => {
+            this.subTasks = subtasks;
+        });
+
+        this.nodes = [
+            {
+                key: '0',
+                label: await firstValueFrom(this.translate.get("Subtasks")),
+            }
+        ]
     }
 
     saveTask() {
@@ -88,7 +112,7 @@ export class TaskEditComponent implements OnInit {
             project: form.project || 0,
             completed: 0,
             order: this.task.order,
-            parent: null,
+            parent: this.task.parent,
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({
@@ -113,6 +137,12 @@ export class TaskEditComponent implements OnInit {
     }
 
     showTaskAddPanel(event: Event) {
-        this.showTaskAdd.emit(event);
+        console.log("ShowTaskAddPanel called")
+        //this.showTaskAdd.emit(event);
+        this.showTaskAddOverlay$.next(event);
+    }
+
+    onAddTask() {
+        console.log("Chamou TaskEdit.onAddTask(), agora tem que recarregar as subtarefas");
     }
 }
