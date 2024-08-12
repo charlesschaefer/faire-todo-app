@@ -61,6 +61,10 @@ export class InboxComponent implements OnInit {
     ) {}
     
     ngOnInit() {
+        console.log(
+            'Activated route data in Component:::',
+            this.activatedRoute.data
+          );
         this.getTasks();
         console.log("tasks: ", this.tasks)
         //this.countSubtasks();
@@ -73,10 +77,9 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-        console.log("Tá nem aí, entrou no getTsks()")
-        this.activatedRoute.data.subscribe(({ inboxResolvedData }) => {
-            this.tasks = inboxResolvedData.tasks;
-            this.subtasksCount = inboxResolvedData.subtasksCount;
+        this.activatedRoute.data.subscribe((inboxResolvedData) => {
+            this.tasks = inboxResolvedData['tasks'].tasks;
+            this.subtasksCount = inboxResolvedData['tasks'].subtasksCount;
         });
     }
 
