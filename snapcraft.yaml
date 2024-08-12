@@ -1,0 +1,77 @@
+name: faire-todo-app
+base: core22
+version: '0.0.1'
+summary: An offline first, multiplatform todo app # 79 char long summary
+description: |
+  Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
+  It stores the data using the IndexedDb of your platform's embeded web browser. 
+  Fair is the infinitive verb in french equivalent to "to do".
+
+grade: stable
+confinement: strict
+
+layout:
+  /usr/libexec/webkit2gtk-4.1:
+    symlink: $SNAP/usr/libexec/webkit2gtk-4.1
+  /usr/lib/x86_64-linux-gnu/webkit2gtk-4.1:
+    symlink: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1
+  /usr/lib/aarch64-linux-gnu/webkit2gtk-4.1:
+    symlink: $SNAP/usr/lib/aarch64-linux-gnu/webkit2gtk-4.1
+  /usr/lib/webkit2gtk-4.1/injected-bundle:
+    symlink: $SNAP/usr/lib/webkit2gtk-4.1/injected-bundle
+
+apps:
+  faire-todo-app:
+    extensions:
+      - gnome
+    command: usr/bin/faire-todo-app
+    desktop: usr/share/applications/faire-todo-app.desktop
+    plugs: 
+      - wayland
+      - x11
+      - home
+      - desktop
+      - unity7
+
+package-repositories:
+  - type: apt
+    components: [main]
+    suites: [noble]
+    key-id: 78E1918602959B9C59103100F1831DDAFC42E99D
+    url: http://ppa.launchpad.net/snappy-dev/snapcraft-daily/ubuntu
+
+parts:
+  build-app:
+    plugin: dump
+    build-snaps:
+      - node/20/stable
+      - rustup/latest/stable
+    build-packages:
+      - libwebkit2gtk-4.1-dev
+      - build-essential
+      - curl
+      - wget
+      - file
+      - libxdo-dev
+      - libssl-dev
+      - libayatana-appindicator3-dev
+      - librsvg2-dev
+      - dpkg
+    stage-packages:
+      - libwebkit2gtk-4.1-0
+      - libayatana-appindicator3-1
+      - libglu1-mesa
+      - freeglut3
+    source: .
+    override-build: |
+      set -eu
+      rustup default stable
+      npm install
+      npm run tauri build -- --bundles deb
+      dpkg -x src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
+      sed -i -e "s|Icon=addiction-tracker|Icon=/usr/share/icons/hicolor/32x32/apps/addiction-tracker.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/addiction-tracker.desktop
+slots:
+  dbus-daemon:
+    interface: dbus
+    bus: session
+    name: com.fairetodoapp
