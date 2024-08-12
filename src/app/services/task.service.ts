@@ -2,9 +2,15 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { Observable, firstValueFrom, from } from 'rxjs';
+import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
 import { DateTime } from 'luxon';
 import { TaskComponent } from '../task/task/task.component';
+
+interface SubtaskCount {
+    subtasks: number;
+    completed: number;
+}
+
 
 @Injectable({
     providedIn: 'root'
@@ -103,6 +109,25 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                 .and((task) => task.completed == 0)
                 .toArray();
         }));
+    }
+
+    countTaskSubtasks(task: TaskDto): Observable<SubtaskCount> {
+        const countSubtasks$ = new Subject<SubtaskCount>();
+        
+        zip(
+            from(liveQuery(() => this.table.where({
+                parent: task.id
+            }).count())),
+            from(liveQuery(() => this.table.where({
+                parent: task.id,
+                completed: 1
+            }).count()))
+        ).subscribe(([subtasks, completed]) => {
+            countSubtasks$.next({
+                subtasks, completed
+            });
+        });
+        return countSubtasks$;        
     }
 
     getAllTasks() {

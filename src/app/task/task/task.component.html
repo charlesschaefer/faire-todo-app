@@ -33,10 +33,10 @@
       </div>
       <div class="task-item-row-second">
         <div class="task-item-attributes gap-3">
-          @if (subtasks?.length) {
+          @if (subtasksCount) {
           <div class="task-item-attributes-subtask">
             <div class="subtask-icon"></div>
-            <span class="subtask-counter">0/2</span>
+            <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
           </div>
           }
           <div class="task-item-attributes-project">

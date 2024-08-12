@@ -54,7 +54,6 @@ import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 export class TaskComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Input() projects!: Map<number, ProjectDto>;
-    @Input() subtasksCount!: number | undefined;
 
     @Output() onTaskRemoved = new EventEmitter<number>();
     @Output() onEditTask = new EventEmitter<Event>();
@@ -72,6 +71,8 @@ export class TaskComponent implements OnDestroy, OnInit {
     taskMenuItems!: MenuItem[];
 
     subtasks!: TaskDto[];
+    subtasksCount!: number;
+    subtasksCompletedCount!: number;
 
     isMobile!: boolean;
 
@@ -102,7 +103,17 @@ export class TaskComponent implements OnDestroy, OnInit {
 
         this.checkTaskIsDue();
 
+        this.countSubtasks();
+
         this.isMobile = Boolean(navigator.userAgent.toLowerCase().match(/(android|iphone|android|iemobile|ipad)/i));
+    }
+
+    countSubtasks() {
+        this.taskService.countTaskSubtasks(this.task).subscribe(subtasksCount => {
+            console.log("Counters for task ", this.task.title, "subtasksCount: ", subtasksCount.subtasks);
+            this.subtasksCount = subtasksCount.subtasks;
+            this.subtasksCompletedCount = subtasksCount.completed;
+        });
     }
 
     checkTaskIsDue() {
