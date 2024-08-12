@@ -17,6 +17,7 @@ export class InboxResolver implements Resolve<InboxResolvedData> {
         private taskService: TaskService<TaskDto>
     ) {}
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<InboxResolvedData> {
+        console.log("Tá nem aí, entrou no resolve");
         return this.taskService.getFromProject(0).pipe(
             mergeMap((tasks) => {
                 tasks = this.taskService.orderTasks(tasks);
@@ -27,7 +28,6 @@ export class InboxResolver implements Resolve<InboxResolvedData> {
                 )
             })
         );
-        
     }
 }
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { first, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -17,21 +17,19 @@ import {
 
 
 import { ThemeService } from './services/theme.service';
-import { routes } from './app.routes';
-import { UndoService, UndoItem } from './services/undo.service';
+import { UndoService } from './services/undo.service';
 import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke } from '@tauri-apps/api/core';
-import { HttpClient, HttpHeaders, provideHttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 
 export enum NotificationType {
     DueTask,
     TodayTasks
 }
-
 
 @Component({
     selector: 'app-root',
