@@ -12,7 +12,7 @@ addEventListener('message', ({ data }) => {
     // checks if there are tasks dueing now every minute
     setInterval(() => {
         settingsService.get(1).subscribe(settings => {
-            if (settings.notifications) {
+            if (settings?.notifications) {
                 checkDuedTasks();
                 if (settings.todayNotifications) {
                     checkDuingToday(settings);

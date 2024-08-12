@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateTime } from 'luxon';
-import { firstValueFrom, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -74,7 +73,8 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-         this.activatedRoute.data.subscribe(({ inboxResolvedData }) => {
+        console.log("Tá nem aí, entrou no getTsks()")
+        this.activatedRoute.data.subscribe(({ inboxResolvedData }) => {
             this.tasks = inboxResolvedData.tasks;
             this.subtasksCount = inboxResolvedData.subtasksCount;
         });
