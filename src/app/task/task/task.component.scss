@@ -123,3 +123,15 @@ li.task-item:hover .task-item-menu {
     color: var(--red-500);
 }
 
+.task-item-attributes-subtask {
+    color: var(--text-color-secondary);
+    display: flex;
+}
+
+.task-item-attributes-subtask .subtask-icon {
+    mask: url("/assets/subtasks.svg") no-repeat center / contain;
+    -webkit-mask: url("/assets/subtasks.svg") no-repeat center / contain;
+    width: 15px;
+    height: 15px;
+    background-color: var(--text-color-secondary);
+}

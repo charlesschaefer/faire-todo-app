@@ -1,7 +1,7 @@
-import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
@@ -39,17 +39,19 @@ import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
         ToastModule,
         ContextMenuModule,
         TreeModule,
-        DateShortenerPipe
+        DateShortenerPipe,
+        TranslateModule,
     ],
     providers: [
         MessageService,
         DialogService,
         ConfirmationService,
+        TranslateService
     ],
     templateUrl: './task.component.html',
     styleUrl: './task.component.scss'
 })
-export class TaskComponent implements OnDestroy, OnInit, OnChanges {
+export class TaskComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Input() projects!: Map<number, ProjectDto>;
     @Input() subtasksCount!: number | undefined;
@@ -69,10 +71,10 @@ export class TaskComponent implements OnDestroy, OnInit, OnChanges {
 
     taskMenuItems!: MenuItem[];
 
-    subtasks!: TreeNode[];
+    subtasks!: TaskDto[];
 
     isMobile!: boolean;
-    
+
     constructor(
         private dialogService: DialogService,
         private messageService: MessageService,
@@ -101,14 +103,6 @@ export class TaskComponent implements OnDestroy, OnInit, OnChanges {
         this.checkTaskIsDue();
 
         this.isMobile = Boolean(navigator.userAgent.toLowerCase().match(/(android|iphone|android|iemobile|ipad)/i));
-    }
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes['subtasksCount']) {
-            this.subtasks = [{
-                key: '0',
-                label: `${this.subtasksCount} tasks`
-            }];
-        }
     }
 
     checkTaskIsDue() {
