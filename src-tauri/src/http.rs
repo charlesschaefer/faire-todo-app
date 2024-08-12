@@ -1,13 +1,39 @@
-use std::thread;
-use tiny_http::{Request, Response, ResponseBox, Header};
+use bytes::Bytes;
+
+use http_body_util::Full;
+use hyper::server::conn::http1;
+use hyper::service::Service;
+use hyper::{body::Incoming as IncomingBody, Request, Response};
+use tokio::net::TcpListener;
+
+use hyper_util::rt::TokioIo;
+
+use std::future::Future;
+use std::net::SocketAddr;
+
+type GenericError = Box<dyn std::error::Error + Send + Sync + 'static>;
+
 
 
 #[tauri::command]
-pub fn start_http_server(otp_code: String, backup_data: String) {
-    thread::spawn(|| {
-        let mut server = HttpServer::new();
-        server.start_server(otp_code, backup_data);
-    });
+pub async fn start_http_server(otp_code: String, backup_data: String) {
+        let mut server = HttpServer {
+            otp_code: otp_code,
+            json_data: backup_data
+        };
+
+        let addr = SocketAddr::from(([0, 0, 0, 0], 9099));
+        let listener = TcpListener::bind(addr).await?;
+        println!("Listening on http://{}", addr);
+
+        loop {
+            let (stream, _) = listener.accept().await?;
+            let io = TokioIo::new(stream);
+
+            if let Err(err) = http1::Builder::new().serve_connection(io, server).await {
+                println!("Failed to serve connection: {:?}", err);
+            }
+        }
 }
 
 struct HttpServer {
@@ -23,49 +49,46 @@ impl HttpServer {
         }
     }
     
-    fn start_server(&mut self, otp_code: String, backup_data: String) {
-        self.otp_code = otp_code;
-        self.json_data = backup_data;
-
-        let server = tiny_http::Server::http("0.0.0.0:9099").unwrap();
-        loop {
-            // waits for the handshake connection
-            let request = match server.recv() {
-                Ok(req) => {
-                    let method = req.method().as_str();
-                    if method != "POST" && method != "OPTIONS" {
-                        dbg!("Wrong url or method");
-                        // without a response, tiny_http returns a 505 HTTP ERROR
-                        continue;
-                    }
-                    req
-                },
-                Err(_err) => {
-                    dbg!("Couldn't receive the request.");
-                    return ;
-                }
-            };
-            let response = self.handle_incoming_request(&request);
-            
-            if let Some(response) = response {
-                let _ = request.respond(response);
-                continue;
-            } else {
-                // finishes the listening loop
-                break;
-            }
-        }
+    fn response_with_cors_headers(&self, resp: &str) -> Result<Response<Full<Bytes>>, hyper::Error> {
+        let response = hyper::Response::builder()
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "*")
+            .body(Full::new(Bytes::from(resp)))
+            .unwrap();
+        
+        Ok(response)
     }
+}
 
-    fn handle_incoming_request(&self, request: &Request) -> Option<ResponseBox> {
+impl Service<Request<IncomingBody>> for HttpServer {
+    type Response = Response<Full<Bytes>>;
+    type Error = hyper::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
+
+    fn call(&self, request: Request<IncomingBody>) -> Self::Future {
+
         if request.method().as_str() == "OPTIONS" {
             dbg!("Received a OPTIONS method");
             let response = self.response_with_cors_headers("");
             dbg!("Returned the response");
-            return response;
+            return Box::pin(async { response });
+        }
+
+        if request.method().as_str() != "POST" {
+            dbg!("Received a method different of POST");
+            
+        }
+        let response = match request.uri.path() {
+            "/handshake" => {
+                dbg!("Received a POST method on /handshake url");
+                self.handshake(request)
+            },
+            "/disconnect" => {
+
+            }
         }
         
-        if request.url() == "/handshake" {
+        if request.uri().path() == "/handshake" {
             dbg!("Received a POST method on /handshake url");
             return self.handshake(request);
         }
@@ -77,7 +100,7 @@ impl HttpServer {
         None
     }
 
-    fn handshake(&self, request: &Request) -> Option<ResponseBox> {
+    fn handshake(&self, request: &Request) {
         let otp_token = request
             .headers()
             .into_iter()
@@ -99,14 +122,5 @@ impl HttpServer {
         self.response_with_cors_headers(&self.json_data.as_str())
     }
 
-    fn response_with_cors_headers(&self, resp: &str) -> Option<ResponseBox> {
-        let header1 = Header::from_bytes(&b"Access-Control-Allow-Origin"[..], &b"*"[..]).unwrap();
-        let header2 = Header::from_bytes(&b"Access-Control-Allow-Headers"[..], &b"*"[..]).unwrap();
-        // received the otp, now we're going to respond with the encrypted json
-        let response = Response::from_string(resp)
-            .with_header(header1)
-            .with_header(header2)
-            .boxed();
-        Some(response)
-    }
+    
 }
