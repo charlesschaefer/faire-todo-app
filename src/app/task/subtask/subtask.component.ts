@@ -1,31 +1,31 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MenuModule } from 'primeng/menu';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DateTime } from 'luxon';
-import { firstValueFrom, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { CheckboxModule } from 'primeng/checkbox';
-import { ButtonModule } from 'primeng/button';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MenuModule } from 'primeng/menu';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { ContextMenuModule } from 'primeng/contextmenu';
-import { TreeModule } from 'primeng/tree';
 
 import { TaskDto } from '../../dto/task-dto';
-import { TaskEditComponent } from '../task-edit/task-edit.component';
-import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskComponent } from '../task/task.component';
 import { TaskService } from '../../services/task.service';
-import { ProjectDto } from '../../dto/project-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
+import { ProjectDto } from '../../dto/project-dto';
+import { Subject, firstValueFrom } from 'rxjs';
+import { DateTime } from 'luxon';
+import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
 
-
+console.log(TaskComponent);
 @Component({
-    selector: 'app-task',
+    selector: 'app-subtask',
     standalone: true,
     imports: [
         RadioButtonModule,
@@ -38,7 +38,6 @@ import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
         CheckboxModule,
         ToastModule,
         ContextMenuModule,
-        TreeModule,
         DateShortenerPipe,
         TranslateModule,
     ],
@@ -48,11 +47,12 @@ import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
         ConfirmationService,
         TranslateService
     ],
-    templateUrl: './task.component.html',
-    styleUrl: './task.component.scss'
+    templateUrl: '../task/task.component.html',
+    styleUrl: '../task/task.component.scss'
 })
-export class TaskComponent implements OnDestroy, OnInit {
+export class SubtaskComponent {
     @Input() task!: TaskDto;
+
     @Input() projects!: Map<number, ProjectDto>;
     @Input() subtasksCount!: number | undefined;
 
@@ -83,26 +83,14 @@ export class TaskComponent implements OnDestroy, OnInit {
         protected translate: TranslateService,
         protected undoService: UndoService,
     ) {
-        this.setTaskMenuItems();
-
-        this.today = new Date();
-        this.today.setHours(0);
-        this.today.setMinutes(0);
-        this.today.setSeconds(0);
-        this.today.setMilliseconds(0);
-    }
-
-    ngOnInit() {
-        this.onSaveEditTask$.subscribe(value => {
-            this.onEditTask.emit();
-        });
-        if (this.task.completed) {
-            this.completed = true;
-        }
-
-        this.checkTaskIsDue();
-
-        this.isMobile = Boolean(navigator.userAgent.toLowerCase().match(/(android|iphone|android|iemobile|ipad)/i));
+        /* super(
+            dialogService,
+            messageService,
+            taskService,
+            confirmationService,
+            translate,
+            undoService,
+        ); */
     }
 
     checkTaskIsDue() {
@@ -301,3 +289,4 @@ export class TaskComponent implements OnDestroy, OnInit {
         this.dialogRef?.close();
     }
 }
+console.log("SubtaskComponent", SubtaskComponent);

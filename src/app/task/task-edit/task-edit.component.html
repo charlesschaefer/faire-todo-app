@@ -52,6 +52,19 @@
           class="task-add-project"
         />
       </div>
+      @if (subTasks?.length) {
+      <div class="task-add-list-subtasks">
+        <p-accordion>
+          <p-accordionTab [header]="'Subtasks' | translate">
+            <div>
+            @for (task of subTasks; track task.id) {
+              <app-subtask [task]="task" />
+            }
+            </div>
+          </p-accordionTab>
+        </p-accordion>
+      </div>
+      }
       <p-divider />
       <div class="task-add-subtask">
         <div class="task-add-line" (click)="showTaskAddPanel($event)">
@@ -66,3 +79,5 @@
     </div>
   </form>
 </p-card>
+
+<app-task-add [(showOverlay$)]="showTaskAddOverlay$" [parent]="task" (onAddTask)="onAddTask()" />
