@@ -2,18 +2,25 @@
 <p-dialog [header]="'Get data from other device' | translate" [modal]="true" [(visible)]="getFromOthersVisible">
   <div class="sync-container-client">
     <p class="help" translate>
-      Open the app on other device, click the button "Send data to other devices" and click the button "Make device discoverable".
+      Click the button below to look for the device in the network.
     </p>
     <p class="help" translate>
-      Then click the button below to look for the device in the network.
+      Then open the app on other device, click the button "Send data to other devices" and then click the button "Make device discoverable".
     </p>
+    <p class="help" translate>
+      This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
+    </p>
+    
     <p-button [label]="'Search devices' | translate" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
     <div class="sync-otp-field" *ngIf="showOTPField">
-      <form novalidate [formGroup]="otpForm" (ngSubmit)="sendEncryptedOTP($event)">
+      <form [formGroup]="otpForm" (ngSubmit)="sendEncryptedOTP($event)">
         <label for="otp">Type the code below</label>
-        <p-inputOtp formControlName="otp" [length]="6" />
+        <p-inputOtp formControlName="otp" [length]="6" class="otp-field" />
         <p-button [label]="'Send' | translate" type="submit" />
       </form>
+    </div>
+    <div class="sync-progress-bar">
+      <p-progressBar mode="indeterminate" [style]="{ height: '6px' }" *ngIf="showProgressBar" />
     </div>
   </div>
 </p-dialog>
@@ -22,6 +29,9 @@
   <div class="sync-container-server">
     <p class="help" translate>
       Open the app on other device, click the button "Get data from other devices" and follow instructions. Then, click the button bellow.
+    </p>
+    <p class="help" translate>
+      This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
     </p>
     <p-button [label]="'Make device discoverable' | translate" (onClick)="makeDeviceDiscoverable()" />
     <div class="sync-otp" *ngIf="otpData">
@@ -40,4 +50,4 @@
   <p-button [label]="'Send data to other devices' | translate" (onClick)="openToOthers()" />
 </div>
 
-<p-toast />
+<p-toast key="sync" />

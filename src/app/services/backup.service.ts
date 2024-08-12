@@ -88,6 +88,7 @@ export class BackupService {
 
     restoreBackup(encryptedData: string, decryptKey: string) {
         let jsonBackup;
+        const backupResponse$ = new Subject();
         console.log("Encrypted data: ", encryptedData, "decryptKey", decryptKey);
         try {
             const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
@@ -98,7 +99,8 @@ export class BackupService {
             jsonBackup = JSON.parse(decryptedBackup.toString(enc.Utf8)) as BackupData;
         } catch (error) {
             console.log("Error trying to decrypt or convert json: ", error);
-            throw error;
+            backupResponse$.error(error);
+            return backupResponse$;
         }
         jsonBackup = this.rehydrateDateFields(jsonBackup);
         console.log("Resultado: ", jsonBackup);
@@ -117,8 +119,6 @@ export class BackupService {
             tag: this.tagService.bulkAdd(jsonBackup.tag),
             taskTag: this.taskTagService.bulkAdd(jsonBackup.taskTag)
         });
-
-        const backupResponse$ = new Subject();
 
         savedData$.subscribe({
             next: (result) => {

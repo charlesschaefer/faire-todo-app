@@ -6,14 +6,15 @@ import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputOtpModule } from 'primeng/inputotp';
+import { ToastModule } from 'primeng/toast';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { AES } from 'crypto-js';
+import { HttpClient } from '@angular/common/http';
+import { Message, MessageService } from 'primeng/api';
+import { firstValueFrom } from 'rxjs';
 
 import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
-import { AES } from 'crypto-js';
-import { HttpClient } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
-import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-synchronization',
@@ -25,6 +26,7 @@ import { ToastModule } from 'primeng/toast';
         CommonModule,
         ReactiveFormsModule,
         InputOtpModule,
+        ProgressBarModule,
         ToastModule,
     ],
     providers: [],
@@ -40,10 +42,11 @@ export class SynchronizationComponent {
 
     enableDiscoverButton = true;
     showOTPField = false;
+    showProgressBar = false;
 
     fb = new FormBuilder();
     otpForm = this.fb.group({
-        otp: ["", Validators.minLength(6)]
+        otp: ["", Validators.required]
     });
 
     constructor(
@@ -52,6 +55,7 @@ export class SynchronizationComponent {
         private httpClient: HttpClient,
         private messageService: MessageService,
         private translateService: TranslateService,
+        private translate: TranslateService,
     ) {}
 
     openFromOthers() {
@@ -62,6 +66,7 @@ export class SynchronizationComponent {
     openToOthers() {
         this.sendToOthersVisible = true;
         this.getFromOthersVisible = false;
+        this.otpData = "";
     }
 
     makeDeviceDiscoverable() {
@@ -80,19 +85,36 @@ export class SynchronizationComponent {
 
     discoverDevices() {
         this.enableDiscoverButton = false;
-        this.showOTPField = true;
+        this.showProgressBar = true;
         console.log("Starting to discover devices...");
         // get devices with faire opened in the network
-        invoke('search_network_sync_services').then(ipv4 => {
+        invoke('search_network_sync_services').then(async (ipv4) => {
             console.log("Encountered the app in the machine with ip ", ipv4);
+            this.messageService.add({
+                summary: await firstValueFrom(this.translate.get("Device found")),
+                detail: await firstValueFrom(this.translate.get("Your device was discovered with the IP: ")) + ipv4,
+                severity: "success",
+                key: "sync"
+            });
             this.showOTPField = true;
+            this.showProgressBar = false;
             this.serverIp = ipv4 as string;
         });
     }
 
-    sendEncryptedOTP(event: Event) {
+    async sendEncryptedOTP(event: Event) {
         console.log("Sending encripted data. OTP: ", this.otpForm.value.otp);
         const otp = this.otpForm.value.otp as unknown as string;
+        if (!otp || otp.length < 6) {
+            this.messageService.add({
+                summary: await firstValueFrom(this.translateService.get("Error")),
+                detail: await firstValueFrom(this.translateService.get("You need to type all the 6 letters correctly.")),
+                severity: 'error',
+                key: "sync"
+
+            });
+            return;
+        }
         
         // encrypts the otp and sends to the server 
         let encryptedOtp = AES.encrypt(otp , otp);
@@ -113,6 +135,7 @@ export class SynchronizationComponent {
                         detail: await firstValueFrom(this.translateService.get("Your data was synchronized successfully.")),
                         severity: "success",
                         life: 4000,
+                        key: "sync"
                     });
                     await this.httpClient.post(`http://${this.serverIp}:9099/disconnect`, {});
                 },
@@ -120,7 +143,9 @@ export class SynchronizationComponent {
                     console.log("Error recovering backup. Showing messages...", err);
                     this.messageService.add({
                         summary: await firstValueFrom(this.translateService.get("Error synchronizing")),
-                        detail: await firstValueFrom(this.translateService.get(`Error trying to synchronize data: `)) + err.toString()
+                        detail: await firstValueFrom(this.translateService.get(`Error trying to synchronize data: `)) + err.toString(),
+                        severity: 'error',
+                        key: "sync"
                     });
                 }
             });
