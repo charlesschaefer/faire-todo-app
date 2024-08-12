@@ -66,10 +66,6 @@ export class InboxComponent implements OnInit {
             this.activatedRoute.data
           );
         this.getTasks();
-        console.log("tasks: ", this.tasks)
-        //this.countSubtasks();
-
-        //let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
     }
 
     onShowTaskAddOverlay(event: Event) {

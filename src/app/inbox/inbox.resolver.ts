@@ -22,7 +22,10 @@ export class InboxResolver implements Resolve<InboxResolvedData> {
                 tasks = this.taskService.orderTasks(tasks);
                 return from(this.taskService.countTasksSubtasks(tasks)).pipe(
                     map(subtasksCount => {
-                        return { tasks: tasks, subtasksCount: subtasksCount} as InboxResolvedData
+                        return { 
+                            tasks: tasks, 
+                            subtasksCount: subtasksCount
+                        } as InboxResolvedData
                     })
                 )
             })

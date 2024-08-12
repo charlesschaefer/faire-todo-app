@@ -54,7 +54,6 @@ export class SubtaskComponent {
     @Input() task!: TaskDto;
 
     @Input() projects!: Map<number, ProjectDto>;
-    @Input() subtasksCount!: number | undefined;
 
     @Output() onTaskRemoved = new EventEmitter<number>();
     @Output() onEditTask = new EventEmitter<Event>();
@@ -72,6 +71,8 @@ export class SubtaskComponent {
     taskMenuItems!: MenuItem[];
 
     subtasks!: TaskDto[];
+    subtasksCount!: number;
+    subtasksCompletedCount!: number;
 
     isMobile!: boolean;
 

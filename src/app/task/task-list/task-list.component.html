@@ -12,7 +12,7 @@
         <p-panel [toggleable]="true" [header]="'Completed tasks' | translate" [collapsed]="true">
           <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
             @for (task of completedTasks; track task.id) {
-              <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount.get(task.id)" />
+              <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
             }
           </ul>
         </p-panel>
