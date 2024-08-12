@@ -97,7 +97,11 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
 
     getTaskSubtasks(task: TaskDto) {
         return from(liveQuery(() => {
-            return this.table.where('parent').equals(task.id).toArray();
+            return this.table
+                .where('parent')
+                .equals(task.id)
+                .and((task) => task.completed == 0)
+                .toArray();
         }));
     }
 
