@@ -27,7 +27,7 @@ export class AllTasksComponent  extends InboxComponent {
     }
 
     override async getTasks() {
-        let tasks = await firstValueFrom(this.taskService.getByField('completed', 0));
+        let tasks = await firstValueFrom(this.taskService.getAllTasks());
         
         console.log("Got tasks", tasks);
         this.tasks = this.taskService.orderTasks(tasks);
