@@ -16,6 +16,15 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         this.table = this.dbService.task;
     }
 
+    listParentTasks() {
+        return from(liveQuery(() => {
+            return this.table.where({
+                completed: 0,
+                parent: null
+            }).toArray();
+        }))
+    }
+
     orderTasks(tasks: T[]) {
         tasks.sort((a, b) => {
             if (a.order > b.order) return 1;
@@ -29,7 +38,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             return this.table.where({
                 completed: 0,
                 project: project,
-            }).toArray();
+            }).and((task) => !task.parent || task.parent  == null).toArray();
         }));
     }
 
@@ -40,7 +49,12 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         date.setSeconds(0);
         date.setMilliseconds(0);
         return from(liveQuery(() => {
-            return this.table.where('dueDate').equals(date).and((task: TaskDto) => task.completed == 0).toArray();
+            return this.table
+                .where('dueDate')
+                .equals(date)
+                .and((task: TaskDto) => task.completed == 0)
+                .and((task: TaskDto) => !task.parent || task.parent == null)
+                .toArray();
         }));
     }
 
@@ -84,5 +98,13 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table.where('parent').equals(task.id).toArray();
         }));
+    }
+
+    getAllTasks() {
+        return from(liveQuery(() => {
+            return this.table.where({
+                completed: 0
+            }).and((task) => !task.parent || task.parent == null).toArray();
+        }))
     }
 }
