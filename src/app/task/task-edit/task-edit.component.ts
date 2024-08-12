@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -33,6 +33,8 @@ import { ProjectDto } from '../../dto/project-dto';
 })
 export class TaskEditComponent implements OnInit {
     task!: TaskDto;
+    
+    @Output() showTaskAdd = new EventEmitter<Event>();
 
     projects!: ProjectDto[];
     
@@ -108,5 +110,9 @@ export class TaskEditComponent implements OnInit {
                 });
             }
         });
+    }
+
+    showTaskAddPanel(event: Event) {
+        this.showTaskAdd.emit(event);
     }
 }
