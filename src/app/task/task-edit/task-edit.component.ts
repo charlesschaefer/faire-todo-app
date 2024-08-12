@@ -45,8 +45,6 @@ export class TaskEditComponent implements OnInit {
     task!: TaskDto;
     subTasks!: TaskDto[];
 
-    nodes!: TreeNode[];
-    
     @Output() showTaskAdd = new EventEmitter<Event>();
 
     projects!: ProjectDto[];
@@ -55,6 +53,9 @@ export class TaskEditComponent implements OnInit {
     taskForm!: FormGroup;
 
     showTaskAddOverlay$ = new Subject<Event>();
+
+    subtasksCount!: number;
+    subtasksCompletedCount!: number;
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
@@ -97,12 +98,10 @@ export class TaskEditComponent implements OnInit {
             this.subTasks = subtasks;
         });
 
-        this.nodes = [
-            {
-                key: '0',
-                label: await firstValueFrom(this.translate.get("Subtasks")),
-            }
-        ]
+        this.taskService.countTaskSubtasks(this.task).subscribe(countSubtasks => {
+            this.subtasksCount = countSubtasks.subtasks;
+            this.subtasksCompletedCount = countSubtasks.completed;
+        });
     }
 
     saveTask() {
@@ -148,5 +147,10 @@ export class TaskEditComponent implements OnInit {
 
     onAddTask() {
         console.log("Chamou TaskEdit.onAddTask(), agora tem que recarregar as subtarefas");
+    }
+
+    subtasksTitle() {
+        const title = this.translate.instant("Subtasks");
+        return title + ` (${this.subtasksCompletedCount}/${this.subtasksCount})`;
     }
 }
