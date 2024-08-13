@@ -32,6 +32,9 @@ apps:
       - home
       - desktop
       - unity7
+      - network
+      - network-bind
+      - network-status
 
 package-repositories:
   - type: apt
