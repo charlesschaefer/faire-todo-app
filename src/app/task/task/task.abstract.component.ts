@@ -136,7 +136,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     async confirmDeleteTask() {
         this.confirmationService.confirm({
             header: await firstValueFrom(this.translate.get(`Are you sure?`)),
-            message: await firstValueFrom(this.translate.get(`Are you sure you want to delete this task?`)),
+            message: await firstValueFrom(this.translate.get(`Are you sure you want to delete this task? All subtasks will also be deleted!`)),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -152,7 +152,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             type: 'task.delete',
             data: undoData
         };
-        this.taskService.remove(this.task.id).subscribe({
+        this.taskService.removeTask(this.task).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Removed`)),
