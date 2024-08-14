@@ -4,8 +4,8 @@ version: '0.0.1'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
   Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
-  It stores the data using the IndexedDb of your platform's embeded web browser. 
-  Fair is the infinitive verb in french equivalent to "to do".
+  It stores the data using the IndexedDb of your platform's embedded web browser. 
+  Faire is the infinitive verb in french equivalent to "to do".
 
 grade: stable
 confinement: strict
