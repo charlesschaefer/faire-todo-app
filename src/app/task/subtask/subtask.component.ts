@@ -47,7 +47,7 @@ import { TaskAbstractComponent } from '../task/task.abstract.component';
         TranslateService
     ],
     templateUrl: '../task/task.component.html',
-    styleUrl: '../task/task.component.scss'
+    styleUrl: 'subtask.component.scss'
 })
 export class SubtaskComponent extends TaskAbstractComponent {
     
