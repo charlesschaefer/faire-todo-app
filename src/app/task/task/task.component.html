@@ -57,6 +57,12 @@
             }
           </div>
           }
+
+          @if (task.recurring) {
+          <div class="task-item-attributes-recurring">
+            <i class="pi pi-history"></i> {{task.recurring}}
+          </div>
+          }
           
         </div>
       </div>

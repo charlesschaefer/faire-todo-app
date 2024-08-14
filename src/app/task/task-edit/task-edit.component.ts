@@ -1,5 +1,5 @@
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -39,6 +39,7 @@ console.log("TaskComponent2", TaskComponent);
         AccordionModule,
         TaskComponent,
         CheckboxModule,
+        FormsModule,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'

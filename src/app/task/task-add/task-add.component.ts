@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstValueFrom, Subject } from 'rxjs';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { first, firstValueFrom, Subject } from 'rxjs';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { CheckboxModule } from 'primeng/checkbox';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
     selector: 'app-task-add',
@@ -32,6 +33,8 @@ import { CheckboxModule } from 'primeng/checkbox';
         TranslateModule,
         DropdownModule,
         CheckboxModule,
+        FormsModule,
+        FloatLabelModule,
     ],
     providers: [
         MessageService,
@@ -56,19 +59,14 @@ export class TaskAddComponent implements OnInit {
         dueTime: [null],
         project: [this.project?.id || null],
         parent: [this.parent || null],
-        recurring: [null]
+        recurring: [null],
+        isRecurring: false
     });
 
     projects!: ProjectDto[];
 
-    isRecurring = false;
-    recurringOptions = [
-        RecurringType.DAILY,
-        RecurringType.WEEKLY,
-        RecurringType.WEEKDAY,
-        RecurringType.MONTHLY,
-        RecurringType.YEARLY
-    ];
+    
+    recurringOptions!: Array<any>;
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
@@ -78,7 +76,7 @@ export class TaskAddComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
     ) {}
 
-    ngOnInit(): void {
+    async ngOnInit() {
         // subscribes to the parent Subject to exhibit the overlay component
         this.showOverlay$.subscribe(event => {
             if (event) {
@@ -102,6 +100,17 @@ export class TaskAddComponent implements OnInit {
         if (this.project) {
             this.taskForm.patchValue({project: this.project.id});
         }
+
+        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        this.recurringOptions = [
+            notRecurringLabel,
+            RecurringType.DAILY,
+            RecurringType.WEEKLY,
+            RecurringType.WEEKDAY,
+            RecurringType.MONTHLY,
+            RecurringType.YEARLY
+        ];
+        this.taskForm.patchValue({recurring: notRecurringLabel});
     }
 
     onClose(event: Event) {
@@ -111,7 +120,7 @@ export class TaskAddComponent implements OnInit {
 
     async saveTask() {
         const form = this.taskForm.value;
-        console.log(form);
+
         let dueDate:Date | null | undefined = form.dueDate;
         if (this.router.url == '/today') {
             dueDate = new Date();
@@ -119,6 +128,21 @@ export class TaskAddComponent implements OnInit {
             dueDate.setMinutes(0);
             dueDate.setSeconds(0);
             dueDate.setMilliseconds(0);
+        }
+
+        let recurring = form.recurring;
+        if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
+            recurring = null;
+        }
+
+        // validates recurring and date
+        if (recurring && !dueDate) {
+            this.messageService.add({
+                severity: 'error',
+                summary: await firstValueFrom(this.translate.get('Unable to save')),
+                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+            });
+            return;
         }
 
         let order = await firstValueFrom(this.taskAddService.count());
@@ -132,7 +156,7 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
-            recurring: form.recurring || null
+            recurring: recurring || null
         };
 
         this.taskAddService.add(saveData).subscribe({
@@ -156,16 +180,19 @@ export class TaskAddComponent implements OnInit {
         });
     }
 
-    clearForm(): boolean {
-        this.taskForm.patchValue({
-            title: null,
-            description: null,
-            dueDate: null,
-            dueTime: null,
-            project: this.parent?.project || this.project?.id,
-            parent: this.parent || null,
-            recurring: null
-        });
+    clearForm() {
+        let patch = async () => {
+            this.taskForm.patchValue({
+                title: null,
+                description: null,
+                dueDate: null,
+                dueTime: null,
+                project: this.parent?.project || this.project?.id,
+                parent: this.parent || null,
+                recurring: await firstValueFrom(this.translate.get('Not recurring'))
+            })
+        };
+        patch();
         return true;
     }
 }

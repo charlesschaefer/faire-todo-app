@@ -145,7 +145,13 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
-                    let newTask: TaskAddDto = task;
+                    let aTask = task as Object;
+                    Object.keys(aTask).forEach(key => {
+                        if (key == 'id') {
+                            delete aTask[key as keyof Object];
+                        }
+                    });
+                    let newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
                     switch (task.recurring) {
                         case RecurringType.DAILY:
@@ -168,7 +174,9 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                             }
                             break;
                     }
+                   
                     newTask.dueDate = date.toJSDate();
+                    console.log(newTask);
                     from(this.table.add(newTask)).subscribe({
                         complete: () => {
                             success$.complete();
