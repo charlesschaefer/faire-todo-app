@@ -204,26 +204,43 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             data: undoData
         };
         task.completed = this.completed ? 1 : 0;
-        this.taskService.edit(task.id, task).subscribe({
-            complete: async () => {
-                this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Marked as complete`)),
-                    detail: await firstValueFrom(this.translate.get(`Task marked as complete`)),
-                    severity: 'success'
-                });
-                this.onTaskRemoved.emit(this.task.id);
-                this.undoService.register(undo).subscribe((data) => {
-                    this.undoMarkAsComplete(data);
-                });
-            },
-            error: async (err) => {
-                this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Error`)),
-                    detail: await firstValueFrom(this.translate.get(`Error marking task as complete.`)) + err,
-                    severity: 'error'
-                });
-            }
-        })
+        const successMsg = async () => this.messageService.add({
+            summary: await firstValueFrom(this.translate.get(`Marked as complete`)),
+            detail: await firstValueFrom(this.translate.get(`Task marked as complete`)),
+            severity: 'success'
+        });
+        const errorMsg = async (err: any) => this.messageService.add({
+            summary: await firstValueFrom(this.translate.get(`Error`)),
+            detail: await firstValueFrom(this.translate.get(`Error marking task as complete.`)) + err,
+            severity: 'error'
+        });
+        if (task.completed) {
+            this.taskService.markTaskComplete(task).subscribe({
+                complete: async () => {
+                    successMsg();
+                    this.onTaskRemoved.emit(this.task.id);
+                    this.undoService.register(undo).subscribe((data) => {
+                        this.undoMarkAsComplete(data);
+                    });
+                },
+                error: async (err) => {
+                    errorMsg(err);
+                }
+            })
+        } else {
+            this.taskService.edit(task.id, task).subscribe({
+                complete: async () => {
+                    successMsg();
+                    this.onTaskRemoved.emit(this.task.id);
+                    this.undoService.register(undo).subscribe((data) => {
+                        this.undoMarkAsComplete(data);
+                    });
+                },
+                error: async (err) => {
+                    errorMsg(err);
+                }
+            })
+        }
     }
 
     undoMarkAsComplete(undoData: UndoItem) {

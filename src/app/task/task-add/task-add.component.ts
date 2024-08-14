@@ -12,10 +12,11 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { TaskService } from '../../services/task.service';
-import { TaskAddDto, TaskDto } from '../../dto/task-dto';
+import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
     selector: 'app-task-add',
@@ -30,6 +31,7 @@ import { ProjectDto } from '../../dto/project-dto';
         ToastModule,
         TranslateModule,
         DropdownModule,
+        CheckboxModule,
     ],
     providers: [
         MessageService,
@@ -53,10 +55,20 @@ export class TaskAddComponent implements OnInit {
         dueDate: [null],
         dueTime: [null],
         project: [this.project?.id || null],
-        parent: [this.parent || null]
+        parent: [this.parent || null],
+        recurring: [null]
     });
 
     projects!: ProjectDto[];
+
+    isRecurring = false;
+    recurringOptions = [
+        RecurringType.DAILY,
+        RecurringType.WEEKLY,
+        RecurringType.WEEKDAY,
+        RecurringType.MONTHLY,
+        RecurringType.YEARLY
+    ];
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
@@ -120,6 +132,7 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
+            recurring: form.recurring || null
         };
 
         this.taskAddService.add(saveData).subscribe({
@@ -150,7 +163,8 @@ export class TaskAddComponent implements OnInit {
             dueDate: null,
             dueTime: null,
             project: this.parent?.project || this.project?.id,
-            parent: this.parent || null
+            parent: this.parent || null,
+            recurring: null
         });
         return true;
     }

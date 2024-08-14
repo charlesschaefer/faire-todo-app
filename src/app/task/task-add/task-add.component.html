@@ -58,6 +58,26 @@
           />
           }
 
+          <p-checkbox
+            #rbutton
+            name="recurring" 
+            value="1"
+            inputId="recurring"
+            [(ngModel)]="isRecurring" 
+            [binary]="true"
+          />
+          <label for="recurring" translate>Is Recurring</label>
+          @if (isRecurring) {
+            Recorrencia
+            <p-dropdown 
+              [options]="recurringOptions"
+              formControlName="recurring"
+              name="recurring"
+              [placeholder]="'Recurrence' | translate" 
+              class="task-add-recurring"
+            />
+          }
+
           
         </div>
         <p-divider />

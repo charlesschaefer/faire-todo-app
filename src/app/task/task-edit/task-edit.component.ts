@@ -15,9 +15,10 @@ import { TaskAddComponent } from '../task-add/task-add.component';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
-import { TaskDto } from '../../dto/task-dto';
+import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
+import { CheckboxModule } from 'primeng/checkbox';
 
 console.log("TaskComponent2", TaskComponent);
 
@@ -36,7 +37,8 @@ console.log("TaskComponent2", TaskComponent);
         TaskAddComponent,
         SubtaskComponent,
         AccordionModule,
-        TaskComponent
+        TaskComponent,
+        CheckboxModule,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -56,6 +58,15 @@ export class TaskEditComponent implements OnInit {
 
     subtasksCount!: number;
     subtasksCompletedCount!: number;
+
+    isRecurring = false;
+    recurringOptions = [
+        RecurringType.DAILY,
+        RecurringType.WEEKLY,
+        RecurringType.WEEKDAY,
+        RecurringType.MONTHLY,
+        RecurringType.YEARLY
+    ];
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
@@ -116,6 +127,7 @@ export class TaskEditComponent implements OnInit {
             completed: 0,
             order: this.task.order,
             parent: this.task.parent,
+            recurring: form.recurring || null
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({

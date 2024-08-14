@@ -27,6 +27,9 @@ export class AppDb extends Dexie {
         this.version(8).stores({
             task: '++id, title, description, dueDate, dueTime, project, completed, order, parent',
         })
+        this.version(9).stores({
+            task: '++id, title, description, dueDate, dueTime, project, completed, order, parent, recurring'
+        })
         this.on('populate', () => this.populate());
     }
 

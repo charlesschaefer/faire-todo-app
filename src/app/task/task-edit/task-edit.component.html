@@ -51,6 +51,25 @@
           [placeholder]="'Project' | translate" 
           class="task-add-project"
         />
+
+        <p-checkbox
+          #rbutton
+          name="recurring" 
+          value="1"
+          inputId="recurring"
+          [(ngModel)]="isRecurring"
+          [binary]="true"
+        />
+        <label for="recurring" translate>Is Recurring</label>
+        @if (isRecurring) {
+          <p-dropdown 
+            [options]="recurringOptions"
+            formControlName="recurring"
+            name="recurring"
+            [placeholder]="'Recurrence' | translate" 
+            class="task-add-recurring"
+          />
+        }
       </div>
       @if (subTasks?.length) {
       <div class="task-add-list-subtasks">
