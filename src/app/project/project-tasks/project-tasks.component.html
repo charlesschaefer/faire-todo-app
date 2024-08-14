@@ -1,4 +1,4 @@
-<h2 class="page-title">{{ 'Project:' | translate}} {{project?.name}}</h2>
+<h2 class="page-title">{{ 'Project:' | translate}} <span class="page-subtitle">{{project?.name}}</span></h2>
 <app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
 
 <!-- Task add overlay panel -->
