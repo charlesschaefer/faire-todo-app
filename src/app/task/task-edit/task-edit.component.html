@@ -58,7 +58,7 @@
           <p-accordionTab [header]="subtasksTitle()">
             <div>
             @for (task of subTasks; track task.id) {
-              <app-subtask [task]="task" />
+              <app-subtask [task]="task" [projects]="projectsMap" />
             }
             </div>
           </p-accordionTab>
