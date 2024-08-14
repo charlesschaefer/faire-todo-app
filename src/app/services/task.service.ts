@@ -58,7 +58,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table
                 .where('dueDate')
-                .equals(date)
+                .belowOrEqual(date)
                 .and((task: TaskDto) => task.completed == 0)
                 .and((task: TaskDto) => !task.parent || task.parent == null)
                 .toArray();
