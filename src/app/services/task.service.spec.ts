@@ -1,14 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TaskService } from './task.service';
-import { TaskDto } from '../dto/task-dto';
+import { TaskAddDto, TaskDto } from '../dto/task-dto';
+import { DbService } from './db.service';
 
 describe('TaskService', () => {
-  let service: TaskService<TaskDto>;
+  let service: TaskService<TaskAddDto>;
+  let dbServiceSpy: jasmine.SpyObj<DbService>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TaskService);
+    dbServiceSpy = jasmine.createSpyObj(DbService, ['task']);
+    //service = TestBed.inject(TaskService);
+    service = new TaskService<TaskAddDto>(dbServiceSpy);
+    
   });
 
   it('should be created', () => {

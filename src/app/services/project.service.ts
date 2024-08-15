@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { map } from 'rxjs';
+import { DbService } from './db.service';
 
 @Injectable({
     providedIn: 'root'
@@ -8,8 +9,10 @@ import { map } from 'rxjs';
 export class ProjectService<T> extends ServiceAbstract<T> {
     storeName = "project";
 
-    constructor() {
+    constructor(
+        protected dbService: DbService
+    ) {
         super();
-        this.table = this.dbService.project;
+        this.setTable();
     }
 }

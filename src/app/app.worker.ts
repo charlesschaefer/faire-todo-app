@@ -6,9 +6,11 @@ import { TaskService } from "./services/task.service";
 import { SettingsService } from "./services/settings.service";
 import { NotificationType } from "./app.component";
 import { SettingsDto } from "./dto/settings-dto";
+import { DbService } from "./services/db.service";
 
 addEventListener('message', ({ data }) => {
-    const settingsService = new SettingsService();
+    const dbService = new DbService();
+    const settingsService = new SettingsService(dbService);
     // checks if there are tasks dueing now every minute
     setInterval(() => {
         settingsService.get(1).subscribe(settings => {
@@ -34,7 +36,8 @@ function checkDuedTasks() {
 
     const time = new Date;
 
-    let taskService = new TaskService<TaskDto>();
+    const dbService = new DbService();
+    let taskService = new TaskService<TaskDto>(dbService);
     taskService.getByField('dueDate', date).subscribe(tasks => {
         tasks.forEach(task => {
             if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {

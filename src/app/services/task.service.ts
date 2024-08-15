@@ -5,6 +5,7 @@ import { liveQuery } from 'dexie';
 import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
 import { DateTime } from 'luxon';
 import { TaskComponent } from '../task/task/task.component';
+import { DbService } from './db.service';
 
 interface SubtaskCount {
     subtasks: number;
@@ -18,9 +19,11 @@ interface SubtaskCount {
 export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     storeName = "task";
 
-    constructor() {
+    constructor(
+        protected dbService: DbService
+    ) {
         super();
-        this.table = this.dbService.task;
+        this.setTable();
     }
 
     listParentTasks() {
