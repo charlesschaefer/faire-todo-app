@@ -2,15 +2,22 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { liveQuery, Table } from "dexie";
 
-import { db } from "../db";
+import { DbService } from "./db.service";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache: boolean = true;
-    abstract storeName: string;
-    dbService = db;
-    table!: Table;
+    protected abstract storeName: string;
+    protected table!: Table;
+    protected abstract dbService: DbService;
+
+
+    setTable() {
+        console.log("Construindo o table do ", this.storeName)
+        this.table = this.dbService.getTable(this.storeName);
+        console.log(this.table);
+    }
 
     /**
      * Gets a cached list of accounts
