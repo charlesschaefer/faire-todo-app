@@ -145,12 +145,11 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
-                    let aTask = task as Object;
-                    Object.keys(aTask).forEach(key => {
-                        if (key == 'id') {
-                            delete aTask[key as keyof Object];
-                        }
-                    });
+                    let aTask:Partial<TaskDto> = task;
+                    // removes id to enable creating a new task
+                    aTask.id = undefined;
+                    aTask.completed = 0;
+                    
                     let newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
                     switch (task.recurring) {

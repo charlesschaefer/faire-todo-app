@@ -61,13 +61,7 @@ export class TaskEditComponent implements OnInit {
     subtasksCompletedCount!: number;
 
     isRecurring = false;
-    recurringOptions = [
-        RecurringType.DAILY,
-        RecurringType.WEEKLY,
-        RecurringType.WEEKDAY,
-        RecurringType.MONTHLY,
-        RecurringType.YEARLY
-    ];
+    recurringOptions!: Array<any>;
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
@@ -114,10 +108,36 @@ export class TaskEditComponent implements OnInit {
             this.subtasksCount = countSubtasks.subtasks;
             this.subtasksCompletedCount = countSubtasks.completed;
         });
+
+        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        this.recurringOptions = [
+            notRecurringLabel,
+            RecurringType.DAILY,
+            RecurringType.WEEKLY,
+            RecurringType.WEEKDAY,
+            RecurringType.MONTHLY,
+            RecurringType.YEARLY
+        ];
     }
 
-    saveTask() {
+    async saveTask() {
         const form = this.taskForm.value;
+
+        let dueDate:Date | null | undefined = form.dueDate;
+        let recurring = form.recurring;
+        if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
+            recurring = null;
+        }
+        // validates recurring and date
+        if (recurring && !dueDate) {
+            this.messageService.add({
+                severity: 'error',
+                summary: await firstValueFrom(this.translate.get('Unable to save')),
+                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+            });
+            return;
+        }
+
         const saveData: TaskDto = {
             id: this.task.id,
             title: form.title as unknown as string,
@@ -128,7 +148,7 @@ export class TaskEditComponent implements OnInit {
             completed: 0,
             order: this.task.order,
             parent: this.task.parent,
-            recurring: form.recurring || null
+            recurring: recurring || null
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({
