@@ -1,10 +1,10 @@
 {
   "productName": "Faire Todo App",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "identifier": "com.fairetodoapp",
   "build": {
-    "beforeDevCommand": "npm run start -- --host localhost --public-host localhost",
-    "devUrl": "http://localhost:1420",
+    "beforeDevCommand": "npm run start -- --host 192.168.1.4 --public-host 192.168.1.4",
+    "devUrl": "http://192.168.1.4:1420",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist/faire-todo-app/browser"
   },
