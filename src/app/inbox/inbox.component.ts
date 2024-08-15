@@ -61,10 +61,6 @@ export class InboxComponent implements OnInit {
     ) {}
     
     ngOnInit() {
-        console.log(
-            'Activated route data in Component:::',
-            this.activatedRoute.data
-          );
         this.getTasks();
     }
 
@@ -83,7 +79,6 @@ export class InboxComponent implements OnInit {
         if (this.tasks) {
             this.subtasksCount = await this.taskService.countTasksSubtasks(this.tasks);
         }
-        console.log("tasks", this.tasks, "subtasksCount", this.subtasksCount)
     }
 
     onAddTask() {
@@ -91,6 +86,7 @@ export class InboxComponent implements OnInit {
     }
     
     onEditTask() {
+        console.log("called Inbox.onEditTask()");
         this.getTasks();
     }
 }

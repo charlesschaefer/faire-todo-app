@@ -27,7 +27,6 @@ import { ProjectDto } from '../../dto/project-dto';
 export class TaskListComponent implements OnInit {
     @Input() tasks!: TaskDto[];
     @Input() completedTasks!: TaskDto[];
-    @Input() subtasksCount!: Map<number, number>;
 
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() onEditTask = new EventEmitter();
@@ -41,13 +40,11 @@ export class TaskListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        console.log("subtasksCount", this.subtasksCount)
         this.projectService.list().subscribe((projects: ProjectDto[]) => {
             let indexedProjects:Map<number, ProjectDto> = new Map();
             projects.forEach(project => indexedProjects.set(project.id, project));
             this.projects = indexedProjects;
         });
-        console.log(this.subtasksCount?.get(1));
     }
 
     showTaskAddPanel(event: Event) {

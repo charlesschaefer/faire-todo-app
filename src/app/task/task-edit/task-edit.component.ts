@@ -20,8 +20,6 @@ import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { CheckboxModule } from 'primeng/checkbox';
 
-console.log("TaskComponent2", TaskComponent);
-
 @Component({
     selector: 'app-task-edit',
     standalone: true,

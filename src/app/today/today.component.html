@@ -4,7 +4,7 @@
         {{today.toFormat('dd/MM')}}
     </span>
 </h2>
-<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" [subtasksCount]="subtasksCount"  />
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
 
 <!-- Task add overlay panel -->
 <app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" />

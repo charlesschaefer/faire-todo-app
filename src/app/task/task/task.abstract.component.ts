@@ -75,7 +75,6 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     countSubtasks() {
         this.taskService.countTaskSubtasks(this.task).subscribe(subtasksCount => {
-            console.log("Counters for task ", this.task.title, "subtasksCount: ", subtasksCount.subtasks);
             this.subtasksCount = subtasksCount.subtasks;
             this.subtasksCompletedCount = subtasksCount.completed;
         });
@@ -218,7 +217,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             this.taskService.markTaskComplete(task).subscribe({
                 complete: async () => {
                     successMsg();
-                    this.onTaskRemoved.emit(this.task.id);
+                    console.log("emiting Task.onEditTask()")
+                    this.onEditTask.emit();
                     this.undoService.register(undo).subscribe((data) => {
                         this.undoMarkAsComplete(data);
                     });
@@ -231,7 +231,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             this.taskService.edit(task.id, task).subscribe({
                 complete: async () => {
                     successMsg();
-                    this.onTaskRemoved.emit(this.task.id);
+                    console.log("emiting Task.onEditTask()")
+                    this.onEditTask.emit();
                     this.undoService.register(undo).subscribe((data) => {
                         this.undoMarkAsComplete(data);
                     });

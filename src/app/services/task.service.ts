@@ -184,11 +184,11 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                             success$.error(err);
                         }
                     })
+                } else {
+                    success$.complete();
                 }
             }
         });
         return success$;
     }
 }
-
-console.log("TaskComponent", TaskComponent);
