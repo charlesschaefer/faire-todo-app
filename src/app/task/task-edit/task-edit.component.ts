@@ -48,6 +48,7 @@ export class TaskEditComponent implements OnInit {
     @Output() showTaskAdd = new EventEmitter<Event>();
 
     projects!: ProjectDto[];
+    projectsMap!: Map<number, ProjectDto>;
     
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
@@ -84,6 +85,7 @@ export class TaskEditComponent implements OnInit {
 
         this.projectService.list().subscribe(projects => {
             let cloneProjects = projects.slice();
+            let projectsMap = new Map<number, ProjectDto>();
 
             if (cloneProjects[0].id != 0) {
                 cloneProjects.unshift({
@@ -92,6 +94,11 @@ export class TaskEditComponent implements OnInit {
                 });
             }
             this.projects = cloneProjects;
+
+            projects.forEach(project => {
+                projectsMap.set(project.id, project);
+            });
+            this.projectsMap = projectsMap;
         });
 
         this.taskService.getTaskSubtasks(this.task).subscribe(subtasks => {

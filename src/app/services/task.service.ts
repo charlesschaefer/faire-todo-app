@@ -58,7 +58,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table
                 .where('dueDate')
-                .equals(date)
+                .belowOrEqual(date)
                 .and((task: TaskDto) => task.completed == 0)
                 .and((task: TaskDto) => !task.parent || task.parent == null)
                 .toArray();
@@ -130,12 +130,46 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return countSubtasks$;        
     }
 
+    getProjectTasks(projectId: number) {
+        return from(liveQuery(() => {
+            return this.table.where({
+                project: projectId,
+                completed: 0
+            }).and((task) => !task.parent || task.parent == null).toArray();
+        }))
+    }
+
     getAllTasks() {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0
             }).and((task) => !task.parent || task.parent == null).toArray();
         }))
+    }
+
+    removeTask(task: TaskDto) {
+        let removal$ = new Subject();
+        this.remove(task.id).subscribe({
+            complete: () => {
+                this.getTaskSubtasks(task).subscribe({
+                    next: (tasks) => {
+                        tasks.forEach(task => {
+                            this.removeTask(task).subscribe({
+                                error: (err) => {
+                                    removal$.error(err);
+                                }
+                            });
+                        });
+                        removal$.complete();
+                    }
+                })
+            },
+            error: () => {
+                throw new Error(`Couldn't remove task ${task.id}`);
+            }
+        });
+
+        return removal$;
     }
 }
 

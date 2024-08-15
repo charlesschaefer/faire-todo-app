@@ -1,6 +1,6 @@
 name: faire-todo-app
 base: core22
-version: '0.0.1'
+version: '0.0.2'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
   Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
@@ -32,6 +32,9 @@ apps:
       - home
       - desktop
       - unity7
+      - network
+      - network-bind
+      - network-status
 
 package-repositories:
   - type: apt
@@ -68,8 +71,8 @@ parts:
       rustup default stable
       npm install
       npm run tauri build -- --bundles deb
-      dpkg -x src-tauri/target/x86_64-unknown-linux-gnu/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
-      sed -i -e "s|Icon=addiction-tracker|Icon=/usr/share/icons/hicolor/32x32/apps/addiction-tracker.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/addiction-tracker.desktop
+      dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
+      sed -i -e "s|Icon=faire-todo-app|Icon=/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/faire-todo-app.desktop
 slots:
   dbus-daemon:
     interface: dbus
