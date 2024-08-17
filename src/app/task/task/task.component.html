@@ -3,15 +3,6 @@
   </div>
     <div class="task-item-handle"><i class="pi pi-equals"></i></div>
     <div class="task-item-mark-complete">
-      <!-- <p-radioButton
-        #rbutton
-        name="mark-task-complete-{{task.id}}" 
-        [value]="task.id"
-        inputId="mark-task-complete-{{task.id}}" 
-        [(ngModel)]="completed"
-        (onClick)="markTaskAsCompleted()"
-      /> -->
-
       <p-checkbox
         #rbutton
         name="mark-task-complete-{{task.id}}" 
@@ -38,17 +29,16 @@
           <div class="task-item-description">
             <pre>{{task.description}}</pre>
           </div>
-          <!-- <div class="task-item-subtasks-count">
-            <p-tree 
-              class="" 
-              [value]="subtasks" 
-              loadingMode="icon"  />
-              < !-- (onNodeExpand)="onNodeExpand2($event)" /> -- >
-          </div> -->
         </div>
       </div>
       <div class="task-item-row-second">
         <div class="task-item-attributes gap-3">
+          @if (subtasksCount) {
+          <div class="task-item-attributes-subtask">
+            <div class="subtask-icon"></div>
+            <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
+          </div>
+          }
           <div class="task-item-attributes-project">
             @if (task.project && projects) {
                 <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}

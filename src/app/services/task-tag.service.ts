@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
+import { DbService } from './db.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TaskTagService<T> extends ServiceAbstract<T> {
     storeName = "task_tag";
-    constructor() {
+    
+    constructor(
+        protected dbService: DbService
+    ) {
         super();
-        this.table = this.dbService.task_tag;
+        this.setTable();
     }
 }

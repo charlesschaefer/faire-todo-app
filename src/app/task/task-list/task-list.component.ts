@@ -47,7 +47,7 @@ export class TaskListComponent implements OnInit {
             projects.forEach(project => indexedProjects.set(project.id, project));
             this.projects = indexedProjects;
         });
-        console.log(this.subtasksCount.get(1));
+        console.log(this.subtasksCount?.get(1));
     }
 
     showTaskAddPanel(event: Event) {

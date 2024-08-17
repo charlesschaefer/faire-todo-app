@@ -1,32 +1,30 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MenuModule } from 'primeng/menu';
+import { ToastModule } from 'primeng/toast';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { Component } from '@angular/core';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogService } from 'primeng/dynamicdialog';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { DateTime } from 'luxon';
-import { firstValueFrom, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { CheckboxModule } from 'primeng/checkbox';
-import { ButtonModule } from 'primeng/button';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { MenuModule } from 'primeng/menu';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ToastModule } from 'primeng/toast';
-import { ContextMenuModule } from 'primeng/contextmenu';
-import { TreeModule } from 'primeng/tree';
 
 import { TaskDto } from '../../dto/task-dto';
-import { TaskEditComponent } from '../task-edit/task-edit.component';
-import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskComponent } from '../task/task.component';
 import { TaskService } from '../../services/task.service';
-import { ProjectDto } from '../../dto/project-dto';
-import { UndoItem, UndoService } from '../../services/undo.service';
+import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
-import { TaskAbstractComponent } from './task.abstract.component';
+import { Subject, firstValueFrom } from 'rxjs';
+import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
+import { TaskAbstractComponent } from '../task/task.abstract.component';
 
 
 @Component({
-    selector: 'app-task',
+    selector: 'app-subtask',
     standalone: true,
     imports: [
         RadioButtonModule,
@@ -39,7 +37,6 @@ import { TaskAbstractComponent } from './task.abstract.component';
         CheckboxModule,
         ToastModule,
         ContextMenuModule,
-        TreeModule,
         DateShortenerPipe,
         TranslateModule,
     ],
@@ -49,10 +46,11 @@ import { TaskAbstractComponent } from './task.abstract.component';
         ConfirmationService,
         TranslateService
     ],
-    templateUrl: './task.component.html',
-    styleUrl: './task.component.scss'
+    templateUrl: '../task/task.component.html',
+    styleUrl: 'subtask.component.scss'
 })
-export class TaskComponent extends TaskAbstractComponent {
+export class SubtaskComponent extends TaskAbstractComponent {
+    
     constructor(
         protected override dialogService: DialogService,
         protected override messageService: MessageService,
@@ -97,4 +95,5 @@ export class TaskComponent extends TaskAbstractComponent {
             }
         });
     }
+
 }

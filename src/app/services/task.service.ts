@@ -2,8 +2,16 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { Observable, firstValueFrom, from } from 'rxjs';
+import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
 import { DateTime } from 'luxon';
+import { TaskComponent } from '../task/task/task.component';
+import { DbService } from './db.service';
+
+interface SubtaskCount {
+    subtasks: number;
+    completed: number;
+}
+
 
 @Injectable({
     providedIn: 'root'
@@ -11,9 +19,20 @@ import { DateTime } from 'luxon';
 export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     storeName = "task";
 
-    constructor() {
+    constructor(
+        protected dbService: DbService
+    ) {
         super();
-        this.table = this.dbService.task;
+        this.setTable();
+    }
+
+    listParentTasks() {
+        return from(liveQuery(() => {
+            return this.table.where({
+                completed: 0,
+                parent: null
+            }).toArray();
+        }))
     }
 
     orderTasks(tasks: T[]) {
@@ -29,7 +48,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             return this.table.where({
                 completed: 0,
                 project: project,
-            }).toArray();
+            }).and((task) => !task.parent || task.parent  == null).toArray();
         }));
     }
 
@@ -40,7 +59,12 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         date.setSeconds(0);
         date.setMilliseconds(0);
         return from(liveQuery(() => {
-            return this.table.where('dueDate').equals(date).and((task: TaskDto) => task.completed == 0).toArray();
+            return this.table
+                .where('dueDate')
+                .belowOrEqual(date)
+                .and((task: TaskDto) => task.completed == 0)
+                .and((task: TaskDto) => !task.parent || task.parent == null)
+                .toArray();
         }));
     }
 
@@ -82,7 +106,74 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
 
     getTaskSubtasks(task: TaskDto) {
         return from(liveQuery(() => {
-            return this.table.where('parent').equals(task.id).toArray();
+            return this.table
+                .where('parent')
+                .equals(task.id)
+                .and((task) => task.completed == 0)
+                .toArray();
         }));
     }
+
+    countTaskSubtasks(task: TaskDto): Observable<SubtaskCount> {
+        const countSubtasks$ = new Subject<SubtaskCount>();
+        
+        zip(
+            from(liveQuery(() => this.table.where({
+                parent: task.id
+            }).count())),
+            from(liveQuery(() => this.table.where({
+                parent: task.id,
+                completed: 1
+            }).count()))
+        ).subscribe(([subtasks, completed]) => {
+            countSubtasks$.next({
+                subtasks, completed
+            });
+        });
+        return countSubtasks$;        
+    }
+
+    getProjectTasks(projectId: number) {
+        return from(liveQuery(() => {
+            return this.table.where({
+                project: projectId,
+                completed: 0
+            }).and((task) => !task.parent || task.parent == null).toArray();
+        }))
+    }
+
+    getAllTasks() {
+        return from(liveQuery(() => {
+            return this.table.where({
+                completed: 0
+            }).and((task) => !task.parent || task.parent == null).toArray();
+        }))
+    }
+
+    removeTask(task: TaskDto) {
+        let removal$ = new Subject();
+        this.remove(task.id).subscribe({
+            complete: () => {
+                this.getTaskSubtasks(task).subscribe({
+                    next: (tasks) => {
+                        tasks.forEach(task => {
+                            this.removeTask(task).subscribe({
+                                error: (err) => {
+                                    removal$.error(err);
+                                }
+                            });
+                        });
+                        removal$.complete();
+                    }
+                })
+            },
+            error: () => {
+                throw new Error(`Couldn't remove task ${task.id}`);
+            }
+        });
+
+        return removal$;
+    }
 }
+
+console.log("TaskComponent", TaskComponent);

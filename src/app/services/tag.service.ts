@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
+import { DbService } from './db.service';
 
 @Injectable({
     providedIn: 'root'
@@ -7,8 +8,11 @@ import { ServiceAbstract } from './service.abstract';
 export class TagService<T> extends ServiceAbstract<T> {
     storeName = "tag";
 
-    constructor() {
+    constructor(
+        protected dbService: DbService
+    ) {
         super();
-        this.table = this.dbService.tag;
+        this.setTable();
     }
+
 }

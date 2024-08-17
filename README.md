@@ -14,11 +14,15 @@ Fair is the infinitive verb in french equivalent to "to do".
 - [x] View of tasks for today
 - [x] View of upcoming tasks
 - [x] Search tasks
+- [x] View all tasks
 - [x] Allow undoing when deleting a task or marking it as complete.
 - [x] Manual task ordering, for prioritization
 - [ ] Tags for tasks
 - [x] Notifications of tasks reaching their due time (Windows and Linux only)
-- [ ] Subtasks
+- [x] Subtasks
+- [ ] Recurring tasks
+- [x] Synchronization of data between devices connected in the same network
+
 
 
 # Building
@@ -41,6 +45,11 @@ npm run tauri dev
 # or to test on android emulator or device:
 npm run tauri android dev
 ```
+
+# Download
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/faire-todo-app)
+
 
 ## Recommended IDE Setup
 

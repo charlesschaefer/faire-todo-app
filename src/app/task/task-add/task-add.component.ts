@@ -12,7 +12,7 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { TaskService } from '../../services/task.service';
-import { TaskAddDto } from '../../dto/task-dto';
+import { TaskAddDto, TaskDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
@@ -40,6 +40,7 @@ import { ProjectDto } from '../../dto/project-dto';
 export class TaskAddComponent implements OnInit {
     @Input() showOverlay$!: Subject<Event>;
     @Input() project!: ProjectDto;
+    @Input() parent!: TaskDto;
 
     @Output() onAddTask = new EventEmitter<any>;
     @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
@@ -51,7 +52,8 @@ export class TaskAddComponent implements OnInit {
         description: [null],
         dueDate: [null],
         dueTime: [null],
-        project: [this.project?.id || null]
+        project: [this.project?.id || null],
+        parent: [this.parent || null]
     });
 
     projects!: ProjectDto[];
@@ -97,6 +99,7 @@ export class TaskAddComponent implements OnInit {
 
     async saveTask() {
         const form = this.taskForm.value;
+        console.log(form);
         let dueDate:Date | null | undefined = form.dueDate;
         if (this.router.url == '/today') {
             dueDate = new Date();
@@ -113,10 +116,10 @@ export class TaskAddComponent implements OnInit {
             description: form.description || null,
             dueDate: dueDate || null,
             dueTime: form.dueTime || null,
-            project: form.project || 0,
+            project: this.parent?.project || form.project || 0,
             completed: 0,
             order: order,
-            parent: null,
+            parent: this.parent?.id || null,
         };
 
         this.taskAddService.add(saveData).subscribe({
@@ -146,7 +149,8 @@ export class TaskAddComponent implements OnInit {
             description: null,
             dueDate: null,
             dueTime: null,
-            project: this.project?.id,
+            project: this.parent?.project || this.project?.id,
+            parent: this.parent || null
         });
         return true;
     }

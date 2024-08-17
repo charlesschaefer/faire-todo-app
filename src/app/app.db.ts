@@ -39,4 +39,4 @@ export class AppDb extends Dexie {
     }
 }
 
-export const db = new AppDb();
+//export const db = new AppDb();

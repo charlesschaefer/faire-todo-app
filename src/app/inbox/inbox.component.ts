@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DateTime } from 'luxon';
-import { firstValueFrom, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -62,11 +61,11 @@ export class InboxComponent implements OnInit {
     ) {}
     
     ngOnInit() {
+        console.log(
+            'Activated route data in Component:::',
+            this.activatedRoute.data
+          );
         this.getTasks();
-        console.log("tasks: ", this.tasks)
-        //this.countSubtasks();
-
-        //let count = await firstValueFrom(this.taskService.countByField('completed', 0)); 
     }
 
     onShowTaskAddOverlay(event: Event) {
@@ -74,9 +73,9 @@ export class InboxComponent implements OnInit {
     }
 
     getTasks() {
-         this.activatedRoute.data.subscribe(({ inboxResolvedData }) => {
-            this.tasks = inboxResolvedData.tasks;
-            this.subtasksCount = inboxResolvedData.subtasksCount;
+        this.activatedRoute.data.subscribe((inboxResolvedData) => {
+            this.tasks = inboxResolvedData['tasks'].tasks;
+            this.subtasksCount = inboxResolvedData['tasks'].subtasksCount;
         });
     }
 
