@@ -48,5 +48,18 @@
     "Receive app Notifications?": "Receber notificações do app?",
     "Notify tasks due today?": "Notificar tarefas vencendo hoje?",
     "Time to notify today tasks:": "Horário para notificar as tarefas do dia:",
-    "Add subtask": "Adicionar subtarefa"
+    "Add subtask": "Adicionar subtarefa",
+    "Click the button below to look for the device in the network.": "Clique no botão abaixo para procurar o dispositivo na rede.",
+    "Synchronize data with other devices": "Sincronizar dados com outros dispositivos",
+    "Get data from other device": "Obter dados de outro dispositivo",
+    "Then open the app on other device, click the button \"Send data to other devices\" and then click the button \"Make device discoverable\".": "Em seguida, abra o aplicativo em outro dispositivo, clique no botão \"Enviar dados para outros dispositivos\" e depois clique no botão \"Tornar dispositivo detectável\".",
+    "This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.": "Esta operação é segura e seus dados são criptografados antes de serem transferidos entre dispositivos, para garantir a segurança.",
+    "Search devices": "Pesquisar dispositivos",
+    "Type the code below": "Digite o código abaixo",
+    "Send": "Enviar",
+    "Send data to other device": "Enviar dados para outro dispositivo",
+    "Open the app on other device, click the button \"Get data from other devices\" and follow instructions. Then, click the button bellow.": "Abra o aplicativo em outro dispositivo, clique no botão \"Obter dados de outros dispositivos\" e siga as instruções. Depois, clique no botão abaixo.",
+    "Type the code below on your other device:": "Digite o código abaixo no seu outro dispositivo:",
+    "Get data from other devices": "Obter dados de outros dispositivos",
+    "Send data to other devices": "Enviar dados para outros dispositivos"
   }

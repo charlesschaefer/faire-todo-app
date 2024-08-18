@@ -48,5 +48,18 @@
     "Receive app Notifications?": "Receive app Notifications?",
     "Notify tasks due today?": "Notify tasks due today?",
     "Time to notify today tasks:": "Time to notify today tasks:",
-    "Add subtask": "Add subtask"
+    "Add subtask": "Add subtask",
+    "Click the button below to look for the device in the network.": "Click the button below to look for the device in the network.",
+    "Synchronize data with other devices": "Synchronize data with other devices",
+    "Get data from other device": "Get data from other device",
+    "Then open the app on other device, click the button \"Send data to other devices\" and then click the button \"Make device discoverable\".": "Then open the app on other device, click the button \"Send data to other devices\" and then click the button \"Make device discoverable\".",
+    "This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.": "This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.",
+    "Search devices": "Search devices",
+    "Type the code below": "Type the code below",
+    "Send": "Send",
+    "Send data to other device": "Send data to other device",
+    "Open the app on other device, click the button \"Get data from other devices\" and follow instructions. Then, click the button bellow.": "Open the app on other device, click the button \"Get data from other devices\" and follow instructions. Then, click the button bellow.",
+    "Type the code below on your other device:": "Type the code below on your other device:",
+    "Get data from other devices": "Get data from other devices",
+    "Send data to other devices": "Send data to other devices"
   }
