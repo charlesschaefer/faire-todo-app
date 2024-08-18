@@ -13,6 +13,7 @@ addEventListener('message', ({ data }) => {
     const settingsService = new SettingsService(dbService);
     // checks if there are tasks dueing now every minute
     setInterval(() => {
+        console.log("Checking if we need to notify about any task...");
         settingsService.get(1).subscribe(settings => {
             if (settings?.notifications) {
                 checkDuedTasks();
@@ -41,6 +42,7 @@ function checkDuedTasks() {
     taskService.getByField('dueDate', date).subscribe(tasks => {
         tasks.forEach(task => {
             if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
+                console.log(`We need to notify user that ${task.title} task is duing now`);
                 // task dueing now, notifying the user
                 postMessage({
                     task: task,
@@ -58,6 +60,7 @@ function checkDuingToday(settings: SettingsDto) {
         settings.notificationTime?.getHours() == date.getHours() &&
         settings.notificationTime?.getMinutes() == date.getMinutes()
     ) {
+        console.log("Notifying the user that they have tasks duing today");
         postMessage({
             type: NotificationType.TodayTasks
         });
