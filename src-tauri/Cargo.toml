@@ -18,7 +18,7 @@ tauri-build = { version = "2.0.0-rc", features = [] }
 tauri = { version = "2.0.0-rc", features = ["tray-icon", "image-png", "devtools"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-tauri-plugin-notification = "2.0.0-rc.0"
+tauri-plugin-notification = "2.0.0-rc"
 mdns-sd = "0.11.1"
 hostname = "0.4.0"
 local-ip-addr = "0.1.1"
