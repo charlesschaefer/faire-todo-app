@@ -242,7 +242,7 @@ export class AppComponent implements OnInit {
         if (permissionGranted) {
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Task duing')),
-                body: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: task.title}))
+                largeBody: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: task.title}))
             });
         }
     }
@@ -262,7 +262,7 @@ export class AppComponent implements OnInit {
             let duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Tasks duing today')),
-                body: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {total: duingToday}))
+                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {total: duingToday}))
             });
         }
     }
@@ -298,11 +298,11 @@ export class AppComponent implements OnInit {
         }
         //alert(`Permission granted: ${permissionGranted}`);
 
-        invoke('add_notification', {title: 'Tauri', body: 'Tauri is awesome!'});
+        //invoke('add_notification', {title: 'Tauri', body: 'Tauri is awesome!'});
     
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            //sendNotification({ title: 'Tauri', body: 'Tauri is awesome!' });
+            sendNotification({ title: 'Tauri', largeBody: 'Tauri is awesome!' });
         }
     }
 

@@ -135,7 +135,7 @@ export class SettingsComponent implements OnInit {
         if (permissionGranted) {
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Notifications enabled')),
-                body: await firstValueFrom(this.translate.get(`Now you'll receive our notifications.`))
+                largeBody: await firstValueFrom(this.translate.get(`Now you'll receive our notifications.`)),
             });
         }
     }
