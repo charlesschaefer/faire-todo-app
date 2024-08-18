@@ -62,13 +62,7 @@ export class TaskAddComponent implements OnInit {
     projects!: ProjectDto[];
 
     isRecurring = false;
-    recurringOptions = [
-        RecurringType.DAILY,
-        RecurringType.WEEKLY,
-        RecurringType.WEEKDAY,
-        RecurringType.MONTHLY,
-        RecurringType.YEARLY
-    ];
+    recurringOptions!: Array<any>;
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
@@ -78,7 +72,7 @@ export class TaskAddComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
     ) {}
 
-    ngOnInit(): void {
+    async ngOnInit() {
         // subscribes to the parent Subject to exhibit the overlay component
         this.showOverlay$.subscribe(event => {
             if (event) {
@@ -102,6 +96,17 @@ export class TaskAddComponent implements OnInit {
         if (this.project) {
             this.taskForm.patchValue({project: this.project.id});
         }
+
+        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        this.recurringOptions = [
+            notRecurringLabel,
+            RecurringType.DAILY,
+            RecurringType.WEEKLY,
+            RecurringType.WEEKDAY,
+            RecurringType.MONTHLY,
+            RecurringType.YEARLY
+        ];
+        this.taskForm.patchValue({ recurring: notRecurringLabel });
     }
 
     onClose(event: Event) {
@@ -164,7 +169,7 @@ export class TaskAddComponent implements OnInit {
             dueTime: null,
             project: this.parent?.project || this.project?.id,
             parent: this.parent || null,
-            recurring: null
+            recurring: this.recurringOptions[0]
         });
         return true;
     }
