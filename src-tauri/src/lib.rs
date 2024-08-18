@@ -1,4 +1,4 @@
-use tauri::{Manager, Emitter};
+//use tauri::{Manager, Emitter};
 
 #[cfg(desktop)]
 mod desktop;
@@ -12,9 +12,8 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
-    let mut builder = tauri::Builder::default();
-
-    builder.plugin(tauri_plugin_notification::init())
+    tauri::Builder::default()
+        .plugin(tauri_plugin_notification::init())
         .setup(|app| {
             #[cfg(desktop)]
             desktop::setup_system_tray_icon(app);
