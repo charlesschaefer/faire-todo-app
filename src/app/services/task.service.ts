@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
-import { TaskAddDto, TaskDto } from '../dto/task-dto';
+import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
 import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
 import { TaskComponent } from '../task/task/task.component';
 import { DbService } from './db.service';
 
@@ -174,6 +174,58 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
 
         return removal$;
     }
-}
 
-console.log("TaskComponent", TaskComponent);
+    markTaskComplete(task: TaskDto) {
+        const success$ = new Subject();
+        task.completed = 1;
+        from(this.table.update(task.id, task)).subscribe({
+            complete: () => {
+                // checks if the task is recurring and creates a new task
+                if (task.recurring) {
+                    let aTask:Partial<TaskDto> = task;
+                    // removes id to enable creating a new task
+                    aTask.id = undefined;
+                    aTask.completed = 0;
+                    
+                    let newTask = aTask as TaskAddDto;
+                    let date = DateTime.fromJSDate(newTask.dueDate as Date);
+                    switch (task.recurring) {
+                        case RecurringType.DAILY:
+                            date = date.plus(Duration.fromObject({day: 1}));
+                            break;
+                        case RecurringType.WEEKLY:
+                            date = date.plus(Duration.fromObject({week: 1}));
+                            break;
+                        case RecurringType.MONTHLY: 
+                            date = date.plus(Duration.fromObject({month: 1}));
+                            break;
+                        case RecurringType.YEARLY:
+                            date = date.plus(Duration.fromObject({year: 1}));
+                            break;
+                        case RecurringType.WEEKDAY:
+                            if (date.weekday < 5) {
+                                date = date.plus(Duration.fromObject({day: 1}));
+                            } else {
+                                date = date.plus(Duration.fromObject({days: 3}));
+                            }
+                            break;
+                    }
+                   
+                    newTask.dueDate = date.toJSDate();
+                    console.log(newTask);
+                    from(this.table.add(newTask)).subscribe({
+                        complete: () => {
+                            success$.complete();
+                        },
+                        error: (err) => {
+                            success$.error(err);
+                        }
+                    })
+                } else {
+                    success$.complete();
+                }
+            }
+        });
+        return success$;
+    }
+}

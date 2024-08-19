@@ -12,10 +12,11 @@ import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 
 import { TaskService } from '../../services/task.service';
-import { TaskAddDto, TaskDto } from '../../dto/task-dto';
+import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
     selector: 'app-task-add',
@@ -30,6 +31,7 @@ import { ProjectDto } from '../../dto/project-dto';
         ToastModule,
         TranslateModule,
         DropdownModule,
+        CheckboxModule,
     ],
     providers: [
         MessageService,
@@ -53,10 +55,14 @@ export class TaskAddComponent implements OnInit {
         dueDate: [null],
         dueTime: [null],
         project: [this.project?.id || null],
-        parent: [this.parent || null]
+        parent: [this.parent || null],
+        recurring: [null]
     });
 
     projects!: ProjectDto[];
+
+    isRecurring = false;
+    recurringOptions!: Array<any>;
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
@@ -66,7 +72,7 @@ export class TaskAddComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
     ) {}
 
-    ngOnInit(): void {
+    async ngOnInit() {
         // subscribes to the parent Subject to exhibit the overlay component
         this.showOverlay$.subscribe(event => {
             if (event) {
@@ -90,6 +96,17 @@ export class TaskAddComponent implements OnInit {
         if (this.project) {
             this.taskForm.patchValue({project: this.project.id});
         }
+
+        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        this.recurringOptions = [
+            notRecurringLabel,
+            RecurringType.DAILY,
+            RecurringType.WEEKLY,
+            RecurringType.WEEKDAY,
+            RecurringType.MONTHLY,
+            RecurringType.YEARLY
+        ];
+        this.taskForm.patchValue({ recurring: notRecurringLabel });
     }
 
     onClose(event: Event) {
@@ -99,7 +116,7 @@ export class TaskAddComponent implements OnInit {
 
     async saveTask() {
         const form = this.taskForm.value;
-        console.log(form);
+        
         let dueDate:Date | null | undefined = form.dueDate;
         if (this.router.url == '/today') {
             dueDate = new Date();
@@ -107,6 +124,21 @@ export class TaskAddComponent implements OnInit {
             dueDate.setMinutes(0);
             dueDate.setSeconds(0);
             dueDate.setMilliseconds(0);
+        }
+
+        let recurring = form.recurring;
+        // checks if the value is not a "not recurring" option
+        if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
+            recurring = null;
+        }
+        // validates recurring and date
+        if (recurring && !dueDate) {
+            this.messageService.add({
+                severity: 'error',
+                summary: await firstValueFrom(this.translate.get('Unable to save')),
+                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+            });
+            return;
         }
 
         let order = await firstValueFrom(this.taskAddService.count());
@@ -120,6 +152,7 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
+            recurring: recurring || null
         };
 
         this.taskAddService.add(saveData).subscribe({
@@ -150,7 +183,8 @@ export class TaskAddComponent implements OnInit {
             dueDate: null,
             dueTime: null,
             project: this.parent?.project || this.project?.id,
-            parent: this.parent || null
+            parent: this.parent || null,
+            recurring: this.recurringOptions[0]
         });
         return true;
     }

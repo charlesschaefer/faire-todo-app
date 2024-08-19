@@ -1,5 +1,5 @@
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -15,11 +15,10 @@ import { TaskAddComponent } from '../task-add/task-add.component';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
-import { TaskDto } from '../../dto/task-dto';
+import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
-
-console.log("TaskComponent2", TaskComponent);
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
     selector: 'app-task-edit',
@@ -36,7 +35,9 @@ console.log("TaskComponent2", TaskComponent);
         TaskAddComponent,
         SubtaskComponent,
         AccordionModule,
-        TaskComponent
+        TaskComponent,
+        CheckboxModule,
+        FormsModule,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -58,6 +59,9 @@ export class TaskEditComponent implements OnInit {
     subtasksCount!: number;
     subtasksCompletedCount!: number;
 
+    isRecurring = false;
+    recurringOptions!: Array<any>;
+
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
         private taskService: TaskService<TaskDto>,
@@ -71,12 +75,16 @@ export class TaskEditComponent implements OnInit {
 
     async ngOnInit() {
         this.task = this.dynamicDialogConfig.data.task;
+        
+        console.log("Recorrência da tarefa: ", this.task.recurring);
         this.taskForm = this.fb.group({
             title: [this.task.title, Validators.required],
             description: [this.task.description],
             dueDate: [this.task.dueDate],
             dueTime: [this.task.dueTime],
             project: [this.task.project != null ? this.task.project : 0],
+            parent: [this.task.parent || null],
+            recurring: [this.task.recurring || 0]
         });
         
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
@@ -109,10 +117,37 @@ export class TaskEditComponent implements OnInit {
             this.subtasksCount = countSubtasks.subtasks;
             this.subtasksCompletedCount = countSubtasks.completed;
         });
+
+        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        this.recurringOptions = [
+            notRecurringLabel,
+            RecurringType.DAILY,
+            RecurringType.WEEKLY,
+            RecurringType.WEEKDAY,
+            RecurringType.MONTHLY,
+            RecurringType.YEARLY
+        ];
     }
 
-    saveTask() {
+    async saveTask() {
         const form = this.taskForm.value;
+
+        let dueDate:Date | null | undefined = form.dueDate;
+        let recurring = form.recurring;
+        // checks if the value is not a "not recurring" option
+        if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
+            recurring = null;
+        }
+        // validates recurring and date
+        if (recurring && !dueDate) {
+            this.messageService.add({
+                severity: 'error',
+                summary: await firstValueFrom(this.translate.get('Unable to save')),
+                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+            });
+            return;
+        }
+
         const saveData: TaskDto = {
             id: this.task.id,
             title: form.title as unknown as string,
@@ -123,6 +158,7 @@ export class TaskEditComponent implements OnInit {
             completed: 0,
             order: this.task.order,
             parent: this.task.parent,
+            recurring: recurring || null
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({

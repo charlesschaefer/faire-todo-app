@@ -16,9 +16,9 @@ export class DateShortenerPipe implements PipeTransform {
 
     const dtNow = DateTime.fromJSDate(now);
     const dtValue = DateTime.fromJSDate(value);
-    console.log("Now", now, "date", dtValue.toJSDate());
+    
     const diff = dtNow.diff(dtValue).as('days');
-    console.log("diff is", diff);
+    
     if (diff < -1 || diff > 1) {
       //return dtValue.toFormat("dd/MM");
       return dtValue.toLocaleString(DateTime.DATE_SHORT);

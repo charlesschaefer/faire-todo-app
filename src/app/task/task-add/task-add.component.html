@@ -57,8 +57,17 @@
             class="task-add-project"
           />
           }
-
-          
+        </div>
+        <div class="task-add-recurring-task align-items-center flex flex-row gap-3">
+          <i class="pi pi-history"></i>
+          <p-dropdown 
+            [options]="recurringOptions"
+            formControlName="recurring"
+            name="recurring"
+            class="task-add-recurring"
+            inputId="recurring"
+            id="recurring"
+          />
         </div>
         <p-divider />
         <div class="task-add-buttons flex flex-row justify-content-end gap-1">
