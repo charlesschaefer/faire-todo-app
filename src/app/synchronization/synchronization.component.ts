@@ -105,6 +105,7 @@ export class SynchronizationComponent {
     }
 
     async sendEncryptedOTP(event: Event) {
+        this.showProgressBar = true;
         console.log("Sending encripted data. OTP: ", this.otpForm.value.otp);
         //alert("Let's start the otp validation");
         const otp = this.otpForm.value.otp as unknown as string;
@@ -151,7 +152,9 @@ export class SynchronizationComponent {
                         life: 4000,
                         key: "sync"
                     });
-                    await this.httpClient.post(`http://${this.serverIp}:9099/disconnect`, {});
+                    this.getFromOthersVisible = false;
+                    this.showProgressBar = false;
+                    await fetch(`http://${this.serverIp}:9099/disconnect`, {method: "POST"});
                 },
                 error: async (err) => {
                     console.log("Error recovering backup. Showing messages...", err);
@@ -162,6 +165,7 @@ export class SynchronizationComponent {
                         severity: 'error',
                         key: "sync"
                     });
+                    this.showProgressBar = false;
                 }
             });
         } catch (error) {
@@ -171,6 +175,7 @@ export class SynchronizationComponent {
                 detail: "Error when tried to encrypt the OTP code: " + error,
                 key: "sync"
             });
+            this.showProgressBar = false;
             return;
         }
 

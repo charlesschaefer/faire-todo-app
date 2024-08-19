@@ -19,9 +19,30 @@ use tokio::sync::Mutex;
 
 #[tauri::command]
 pub async fn start_http_server(otp_code: String, backup_data: String) {
-    let server = HttpServer::new().set_data(otp_code, backup_data);
+    println!("Called start_http_server()");
 
-    let _ = start_server(server).await.unwrap();
+    let mut guard = SERVER.lock().await;
+    let mut server = guard.as_mut().unwrap().clone();
+    // releases the lock
+    drop(guard);
+
+    let mut guard = SERVER.lock().await;
+    server.set_data(otp_code.clone(), backup_data);
+    guard.replace(server.to_owned());
+    // releases the lock
+    drop(guard);
+
+    println!("Conseguiu pegar o lock() do server");
+    STOP_CONNECTIONS.lock().await.replace(false);
+    //let server = HttpServer::new().set_data(otp_code, backup_data);
+    
+    println!("Let's start the server... with new otp: {:?}", otp_code);
+    println!("Server was running? {:?}", server.running);
+    if !server.running {
+        server.set_running(true);
+        SERVER.lock().await.replace(server.clone());
+        let _ = start_server().await.unwrap();
+    }
 }
 
 #[tauri::command]
@@ -33,13 +54,16 @@ lazy_static! {
     // a global watch channel behind a thread safe Mutex
     static ref SHUTDOWN_TX: Arc<Mutex<Option<watch::Sender<()>>>> = <_>::default();
     // thread safe boolean flag (behind a mutex)
-    static ref STOP_CONNECTIONS: Arc<Mutex<bool>> = Arc::new(Mutex::new(false));
+    static ref STOP_CONNECTIONS: Arc<Mutex<Option<bool>>> = Arc::new(Mutex::new(Some(false)));
+    // global server handle
+    static ref SERVER: Arc<Mutex<Option<HttpServer>>> = Arc::new(Mutex::new(Some(HttpServer::new())));
 }
 
 #[derive(Debug, Clone)]
 pub struct HttpServer {
     otp_code: String,
     json_data: String,
+    running: bool
 }
 
 impl HttpServer {
@@ -47,6 +71,7 @@ impl HttpServer {
         Self {
             otp_code: String::new(),
             json_data: String::new(),
+            running: false
         }
     }
 
@@ -54,6 +79,10 @@ impl HttpServer {
         self.otp_code = otp_code;
         self.json_data = json_data;
         self.clone()
+    }
+
+    pub fn set_running(&mut self, running: bool) {
+        self.running = running;
     }
 }
 
@@ -91,15 +120,18 @@ impl Service<Request<IncomingBody>> for HttpServer {
         let res: Result<Response<Full<Bytes>>, hyper::Error> = match request.uri().path() {
             "/handshake" => {
                 println!("Handshaking...");
-                let otp_token = request.headers().get("x-signed-token").unwrap();
-                if otp_token.len() == 0 {
-                    mk_response("Empty token".to_string(), 500)
+                if let Some(otp_token) = request.headers().get("x-signed-token") {
+                    if otp_token.len() == 0 {
+                        mk_response("Empty token".to_string(), 500)
+                    } else {
+                        let json_data = self.json_data.clone();
+                        mk_response(json_data, 200)
+                    }
                 } else {
-                    let json_data = self.json_data.clone();
-                    mk_response(json_data, 200)
+                    mk_response("Token not provided".to_string(), 500)
                 }
             },
-            "/close" => {
+            "/disconnect" => {
                 tokio::spawn(async move {
                     let _ = stop_server().await.unwrap();
                 });
@@ -112,7 +144,7 @@ impl Service<Request<IncomingBody>> for HttpServer {
     }
 }
 
-pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+pub async fn start_server() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let addr: SocketAddr = ([0, 0, 0, 0], 9099).into();
     let listener = TcpListener::bind(addr).await?;
     dbg!("Listening on http://{}", addr);
@@ -120,30 +152,37 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
     let (tx, rx) = watch::channel::<()>(());
     SHUTDOWN_TX.lock().await.replace(tx);
 
+
     let mut rx_clone = rx.clone();
     tokio::spawn(async move {
         //let mut keep = keep_receiving_connections.clone();
         match rx_clone.changed().await {
             Ok(_) => {
                 dbg!("Received the stop server signal. Telling the loop to stop receiving connections");
-                let mut stop = STOP_CONNECTIONS.lock().await;
-                *stop = true;
+                STOP_CONNECTIONS.lock().await.replace(true);
             },
             Err(_) => println!("Sender dropped"),
         };
     });
-
+    
     loop {
-        let stop_conns = STOP_CONNECTIONS.lock().await.clone();
+        let guard = SERVER.lock().await;
+        let mut svc = guard.as_ref().unwrap().clone();
+        drop(guard);
+        println!("Listening for connections with the OTP: {:?}", svc.otp_code);
+    
+        let stop_conns = STOP_CONNECTIONS.lock().await.unwrap().clone();
         if stop_conns {
-            dbg!("Stoping to receive connections");
+            println!("Stoping to receive connections");
             drop(listener);
+            svc.set_running(false);
+            SERVER.lock().await.replace(svc.to_owned());
             return Ok(());
         } else {
-            dbg!("We can keep receiving connections. Listening to the next one");
+            println!("We can keep receiving connections. Listening to the next one");
         }
 
-        // receives the connection with a timeout of 10 seconds
+        // receives the connection with a timeout of 2 seconds
         tokio::select! {
             Ok((stream, remote)) = listener.accept() => {
                 dbg!("Received a connection from {:?}", remote);
@@ -171,8 +210,8 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
                     }
                 });
             },
-            _ = tokio::time::sleep(Duration::from_secs(10)) => {
-                dbg!("listener::accept() timedout. Listening for the next one...");
+            _ = tokio::time::sleep(Duration::from_secs(2)) => {
+                dbg!(format!("listener::accept() timedout. Listening for the next one... OTP: {:?}", svc.otp_code));
             }
         };
     }

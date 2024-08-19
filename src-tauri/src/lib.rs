@@ -28,6 +28,7 @@ pub fn run() {
             mdns::search_network_sync_services,
             mdns::broadcast_network_sync_services,
             http::start_http_server,
+            http::stop_http_server,
             add_notification,
             close_app,
         ])
