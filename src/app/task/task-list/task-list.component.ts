@@ -72,6 +72,7 @@ export class TaskListComponent implements OnInit {
     }
 
     onTaskEdit() {
+        console.log("TaskList.onTaskEdit emitted");
         this.onEditTask.emit();
     }
 }

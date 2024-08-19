@@ -116,7 +116,7 @@ export class TaskAddComponent implements OnInit {
 
     async saveTask() {
         const form = this.taskForm.value;
-        console.log(form);
+        
         let dueDate:Date | null | undefined = form.dueDate;
         if (this.router.url == '/today') {
             dueDate = new Date();
@@ -124,6 +124,21 @@ export class TaskAddComponent implements OnInit {
             dueDate.setMinutes(0);
             dueDate.setSeconds(0);
             dueDate.setMilliseconds(0);
+        }
+
+        let recurring = form.recurring;
+        // checks if the value is not a "not recurring" option
+        if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
+            recurring = null;
+        }
+        // validates recurring and date
+        if (recurring && !dueDate) {
+            this.messageService.add({
+                severity: 'error',
+                summary: await firstValueFrom(this.translate.get('Unable to save')),
+                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+            });
+            return;
         }
 
         let order = await firstValueFrom(this.taskAddService.count());
@@ -137,7 +152,7 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
-            recurring: form.recurring || null
+            recurring: recurring || null
         };
 
         this.taskAddService.add(saveData).subscribe({

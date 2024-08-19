@@ -181,15 +181,19 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.get(`Undone`)),
                         detail: await firstValueFrom(this.translate.get(`Your delete action was undone successfully.`)),
-                        severity: "success"
+                        severity: "success",
+                        key: "task"
                     });
+                    this.onEditTask.emit();
                 }, 
                 error: async (err) => {
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.get(`Error`)) + err,
                         detail: await firstValueFrom(this.translate.get(`Error trying to recover task.`)) + err,
-                        severity: "error"
+                        severity: "error",
+                        key: "task"
                     });
+                    this.onEditTask.emit();
                 }
             });
         }
@@ -247,20 +251,28 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     undoMarkAsComplete(undoData: UndoItem) {
         if (undoData.type == 'task.markComplete') {
             const task = undoData.data as TaskDto;
+            console.log("Lets save the task again");
             this.taskService.edit(task.id, task).subscribe({
                 complete: async () => {
+                    console.log("undoMarkAsComplete().complete")
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.get(`Undone`)),
                         detail: await firstValueFrom(this.translate.get(`Task got back to it's initial state`)),
-                        severity: 'success'
+                        severity: 'success',
+                        key: "task"
                     });
+                    console.log("Emiting onEditTask")
+                    this.onEditTask.emit();
                 },
                 error: async (err) => {
+                    console.log("undoMarkAsComplete().error")
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.get(`Error`)),
                         detail: await firstValueFrom(this.translate.get(`Error trying to undo marking task as complete.`)) + err,
-                        severity: 'error'
+                        severity: 'error',
+                        key: "task"
                     });
+                    this.onEditTask.emit();
                 }
             });
         }

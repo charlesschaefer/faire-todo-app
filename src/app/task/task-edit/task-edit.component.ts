@@ -74,12 +74,16 @@ export class TaskEditComponent implements OnInit {
 
     async ngOnInit() {
         this.task = this.dynamicDialogConfig.data.task;
+        
+        console.log("Recorrência da tarefa: ", this.task.recurring);
         this.taskForm = this.fb.group({
             title: [this.task.title, Validators.required],
             description: [this.task.description],
             dueDate: [this.task.dueDate],
             dueTime: [this.task.dueTime],
             project: [this.task.project != null ? this.task.project : 0],
+            parent: [this.task.parent || null],
+            recurring: [this.task.recurring || 0]
         });
         
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
@@ -123,6 +127,7 @@ export class TaskEditComponent implements OnInit {
 
         let dueDate:Date | null | undefined = form.dueDate;
         let recurring = form.recurring;
+        // checks if the value is not a "not recurring" option
         if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
             recurring = null;
         }
