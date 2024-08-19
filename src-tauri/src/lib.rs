@@ -44,16 +44,18 @@ fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
         .title(title)
         .large_body(body)
         .show();
-
+    
     match results {
         Ok(_) => {
             println!("Notification shown successfully");
-        }
+        },
         Err(err) => {
             println!("Error sending notification: {:?}", err);
         }
     }
 }
+
+
 
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {

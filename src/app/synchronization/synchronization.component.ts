@@ -17,6 +17,7 @@ import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
 import { fetch } from '@tauri-apps/plugin-http';
 
+
 @Component({
     selector: 'app-synchronization',
     standalone: true,
@@ -112,7 +113,6 @@ export class SynchronizationComponent {
                 detail: await firstValueFrom(this.translateService.get("You need to type all the 6 letters correctly.")),
                 severity: 'error',
                 key: "sync"
-
             });
             return;
         }
