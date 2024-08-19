@@ -1,34 +1,32 @@
 use bytes::Bytes;
-use std::time::Duration;
 use lazy_static::lazy_static;
+use std::time::Duration;
 
 use http_body_util::Full;
+use hyper::server::conn::http1;
 use hyper::service::Service;
 use hyper::{body::Incoming as IncomingBody, Request, Response};
-use hyper::server::conn::http1;
-use tokio::pin;
+use hyper_util::rt::TokioIo;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
-use hyper_util::rt::TokioIo;
-
+use tokio::pin;
 
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
-use tokio::sync::Mutex;
 use tokio::sync::watch;
-
+use tokio::sync::Mutex;
 
 #[tauri::command]
 pub async fn start_http_server(otp_code: String, backup_data: String) {
-        let mut server = HttpServer::new().set_data(otp_code, backup_data);
+    let server = HttpServer::new().set_data(otp_code, backup_data);
 
-        start_server(server).await;
+    let _ = start_server(server).await.unwrap();
 }
 
 #[tauri::command]
 pub async fn stop_http_server() {
-    stop_server().await;
+    stop_server().await.unwrap();
 }
 
 lazy_static! {
@@ -38,11 +36,10 @@ lazy_static! {
     static ref STOP_CONNECTIONS: Arc<Mutex<bool>> = Arc::new(Mutex::new(false));
 }
 
-
 #[derive(Debug, Clone)]
 pub struct HttpServer {
     otp_code: String,
-    json_data: String
+    json_data: String,
 }
 
 impl HttpServer {
@@ -50,8 +47,6 @@ impl HttpServer {
         Self {
             otp_code: String::new(),
             json_data: String::new(),
-            server: tiny_http::Server::http("0.0.0.0:9099").unwrap(),
-            connection_openned: true
         }
     }
 
@@ -66,33 +61,34 @@ impl Service<Request<IncomingBody>> for HttpServer {
     type Response = Response<Full<Bytes>>;
     type Error = hyper::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
-    
+
     fn call(&self, request: Request<IncomingBody>) -> Self::Future {
-        fn mk_response(resp: String, status: u16) -> Result<Response<Full<Bytes>>, hyper::Error>  {
+        fn mk_response(resp: String, status: u16) -> Result<Response<Full<Bytes>>, hyper::Error> {
             let response = hyper::Response::builder()
-            .header("Access-Control-Allow-Origin", "*")
-            .header("Access-Control-Allow-Headers", "*")
-            .status(status)
-            .body(Full::new(Bytes::from(resp)))
-            .unwrap();
-            
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Access-Control-Allow-Headers", "*")
+                .status(status)
+                .body(Full::new(Bytes::from(resp)))
+                .unwrap();
+
             Ok(response)
         }
-        
+
         let method = request.method().as_str();
         if method != "POST" && method != "OPTIONS" {
-            return Box::pin( async {
-                Ok(Response::builder().status(500).body(Full::new(Bytes::from("Unacepted method"))).unwrap())
-            });
-        }
-        
-        if method == "OPTIONS" {
             return Box::pin(async {
-                mk_response("".to_string(), 200)
+                Ok(Response::builder()
+                    .status(500)
+                    .body(Full::new(Bytes::from("Unacepted method")))
+                    .unwrap())
             });
         }
-        
-        let res: Result<Response<Full<Bytes>>, hyper::Error>  = match request.uri().path() {
+
+        if method == "OPTIONS" {
+            return Box::pin(async { mk_response("".to_string(), 200) });
+        }
+
+        let res: Result<Response<Full<Bytes>>, hyper::Error> = match request.uri().path() {
             "/handshake" => {
                 println!("Handshaking...");
                 let otp_token = request.headers().get("x-signed-token").unwrap();
@@ -109,13 +105,10 @@ impl Service<Request<IncomingBody>> for HttpServer {
                 });
                 mk_response("retornando do close".to_string(), 200)
             },
-            _ => {
-                mk_response("Request not found".to_string(), 200)
-            }
+            _ => mk_response("Request not found".to_string(), 200),
         };
-        
+
         Box::pin(async { res })
-        
     }
 }
 
@@ -123,10 +116,10 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
     let addr: SocketAddr = ([0, 0, 0, 0], 9099).into();
     let listener = TcpListener::bind(addr).await?;
     dbg!("Listening on http://{}", addr);
-    
+
     let (tx, rx) = watch::channel::<()>(());
     SHUTDOWN_TX.lock().await.replace(tx);
-    
+
     let mut rx_clone = rx.clone();
     tokio::spawn(async move {
         //let mut keep = keep_receiving_connections.clone();
@@ -136,10 +129,10 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
                 let mut stop = STOP_CONNECTIONS.lock().await;
                 *stop = true;
             },
-            Err(_) => println!("Sender dropped")
+            Err(_) => println!("Sender dropped"),
         };
     });
-    
+
     loop {
         let stop_conns = STOP_CONNECTIONS.lock().await.clone();
         if stop_conns {
@@ -149,21 +142,21 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
         } else {
             dbg!("We can keep receiving connections. Listening to the next one");
         }
-        
+
         // receives the connection with a timeout of 10 seconds
         tokio::select! {
             Ok((stream, remote)) = listener.accept() => {
                 dbg!("Received a connection from {:?}", remote);
                 let io = TokioIo::new(stream);
                 let svc_clone = svc.clone();
-                
+
                 let mut rx_clone = rx.clone();
-                
+
                 tokio::task::spawn(async move {
                     // Pin the connection object so we can use tokio::select! below.
                     let conn = http1::Builder::new().serve_connection(io, svc_clone);
                     pin!(conn);
-                    
+
                     tokio::select! {
                         res = conn.as_mut() => {
                             match res {
@@ -186,10 +179,9 @@ pub async fn start_server(svc: HttpServer) -> Result<(), Box<dyn std::error::Err
 }
 
 pub async fn stop_server() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-
     if let Some(tx) = SHUTDOWN_TX.lock().await.take() {
         let _ = tx.send(());
     }
-    
+
     Ok(())
 }

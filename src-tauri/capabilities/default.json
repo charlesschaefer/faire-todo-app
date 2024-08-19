@@ -10,7 +10,11 @@
     "notification:default",
     {
       "identifier": "http:default",
-      "allow": [{"url": "http://*:9099/*"}]
+      "allow": [
+        {
+          "url": "http://*:9099/*"
+        }
+      ]
     }
   ]
 }

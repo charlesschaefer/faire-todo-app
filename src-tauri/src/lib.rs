@@ -44,7 +44,7 @@ fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
         .title(title)
         .large_body(body)
         .show();
-    
+
     match results {
         Ok(_) => {
             println!("Notification shown successfully");
@@ -54,8 +54,6 @@ fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
         }
     }
 }
-
-
 
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
