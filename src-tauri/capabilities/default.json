@@ -7,6 +7,10 @@
   ],
   "permissions": [
     "core:default",
-    "notification:default"
+    "notification:default",
+    {
+      "identifier": "http:default",
+      "allow": [{"url": "http://*:9099/*"}]
+    }
   ]
 }

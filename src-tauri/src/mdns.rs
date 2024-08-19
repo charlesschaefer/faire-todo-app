@@ -73,10 +73,11 @@ pub fn broadcast_service() {
         ip,
         port,
         &properties[..],
-    ).unwrap();
+    )
+    .unwrap();
     // Register with the daemon, which publishes the service.
-    mdns.register(my_service).expect("Failed to register our service");
-
+    mdns.register(my_service)
+        .expect("Failed to register our service");
 
     // Gracefully shutdown the daemon
     std::thread::sleep(std::time::Duration::from_secs(1));

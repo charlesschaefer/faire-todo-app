@@ -2,7 +2,7 @@ import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { NgxIndexedDBModule } from "ngx-indexed-db";
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
@@ -19,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(routes),
         provideAnimationsAsync(),
-        provideHttpClient(),
+        provideHttpClient(withFetch()),
         importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
         importProvidersFrom(TranslateModule.forRoot({
             loader: {

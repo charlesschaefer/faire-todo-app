@@ -1,5 +1,8 @@
-use tauri::{menu::{MenuBuilder, MenuItem}, App, Manager, WindowEvent};
 use tauri::tray::{MouseButton, TrayIconBuilder, TrayIconEvent};
+use tauri::{
+    menu::{MenuBuilder, MenuItem},
+    App, Manager, WindowEvent,
+};
 
 #[cfg(desktop)]
 pub fn setup_system_tray_icon(app: &mut App) {
@@ -14,14 +17,12 @@ pub fn setup_system_tray_icon(app: &mut App) {
 
     let window = app.get_webview_window("main").unwrap();
     let window_hider = window.clone();
-    window.on_window_event(move |event| {
-        match event {
-            WindowEvent::CloseRequested { api, .. } => {
-                api.prevent_close();
-                window_hider.hide().unwrap();
-            },
-            _ => {}
+    window.on_window_event(move |event| match event {
+        WindowEvent::CloseRequested { api, .. } => {
+            api.prevent_close();
+            window_hider.hide().unwrap();
         }
+        _ => {}
     });
 
     // creates the tray icon
@@ -36,19 +37,16 @@ pub fn setup_system_tray_icon(app: &mut App) {
                 rect: _,
                 button,
                 button_state: _,
-            } => {
-                match button {
-                    MouseButton::Left => {
-                        dbg!("system tray received a left click");
-                        let window =
-                            tray_icon.app_handle().get_webview_window("main").unwrap();
-                        window.show().unwrap();
-                    }
-                    _ => {
-                        dbg!("system tray received a middle or right click");
-                    }
+            } => match button {
+                MouseButton::Left => {
+                    dbg!("system tray received a left click");
+                    let window = tray_icon.app_handle().get_webview_window("main").unwrap();
+                    window.show().unwrap();
                 }
-            }
+                _ => {
+                    dbg!("system tray received a middle or right click");
+                }
+            },
             _ => {
                 dbg!("system tray received an unknow event");
             }

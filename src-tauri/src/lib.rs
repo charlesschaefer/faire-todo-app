@@ -3,8 +3,8 @@
 #[cfg(desktop)]
 mod desktop;
 
-mod mdns;
 mod http;
+mod mdns;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -13,10 +13,11 @@ pub fn run() {
     //mdns::broadcast_service();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
-        .setup(|app| {
+        .setup(|_app| {
             #[cfg(desktop)]
-            desktop::setup_system_tray_icon(app);
+            desktop::setup_system_tray_icon(_app);
 
             // #[cfg(not(desktop))]
             // android::setup_system_tray_icon(app);
@@ -43,18 +44,16 @@ fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
         .title(title)
         .large_body(body)
         .show();
-    
+
     match results {
         Ok(_) => {
             println!("Notification shown successfully");
-        },
+        }
         Err(err) => {
             println!("Error sending notification: {:?}", err);
         }
     }
 }
-
-
 
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {

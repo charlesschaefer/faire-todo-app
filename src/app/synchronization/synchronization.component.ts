@@ -11,10 +11,11 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
 import { Message, MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, from } from 'rxjs';
 
 import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
+import { fetch } from '@tauri-apps/plugin-http';
 
 @Component({
     selector: 'app-synchronization',
@@ -116,20 +117,29 @@ export class SynchronizationComponent {
             return;
         }
         
-        // encrypts the otp and sends to the server 
-        let encryptedOtp = AES.encrypt(otp , otp);
-        let options = {
-            headers: {
-                'X-SIGNED-TOKEN': encryptedOtp.toString()
-            },
-            responseType: 'text' as 'json' // HACK because angular @types has the type of responseType fixed as 'json' :shrug:
-        };
-
-        this.httpClient.post<string>(`http://${this.serverIp}:9099/handshake`, {}, options).subscribe(backupData => {
+        try {
+            // encrypts the otp and sends to the server 
+            let encryptedOtp = AES.encrypt(otp , otp);
+            let options = {
+                headers: {
+                    'X-SIGNED-TOKEN': encryptedOtp.toString()
+                },
+                responseType: 'text' as 'json' // HACK because angular @types has the type of responseType fixed as 'json' :shrug:
+            };
+            const url = `http://${this.serverIp}:9099/handshake`;
+            //this.httpClient.post<string>(url, {}, options).subscribe({
+            
+            const response = await fetch(url, {method: "POST", headers: options.headers});
+            if (!response.status) {
+                throw new Error("Error trying to handshake with device. Response status: " + response.status);
+            }
+            const backupData = await response.text();
             console.log("Data sent and backup received. Restoring backup...")
+            alert("Data sent and backup received. Restoring backup...")
             this.backupService.restoreBackup(backupData, otp).subscribe({
                 complete: async () => {
                     console.log("Backup restored. Showing messages");
+                    alert("Data sent and backup received. Restoring backup...");
                     this.messageService.add({
                         summary: await firstValueFrom(this.translateService.get("Synchronized successfully")),
                         detail: await firstValueFrom(this.translateService.get("Your data was synchronized successfully.")),
@@ -141,6 +151,7 @@ export class SynchronizationComponent {
                 },
                 error: async (err) => {
                     console.log("Error recovering backup. Showing messages...", err);
+                    alert("Error recovering backup. Showing messages..." + err)
                     this.messageService.add({
                         summary: await firstValueFrom(this.translateService.get("Error synchronizing")),
                         detail: await firstValueFrom(this.translateService.get(`Error trying to synchronize data: `)) + err.toString(),
@@ -149,6 +160,15 @@ export class SynchronizationComponent {
                     });
                 }
             });
-        });
+        } catch (error) {
+            this.messageService.add({
+                severity: 'error', 
+                summary: "Error encrypting OTP code",
+                detail: "Error when tried to encrypt the OTP code: " + error,
+                key: "sync"
+            });
+            return;
+        }
+
     }
 }

@@ -24,6 +24,7 @@
     "@ngx-translate/core": "^15.0.0",
     "@ngx-translate/http-loader": "^8.0.0",
     "@tauri-apps/api": ">=2.0.0-rc.0",
+    "@tauri-apps/plugin-http": "^2.0.0-rc.1",
     "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
     "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
     "@types/crypto-js": "^4.2.2",

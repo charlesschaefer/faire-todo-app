@@ -91,14 +91,17 @@ export class BackupService {
         const backupResponse$ = new Subject();
         console.log("Encrypted data: ", encryptedData, "decryptKey", decryptKey);
         try {
+            alert("Data received: " + encryptedData + " Total bytes: " + encryptedData.length);
             const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
-            
+            alert("Backup decriptado: " + decryptedBackup.toString(enc.Utf8) + " Total bytes: " + decryptedBackup.toString(enc.Utf8).length);
             console.log("Received the data and here it is after decrypting: ");
             console.log(decryptedBackup.toString(enc.Utf8));
             console.log("Total bytes: ", decryptedBackup.toString(enc.Utf8).length);
             jsonBackup = JSON.parse(decryptedBackup.toString(enc.Utf8)) as BackupData;
         } catch (error) {
             console.log("Error trying to decrypt or convert json: ", error);
+            const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
+            alert(decryptedBackup.toString(enc.Utf8));
             backupResponse$.error(error);
             return backupResponse$;
         }
