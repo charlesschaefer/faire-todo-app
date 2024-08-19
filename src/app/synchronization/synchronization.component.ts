@@ -106,6 +106,7 @@ export class SynchronizationComponent {
 
     async sendEncryptedOTP(event: Event) {
         console.log("Sending encripted data. OTP: ", this.otpForm.value.otp);
+        alert("Let's start the otp validation");
         const otp = this.otpForm.value.otp as unknown as string;
         if (!otp || otp.length < 6) {
             this.messageService.add({
@@ -116,6 +117,8 @@ export class SynchronizationComponent {
             });
             return;
         }
+
+        alert("OTP Validated, let's start the handshake");
         
         try {
             // encrypts the otp and sends to the server 
@@ -131,11 +134,12 @@ export class SynchronizationComponent {
             
             const response = await fetch(url, {method: "POST", headers: options.headers});
             if (!response.status) {
+                alert("Error with status: " + response.status);
                 throw new Error("Error trying to handshake with device. Response status: " + response.status);
             }
             const backupData = await response.text();
-            console.log("Data sent and backup received. Restoring backup...")
-            alert("Data sent and backup received. Restoring backup...")
+            console.log("Data sent and backup received. Restoring backup...");
+            alert("Data sent and backup received. Restoring backup...");
             this.backupService.restoreBackup(backupData, otp).subscribe({
                 complete: async () => {
                     console.log("Backup restored. Showing messages");
