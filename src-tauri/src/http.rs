@@ -78,13 +78,13 @@ impl Service<Request<IncomingBody>> for HttpServer {
         }
         
         let method = request.method().as_str();
-        if method != "POST" && method != "OPTION" {
+        if method != "POST" && method != "OPTIONS" {
             return Box::pin( async {
                 Ok(Response::builder().status(500).body(Full::new(Bytes::from("Unacepted method"))).unwrap())
             });
         }
         
-        if method == "OPTION" {
+        if method == "OPTIONS" {
             return Box::pin(async {
                 mk_response("".to_string(), 200)
             });
