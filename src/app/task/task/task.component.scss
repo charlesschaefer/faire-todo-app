@@ -10,7 +10,7 @@ li.task-item {
 }
 
 li.task-item:hover {
-    background-color: #fafafa;
+    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 
 li.task-item:active {

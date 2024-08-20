@@ -54,6 +54,10 @@ footer {
     margin: 10px 0;
 }
 
+:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-icon {
+    color: var(--primary-color);
+}
+
 @media (max-width: 600px) {
     img#logo {
         display: none;
