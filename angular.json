@@ -37,12 +37,12 @@
             ],
             "styles": [
               {
-                "input": "node_modules/primeng/resources/themes/aura-light-blue/theme.css",
+                "input": "node_modules/primeng/resources/themes/aura-light-amber/theme.css",
                 "bundleName": "aura-light",
                 "inject": false
               },
               {
-                "input": "node_modules/primeng/resources/themes/aura-dark-blue/theme.css",
+                "input": "node_modules/primeng/resources/themes/aura-dark-amber/theme.css",
                 "bundleName": "aura-dark",
                 "inject": false
               },
