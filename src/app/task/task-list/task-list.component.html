@@ -1,5 +1,5 @@
-<p-dataView #dv [value]="tasks">
-  <ng-template pTemplate="list" let-tasks>
+<!-- <p-dataView #dv [value]="tasks"  rows="2">
+  <ng-template pTemplate="list" let-tasks> -->
     <div class="tasks-container">
       @if (tasks?.length) {
       <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
@@ -28,5 +28,5 @@
       </div>
     }
     </div>
-  </ng-template>
-</p-dataView>
+  <!-- </ng-template>
+</p-dataView> -->
