@@ -10,6 +10,7 @@
           [placeholder]="'Task title' | translate" 
           formControlName="title"
           [autofocus]="true"
+          (ngModelChange)="onTitleChange($event)"
         />
       </div>
       <div class="task-add-description">

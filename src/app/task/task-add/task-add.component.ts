@@ -11,6 +11,12 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 
+import nlp from 'compromise';
+import dates, { DatesMethods } from 'compromise-dates';
+
+nlp.plugin(dates);
+
+
 import { TaskService } from '../../services/task.service';
 import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
@@ -52,8 +58,8 @@ export class TaskAddComponent implements OnInit {
     taskForm = this.fb.group({
         title: [null, Validators.required],
         description: [null],
-        dueDate: [null],
-        dueTime: [null],
+        dueDate: [null] as [null | Date],
+        dueTime: [null] as [null | Date],
         project: [this.project?.id || null],
         parent: [this.parent || null],
         recurring: [null]
@@ -187,5 +193,25 @@ export class TaskAddComponent implements OnInit {
             recurring: this.recurringOptions[0]
         });
         return true;
+    }
+
+    onTitleChange(event: any) {
+        let doc = nlp<DatesMethods>(event);
+        let dates;
+        if (dates = doc.dates().get()) {
+            const dateView = dates[0] as {start:string};
+            if (dateView?.start) {
+                let date = new Date(dateView.start);
+                this.taskForm.patchValue({
+                    dueDate: date
+                });
+
+                if (date.getHours() != 0) {
+                    this.taskForm.patchValue({
+                        dueTime: date
+                    })
+                }
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@
             formControlName="title"
             autocomplete="off"
             [autofocus]="true"
+            (ngModelChange)="onTitleChange($event)"
           />
         </div>
         <div class="task-add-description">

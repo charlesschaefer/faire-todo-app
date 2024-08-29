@@ -11,6 +11,11 @@ import { MessageService, TreeNode } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { AccordionModule } from 'primeng/accordion';
 
+import nlp from 'compromise';
+import dates, { DatesMethods } from 'compromise-dates';
+
+nlp.plugin(dates);
+
 import { TaskAddComponent } from '../task-add/task-add.component';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
@@ -195,5 +200,25 @@ export class TaskEditComponent implements OnInit {
     subtasksTitle() {
         const title = this.translate.instant("Subtasks");
         return title + ` (${this.subtasksCompletedCount}/${this.subtasksCount})`;
+    }
+
+    onTitleChange(event: any) {
+        let doc = nlp<DatesMethods>(event);
+        let dates;
+        if (dates = doc.dates().get()) {
+            const dateView = dates[0] as {start:string};
+            if (dateView?.start) {
+                let date = new Date(dateView.start);
+                this.taskForm.patchValue({
+                    dueDate: date
+                });
+
+                if (date.getHours() != 0) {
+                    this.taskForm.patchValue({
+                        dueTime: date
+                    })
+                }
+            }
+        }
     }
 }

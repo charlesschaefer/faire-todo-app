@@ -28,6 +28,7 @@
     "@tauri-apps/plugin-notification": "^2.0.0-rc.0",
     "@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
     "@types/crypto-js": "^4.2.2",
+    "compromise-dates": "^3.6.0",
     "crypto-js": "^4.2.0",
     "dexie": "^4.0.8",
     "luxon": "^3.4.4",
