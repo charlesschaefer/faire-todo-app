@@ -2,7 +2,7 @@
 
 Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser.
 
-Fair is the infinitive verb in french equivalent to "to do".
+Faire is the infinitive verb in french equivalent to "to do".
 
 # Features
 
@@ -20,8 +20,11 @@ Fair is the infinitive verb in french equivalent to "to do".
 - [ ] Tags for tasks
 - [x] Notifications of tasks reaching their due time (Windows and Linux only)
 - [x] Subtasks
-- [ ] Recurring tasks
+- [x] Recurring tasks
 - [x] Synchronization of data between devices connected in the same network
+- [x] Fill the due date and due time based on dates typed in the task title (i.e.: "Do this today" sets the due date for today automatically).
+- [ ] A calendar view of the tasks
+- [ ] A time tracker to track each task
 
 
 
@@ -35,7 +38,7 @@ npm run tauri android init
 npm run tauri android build
 ```
 
-Check [Tauri Dependencies](https://v2.tauri.app/start/prerequisites/) for know what to install before building.
+Check [Tauri Dependencies](https://v2.tauri.app/start/prerequisites/) to know what to install before building. And check [Android Code Signing](https://v2.tauri.app/distribute/signing/android/) to know how to set up keys to sign your APK.
 
 # Developing 
 
