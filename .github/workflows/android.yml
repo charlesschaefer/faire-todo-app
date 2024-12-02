@@ -37,6 +37,8 @@ jobs:
               with:
                   node-version: 22.1.0
                   cache: 'npm'
+
+            - name: Install dependencies
               run: npm install
 
             - name: install Rust stable
