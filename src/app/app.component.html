@@ -10,8 +10,26 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <!-- <p-tieredMenu #menu [popup]="true" [model]="menuItems" /> -->
-      <p-button icon="pi pi-bars" (click)="showSidebar = true" />
+      <!-- Login/User section -->
+      <ng-container *ngIf="!currentUser; else userMenu">
+        <p-button 
+          icon="pi pi-google" 
+          label="{{ 'Sign in' | translate }}"
+          (onClick)="signInWithGoogle()"
+          severity="secondary"
+          [text]="true"
+        ></p-button>
+      </ng-container>
+      <ng-template #userMenu>
+        <p-avatar 
+          [image]="currentUser?.user_metadata?.['avatar_url']"
+          shape="circle"
+          size="normal"
+        ></p-avatar>
+          <!-- (click)="menuSettings.toggle($event)" -->
+      </ng-template>
+      <!-- Sidebar toggle -->
+      <p-button icon="pi pi-bars" (click)="showSidebar = true"></p-button>
     </div>
   </p-toolbar>
 </header>

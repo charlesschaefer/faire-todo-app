@@ -9,6 +9,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 import { routes } from "./app.routes";
 import { dbConfig } from "./db.config";
+import { environment } from '../environments/environment';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -28,6 +29,14 @@ export const appConfig: ApplicationConfig = {
                 deps: [HttpClient]
             },
             defaultLanguage: 'en'
-        }))
+        })),
+        {
+            provide: 'SUPABASE_URL',
+            useValue: environment.supabaseUrl
+        },
+        {
+            provide: 'SUPABASE_KEY',
+            useValue: environment.supabaseKey
+        }
     ],
 };

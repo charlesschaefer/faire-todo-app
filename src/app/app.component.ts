@@ -15,7 +15,7 @@ import {
     sendNotification,
   } from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
-
+import { AvatarModule } from 'primeng/avatar';
 
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
@@ -25,7 +25,8 @@ import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
-
+import { AuthService } from './services/auth.service';
+import { User } from '@supabase/supabase-js';
 
 export enum NotificationType {
     DueTask,
@@ -44,6 +45,7 @@ export enum NotificationType {
         ToastModule,
         TranslateModule,
         SidebarModule,
+        AvatarModule,
     ],
     providers: [
         MessageService,
@@ -57,6 +59,7 @@ export class AppComponent implements OnInit {
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
+    currentUser: User | null = null;
 
     constructor(
         private themeService: ThemeService,
@@ -66,6 +69,7 @@ export class AppComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
         private taskService: TaskService<TaskDto>,
         private httpClient: HttpClient,
+        private authService: AuthService,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
@@ -76,6 +80,13 @@ export class AppComponent implements OnInit {
             userLanguage = 'en';
         }
         this.translate.use(userLanguage);
+
+        this.authService.currentUser.subscribe(user => {
+            this.currentUser = user;
+            if (user) {
+                this.setupMenu();
+            }
+        });
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
@@ -94,6 +105,17 @@ export class AppComponent implements OnInit {
         }];
         for (let item of additionalItems) {
             menuItems.push(item);
+        }
+
+        if (this.currentUser) {
+            menuItems[0].items?.push(
+                { separator: true },
+                { 
+                    label: await firstValueFrom(this.translate.get(`Sign Out`)), 
+                    icon: 'pi pi-sign-out',
+                    command: () => this.signOut()
+                } as MenuItem,
+            );
         }
 
         this.menuItems = menuItems;
@@ -283,5 +305,21 @@ export class AppComponent implements OnInit {
         invoke('broadcast_network_sync_services').then(() => {
             invoke('start_http_server');
         })
+    }
+
+    async signInWithGoogle() {
+        try {
+            await this.authService.signInWithGoogle();
+        } catch (error) {
+            console.error('Error signing in:', error);
+        }
+    }
+
+    async signOut() {
+        try {
+            await this.authService.logout();
+        } catch (error) {
+            console.error('Error signing out:', error);
+        }
     }
 }

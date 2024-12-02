@@ -21,5 +21,6 @@ export const routes: Routes = [
     {path: "search", component: SearchComponent},
     {path: "settings", component: SettingsComponent},
     {path: "sync", component: SynchronizationComponent},
+    {path: "auth/callback", redirectTo:"today", pathMatch: "full"},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];
