@@ -53,6 +53,7 @@ jobs:
                   ${{ runner.os }}-node-
 
             - name: Install dependencies
+              if: steps.npm-cache.outputs.cache-hit != 'true'
               run: npm install
 
             - name: install Rust stable
@@ -61,6 +62,7 @@ jobs:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
             
             - uses: actions/cache@v4
+              id: cargo-cache
               with:
                 path: |
                   ~/.cargo/bin/
@@ -70,6 +72,12 @@ jobs:
                   faire-todo-app/target/
                 key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
             
+            - name: Cargo dependencies
+              if: steps.cargo-cache.outputs.cache-hit != 'true'
+              run: |
+                cd src-tauri
+                cargo install
+
             # - name: Install dependencies
             #   run: pnpm install
 
