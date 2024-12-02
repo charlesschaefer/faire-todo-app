@@ -116,7 +116,6 @@ jobs:
             - name: Create gradle cache
               uses: actions/cache/save@v4
               id: gradle-cache-create
-              if: steps.gradle-cache-restore.outputs.cache-hit != 'true'
               with:
                 path: |
                   ~/.gradle/
@@ -125,7 +124,6 @@ jobs:
             - name: Create cargo cache
               uses: actions/cache/save@v4
               id: cargo-cache-save
-              if: steps.cargo-cache-restore.outputs.cache-hit != 'true'
               with:
                 path: |
                   ~/.cargo/
