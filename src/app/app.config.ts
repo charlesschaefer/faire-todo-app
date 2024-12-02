@@ -6,6 +6,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 
 
 import { routes } from "./app.routes";
+import { dbConfig } from "./db.config";
+import { environment } from '../environments/environment';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
 
@@ -14,6 +16,14 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
+        {
+            provide: 'SUPABASE_URL',
+            useValue: environment.supabaseUrl
+        },
+        {
+            provide: 'SUPABASE_KEY',
+            useValue: environment.supabaseKey
+        },
         importProvidersFrom(TranslocoModule), 
         // provideHttpClient(), 
         provideTransloco({
