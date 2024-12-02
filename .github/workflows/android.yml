@@ -68,8 +68,8 @@ jobs:
                 echo "storeFile="$RUNNER_TEMP"/keystore.jks" >> keystore.properties
 
             - name: Build app bundle
-              # run: npm run tauri android build -- -v --apk --target armv7
-              run: npm run tauri info
+              run: npm run tauri android build -- -v --apk --target armv7
+              # run: npm run tauri info
               env:
                   NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
 
