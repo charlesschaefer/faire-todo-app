@@ -35,7 +35,7 @@ jobs:
             - name: setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: 22.1.0
+                  node-version: lts/*
                   #cache: 'npm'
 
             - name: Install dependencies
@@ -47,6 +47,8 @@ jobs:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
             
             - uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: "src-tauri -> target"
 
 
             # - name: Install dependencies
