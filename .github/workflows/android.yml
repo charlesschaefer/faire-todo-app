@@ -43,41 +43,29 @@ jobs:
               shell: bash
               run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
 
-            - name: Generate npm cache
-              uses: actions/cache@v4
-              id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+            - name: Restore npm cache
+              uses: actions/cache/restore@v4
+              id: npm-cache-restore
               with:
                 path: ${{ steps.npm-cache-dir.outputs.dir }}
                 key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                restore-keys: |
-                  ${{ runner.os }}-node-
 
             - name: Install dependencies
               if: steps.npm-cache.outputs.cache-hit != 'true'
               run: npm install
+            
+            - name: Generate npm cache
+              uses: actions/cache/save@v4
+              id: npm-cache-save
+              with:
+                path: ${{ steps.npm-cache-dir.outputs.dir }}
+                key: ${{ steps.npm-cache-restore.outputs.cache-primary-key }}
 
             - name: install Rust stable
               uses: dtolnay/rust-toolchain@stable
               with:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
             
-            - uses: actions/cache@v4
-              id: cargo-cache
-              with:
-                path: |
-                  ~/.cargo/bin/
-                  ~/.cargo/registry/index/
-                  ~/.cargo/registry/cache/
-                  ~/.cargo/git/db/
-                  faire-todo-app/target/
-                key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-            
-            - name: Cargo dependencies
-              if: steps.cargo-cache.outputs.cache-hit != 'true'
-              run: |
-                cd src-tauri
-                cargo install
-
             # - name: Install dependencies
             #   run: pnpm install
 
@@ -101,21 +89,52 @@ jobs:
                 ls -al $RUNNER_TEMP
                 cat src-tauri/gen/android/keystore.properties
 
-            - name: Create gradle cache
-              uses: actions/cache@v4
+
+            - uses: actions/cache/restore@v4
+              id: cargo-cache-restore
+              with:
+                path: |
+                  ~/.cargo/bin/
+                  ~/.cargo/registry/index/
+                  ~/.cargo/registry/cache/
+                  ~/.cargo/git/db/
+                  faire-todo-app/target/
+                key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+            - name: Restore gradle cache
+              uses: actions/cache/restore@v4
+              id: gradle-cache-restore
               with:
                 path: |
                   ~/.gradle/caches
                   ~/.gradle/wrapper
                 key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-                restore-keys: |
-                  ${{ runner.os }}-gradle-
-
+                
             - name: Build app bundle
               run: npm run tauri android build -- -v --apk --target armv7
               # run: npm run tauri info
               env:
                   NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
+
+            - name: Create gradle cache
+              uses: actions/cache/save@v4
+              id: gradle-cache-create
+              with:
+                path: |
+                  ~/.gradle/caches
+                  ~/.gradle/wrapper
+                key: ${{ steps.gradle-cache-restore.outputs.cache-primary-key }} }}
+            
+            - uses: actions/cache/save@v4
+              id: cargo-cache-save
+              with:
+                path: |
+                  ~/.cargo/bin/
+                  ~/.cargo/registry/index/
+                  ~/.cargo/registry/cache/
+                  ~/.cargo/git/db/
+                  faire-todo-app/target/
+                key: ${{ steps.cargo-cache-restore.outputs.cache-primary-key }}
 
             - name: Shows the generated packages
               run: |
