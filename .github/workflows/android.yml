@@ -18,6 +18,7 @@ jobs:
             - uses: pnpm/action-setup@v4
               with:
                   version: 8
+                  run_install: false
 
             - name: Setup Java
               uses: actions/setup-java@v4
@@ -35,6 +36,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: lts/*
+                  cache: 'pnpm'
 
             - name: install Rust stable
               uses: dtolnay/rust-toolchain@stable
@@ -45,13 +47,17 @@ jobs:
               run: pnpm install
 
             - name: setup Android signing
+              env:
+                ANDROID_RELEASE_KEY: ${{ secrets.ANDROID_RELEASE_KEY }}
+                ANDROID_RELEASE_PASSWORD: ${{ secrets.ANDROID_RELEASE_PASSWORD }}
+                ANDROID_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
+                ANDROID_RELEASE_KEYSTORE: ${{ secrets.ANDROID_RELEASE_KEYSTORE }}
               run: |
-                cd src-tauri/gen/android
-                echo "keyAlias=${{ secrets.ANDROID_RELEASE_KEY }}" > keystore.properties
-                echo "storePassword=${{ secrets.ANDROID_RELEASE_PASSWORD }}" >> keystore.properties
-                echo "keyPassword=${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}" >> keystore.properties
-                base64 -d <<< "${{ secrets.ANDROID_RELEASE_KEYSTORE }}" > $RUNNER_TEMP/keystore.jks
-                echo "storeFile=$RUNNER_TEMP/keystore.jks" >> keystore.properties
+                echo "keyAlias=$ANDROID_RELEASE_KEY" > src-tauri/gen/android/keystore.properties
+                echo "storePassword=$ANDROID_RELEASE_PASSWORD" >> src-tauri/gen/android/keystore.properties
+                echo "keyPassword=$ANDROID_RELEASE_KEY_PASSWORD" >> src-tauri/gen/android/keystore.properties
+                base64 -d <<< "$ANDROID_RELEASE_KEYSTORE" > $RUNNER_TEMP/keystore.jks
+                echo "storeFile="$RUNNER_TEMP"/keystore.jks" >> keystore.properties
 
             - name: Build app bundle
               run: pnpm tauri android build -v
@@ -68,9 +74,9 @@ jobs:
             # - name: Sign APK
             #   run: |
             #       ${{ env.ANDROID_HOME }}/build-tools/34.0.0/apksigner sign --ks src-tauri/gen/android/release.decrypted.jks \
-            #         --ks-key-alias ${{ secrets.ANDROID_RELEASE_KEY }} \
-            #         --ks-pass pass:${{ secrets.ANDROID_RELEASE_PASSWORD }} \
-            #         --key-pass pass:${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }} \
+            #         --ks-key-alias $ANDROID_RELEASE_KEY \
+            #         --ks-pass pass:$ANDROID_RELEASE_PASSWORD \
+            #         --key-pass pass:$ANDROID_RELEASE_KEY_PASSWORD \
             #         --out src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-signed.apk \
             #         src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release-unsigned.apk
 
