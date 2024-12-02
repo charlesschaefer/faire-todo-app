@@ -1,4 +1,4 @@
-name: 'publish-androis'
+name: 'publish-android'
 
 on:
     push:
