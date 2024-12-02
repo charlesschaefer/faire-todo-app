@@ -158,8 +158,8 @@ jobs:
               uses: softprops/action-gh-release@v1
               with:
                   draft: true
-                  name: App v${{ steps.package-version.outputs.current-version}}
-                  tag_name: v${{ steps.package-version.outputs.current-version}}
+                  name: Android App v${{ steps.package-version.outputs.current-version}}
+                  tag_name: android-v${{ steps.package-version.outputs.current-version}}
                   generate_release_notes: true
                   files: |
                       src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk
