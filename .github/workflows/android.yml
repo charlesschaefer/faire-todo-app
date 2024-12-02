@@ -163,5 +163,5 @@ jobs:
                   generate_release_notes: true
                   files: |
                       src-tauri/gen/android/app/build/outputs/apk/universal/release/app-universal-release.apk
-                      src-tauri/gen/android/app/build/outputs/aab/universal/release/app-universal-release.aab
+                      src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
                 #./src-tauri/gen/android/app/build/outputs/apk/universal/release/faire-todo-app-${{ steps.package-version.outputs.current-version}}.apk
