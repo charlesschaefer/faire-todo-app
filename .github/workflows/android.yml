@@ -36,7 +36,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 22.1.0
-                  cache: 'npm'
+                  #cache: 'npm'
 
             - name: Install dependencies
               run: npm install
@@ -45,6 +45,9 @@ jobs:
               uses: dtolnay/rust-toolchain@stable
               with:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+            
+            - uses: Swatinem/rust-cache@v2
+
 
             # - name: Install dependencies
             #   run: pnpm install
