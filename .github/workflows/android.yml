@@ -15,10 +15,10 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
-            - uses: pnpm/action-setup@v4
-              with:
-                  version: 8
-                  run_install: false
+            # - uses: pnpm/action-setup@v4
+            #   with:
+            #       version: 8
+            #       run_install: false
 
             - name: Setup Java
               uses: actions/setup-java@v4
@@ -35,16 +35,17 @@ jobs:
             - name: setup node
               uses: actions/setup-node@v4
               with:
-                  node-version: '22.11.0'
-                  cache: 'pnpm'
+                  node-version: 22.1.0
+                  cache: 'npm'
+              run: npm install
 
             - name: install Rust stable
               uses: dtolnay/rust-toolchain@stable
               with:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
 
-            - name: Install dependencies
-              run: pnpm install
+            # - name: Install dependencies
+            #   run: pnpm install
 
             - name: setup Android signing
               env:
@@ -60,7 +61,7 @@ jobs:
                 echo "storeFile="$RUNNER_TEMP"/keystore.jks" >> keystore.properties
 
             - name: Build app bundle
-              run: pnpm tauri android build -v
+              run: npm tauri android build -- -v --apk --target armv7
               env:
                   NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
 
