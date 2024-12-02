@@ -45,7 +45,6 @@
     "@angular/cli": "^18.0.0",
     "@angular/compiler-cli": "^18.0.0",
     "@angular/localize": "^18.1.1",
-    "@biesbjerg/ngx-translate-extract": "^7.0.4",
     "@tauri-apps/cli": "^2.0.0-rc.1",
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.4.2",
