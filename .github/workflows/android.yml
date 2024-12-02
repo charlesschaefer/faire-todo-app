@@ -95,10 +95,7 @@ jobs:
               id: cargo-cache-restore
               with:
                 path: |
-                  ~/.cargo/bin/
-                  ~/.cargo/registry/index/
-                  ~/.cargo/registry/cache/
-                  ~/.cargo/git/db/
+                  ~/.cargo/
                   faire-todo-app/target/
                 key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
@@ -107,8 +104,7 @@ jobs:
               id: gradle-cache-restore
               with:
                 path: |
-                  ~/.gradle/caches
-                  ~/.gradle/wrapper
+                  ~/.gradle/
                 key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
                 
             - name: Build app bundle
@@ -123,8 +119,7 @@ jobs:
               if: steps.gradle-cache-restore.outputs.cache-hit != 'true'
               with:
                 path: |
-                  ~/.gradle/caches
-                  ~/.gradle/wrapper
+                  ~/.gradle/
                 key: ${{ steps.gradle-cache-restore.outputs.cache-primary-key }} }}
             
             - name: Create cargo cache
@@ -133,10 +128,7 @@ jobs:
               if: steps.cargo-cache-restore.outputs.cache-hit != 'true'
               with:
                 path: |
-                  ~/.cargo/bin/
-                  ~/.cargo/registry/index/
-                  ~/.cargo/registry/cache/
-                  ~/.cargo/git/db/
+                  ~/.cargo/
                   faire-todo-app/target/
                 key: ${{ steps.cargo-cache-restore.outputs.cache-primary-key }}
 
