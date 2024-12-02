@@ -89,7 +89,7 @@ jobs:
             - name: Check src-tauri permissions
               run: |
                 ls -al `find src-tauri/gen/`
-                ls -al `find src-tauri/target`
+                ls -al src-tauri/ src-tauri/*
                 ls -al $RUNNER_TEMP
                 cat src-tauri/gen/android/keystore.properties
 
