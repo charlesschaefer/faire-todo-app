@@ -31,12 +31,26 @@ jobs:
 
             - name: Install NDK
               run: sdkmanager "ndk;27.0.11902837"
-
+            
             - name: setup node
               uses: actions/setup-node@v4
               with:
                   node-version: lts/*
                   #cache: 'npm'
+            
+            - name: Get npm cache directory
+              id: npm-cache-dir
+              shell: bash
+              run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+            - name: Generate npm cache
+              uses: actions/cache@v4
+              id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+              with:
+                path: ${{ steps.npm-cache-dir.outputs.dir }}
+                key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                restore-keys: |
+                  ${{ runner.os }}-node-
 
             - name: Install dependencies
               run: npm install
@@ -46,11 +60,16 @@ jobs:
               with:
                   targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
             
-            - uses: Swatinem/rust-cache@v2
+            - uses: actions/cache@v4
               with:
-                  workspaces: "src-tauri -> target"
-
-
+                path: |
+                  ~/.cargo/bin/
+                  ~/.cargo/registry/index/
+                  ~/.cargo/registry/cache/
+                  ~/.cargo/git/db/
+                  faire-todo-app/target/
+                key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+            
             # - name: Install dependencies
             #   run: pnpm install
 
@@ -65,8 +84,15 @@ jobs:
                 echo "storePassword=$ANDROID_RELEASE_PASSWORD" >> src-tauri/gen/android/keystore.properties
                 echo "keyPassword=$ANDROID_RELEASE_KEY_PASSWORD" >> src-tauri/gen/android/keystore.properties
                 base64 -d <<< "$ANDROID_RELEASE_KEYSTORE" > $RUNNER_TEMP/keystore.jks
-                echo "storeFile="$RUNNER_TEMP"/keystore.jks" >> keystore.properties
+                echo "storeFile="$RUNNER_TEMP"/keystore.jks" >> src-tauri/gen/android/keystore.properties
 
+            - name: Check src-tauri permissions
+              run: |
+                ls -al `find src-tauri/gen/`
+                ls -al `find src-tauri/target`
+                ls -al $RUNNER_TEMP
+                cat src-tauri/gen/android/keystore.properties
+                
             - name: Build app bundle
               run: npm run tauri android build -- -v --apk --target armv7
               # run: npm run tauri info
