@@ -10,15 +10,19 @@ export enum RecurringType {
 
 export interface TaskDto {
     id: number;
+    uuid: string;
+    user_uuid: string;
     title: string;
     description: string | null;
     dueDate: Date | null;
     dueTime: Date | null;
     project: number | null;
-    completed: number; // number because indexeddb doesn't accept boolean as keys
+    project_uuid: string | null;
+    completed: number;
     order: number;
     parent: number | null;
+    parent_uuid: string | null;
     recurring: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null
 }
 
-export type TaskAddDto = Omit<TaskDto, "id">;
+export type TaskAddDto = Omit<TaskDto, "id" | "user_uuid">;

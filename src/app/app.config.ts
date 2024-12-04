@@ -8,7 +8,6 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 
 import { routes } from "./app.routes";
-import { dbConfig } from "./db.config";
 import { environment } from '../environments/environment';
 
 // AoT requires an exported function for factories
@@ -21,7 +20,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
-        importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
+        // importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
         importProvidersFrom(TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
