@@ -251,6 +251,10 @@ export class AppComponent implements OnInit {
             });
         });
 
+        listen('get-due-tasks', (event) => {
+            checkDuedTasks();
+        });
+
         this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
             this.notificationService.setup(settings);
         });
@@ -407,4 +411,29 @@ function parseIntentUri(uri: string) {
         result[key] = value;
     }
     return result;
+}
+
+function checkDuedTasks() {
+    const date = new Date;
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    const time = new Date;
+
+    const dbService = new DbService();
+    let taskService = new TaskService<TaskDto>(dbService);
+    taskService.getByField('dueDate', date).subscribe(tasks => {
+        const duingTasks: {tasks: {title: string}[]} = {tasks: []};
+        tasks.reduce((acc, task) => {
+            if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
+                console.log(`We need to notify user that ${task.title} task is duing now`);
+                // task dueing now, notifying the user
+                acc.tasks.push({title: task.title});
+            }
+            return acc;
+        }, duingTasks);
+        invoke('set_due_tasks', duingTasks);
+    })
 }
