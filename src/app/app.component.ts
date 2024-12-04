@@ -27,6 +27,8 @@ import { invoke } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { User } from '@supabase/supabase-js';
+import { DbService } from './services/db.service';
+
 
 export enum NotificationType {
     DueTask,
@@ -211,6 +213,10 @@ export class AppComponent implements OnInit {
             });
         });
 
+        listen('get-due-tasks', (event) => {
+            checkDuedTasks();
+        });
+
         // starts the notification worker
         if (typeof Worker !== 'undefined') {
             // Create a new
@@ -226,6 +232,7 @@ export class AppComponent implements OnInit {
           } else {
               // Web Workers are not supported in this environment.
               // You should add a fallback so that your program still executes correctly.
+              alert("Web Workers are not supported in this environment.");
           }
     }
 
@@ -322,4 +329,30 @@ export class AppComponent implements OnInit {
             console.error('Error signing out:', error);
         }
     }
+}
+
+
+function checkDuedTasks() {
+    const date = new Date;
+    date.setHours(0);
+    date.setMinutes(0);
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+
+    const time = new Date;
+
+    const dbService = new DbService();
+    let taskService = new TaskService<TaskDto>(dbService);
+    taskService.getByField('dueDate', date).subscribe(tasks => {
+        const duingTasks: {tasks: {title: string}[]} = {tasks: []};
+        tasks.reduce((acc, task) => {
+            if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
+                console.log(`We need to notify user that ${task.title} task is duing now`);
+                // task dueing now, notifying the user
+                acc.tasks.push({title: task.title});
+            }
+            return acc;
+        }, duingTasks);
+        invoke('set_due_tasks', duingTasks);
+    })
 }
