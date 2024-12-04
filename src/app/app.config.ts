@@ -6,7 +6,6 @@ import { TranslocoModule } from '@jsverse/transloco';
 
 
 import { routes } from "./app.routes";
-import { dbConfig } from "./db.config";
 import { environment } from '../environments/environment';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';

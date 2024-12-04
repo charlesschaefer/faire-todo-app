@@ -165,7 +165,11 @@ export class TaskEditComponent implements OnInit {
             completed: 0,
             order: this.task.order,
             parent: this.task.parent,
-            recurring: recurring || null
+            recurring: recurring || null,
+            uuid: this.task.uuid,
+            user_uuid: this.task.user_uuid,
+            project_uuid: this.task.project_uuid,
+            parent_uuid: this.task.parent_uuid
         };
 
         this.taskService.edit(this.task.id, saveData).subscribe({

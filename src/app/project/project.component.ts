@@ -132,8 +132,8 @@ export class ProjectComponent implements OnInit {
     editProject() {
         const form = this.projectEditForm.value;
         const formData = {
-            id: form.id,
-            name: form.name
+            id: form.id as number,
+            name: form.name as string,
         } as ProjectDto;
         this.projectService.edit(form.id as number, formData).subscribe({
             complete: () => {
@@ -154,9 +154,11 @@ export class ProjectComponent implements OnInit {
 
     saveProject() {
         const form = this.projectForm.value;
-        const projectData = {
-            name: form.name as unknown as string
-        } as ProjectAddDto;
+        const projectData: ProjectAddDto = {
+            name: form.name as unknown as string,
+            uuid: crypto.randomUUID(),
+            user_uuid: ''
+        };
 
         this.projectAddService.add(projectData).subscribe({
             complete: async () => {

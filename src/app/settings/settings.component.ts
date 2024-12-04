@@ -66,7 +66,9 @@ export class SettingsComponent implements OnInit {
             id: 1,
             notifications: Number(form.notifications),
             todayNotifications: Number(form.todayNotifications),
-            notificationTime: form.notificationTime as unknown as Date
+            notificationTime: form.notificationTime as unknown as Date,
+            uuid: crypto.randomUUID(),
+            user_uuid: ''
         };
         let settings = await firstValueFrom(this.settingsService.get(1));
         let savedData$;

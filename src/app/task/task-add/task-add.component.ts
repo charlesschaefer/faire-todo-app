@@ -169,7 +169,10 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
-            recurring: recurring || null
+            recurring: recurring || null,
+            uuid: crypto.randomUUID(),
+            project_uuid: this.project?.uuid,
+            parent_uuid: this.parent?.uuid
         };
 
         this.taskAddService.add(saveData).subscribe({
