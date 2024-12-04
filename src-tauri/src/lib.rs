@@ -5,6 +5,7 @@ mod desktop;
 
 mod http;
 mod mdns;
+mod data;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -18,9 +19,17 @@ pub fn run() {
         .setup(|_app| {
             #[cfg(desktop)]
             desktop::setup_system_tray_icon(_app);
-
-            // #[cfg(not(desktop))]
-            // android::setup_system_tray_icon(app);
+            
+            _app.manage(Mutex::new(data::AppData::default()));
+            
+            let app = _app.clone(); 
+            // Spawn background thread 
+            std::thread::spawn(|| {
+                loop {
+                    app.emit_to("main", "get-due-tasks", "").unwrap();
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                }
+            });
 
             Ok(())
         })
@@ -29,6 +38,7 @@ pub fn run() {
             mdns::broadcast_network_sync_services,
             http::start_http_server,
             http::stop_http_server,
+            set_due_tasks,
             add_notification,
             close_app,
         ])
@@ -59,4 +69,11 @@ fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
+}
+
+#[tauri::command]
+fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TaskDuingNow) {
+    let app_data = app_handle.state::<Mutex<data::AppData>>();
+    let mut app_data = app_data.lock().unwrap();
+    app_data.due_tasks = due_tasks;
 }
