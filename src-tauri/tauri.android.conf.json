@@ -1,0 +1,8 @@
+{
+  "productName": "Faire Todo App",
+  "identifier": "com.fairetodoapp",
+  "build": {
+    "devUrl": "http://192.168.1.8:1420",
+    "beforeDevCommand": "npm run start -- --host 192.168.1.8 --public-host 192.168.1.8"
+  }
+}
