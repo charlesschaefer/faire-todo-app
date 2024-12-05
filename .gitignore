@@ -48,3 +48,4 @@ Thumbs.db
 src/environments/.env
 src/environments/environment.ts
 src/environments/environment.development.ts
+src-tauri/gen/android/keystore.properties
