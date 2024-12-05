@@ -1,9 +1,12 @@
+#cargo-features = ["codegen-backend"]
+
 [package]
 name = "faire-todo-app"
 version = "0.0.4"
 description = "Faire Todo App"
 authors = ["Charles Schaefer"]
 edition = "2021"
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -25,10 +28,14 @@ hyper = { version = "1.4.1", features = ["full"] }
 http-body-util = "0.1.2"
 hyper-util = { version = "0.1.7", features = ["full"] }
 tokio = { version = "1.39.2", features = ["full"] }
-bytes = "1.7.1"
+bytes = { version = "1.7.1", default-features = false }
 lazy_static = "1.5.0"
-chrono = "0.4.38"
+chrono = { version = "0.4.38", features = ["now"] }
 tauri-plugin-notification = "2"
 tauri-plugin-http = "2"
+
+
+#[profile.dev]
+#codegen-backend = "cranelift"
 
 

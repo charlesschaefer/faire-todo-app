@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "npm run tauri dev",
+            "name": "Run npm tauri dev",
+            "request": "launch",
+            "type": "node-terminal"
+        },
+        {
+            "name": "Launch Frontend with ng serve",
+            "request": "launch",
+            "command": "ng serve",
+            "type": "node-terminal",
+            "cwd": "${workspaceFolder}${pathSeparator}src"
+        }
+    ]
+}
