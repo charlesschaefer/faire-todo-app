@@ -13,7 +13,7 @@ import {
     isPermissionGranted,
     requestPermission,
     sendNotification,
-  } from '@tauri-apps/plugin-notification';
+} from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
 import { AvatarModule } from 'primeng/avatar';
 
@@ -28,6 +28,9 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { User } from '@supabase/supabase-js';
 import { DbService } from './services/db.service';
+import { SettingsService } from './services/settings.service';
+import { SettingsDto } from './dto/settings-dto';
+import { NotificationService } from './services/notification.service';
 
 
 export enum NotificationType {
@@ -39,7 +42,7 @@ export enum NotificationType {
     selector: 'app-root',
     standalone: true,
     imports: [
-        CommonModule, 
+        CommonModule,
         RouterOutlet,
         ToolbarModule,
         ButtonModule,
@@ -63,7 +66,7 @@ export class AppComponent implements OnInit {
     settingsMenuItems!: MenuItem[];
     currentUser: User | null = null;
 
-    constructor(
+    constructor (
         private themeService: ThemeService,
         private translate: TranslateService,
         private undoService: UndoService,
@@ -72,6 +75,8 @@ export class AppComponent implements OnInit {
         private taskService: TaskService<TaskDto>,
         private httpClient: HttpClient,
         private authService: AuthService,
+        private settingsService: SettingsService<SettingsDto>,
+        private notificationService: NotificationService,
     ) {
         translate.setDefaultLang('en');
         //translate.use('en');
@@ -132,7 +137,7 @@ export class AppComponent implements OnInit {
             {
                 lable: await firstValueFrom(this.translate.get("Synchronize")),
                 items: [
-                    { 
+                    {
                         label: await firstValueFrom(this.translate.get("Synchronize other devices")),
                         routerLink: '/sync'
                     } as MenuItem
@@ -144,8 +149,8 @@ export class AppComponent implements OnInit {
                     { label: await firstValueFrom(this.translate.get("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
                 ],
             },
-            { 
-                label: await firstValueFrom(this.translate.get("Language")), 
+            {
+                label: await firstValueFrom(this.translate.get("Language")),
                 icon: "pi pi-flag",
                 items: [
                     {
@@ -167,7 +172,7 @@ export class AppComponent implements OnInit {
         let projectItems: MenuItem[] = [];
         for (let project of projects) {
             projectItems.push({
-                label: project.name, 
+                label: project.name,
                 icon: 'pi pi-hashtag',
                 routerLink: `/project/${project.id}/tasks`
             });
@@ -178,7 +183,7 @@ export class AppComponent implements OnInit {
         };
 
         return [
-            {separator: true},
+            { separator: true },
             projectMenuItems,
         ];
     }
@@ -187,12 +192,12 @@ export class AppComponent implements OnInit {
         let projectItems = await this.getProjectMenuItems();
         await this.setMenuItems(projectItems);
     }
-    
+
     async ngOnInit() {
         //invoke("set_frontend_complete");
 
         this.setupMenu();
-        
+
         let currentTheme = this.themeService.getCurrentTheme();
         let userTheme = localStorage.getItem('theme');
         if (!userTheme) {
@@ -207,33 +212,33 @@ export class AppComponent implements OnInit {
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
                 severity: 'info',
-                summary: 'Undo', 
+                summary: 'Undo',
                 detail: 'Action completed.',
                 life: 15000
             });
         });
 
-        listen('get-due-tasks', (event) => {
-            checkDuedTasks();
+        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
+            this.notificationService.setup(settings);
         });
 
-        // starts the notification worker
-        if (typeof Worker !== 'undefined') {
-            // Create a new
-            const worker = new Worker(new URL('./app.worker', import.meta.url));
-            worker.onmessage = ({ data }) => {
-                if (data.type == NotificationType.DueTask) {
-                    this.notifyDuingTask(data.task);
-                } else if (data.type == NotificationType.TodayTasks) {
-                    this.notifyTasksDuingToday();
-                }
-            };
-            worker.postMessage('hello');
-          } else {
-              // Web Workers are not supported in this environment.
-              // You should add a fallback so that your program still executes correctly.
-              alert("Web Workers are not supported in this environment.");
-          }
+        // // starts the notification worker
+        // if (typeof Worker !== 'undefined') {
+        //     // Create a new
+        //     const worker = new Worker(new URL('./app.worker', import.meta.url));
+        //     worker.onmessage = ({ data }) => {
+        //         if (data.type == NotificationType.DueTask) {
+        //             this.notifyDuingTask(data.task);
+        //         } else if (data.type == NotificationType.TodayTasks) {
+        //             this.notifyTasksDuingToday();
+        //         }
+        //     };
+        //     worker.postMessage('hello');
+        // } else {
+        //     // Web Workers are not supported in this environment.
+        //     // You should add a fallback so that your program still executes correctly.
+        //     alert("Web Workers are not supported in this environment.");
+        // }
     }
 
     switchTheme() {
@@ -269,7 +274,7 @@ export class AppComponent implements OnInit {
         if (permissionGranted) {
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Task duing')),
-                largeBody: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: task.title}))
+                largeBody: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, { title: task.title }))
             });
         }
     }
@@ -289,7 +294,7 @@ export class AppComponent implements OnInit {
             let duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Tasks duing today')),
-                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {total: duingToday}))
+                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, { total: duingToday }))
             });
         }
     }
@@ -329,30 +334,4 @@ export class AppComponent implements OnInit {
             console.error('Error signing out:', error);
         }
     }
-}
-
-
-function checkDuedTasks() {
-    const date = new Date;
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    const time = new Date;
-
-    const dbService = new DbService();
-    let taskService = new TaskService<TaskDto>(dbService);
-    taskService.getByField('dueDate', date).subscribe(tasks => {
-        const duingTasks: {tasks: {title: string}[]} = {tasks: []};
-        tasks.reduce((acc, task) => {
-            if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
-                console.log(`We need to notify user that ${task.title} task is duing now`);
-                // task dueing now, notifying the user
-                acc.tasks.push({title: task.title});
-            }
-            return acc;
-        }, duingTasks);
-        invoke('set_due_tasks', duingTasks);
-    })
 }

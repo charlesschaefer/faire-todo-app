@@ -40,6 +40,32 @@ npm run tauri android build
 
 Check [Tauri Dependencies](https://v2.tauri.app/start/prerequisites/) to know what to install before building. And check [Android Code Signing](https://v2.tauri.app/distribute/signing/android/) to know how to set up keys to sign your APK.
 
+
+# Install android dependencies
+
+```
+mkdir ~/.android/sdk
+cd ~/.android/sdk
+wget https://dl.google.com/android/repository/commandlinetools-linux-12266719_latest.zip
+unzip commandlinetools-linux-12266719_latest.zip
+mkdir cmdline-tools/latest
+mv cmdline-tools/* cmdline-tools/latest
+cd cmdline-tools/latest/
+./bin/sdkmanager --licenses
+./bin/sdkmanager tools
+./bin/sdkmanager platform-tools
+./bin/sdkmanager "ndk;27.0.11902837"
+
+# Set environment variables
+
+export ANDROID_HOME=$HOME/.android/sdk
+export ANDROID_SDK_ROOT=$HOME/.android/sdk
+export NDK_HOME=$HOME/.android/sdk/ndk/27.0.11902837
+
+# Install Rust toolchains
+rustup toolchain install stable --target aarch64-linux-android --target armv7-linux-androideabi --target i686-linux-android --target x86_64-linux-android --profile minimal
+```
+
 # Developing 
 
 ```
