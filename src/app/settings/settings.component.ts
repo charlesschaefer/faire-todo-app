@@ -17,6 +17,7 @@ import {
 import { SettingsService } from '../services/settings.service';
 import { SettingsDto } from '../dto/settings-dto';
 import { invoke } from '@tauri-apps/api/core';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
     selector: 'app-settings',

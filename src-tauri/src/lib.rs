@@ -46,9 +46,3 @@ fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
 }
 
-#[tauri::command]
-fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TaskDuingNow) {
-    let app_data = app_handle.state::<Mutex<data::AppData>>();
-    let mut app_data = app_data.lock().unwrap();
-    app_data.due_tasks = due_tasks;
-}

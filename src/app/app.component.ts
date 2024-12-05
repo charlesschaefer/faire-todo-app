@@ -15,6 +15,7 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
+} from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
 import { AvatarModule } from 'primeng/avatar';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
@@ -251,8 +252,8 @@ export class AppComponent implements OnInit {
             });
         });
 
-        listen('get-due-tasks', (event) => {
-            checkDuedTasks();
+        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
+            this.notificationService.setup(settings);
         });
 
         this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
