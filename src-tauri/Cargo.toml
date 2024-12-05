@@ -35,7 +35,8 @@ tauri-plugin-notification = "2"
 tauri-plugin-http = "2"
 
 
-#[profile.dev]
+[profile.dev]
 #codegen-backend = "cranelift"
+
 
 
