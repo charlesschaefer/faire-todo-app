@@ -239,6 +239,27 @@ export class AppComponent implements OnInit {
         //     // You should add a fallback so that your program still executes correctly.
         //     alert("Web Workers are not supported in this environment.");
         // }
+        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
+            this.notificationService.setup(settings);
+        });
+
+        // // starts the notification worker
+        // if (typeof Worker !== 'undefined') {
+        //     // Create a new
+        //     const worker = new Worker(new URL('./app.worker', import.meta.url));
+        //     worker.onmessage = ({ data }) => {
+        //         if (data.type == NotificationType.DueTask) {
+        //             this.notifyDuingTask(data.task);
+        //         } else if (data.type == NotificationType.TodayTasks) {
+        //             this.notifyTasksDuingToday();
+        //         }
+        //     };
+        //     worker.postMessage('hello');
+        // } else {
+        //     // Web Workers are not supported in this environment.
+        //     // You should add a fallback so that your program still executes correctly.
+        //     alert("Web Workers are not supported in this environment.");
+        // }
     }
 
     switchTheme() {
@@ -294,7 +315,7 @@ export class AppComponent implements OnInit {
             let duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Tasks duing today')),
-                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, { total: duingToday }))
+                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {  total: duingToday  }))
             });
         }
     }
