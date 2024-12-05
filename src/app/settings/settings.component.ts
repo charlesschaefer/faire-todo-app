@@ -15,6 +15,7 @@ import {
 
 import { SettingsService } from '../services/settings.service';
 import { SettingsDto } from '../dto/settings-dto';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
     selector: 'app-settings',
@@ -60,7 +61,6 @@ export class SettingsComponent implements OnInit {
 
     async saveSettings() {
         const form = this.settingsForm.value;
-        console.log(form);
         const settingsData: SettingsDto = {
             id: 1,
             notifications: Number(form.notifications),
@@ -133,10 +133,13 @@ export class SettingsComponent implements OnInit {
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            sendNotification({
-                title: await firstValueFrom(this.translate.get('Notifications enabled')),
-                largeBody: await firstValueFrom(this.translate.get(`Now you'll receive our notifications.`)),
-            });
+            const title = await firstValueFrom(this.translate.get('Notifications enabled'));
+            const largeBody = await firstValueFrom(this.translate.get(`Now you'll receive our notifications.`));
+            // sendNotification({
+            //     title: title,
+            //     largeBody: largeBody,
+            // });
+            invoke('add_notification', {title, body: largeBody});
         }
     }
 }

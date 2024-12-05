@@ -1,0 +1,128 @@
+use std::sync::Mutex;
+use tauri::{Emitter, Manager};
+use chrono::{Local, Timelike};
+use tauri_plugin_notification::{NotificationExt, Channel, Importance};
+
+use crate::data;
+
+const NOTIFICATION_DAEMON_SLEEP_TIME: u64 = 5;
+
+pub fn notify(app_handle: tauri::AppHandle, title: String, body: String, channel: Option<String>) {
+
+    let channel = channel.unwrap_or("general".to_string());
+
+    let results = app_handle
+        .notification()
+        .builder()
+        .channel_id(channel)
+        .title(title)
+        .large_body(body)
+        .show();
+
+    match results {
+        Ok(_) => {
+            println!("Notification shown successfully");
+        },
+        Err(err) => {
+            println!("Error sending notification: {:?}", err);
+        }
+    }
+}
+
+#[tauri::command]
+pub fn add_notification(app_handle: tauri::AppHandle, title: String, body: String) {
+    notify(app_handle, title, body, None);
+}
+
+#[tauri::command]
+pub fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TasksDuingNow) {
+    let app_data = app_handle.state::<Mutex<data::AppData>>();
+    let mut app_data = app_data.lock().unwrap();
+    app_data.tasks_duing_now = due_tasks;
+}
+
+#[tauri::command]
+pub fn set_time_to_notify_today_tasks(app_handle: tauri::AppHandle, time_to_notify_today_tasks: [u32;2]) {
+    let app_data = app_handle.state::<Mutex<data::AppData>>();
+    let mut app_data = app_data.lock().unwrap();
+    app_data.settings.time_to_notify_today_tasks = time_to_notify_today_tasks;
+}
+
+#[tauri::command]
+pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, Mutex<data::AppData>>, settings: data::Settings) {
+    let mut app_data = state.lock().unwrap();
+    if !settings.send_notifications {
+        println!("Not sending notifications");
+        if let Some(handle) = app_data.thread_handle.take() {
+            handle.join().unwrap();
+        }
+        drop(app_data);
+        return;
+    }
+    println!("Sending notifications");
+
+    #[cfg(target_os = "android")]
+    {
+        // Create notification channels
+        let general_channel = Channel::builder("general", "General")
+            .description("General notifications from the app")
+            .importance(Importance::Default)
+            .build();
+
+        let tasks_channel = Channel::builder("tasks", "Tasks")
+            .description("Task due notifications")
+            .importance(Importance::High)
+            .build();
+
+        let daily_tasks_channel = Channel::builder("daily-tasks", "Daily Tasks")
+            .description("Daily task summary notifications")
+            .importance(Importance::High)
+            .build();
+
+        app.notification().create_channel(general_channel).unwrap();
+        app.notification().create_channel(tasks_channel).unwrap();
+        app.notification().create_channel(daily_tasks_channel).unwrap();
+    }
+
+    // Spawn background thread
+    app_data.thread_handle = Some(std::thread::spawn(move || {
+        println!("Starting notification daemon");
+        loop {
+
+            let app_data = app.state::<Mutex<data::AppData>>();
+            let app_data = app_data.lock().unwrap();
+
+            println!("Checking for due tasks");
+            // send to frontend the event to check for due tasks
+            app.emit("get-due-tasks", "").unwrap();
+            
+            // get the due tasks and notify the user
+            if app_data.tasks_duing_now.tasks.len() > 0 {
+                println!("Due tasks: {:?}", app_data.tasks_duing_now.tasks);
+                app_data.tasks_duing_now.tasks.iter().for_each(|task| {
+                    let local_app = app.clone();
+                    let body = app_data.settings.notification_body.replace("{title}", &task.title);
+                    notify(local_app, app_data.settings.notification_title.clone(), body, Some("tasks".to_string()));
+                });
+            }
+            if app_data.tasks_duing_today.tasks.len() > 0 && app_data.settings.send_today_notifications {
+                let current_hour = Local::now().hour();
+                let current_minute = Local::now().minute();
+                println!("Hora atual: {}:{} - Hora para notificar: {:?}", current_hour, current_minute, app_data.settings.time_to_notify_today_tasks);
+
+                if current_hour == app_data.settings.time_to_notify_today_tasks[0] && current_minute == app_data.settings.time_to_notify_today_tasks[1] {
+                    println!("Due today tasks: {:?}", app_data.tasks_duing_today.tasks);
+                    app_data.tasks_duing_today.tasks.iter().for_each(|task| {
+                    let local_app = app.clone();
+                    let body = app_data.settings.notification_body.replace("{title}", &task.title);
+                        notify(local_app, app_data.settings.notification_title.clone(), body, Some("daily-tasks".to_string()));
+                    });
+                }
+            }
+            drop(app_data);
+            println!("Waiting {} second", NOTIFICATION_DAEMON_SLEEP_TIME);
+            std::thread::sleep(std::time::Duration::from_secs(NOTIFICATION_DAEMON_SLEEP_TIME));
+        }
+    }));
+
+}
