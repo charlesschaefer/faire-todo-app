@@ -31,6 +31,7 @@ pub fn run() {
             http::start_http_server,
             http::stop_http_server,
             notification::set_due_tasks,
+            notification::set_today_tasks,
             notification::add_notification,
             notification::start_notification_daemon,
             notification::set_time_to_notify_today_tasks,

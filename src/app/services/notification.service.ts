@@ -12,7 +12,8 @@ import { firstValueFrom } from 'rxjs';
 })
 export class NotificationService {
 
-    private unlisten: Function | undefined;
+    private unlistenDue: Function | undefined;
+    private unlistenToday: Function | undefined;
 
     constructor (
         private translate: TranslateService,
@@ -36,11 +37,17 @@ export class NotificationService {
                     settings.notificationTime.getHours(),
                     settings.notificationTime.getMinutes()
                 ];
+
+                if (!this.unlistenToday) {
+                    this.unlistenToday = await listen('get-today-tasks', (event) => {
+                        this.checkTodayTasks();
+                    });
+                }
             }
-            if (!this.unlisten) {
-                // this.unlisten = await listen('get-due-tasks', (event) => {
-                //     this.checkDuedTasks();
-                // });
+            if (!this.unlistenDue) {
+                this.unlistenDue = await listen('get-due-tasks', (event) => {
+                    this.checkDuedTasks();
+                });
             }
         }
         console.log("Settings object: ", settingsObj);
@@ -49,10 +56,8 @@ export class NotificationService {
 
     checkDuedTasks() {
         const date = new Date;
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
+        date.setHours(0, 0, 0, 0);
+        
     
         const time = new Date;
     
@@ -67,6 +72,25 @@ export class NotificationService {
                 return acc;
             }, duingTasks);
             invoke('set_due_tasks', {dueTasks: duingTasks});
+        })
+    }
+
+    checkTodayTasks() {
+        const initial = new Date;
+        initial.setHours(0, 0, 0, 0);
+
+        const final = new Date;
+        final.setHours(23, 59, 59, 999);
+
+        this.taskService.getByDate('dueDate', initial, final).subscribe(tasks => {
+            let duingTasks: {tasks: {title: string}[]} = {tasks: []};
+            duingTasks = tasks.reduce((acc, task) => {
+                console.log(`We need to notify user that ${task.title} task is duing now`);
+                // task duing today, notifying the user
+                acc.tasks.push({title: task.title});
+                return acc;
+            }, duingTasks);
+            invoke('set_today_tasks', {todayTasks: duingTasks});
         })
     }
 

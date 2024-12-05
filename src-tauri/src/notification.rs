@@ -1,15 +1,16 @@
 use std::sync::Mutex;
 use tauri::{Emitter, Manager};
 use chrono::{Local, Timelike};
-use tauri_plugin_notification::{NotificationExt, Channel, Importance};
+use tauri_plugin_notification::NotificationExt;
 
 use crate::data;
 
-const NOTIFICATION_DAEMON_SLEEP_TIME: u64 = 5;
+const NOTIFICATION_DAEMON_SLEEP_TIME: u64 = 40;
 
 pub fn notify(app_handle: tauri::AppHandle, title: String, body: String, channel: Option<String>) {
 
     let channel = channel.unwrap_or("general".to_string());
+    println!("Notifying with channel: {}, title: {}, body: {}", channel, title, body);
 
     let results = app_handle
         .notification()
@@ -42,6 +43,13 @@ pub fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TasksDuingNo
 }
 
 #[tauri::command]
+pub fn set_today_tasks(app_handle: tauri::AppHandle, today_tasks: data::TasksDuingToday) {
+    let app_data = app_handle.state::<Mutex<data::AppData>>();
+    let mut app_data = app_data.lock().unwrap();
+    app_data.tasks_duing_today = today_tasks;
+}
+
+#[tauri::command]
 pub fn set_time_to_notify_today_tasks(app_handle: tauri::AppHandle, time_to_notify_today_tasks: [u32;2]) {
     let app_data = app_handle.state::<Mutex<data::AppData>>();
     let mut app_data = app_data.lock().unwrap();
@@ -51,7 +59,8 @@ pub fn set_time_to_notify_today_tasks(app_handle: tauri::AppHandle, time_to_noti
 #[tauri::command]
 pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, Mutex<data::AppData>>, settings: data::Settings) {
     let mut app_data = state.lock().unwrap();
-    if !settings.send_notifications {
+    app_data.settings = settings;
+    if !app_data.settings.send_notifications {
         println!("Not sending notifications");
         if let Some(handle) = app_data.thread_handle.take() {
             handle.join().unwrap();
@@ -63,6 +72,7 @@ pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, 
 
     #[cfg(target_os = "android")]
     {
+        use tauri_plugin_notification::{Channel, Importance};
         // Create notification channels
         let general_channel = Channel::builder("general", "General")
             .description("General notifications from the app")
@@ -95,7 +105,8 @@ pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, 
             println!("Checking for due tasks");
             // send to frontend the event to check for due tasks
             app.emit("get-due-tasks", "").unwrap();
-            
+            app.emit("get-today-tasks", "").unwrap();
+
             // get the due tasks and notify the user
             if app_data.tasks_duing_now.tasks.len() > 0 {
                 println!("Due tasks: {:?}", app_data.tasks_duing_now.tasks);
@@ -105,6 +116,7 @@ pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, 
                     notify(local_app, app_data.settings.notification_title.clone(), body, Some("tasks".to_string()));
                 });
             }
+            println!("Checking for today tasks {:?}, Notify today: {} at{:?}", app_data.tasks_duing_today.tasks, app_data.settings.send_today_notifications, app_data.settings.time_to_notify_today_tasks);
             if app_data.tasks_duing_today.tasks.len() > 0 && app_data.settings.send_today_notifications {
                 let current_hour = Local::now().hour();
                 let current_minute = Local::now().minute();
@@ -112,11 +124,13 @@ pub fn start_notification_daemon(app: tauri::AppHandle, state: tauri::State<'_, 
 
                 if current_hour == app_data.settings.time_to_notify_today_tasks[0] && current_minute == app_data.settings.time_to_notify_today_tasks[1] {
                     println!("Due today tasks: {:?}", app_data.tasks_duing_today.tasks);
-                    app_data.tasks_duing_today.tasks.iter().for_each(|task| {
+
+                    let total = app_data.tasks_duing_today.tasks.len();
+                    let title = "Tasks duing today".to_string();
+                    let body = format!("You have {} task(s) duing today.", total);
+
                     let local_app = app.clone();
-                    let body = app_data.settings.notification_body.replace("{title}", &task.title);
-                        notify(local_app, app_data.settings.notification_title.clone(), body, Some("daily-tasks".to_string()));
-                    });
+                    notify(local_app, title, body, Some("daily-tasks".to_string()));
                 }
             }
             drop(app_data);
