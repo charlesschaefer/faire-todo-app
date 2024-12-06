@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { TestSyncDto, TestSyncAddDto } from '../dto/testsync.dto';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { TestSyncDto } from '../dto/testsync.dto';
 import { DbService } from '../../services/db.service';
 import { ServiceAbstract } from '../../services/service.abstract';
 

@@ -1,5 +1,4 @@
 /// <reference lib="webworker" />
-import { firstValueFrom } from "rxjs";
 
 import { TaskDto } from "./dto/task-dto";
 import { TaskService } from "./services/task.service";

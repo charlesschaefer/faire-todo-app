@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
+import { Observable, Subject, firstValueFrom, from, zip } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
-import { TaskComponent } from '../task/task/task.component';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';
 

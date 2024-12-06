@@ -1,7 +1,7 @@
 import { TranslocoService} from '@ngx-translate/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { DateShortenerPipe } from './date-shortener.pipe';
-import { Inject, Injector, inject } from '@angular/core';
+import { inject } from '@angular/core';
 
 describe('DateShortenerPipe', () => {
   it('create an instance', () => {

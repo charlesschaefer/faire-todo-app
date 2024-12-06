@@ -11,7 +11,6 @@ import { ToastModule } from 'primeng/toast';
 import {
     isPermissionGranted,
     requestPermission,
-    sendNotification,
   } from '@tauri-apps/plugin-notification';
 
 import { SettingsService } from '../services/settings.service';

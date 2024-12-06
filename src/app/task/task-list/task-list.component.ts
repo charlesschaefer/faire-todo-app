@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataViewModule } from 'primeng/dataview';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { TranslocoModule } from '@jsverse/transloco';
 

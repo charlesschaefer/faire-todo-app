@@ -14,7 +14,6 @@ import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 
 import { TaskDto } from '../../dto/task-dto';
-import { TaskComponent } from '../task/task.component';
 import { TaskService } from '../../services/task.service';
 import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';

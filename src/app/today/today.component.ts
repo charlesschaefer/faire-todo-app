@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
-import { TaskDto } from '../dto/task-dto';
-import { Subject, firstValueFrom } from 'rxjs';
-import { TaskService } from '../services/task.service';
+import { firstValueFrom } from 'rxjs';
 import { InboxComponent } from '../inbox/inbox.component';
 import { DateTime } from 'luxon';
 import { TranslocoModule } from '@jsverse/transloco';

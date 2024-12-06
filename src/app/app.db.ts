@@ -1,4 +1,4 @@
-import {Dexie, Table } from 'dexie';
+import { Dexie, Table } from 'dexie';
 
 import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';
