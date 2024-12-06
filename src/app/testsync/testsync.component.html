@@ -1,0 +1,81 @@
+<h2 translate class="page-title">TestSyncs</h2>
+<p-card [header]="testSyncs.length + (' testSyncs' | translate)" class="testSync-list">
+
+  <ul class="testSync-items">
+    @for (testSync of testSyncs; track testSync.id) {
+      <li class="testSync-item">
+        <div class="testSync-item-name text-sm" (click)="router.navigate([buildUrl(testSync.id)])">
+          {{testSync.name}}
+        </div>
+        <div class="testSync-item-menu">
+          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteTestSync(testSync.id)" [rounded]="true" />
+          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editTestSyncDialog(testSync.id)" [rounded]="true" />
+        </div>
+      </li>
+    }
+  </ul>
+  <div class="testSync-add-line" (click)="showTestSyncAddPanel($event)">
+    <div class="testSync-add-button">
+      <i class="pi pi-plus"></i>
+    </div>
+    <div class="testSync-add-title">
+      <ng-container translate>Add testSync</ng-container>
+    </div>
+  </div>
+</p-card>
+
+<p-overlayPanel #testSyncAddOp>
+  <form [formGroup]="testSyncForm" novalidate (ngSubmit)="saveTestSync()">
+    <p-card>
+      <div  class="testSync-add flex flex-column gap-3">
+        <div class="testSync-add-name">
+          <input 
+            class="testSync-name-input" 
+            pInputText 
+            name="name"
+            [placeholder]="'TestSync name' | translate" 
+            formControlName="name"
+            autocomplete="off"
+          />
+        </div>
+        <p-divider />
+        <div class="testSync-add-buttons flex flex-row justify-content-end gap-1">
+          <div>
+            <p-button [label]="'Cancel' | translate" (onClick)="clearForm() && testSyncAddOp.toggle($event) " severity="secondary" />
+          </div>
+          <div>
+            <p-button [label]="'Save' | translate" type="submit" />
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </form>
+</p-overlayPanel>
+<p-confirmDialog />
+<p-dialog [header]="'Edit Profile' | translate" [modal]="true" [(visible)]="editTestSyncVisible" [style]="{ width: '25rem' }">
+  <form novalidate [formGroup]="testSyncEditForm" (ngSubmit)="editTestSync()">
+    <div class="testSync-edit">
+      <input 
+        type="hidden" 
+        name="id" 
+        formControlName="id"
+      />
+      <input 
+        class="testSync-name-input" 
+        pInputText 
+        name="name"
+        [placeholder]="'TestSync name' | translate" 
+        formControlName="name"
+        autocomplete="off"
+        [autofocus]="true"
+      />
+    </div>
+    <p-divider />
+    <div class="flex justify-content-end gap-2">
+        <p-button [label]="'Cancel' | translate" severity="secondary" (onClick)="editTestSyncVisible = false" />
+        <p-button [label]="'Save' | translate" type="submit" />
+    </div>
+  </form>
+</p-dialog>
+
+<p-toast />

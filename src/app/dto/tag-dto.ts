@@ -1,3 +1,5 @@
+import { UserBound } from "../services/service.abstract";
+
 export interface TagDto {
     id: number;
     uuid: string;
@@ -5,4 +7,4 @@ export interface TagDto {
     name: string;
 }
 
-export type TagAddDto = Omit<TagDto, "id">;
+export type TagAddDto = Omit<TagDto, "id" > & UserBound;

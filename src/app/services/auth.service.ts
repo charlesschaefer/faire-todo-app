@@ -43,6 +43,10 @@ export class AuthService {
     });
   }
 
+  get authenticatedUser(): BehaviorSubject<User | null> {
+    return this.userSubject;
+  }
+
   get currentUser(): User | null {
     return this.userSubject.value;
   }

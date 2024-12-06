@@ -1,0 +1,65 @@
+:host ::ng-deep .p-card {
+    max-width: 600px
+}
+
+ul.testSync-items {
+    padding-inline-start: 20px;
+}
+
+.testSync-add-line {
+    display: flex;
+    color: #999;
+    padding-left: 20px;
+    cursor: pointer;
+}
+
+.testSync-add-button {
+    padding-right: 10px;
+    color: var(--indigo-600)
+}
+
+.testSync-add-button i {
+    font-size: 12px;
+}
+
+li.testSync-item {
+    list-style: none;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    width: calc(100% - 20px);
+    align-items: center;
+    padding: 15px 0px;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+li.testSync-item:hover {
+    background-color: #fafafa;
+}
+
+.testSync-item-menu {
+    display: none;
+}
+
+li.testSync-item:hover .testSync-item-menu {
+    display: inherit;
+}
+
+:host ::ng-deep .testSync-item-menu .p-button.p-button-icon-only {
+    margin-right: 10px;
+}
+
+.testSync-item-name {
+    width: calc(100% - 60px);
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.testSync-name-input {
+    border: none;
+}
+
+.testSync-edit {
+    margin-top: 10px;
+}

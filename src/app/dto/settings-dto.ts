@@ -1,4 +1,5 @@
 import { Settings } from "luxon";
+import { UserBound } from "../services/service.abstract";
 
 export interface SettingsDto {
     id: number;
@@ -9,4 +10,4 @@ export interface SettingsDto {
     notificationTime: Date | null;
 }
 
-export type SettingsAddDto = Omit<SettingsDto, 'id'>;
+export type SettingsAddDto = Omit<SettingsDto, 'id'> & UserBound;

@@ -11,6 +11,7 @@ import { SettingsComponent } from "./settings/settings.component";
 import { AllTasksComponent } from "./all-tasks/all-tasks.component";
 import { SynchronizationComponent } from "./synchronization/synchronization.component";
 import { InboxResolver } from "./inbox/inbox.resolver";
+import { TestSyncComponent } from './testsync/testsync.component';
 
 export const routes: Routes = [
     {path: "today", component: TodayComponent},
@@ -24,4 +25,5 @@ export const routes: Routes = [
     {path: "sync", component: SynchronizationComponent},
     {path: "auth/callback", component: AuthCallbackComponent},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
+    {path: 'testsync', component: TestSyncComponent}
 ];
