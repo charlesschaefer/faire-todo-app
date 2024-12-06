@@ -3,6 +3,13 @@ import { BehaviorSubject, Observable, from } from "rxjs";
 import { liveQuery, Table } from "dexie";
 
 import { DbService } from "./db.service";
+import { User } from "@supabase/supabase-js";
+import { AuthService } from "./auth.service";
+
+export type UserBound = {
+    user_uuid: string;
+}
+
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
@@ -11,6 +18,15 @@ export abstract class ServiceAbstract<T> {
     protected abstract storeName: string;
     protected table!: Table;
     protected abstract dbService: DbService;
+    protected userUuid: string | null = null;
+
+    constructor(protected authService: AuthService) {
+        this.authService.authenticatedUser.subscribe((user: User | null) => {
+            if (user) {
+                this.userUuid = user.id;
+            }
+        });
+    }
 
 
     setTable() {
@@ -28,16 +44,28 @@ export abstract class ServiceAbstract<T> {
         return from(liveQuery(() => this.table.toArray()));
     }
 
-    add(data: T) {
+    add(data: T & UserBound) {
+        if (this.userUuid) {
+            data["user_uuid"] = this.userUuid;
+        }
         return from(this.table.add(data));
     }
 
-    bulkAdd(data: T[]) {
+    bulkAdd(data: (T & UserBound)[]) {
+        if (this.userUuid) {
+            data = data.map((item) => {
+                const user = {user_uuid: this.userUuid} as UserBound;
+                return { ...item, ...user };
+            });
+        }
         this.clearCache();
         return from(this.table.bulkAdd(data));
     }
 
-    edit(id: number, data: T) {
+    edit(id: number, data: T & UserBound) {
+        if (this.userUuid) {
+            data["user_uuid"] = this.userUuid;
+        }
         this.clearCache();
         return from(this.table.update(id, data as Object));/* 
             .pipe(

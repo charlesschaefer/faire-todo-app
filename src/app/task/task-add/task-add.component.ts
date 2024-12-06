@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { CheckboxModule } from 'primeng/checkbox';
+import { UserBound } from '../../services/service.abstract';
 
 @Component({
     selector: 'app-task-add',
@@ -69,6 +70,7 @@ export class TaskAddComponent implements OnInit {
 
     isRecurring = false;
     recurringOptions!: Array<any>;
+    authService: any;
 
     constructor(
         private taskAddService: TaskService<TaskAddDto>,
@@ -161,10 +163,11 @@ export class TaskAddComponent implements OnInit {
             recurring: recurring || null,
             uuid: crypto.randomUUID(),
             project_uuid: this.project?.uuid,
-            parent_uuid: this.parent?.uuid
+            parent_uuid: this.parent?.uuid,
+            user_uuid: this.authService.userUuid
         };
 
-        this.taskAddService.add(saveData).subscribe({
+        this.taskAddService.add(saveData as TaskAddDto & UserBound).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Saved successfully`)),

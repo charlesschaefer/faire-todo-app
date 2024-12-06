@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { UserBound } from "../services/service.abstract";
 
 export enum RecurringType {
     DAILY = 'daily',
@@ -25,4 +26,4 @@ export interface TaskDto {
     recurring: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null
 }
 
-export type TaskAddDto = Omit<TaskDto, "id" | "user_uuid">;
+export type TaskAddDto = Omit<TaskDto, "id" > & UserBound;

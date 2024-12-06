@@ -6,6 +6,7 @@ import { Observable, Subject, firstValueFrom, from, mergeMap, zip } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
 import { TaskComponent } from '../task/task/task.component';
 import { DbService } from './db.service';
+import { AuthService } from './auth.service';
 
 interface SubtaskCount {
     subtasks: number;
@@ -20,9 +21,10 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     storeName = "task";
 
     constructor(
-        protected dbService: DbService
+        protected dbService: DbService,
+        protected override authService: AuthService
     ) {
-        super();
+        super(authService);
         this.setTable();
     }
 

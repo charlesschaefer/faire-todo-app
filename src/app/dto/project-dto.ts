@@ -1,3 +1,5 @@
+import { UserBound } from "../services/service.abstract";
+
 export interface ProjectDto {
     id: number;
     uuid: string;
@@ -5,4 +7,4 @@ export interface ProjectDto {
     name: string;
 }
 
-export type ProjectAddDto = Omit<ProjectDto, "id">;
+export type ProjectAddDto = Omit<ProjectDto, "id" > & UserBound;
