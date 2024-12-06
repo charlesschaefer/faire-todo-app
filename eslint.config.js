@@ -20,6 +20,7 @@ module.exports = tseslint.config(
       "unused-imports": unusedImports
     },
     rules: {
+      "@typescript-eslint/no-explicit-any": "off",
       "no-unused-vars": "off",
       "unused-imports/no-unused-imports": "error",
       "unused-imports/no-unused-vars": [

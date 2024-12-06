@@ -21,7 +21,6 @@ import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
-import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { CheckboxModule } from 'primeng/checkbox';
 
@@ -40,7 +39,6 @@ import { CheckboxModule } from 'primeng/checkbox';
         TaskAddComponent,
         SubtaskComponent,
         AccordionModule,
-        TaskComponent,
         CheckboxModule,
         FormsModule,
     ],
@@ -209,7 +207,7 @@ export class TaskEditComponent implements OnInit {
     onTitleChange(event: any) {
         const doc = nlp<DatesMethods>(event);
         let dates;
-        if (dates = doc.dates().get()) {
+        if ((dates = doc.dates().get())) {
             const dateView = dates[0] as {start:string};
             if (dateView?.start) {
                 const date = new Date(dateView.start);
