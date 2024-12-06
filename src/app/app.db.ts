@@ -116,6 +116,15 @@ export class AppDb extends Dexie {
                 throw error;
             }
         });
+
+        this.version(11).stores({
+            user: '++id, email, name, created_at, uuid, avatar_url',
+            task: '++id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, uuid, user_uuid, project_uuid, parent_uuid',
+            project: '++id, name, uuid, user_uuid',
+            tag: '++id, name, uuid, user_uuid',
+            task_tag: 'task, tag, user_uuid, task_uuid, tag_uuid',
+            settings: '++id, notifications, todayNotifications, notificationTime, uuid, user_uuid',
+        });
         
 
         this.on('populate', () => this.populate());
