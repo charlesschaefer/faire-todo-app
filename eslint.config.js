@@ -17,6 +17,7 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     plugins: {
+      // @ts-ignore
       "unused-imports": unusedImports
     },
     rules: {
