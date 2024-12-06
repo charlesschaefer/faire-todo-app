@@ -55,7 +55,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     getForToday() {
-        let date = new Date;
+        const date = new Date;
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
@@ -71,7 +71,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     countForToday() {
-        let date = new Date;
+        const date = new Date;
         date.setHours(0);
         date.setMinutes(0);
         date.setSeconds(0);
@@ -82,7 +82,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     getUpcoming() {
-        let minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
+        const minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
         return from(liveQuery(() => {
             return this.table.where('dueDate').above(minDate).and((task: TaskDto) => task.completed == 0).toArray();
         }));
@@ -98,9 +98,9 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     async countTasksSubtasks(tasks: TaskDto[]) {
-        let countMap:Map<number, number> = new Map();
-        for (let task of tasks) {
-            let count = await firstValueFrom(this.countByField('parent', task.id));
+        const countMap = new Map<number, number>();
+        for (const task of tasks) {
+            const count = await firstValueFrom(this.countByField('parent', task.id));
             countMap.set(task.id, count);
         };
         return countMap;
@@ -153,7 +153,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     removeTask(task: TaskDto) {
-        let removal$ = new Subject();
+        const removal$ = new Subject();
         this.remove(task.id).subscribe({
             complete: () => {
                 this.getTaskSubtasks(task).subscribe({
@@ -184,12 +184,12 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
-                    let aTask:Partial<TaskDto> = task;
+                    const aTask:Partial<TaskDto> = task;
                     // removes id to enable creating a new task
                     aTask.id = undefined;
                     aTask.completed = 0;
                     
-                    let newTask = aTask as TaskAddDto;
+                    const newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
                     switch (task.recurring) {
                         case RecurringType.DAILY:

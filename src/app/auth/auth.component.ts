@@ -32,9 +32,9 @@ import { AuthService } from '../services/auth.service';
 })
 export class AuthComponent {
   currentUser: User | null = null;
-  displayLoginDialog: boolean = false;
-  termsAccepted: boolean = false;
-  isLoading: boolean = false;
+  displayLoginDialog = false;
+  termsAccepted = false;
+  isLoading = false;
   loginError: string | null = null;
 
   constructor(

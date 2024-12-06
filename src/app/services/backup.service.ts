@@ -36,7 +36,7 @@ export class BackupService {
     
     backupData(encryptKey: string): Subject<string> {
         let backupObj: BackupData;
-        let backupSubject$ = new Subject<string>();
+        const backupSubject$ = new Subject<string>();
 
         this.taskService.list().subscribe(task => {
             this.projectService.list().subscribe(project => {

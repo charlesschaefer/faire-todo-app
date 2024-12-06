@@ -19,7 +19,7 @@ import { firstValueFrom } from 'rxjs';
 export class UpcomingComponent extends InboxComponent implements OnInit {
 
     override async getTasks() {
-        let tasks = await firstValueFrom(this.taskService.getUpcoming());
+        const tasks = await firstValueFrom(this.taskService.getUpcoming());
     
         // now filter only tasks not completed
         this.tasks = this.taskService.orderTasks(tasks);

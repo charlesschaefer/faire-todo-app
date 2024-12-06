@@ -69,7 +69,7 @@ export enum NotificationType {
 })
 export class AppComponent implements OnInit {
 
-    showSidebar: boolean = false;
+    showSidebar = false;
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
-        let menuItems: MenuItem[] = [{
+        const menuItems: MenuItem[] = [{
             label: " ",
             items: [
                 { label: await firstValueFrom(this.translate.get("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
                 { label: await firstValueFrom(this.translate.get(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
             ],
         }];
-        for (let item of additionalItems) {
+        for (const item of additionalItems) {
             menuItems.push(item);
         }
 
@@ -157,17 +157,17 @@ export class AppComponent implements OnInit {
     }
 
     async getProjectMenuItems(): Promise<MenuItem[]> {
-        let projects = await firstValueFrom(this.projectService.list())
+        const projects = await firstValueFrom(this.projectService.list())
         if (!projects.length) return [];
-        let projectItems: MenuItem[] = [];
-        for (let project of projects) {
+        const projectItems: MenuItem[] = [];
+        for (const project of projects) {
             projectItems.push({
                 label: project.name,
                 icon: 'pi pi-hashtag',
                 routerLink: `/project/${project.id}/tasks`
             });
         }
-        let projectMenuItems = {
+        const projectMenuItems = {
             label: await firstValueFrom(this.translate.get("Projects")),
             items: projectItems
         };
@@ -179,7 +179,7 @@ export class AppComponent implements OnInit {
     }
 
     async setupMenu() {
-        let projectItems = await this.getProjectMenuItems();
+        const projectItems = await this.getProjectMenuItems();
         await this.setMenuItems(projectItems);
     }
 
@@ -188,7 +188,7 @@ export class AppComponent implements OnInit {
 
         this.setupMenu();
 
-        let currentTheme = this.themeService.getCurrentTheme();
+        const currentTheme = this.themeService.getCurrentTheme();
         let userTheme = localStorage.getItem('theme');
         if (!userTheme) {
             userTheme = currentTheme;
@@ -255,7 +255,7 @@ export class AppComponent implements OnInit {
     switchTheme() {
         this.themeService.switchTheme();
 
-        let currentTheme = this.themeService.getCurrentTheme();
+        const currentTheme = this.themeService.getCurrentTheme();
         localStorage.setItem('theme', currentTheme);
     }
 
@@ -302,7 +302,7 @@ export class AppComponent implements OnInit {
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            let duingToday = await firstValueFrom(this.taskService.countForToday());
+            const duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
                 title: await firstValueFrom(this.translate.get('Tasks duing today')),
                 largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, {  total: duingToday  }))

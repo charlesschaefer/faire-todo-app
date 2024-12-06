@@ -26,7 +26,7 @@ export class TodayComponent extends InboxComponent implements OnInit {
     today = DateTime.fromJSDate(new Date());
 
     override async getTasks() {
-        let tasks = await firstValueFrom(this.taskService.getForToday());
+        const tasks = await firstValueFrom(this.taskService.getForToday());
         this.tasks = this.taskService.orderTasks(tasks);
         this.countSubtasks();
     }
