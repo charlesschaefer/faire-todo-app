@@ -1,0 +1,51 @@
+<!-- User Profile or Login Banner -->
+<ng-container *ngIf="currentUser; else loginBanner">
+  <div class="sidebar-user-profile">
+    <p-avatar [image]="currentUser?.user_metadata?.['avatar_url']" shape="circle" size="large"></p-avatar>
+    <span class="user-email">{{ currentUser.email }}</span>
+    <a href="javascript:;" class="logout-link" (click)="signOut()">
+      <i class="pi pi-sign-out"></i>
+      {{ 'Sign Out' | translate }}
+    </a>
+  </div>
+</ng-container>
+
+<ng-template #loginBanner>
+  <div class="sidebar-login-banner">
+    <p>{{ 'Save and access your tasks from anywhere' | translate }}</p>
+    <p-button label="{{ 'Save tasks online' | translate }}" (onClick)="showLoginDialog()" severity="info"
+      styleClass="w-full"></p-button>
+  </div>
+</ng-template>
+
+<!-- Login Dialog -->
+<p-dialog [(visible)]="displayLoginDialog" [header]="'Save your tasks online' | translate" [modal]="true"
+  [style]="{width: '90%', maxWidth: '400px'}" [closable]="!isLoading">
+  <div class="login-dialog-content">
+    <!-- Show error message if exists -->
+    <p-message *ngIf="loginError" severity="error" [text]="loginError"></p-message>
+
+    <!-- Show redirect message when loading -->
+    <p-message *ngIf="isLoading" severity="info"
+      [text]="'You will be redirected to authenticate on Google. After authentication, you will return to the app.' | translate"></p-message>
+
+    <!-- Hide main content during loading -->
+    <ng-container *ngIf="!isLoading">
+      <p>{{ 'Save your tasks and access them from any device' | translate }}</p>
+
+      <div class="terms-checkbox">
+        <p-checkbox [(ngModel)]="termsAccepted" [binary]="true" inputId="terms" [disabled]="isLoading"></p-checkbox>
+        <label for="terms">
+          {{ 'I accept the' | translate }}
+          <a href="/terms" target="_blank">{{ 'Terms of Use' | translate }}</a>
+          {{ 'and' | translate }}
+          <a href="/privacy" target="_blank">{{ 'Privacy Policy' | translate }}</a>
+        </label>
+      </div>
+
+      <p-button icon="pi pi-google" label="{{ 'Continue with Google' | translate }}" (onClick)="signInWithGoogle()"
+        [disabled]="!termsAccepted || isLoading" severity="secondary" styleClass="w-full"
+        [loading]="isLoading"></p-button>
+    </ng-container>
+  </div>
+</p-dialog>

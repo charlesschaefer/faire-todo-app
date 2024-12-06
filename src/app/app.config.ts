@@ -5,7 +5,7 @@ import { NgxIndexedDBModule } from "ngx-indexed-db";
 import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-
+import { MessageService } from 'primeng/api';
 
 import { routes } from "./app.routes";
 import { environment } from '../environments/environment';
@@ -36,6 +36,7 @@ export const appConfig: ApplicationConfig = {
         {
             provide: 'SUPABASE_KEY',
             useValue: environment.supabaseKey
-        }
+        },
+        MessageService
     ],
 };

@@ -63,5 +63,10 @@
     "Get data from other devices": "Get data from other devices",
     "Send data to other devices": "Send data to other devices",
     "Synchronize other devices": "Synchronize other devices",
-    "Close App": "Close App"
+    "Close App": "Close App",
+    "Processing authentication...": "Processing authentication...",
+    "Authentication Successful": "Authentication Successful",
+    "You can now save your tasks online": "You can now save your tasks online",
+    "Authentication Failed": "Authentication Failed",
+    "An unexpected error occurred during authentication": "An unexpected error occurred during authentication"
   }
