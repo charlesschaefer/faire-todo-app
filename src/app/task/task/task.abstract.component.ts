@@ -26,7 +26,9 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Input() projects!: Map<number, ProjectDto>;
 
+    // eslint-disable-next-line @angular-eslint/no-output-on-prefix
     @Output() onTaskRemoved = new EventEmitter<number>();
+    // eslint-disable-next-line @angular-eslint/no-output-on-prefix
     @Output() onEditTask = new EventEmitter<Event>();
 
     onSaveEditTask$ = new Subject();
@@ -69,7 +71,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this.onSaveEditTask$.subscribe(value => {
+        this.onSaveEditTask$.subscribe(() => {
             this.onEditTask.emit();
         });
         if (this.task.completed) {

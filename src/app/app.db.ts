@@ -7,9 +7,9 @@ import { TaskTagDto } from './dto/task-tag-dto';
 import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { UserDto } from './dto/user-dto';
 
-/* eslint-disable */
+ 
 function runTaskSerial(fn: CallableFunction, results: any) {
-    /* eslint-enable */
+     
     return fn(results);
 }
 
