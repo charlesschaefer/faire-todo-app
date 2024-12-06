@@ -73,7 +73,7 @@ export class TaskAddComponent implements OnInit {
     projects!: ProjectDto[];
 
     isRecurring = false;
-    recurringOptions!: Array<any>;
+    recurringOptions!: any[];
     authService: any;
 
     constructor(
@@ -94,7 +94,7 @@ export class TaskAddComponent implements OnInit {
 
         this.projectService.list().subscribe(projects => {
             if (!projects.length) return;
-            let cloneProjects = projects.slice();
+            const cloneProjects = projects.slice();
 
             if (cloneProjects[0].id != 0) {
                 cloneProjects.unshift({
@@ -160,7 +160,7 @@ export class TaskAddComponent implements OnInit {
             return;
         }
 
-        let order = await firstValueFrom(this.taskAddService.count());
+        const order = await firstValueFrom(this.taskAddService.count());
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,
@@ -213,12 +213,12 @@ export class TaskAddComponent implements OnInit {
     }
 
     onTitleChange(event: any) {
-        let doc = nlp<DatesMethods>(event);
+        const doc = nlp<DatesMethods>(event);
         let dates;
         if (dates = doc.dates().get()) {
             const dateView = dates[0] as {start:string};
             if (dateView?.start) {
-                let date = new Date(dateView.start);
+                const date = new Date(dateView.start);
                 this.taskForm.patchValue({
                     dueDate: date
                 });

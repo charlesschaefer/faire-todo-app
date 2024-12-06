@@ -106,7 +106,7 @@ export class TestSyncComponent implements OnInit {
         this.testSyncService.remove(id).subscribe({
             complete: () => {
                 this.taskService.getByField('testSync', id).subscribe(tasks => {
-                    let tasksIds: number[] = [];
+                    const tasksIds: number[] = [];
                     tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
                     // then deletes the tasks of the testSync
                     this.taskService.bulkRemove(tasksIds);

@@ -82,7 +82,7 @@ export class SynchronizationComponent {
 
     makeDeviceDiscoverable() {
         // generates OTP code
-        let otp = this.otpGenerator.generateOTP();
+        const otp = this.otpGenerator.generateOTP();
         this.otpData = otp;
         console.log("OTP Data: ", otp);
         this.backupService.backupData(otp).subscribe(cryptedBackup => {
@@ -132,8 +132,8 @@ export class SynchronizationComponent {
         
         try {
             // encrypts the otp and sends to the server 
-            let encryptedOtp = AES.encrypt(otp , otp);
-            let options = {
+            const encryptedOtp = AES.encrypt(otp , otp);
+            const options = {
                 headers: {
                     'X-SIGNED-TOKEN': encryptedOtp.toString()
                 },

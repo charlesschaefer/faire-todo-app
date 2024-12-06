@@ -100,7 +100,7 @@ export class ProjectComponent implements OnInit {
         this.projectService.remove(id).subscribe({
             complete: () => {
                 this.taskService.getByField('project', id).subscribe(tasks => {
-                    let tasksIds: number[] = [];
+                    const tasksIds: number[] = [];
                     tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
                     // then deletes the tasks of the project
                     this.taskService.bulkRemove(tasksIds);

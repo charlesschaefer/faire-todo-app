@@ -6,7 +6,7 @@ import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
 import { AuthService } from "./auth.service";
 
-export type UserBound = {
+export interface UserBound {
     user_uuid: string;
 }
 
@@ -14,7 +14,7 @@ export type UserBound = {
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
-    private useCache: boolean = true;
+    private useCache = true;
     protected abstract storeName: string;
     protected table!: Table;
     protected abstract dbService: DbService;
@@ -67,7 +67,7 @@ export abstract class ServiceAbstract<T> {
             data["user_uuid"] = this.userUuid;
         }
         this.clearCache();
-        return from(this.table.update(id, data as Object));/* 
+        return from(this.table.update(id, data as object));/* 
             .pipe(
                 map((response: T) => response),
                 catchError((error: T) => throwError(error))
@@ -79,7 +79,7 @@ export abstract class ServiceAbstract<T> {
     }
 
     getByField(field: string, value: any): Observable<T[]> {
-        let where: {[key: string]: any} = {};
+        const where: Record<string, any> = {};
         where[field] = value;
         return from(liveQuery(() => this.table.where(where).toArray()));
     }
@@ -89,7 +89,7 @@ export abstract class ServiceAbstract<T> {
     }
 
     countByField(field: string, value: any) {
-        let where: {[key: string]: any} = {};
+        const where: Record<string, any> = {};
         where[field] = value;
         return from(liveQuery(() => this.table.where(where).count()));
     }

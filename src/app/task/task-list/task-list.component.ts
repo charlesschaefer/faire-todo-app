@@ -31,7 +31,7 @@ export class TaskListComponent implements OnInit {
 
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() onEditTask = new EventEmitter();
-    @Input() showAddTask: boolean = true;
+    @Input() showAddTask = true;
 
     projects!: Map<number, ProjectDto>;
 
@@ -42,7 +42,7 @@ export class TaskListComponent implements OnInit {
 
     ngOnInit(): void {
         this.projectService.list().subscribe((projects: ProjectDto[]) => {
-            let indexedProjects:Map<number, ProjectDto> = new Map();
+            const indexedProjects = new Map<number, ProjectDto>();
             projects.forEach(project => indexedProjects.set(project.id, project));
             this.projects = indexedProjects;
         });
@@ -53,7 +53,7 @@ export class TaskListComponent implements OnInit {
     }
 
     onTaskRemoved(id: number) {
-        let newTasks:TaskDto[] = [];
+        const newTasks:TaskDto[] = [];
         this.tasks.forEach(task => {
             if (task.id != id) {
                 newTasks.push(task);

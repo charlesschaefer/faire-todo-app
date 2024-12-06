@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -31,7 +31,7 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './search.component.html',
     styleUrl: './search.component.scss'
 })
-export class SearchComponent extends InboxComponent {
+export class SearchComponent extends InboxComponent implements OnInit {
     searchValue!: string;
 
     completedTasks!: TaskDto[];
@@ -48,13 +48,13 @@ export class SearchComponent extends InboxComponent {
     async search() {
         let tasks = await firstValueFrom(this.taskService.slowStringSearch('title', this.searchValue));
         
-        let completedTasks: TaskDto[] = [];
+        const completedTasks: TaskDto[] = [];
         tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
         // we trust that all the completed tasks are going to be in the end of the array
         // and that when we find an incomplete task all tasks before will be incomplete (so we break the loop)
         for (let i = tasks.length - 1; i >= 0; i--) {
             if (tasks[i].completed) {
-                let task = tasks.pop();
+                const task = tasks.pop();
                 completedTasks.push(task);
             } else {
                 break;

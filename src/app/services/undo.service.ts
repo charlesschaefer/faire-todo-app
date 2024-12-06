@@ -29,7 +29,7 @@ export class UndoService {
     }
 
     undo() {
-        let item = this.undoQueue.items.pop();
+        const item = this.undoQueue.items.pop();
         this.undo$.next(item as UndoItem);
     }
 }

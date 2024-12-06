@@ -71,7 +71,7 @@ export class SettingsComponent implements OnInit {
             uuid: crypto.randomUUID(),
             user_uuid: ''
         };
-        let settings = await firstValueFrom(this.settingsService.get(1));
+        const settings = await firstValueFrom(this.settingsService.get(1));
         let savedData$;
         if (settings?.id) {
             savedData$ = this.settingsService.edit(1, settingsData);
@@ -105,7 +105,7 @@ export class SettingsComponent implements OnInit {
                 notificationTime: null
             });
         } else {
-            let date = new Date();
+            const date = new Date();
             date.setHours(9);
             date.setMinutes(0);
 

@@ -44,7 +44,7 @@ function checkDuedTasks() {
     const time = new Date;
 
     const dbService = new DbService();
-    let taskService = new TaskService<TaskDto>(dbService);
+    const taskService = new TaskService<TaskDto>(dbService);
     taskService.getByField('dueDate', date).subscribe(tasks => {
         tasks.forEach(task => {
             if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {

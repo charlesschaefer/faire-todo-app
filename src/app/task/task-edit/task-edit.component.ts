@@ -67,7 +67,7 @@ export class TaskEditComponent implements OnInit {
     subtasksCompletedCount!: number;
 
     isRecurring = false;
-    recurringOptions!: Array<any>;
+    recurringOptions!: any[];
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
@@ -99,8 +99,8 @@ export class TaskEditComponent implements OnInit {
         });
 
         this.projectService.list().subscribe(projects => {
-            let cloneProjects = projects.slice();
-            let projectsMap = new Map<number, ProjectDto>();
+            const cloneProjects = projects.slice();
+            const projectsMap = new Map<number, ProjectDto>();
 
             if (cloneProjects[0].id != 0) {
                 cloneProjects.unshift({
@@ -139,7 +139,7 @@ export class TaskEditComponent implements OnInit {
     async saveTask() {
         const form = this.taskForm.value;
 
-        let dueDate:Date | null | undefined = form.dueDate;
+        const dueDate:Date | null | undefined = form.dueDate;
         let recurring = form.recurring;
         // checks if the value is not a "not recurring" option
         if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
@@ -209,12 +209,12 @@ export class TaskEditComponent implements OnInit {
     }
 
     onTitleChange(event: any) {
-        let doc = nlp<DatesMethods>(event);
+        const doc = nlp<DatesMethods>(event);
         let dates;
         if (dates = doc.dates().get()) {
             const dateView = dates[0] as {start:string};
             if (dateView?.start) {
-                let date = new Date(dateView.start);
+                const date = new Date(dateView.start);
                 this.taskForm.patchValue({
                     dueDate: date
                 });

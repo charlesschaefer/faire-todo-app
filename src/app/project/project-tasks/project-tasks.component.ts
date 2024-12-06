@@ -49,9 +49,9 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
     }
 
     override async getTasks() {
-        let tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.id));
+        const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.id));
         // now filter only tasks not completed
-        let filteredTasks = tasks.filter(task => task.completed == 0);
+        const filteredTasks = tasks.filter(task => task.completed == 0);
         this.tasks = this.taskService.orderTasks(filteredTasks);
         this.countSubtasks();
     }

@@ -29,7 +29,7 @@ export class AllTasksComponent  extends InboxComponent {
     }
 
     override async getTasks() {
-        let tasks = await firstValueFrom(this.taskService.getAllTasks());
+        const tasks = await firstValueFrom(this.taskService.getAllTasks());
         
         this.tasks = this.taskService.orderTasks(tasks);
         this.countSubtasks();

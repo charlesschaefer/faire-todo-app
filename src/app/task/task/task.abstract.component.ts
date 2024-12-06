@@ -31,11 +31,11 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     onSaveEditTask$ = new Subject();
 
-    completed: boolean = false;
+    completed = false;
     dateTimeHandler = DateTime;
 
     today!: Date;
-    due: boolean = false;
+    due = false;
 
     dialogRef: DynamicDialogRef | undefined;
 
@@ -156,7 +156,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     deleteTask() {
-        let undoData = Object.assign({}, this.task);
+        const undoData = Object.assign({}, this.task);
         const undo: UndoItem = {
             type: 'task.delete',
             data: undoData
@@ -185,7 +185,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     undoDelete(undoData: UndoItem) {
         if (undoData.type == 'task.delete') {
-            let task = undoData.data as TaskDto;
+            const task = undoData.data as TaskDto;
             this.taskService.add(task).subscribe({
                 complete: async () => {
                     this.messageService.add({
@@ -210,8 +210,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     markTaskAsCompleted() {
-        let task = this.task;
-        let undoData = Object.assign({}, task);
+        const task = this.task;
+        const undoData = Object.assign({}, task);
         const undo: UndoItem = {
             type: 'task.markComplete',
             data: undoData

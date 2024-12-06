@@ -11,7 +11,7 @@ export class DbService {
     dbService:AppDb = new AppDb();
 
     getTable(name: string): Table {
-        let table = name as keyof AppDb;
+        const table = name as keyof AppDb;
         return this.dbService[table] as Table<any, any, any>;
     }
 
