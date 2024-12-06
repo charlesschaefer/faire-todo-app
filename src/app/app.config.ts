@@ -3,7 +3,7 @@ import { provideRouter } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslocoModule } from '@jsverse/transloco';
-
+import { MessageService } from 'primeng/api';
 
 import { routes } from "./app.routes";
 import { environment } from '../environments/environment';

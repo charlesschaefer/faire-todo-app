@@ -28,12 +28,11 @@ import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
-import { User } from '@supabase/supabase-js';
 import { DbService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
+import { AuthComponent } from './auth/auth.component';
 import { InboxComponent } from './inbox/inbox.component';
 
 export enum NotificationType {
@@ -54,6 +53,11 @@ export enum NotificationType {
         TranslocoModule,
         SidebarModule,
         AvatarModule,
+        DialogModule,
+        CheckboxModule,
+        FormsModule,
+        MessageModule,
+        AuthComponent,
     ],
     providers: [
         MessageService,
@@ -84,7 +88,6 @@ export class AppComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
         private taskService: TaskService<TaskDto>,
         private httpClient: HttpClient,
-        private authService: AuthService,
         private settingsService: SettingsService<SettingsDto>,
         private notificationService: NotificationService,
         private router: Router,
@@ -123,17 +126,6 @@ export class AppComponent implements OnInit {
         }];
         for (let item of additionalItems) {
             menuItems.push(item);
-        }
-
-        if (this.currentUser) {
-            menuItems[0].items?.push(
-                { separator: true },
-                { 
-                    label: await firstValueFrom(this.translate.get(`Sign Out`)), 
-                    icon: 'pi pi-sign-out',
-                    command: () => this.signOut()
-                } as MenuItem,
-            );
         }
 
         this.menuItems = menuItems;

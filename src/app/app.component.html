@@ -1,5 +1,5 @@
 <header class="header">
-  <p-toolbar >
+  <p-toolbar>
     <div class="p-toolbar-group-start">
       <!-- <h2 class="title">{{ title }}</h2> -->
       <a routerLink="/">
@@ -10,24 +10,6 @@
     <div class="p-toolbar-group-center">
     </div>
     <div class="p-toolbar-group-end">
-      <!-- Login/User section -->
-      <ng-container *ngIf="!currentUser; else userMenu">
-        <p-button 
-          icon="pi pi-google" 
-          label="{{ 'Sign in' | translate }}"
-          (onClick)="signInWithGoogle()"
-          severity="secondary"
-          [text]="true"
-        ></p-button>
-      </ng-container>
-      <ng-template #userMenu>
-        <p-avatar 
-          [image]="currentUser?.user_metadata?.['avatar_url']"
-          shape="circle"
-          size="normal"
-        ></p-avatar>
-          <!-- (click)="menuSettings.toggle($event)" -->
-      </ng-template>
       <!-- Sidebar toggle -->
       <p-button icon="pi pi-bars" (click)="showSidebar = true"></p-button>
     </div>
@@ -43,37 +25,58 @@
 </section>
 
 <footer class="footer">
-  <p>Faire todo app - 2024 - <a href="https://github.com/charlesschaefer/faire-todo-app/blob/main/LICENSE">License</a></p>
+  <p>Faire todo app - 2024 - <a href="https://github.com/charlesschaefer/faire-todo-app/blob/main/LICENSE">License</a>
+  </p>
 </footer>
 
 <!-- <p-toast position="bottom-left" /> -->
 <p-toast position="bottom-left" #toast>
   <ng-template let-message pTemplate="message">
     <div class="flex flex-column align-items-start" style="flex: 1">
-        <div class="flex align-items-center gap-2">
-            <span class="font-bold text-900">
-              {{ message.summary }}
-            </span>
+      <div class="flex align-items-center gap-2">
+        <span class="font-bold text-900">
+          {{ message.summary }}
+        </span>
+      </div>
+      <div class="text-base my-3 text-900 flex flex-row gap-3">
+        <div class="h-3-rem">
+          {{ message.detail }}
         </div>
-        <div class="text-base my-3 text-900 flex flex-row gap-3">
-          <div class="h-3-rem">
-            {{ message.detail }}
-          </div> 
-          <div class="">
-            <a href="javascript:;" p-button class="text-sm w-min" severity="info" size="small" (click)="undo()"  >{{ 'Undo' | transloco }}</a>
-          </div>
+        <div class="">
+          <a href="javascript:;" p-button class="text-sm w-min" severity="info" size="small" (click)="undo()"
+             >{{ 'Undo' | transloco }}</a>
         </div>
+      </div>
     </div>
-</ng-template>
+  </ng-template>
+</p-toast>
+<p-toast [key]="'auth-messages'" [position]="'top-center'">
+  <ng-template let-message pTemplate="auth-message">
+    <div class="flex flex-column align-items-start" style="flex: 1">
+      <div class="flex align-items-center gap-2">
+        <span class="font-bold text-900">
+          {{ message.summary }}
+        </span>
+      </div>
+      <div class="text-base my-3 text-900 flex flex-row gap-3">
+        <div class="h-3-rem">
+          {{ message.detail }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
 </p-toast>
 
 <p-sidebar [(visible)]="showSidebar" position="right">
+  <!-- Use the new auth component -->
+  <app-auth></app-auth>
+
+  <p-menu #menu [model]="menuItems" class="side-bar-menu" />
+
   <ng-template pTemplate="footer">
     <div class="flex align-items-center justify-content-end gap-2">
-        <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
+      <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
     </div>
     <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" class="side-bar-header-menu" appendTo="body" />
   </ng-template>
-  <p-menu #menu [model]="menuItems" class="side-bar-menu" />
 </p-sidebar>
-

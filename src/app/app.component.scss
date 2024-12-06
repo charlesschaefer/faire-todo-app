@@ -44,6 +44,7 @@ footer {
 :host ::ng-deep .side-bar-menu .p-menu {
     border: none;
     width: 100%;
+    margin-top: 0;
 }
 
 :host ::ng-deep .side-bar-menu .p-menuitem {
@@ -83,5 +84,118 @@ footer {
     }
     :host ::ng-deep .p-toast-top-right {
         left: 0px;
+    }
+}
+
+.login-dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+
+    .terms-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        label {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
+
+    :host ::ng-deep .p-message {
+        width: 100%;
+    }
+
+    :host ::ng-deep .p-button-loading-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+.sidebar-user-profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--surface-border);
+    margin-bottom: 1rem;
+
+    .user-email {
+        font-size: 0.9rem;
+        color: var(--text-color-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .logout-link {
+        font-size: 0.9rem;
+        color: var(--text-color-secondary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border-radius: var(--border-radius);
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+            background-color: var(--surface-hover);
+            color: var(--text-color);
+        }
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+}
+
+.save-tasks-button {
+    // Default styles for larger screens
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+
+    @media (max-width: 600px) {
+        // Adjust styles for smaller screens
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    @media (max-width: 420px) {
+        // Further adjustments for very small screens
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
+
+.sidebar-login-banner {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+    border-bottom: 1px solid var(--surface-border);
+    margin-bottom: 1rem;
+    text-align: center;
+
+    p {
+        margin: 0;
+        color: var(--text-color-secondary);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    :host ::ng-deep .p-button {
+        width: 100%;
     }
 }

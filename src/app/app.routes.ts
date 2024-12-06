@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { AuthCallbackComponent } from './auth/callback/callback.component';
 
 import { TodayComponent } from "./today/today.component";
 import { InboxComponent } from "./inbox/inbox.component";
@@ -21,6 +22,6 @@ export const routes: Routes = [
     {path: "search", component: SearchComponent},
     {path: "settings", component: SettingsComponent},
     {path: "sync", component: SynchronizationComponent},
-    {path: "auth/callback", redirectTo:"today", pathMatch: "full"},
+    {path: "auth/callback", component: AuthCallbackComponent},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];
