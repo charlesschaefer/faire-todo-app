@@ -13,7 +13,6 @@ import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { TaskDto } from '../../dto/task-dto';
-import { TaskComponent } from '../task/task.component';
 import { TaskService } from '../../services/task.service';
 import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';

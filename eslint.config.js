@@ -2,6 +2,9 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+const unusedImports = require("eslint-plugin-unused-imports");
+
+console.log(unusedImports)
 
 module.exports = tseslint.config(
   {
@@ -13,7 +16,20 @@ module.exports = tseslint.config(
       ...angular.configs.tsRecommended,
     ],
     processor: angular.processInlineTemplates,
+    plugins: {
+      "unused-imports": unusedImports
+    },
     rules: {
+      "no-unused-vars": "off",
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "error",
+        {
+          // plugins: {
+          //   "unused-imports": unusedImports,
+          // },
+        },
+      ],
       "@angular-eslint/directive-selector": [
         "error",
         {
@@ -30,7 +46,26 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
-    }
+      // "@typescript-eslint/no-unused-vars": [
+      //   "error",
+      //   {
+      //     "vars": "all",
+      //     "args": "after-used",
+      //     "ignoreRestSiblings": false,
+      //     "no-unused-vars": "off",
+      //     "unused-imports/no-unused-imports": "error",
+      //     "unused-imports/no-unused-vars": [
+      //       "warn",
+      //       {
+      //         "vars": "all",
+      //         "varsIgnorePattern": "^_",
+      //         "args": "after-used",
+      //         "argsIgnorePattern": "^_"
+      //       }
+      //     ]
+      //   }
+      // ]
+    },
   },
   {
     files: ["**/*.html"],

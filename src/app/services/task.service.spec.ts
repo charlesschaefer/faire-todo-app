@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TaskService } from './task.service';
-import { TaskAddDto, TaskDto } from '../dto/task-dto';
+import { TaskAddDto } from '../dto/task-dto';
 import { DbService } from './db.service';
 
 describe('TaskService', () => {

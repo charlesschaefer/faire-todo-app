@@ -11,7 +11,7 @@ import { ProjectDto } from '../dto/project-dto';
 import { SettingsDto } from '../dto/settings-dto';
 import { TagDto } from '../dto/tag-dto';
 import { TaskTagDto } from '../dto/task-tag-dto';
-import { forkJoin, Observable, Subject } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 
 interface BackupData {
     task: TaskDto[];

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SettingsDto } from '../dto/settings-dto';
 import { TranslateService } from '@ngx-translate/core';
 import { invoke } from '@tauri-apps/api/core';
-import { listen, UnlistenFn } from '@tauri-apps/api/event';
+import { listen } from '@tauri-apps/api/event';
 import { TaskService } from './task.service';
 import { TaskDto } from '../dto/task-dto';
 import { firstValueFrom } from 'rxjs';

@@ -11,8 +11,6 @@ import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 
-import { ProjectService } from '../services/project.service';
-import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
 import { TaskService } from '../services/task.service';

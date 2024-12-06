@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
-import { map } from 'rxjs';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';
 

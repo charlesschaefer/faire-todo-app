@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DateTime, Duration } from 'luxon';
+import { DateTime } from 'luxon';
 
 @Pipe({
   name: 'dateShortener',

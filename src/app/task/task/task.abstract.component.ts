@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { TaskDto } from '../../dto/task-dto';

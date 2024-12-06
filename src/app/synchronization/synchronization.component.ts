@@ -10,8 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
-import { Message, MessageService } from 'primeng/api';
-import { firstValueFrom, from } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { firstValueFrom } from 'rxjs';
 
 import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';

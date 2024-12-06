@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { DateTime } from 'luxon';
 
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';

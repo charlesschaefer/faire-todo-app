@@ -14,7 +14,6 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
-import { listen } from '@tauri-apps/api/event';
 import { AvatarModule } from 'primeng/avatar';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -30,7 +29,6 @@ import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
 import { invoke } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
-import { DbService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
@@ -198,7 +196,7 @@ export class AppComponent implements OnInit {
         }
 
         // watches for undo calls, so we exhibit a toast to the user
-        this.undoService.watch().subscribe(item => {
+        this.undoService.watch().subscribe(() => {
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
                 severity: 'info',

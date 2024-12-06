@@ -8,7 +8,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
-import { Router } from '@angular/router';
 import { User } from '@supabase/supabase-js';
 
 import { AuthService } from '../services/auth.service';
@@ -39,7 +38,6 @@ export class AuthComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
   ) {
     this.authService.user.subscribe({
       next: user => {
