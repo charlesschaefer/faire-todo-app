@@ -11,12 +11,25 @@
       This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
     </p>
     
-    <p-button [label]="'Search devices' | translate" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
-    <div class="sync-otp-field" *ngIf="showOTPField">
+    
+    <p-button *ngIf="!useKnownIp" [label]="'Search devices' | translate" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
+    <p></p>
+    <div class="checkbox-container">
+      <p-checkbox [(ngModel)]="useKnownIp" [binary]="true" inputId="useKnownIp" [label]="'Synchronize using known IP' | translate" class="sync-known-ip-checkbox">
+      </p-checkbox>
+    <!-- </div>
+    <div *ngIf="useKnownIp" class="ip-input-container"> -->
+      <span class="p-float-label" *ngIf="useKnownIp">
+        <input pInputText id="ipAddress" [(ngModel)]="serverIp" class="sync-ip-field" />
+        <label for="ipAddress" translate>IP Address</label>
+      </span>
+    </div>
+    <div class="sync-otp-field" *ngIf="showOTPField || useKnownIp">
       <form [formGroup]="otpForm" (ngSubmit)="sendEncryptedOTP($event)">
         <label for="otp">Type the code below</label>
         <p-inputOtp formControlName="otp" [length]="6" class="otp-field" />
-        <p-button [label]="'Send' | translate" type="submit" />
+        <p-button [label]="'Send' | translate" type="submit" 
+                  *ngIf="(!useKnownIp || (useKnownIp && isValidIp(serverIp))) && otpForm.valid" />
       </form>
     </div>
     <div class="sync-progress-bar">

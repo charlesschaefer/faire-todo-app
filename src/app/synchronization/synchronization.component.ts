@@ -12,6 +12,9 @@ import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
 import { Message, MessageService } from 'primeng/api';
 import { firstValueFrom, from } from 'rxjs';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 
 import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
@@ -30,6 +33,9 @@ import { fetch } from '@tauri-apps/plugin-http';
         InputOtpModule,
         ProgressBarModule,
         ToastModule,
+        CheckboxModule,
+        InputTextModule,
+        FormsModule,
     ],
     providers: [],
     templateUrl: './synchronization.component.html',
@@ -50,6 +56,8 @@ export class SynchronizationComponent {
     otpForm = this.fb.group({
         otp: ["", Validators.required]
     });
+
+    useKnownIp = false;
 
     constructor(
         private otpGenerator: OtpGeneratorService,
@@ -179,5 +187,17 @@ export class SynchronizationComponent {
             return;
         }
 
+    }
+
+    isValidIp(ip: string): boolean {
+        if (!ip) return false;
+        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        if (!ipRegex.test(ip)) return false;
+        
+        const parts = ip.split('.');
+        return parts.every(part => {
+            const num = parseInt(part, 10);
+            return num >= 0 && num <= 255;
+        });
     }
 }
