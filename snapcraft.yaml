@@ -22,8 +22,8 @@ layout:
 
 apps:
   faire-todo-app:
-    extensions:
-      - gnome
+    #extensions:
+    #  - gnome
     command: usr/bin/faire-todo-app
     desktop: usr/share/applications/faire-todo-app.desktop
     plugs: 
