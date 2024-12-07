@@ -44,7 +44,7 @@ FILES.forEach(file => {
     for (let i = 0; i < lines.length; i++) {
         if (file.pattern.test(lines[i])) {
             let line = file.replace.replace("$version", versionNumber);
-            lines[i] = file.pattern.replace(file.pattern, line);
+            lines[i] = lines[i].replace(file.pattern, line);
             break;
         }
     }
