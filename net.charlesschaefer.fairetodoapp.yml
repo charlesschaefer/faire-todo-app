@@ -1,0 +1,32 @@
+id: net.charlesschaefer.fairetodoapp
+
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
+
+command: faire-todo-app
+finish-args:
+  - --socket=wayland # Permission needed to show the window
+  - --socket=fallback-x11 # Permission needed to show the window
+  - --device=dri # OpenGL, noct necessary for all projects
+  - --share=ipc
+
+modules:
+  - name: binary
+    buildsystem: simple
+    sources:
+      - type: file
+        url: https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v0.0.5/Faire.Todo.App_0.0.5_amd64.deb
+        sha256: 0f6b2b80a56c204a10eff08101dc6487bf5db450a1332b2eac0341ed12ff98ff # This is required if you are using a remote source
+        only-arches: [x86_64] #This source is only used on x86_64 Computers
+        # This path points to the binary file which was created in the .deb bundle.
+        # Tauri also creates a folder which corresponds to the content of the unpacked .deb.
+    build-commands:
+      - ar -x *.deb
+      - tar -xf data.tar.gz
+      - 'install -Dm755 usr/bin/faire-todo-app /app/bin/faire-todo-app'
+      - install -Dm644 usr/share/applications/Faire\ Todo\ App.desktop /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
+      - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/net.charlesschaefer.fairetodoapp.png
+      - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/net.charlesschaefer.fairetodoapp.png
+      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/net.charlesschaefer.fairetodoapp.png
+      #- install -Dm644 net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.rosary.metainfo.xml
