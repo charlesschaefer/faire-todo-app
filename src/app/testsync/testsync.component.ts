@@ -101,27 +101,27 @@ export class TestSyncComponent implements OnInit {
 
     deleteTestSync(id: number) {
         // deletes the testSync
-        this.testSyncService.remove(id).subscribe({
-            complete: () => {
-                this.taskService.getByField('testSync', id).subscribe(tasks => {
-                    const tasksIds: number[] = [];
-                    tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
-                    // then deletes the tasks of the testSync
-                    this.taskService.bulkRemove(tasksIds);
-                    this.messageService.add({
-                        summary: "Removed",
-                        detail: "TestSync and it's tasks removed successfully!",
-                        severity: "success"
-                    });
-                    setTimeout(() => window.location.reload(), 2000);
-                });
-            },
-            error: (err) => this.messageService.add({
-                summary: "Error",
-                detail: "Error trying to delete the testSync and it's tasks" + err,
-                severity: 'error'
-            })
-        });
+        // this.testSyncService.remove(id).subscribe({
+        //     complete: () => {
+        //         this.taskService.getByField('testSync', id).subscribe(tasks => {
+        //             const tasksIds: number[] = [];
+        //             tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
+        //             // then deletes the tasks of the testSync
+        //             this.taskService.bulkRemove(tasksIds);
+        //             this.messageService.add({
+        //                 summary: "Removed",
+        //                 detail: "TestSync and it's tasks removed successfully!",
+        //                 severity: "success"
+        //             });
+        //             setTimeout(() => window.location.reload(), 2000);
+        //         });
+        //     },
+        //     error: (err) => this.messageService.add({
+        //         summary: "Error",
+        //         detail: "Error trying to delete the testSync and it's tasks" + err,
+        //         severity: 'error'
+        //     })
+        // });
     }
 
     editTestSyncDialog(id: number) {

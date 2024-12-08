@@ -39,7 +39,7 @@ export abstract class ServiceAbstract<T> {
      * Gets a list of items
      */
     list() {
-        return this.table.$;
+        return this.table.find().$;
     }
 
     add(data: T & UserBound) {
@@ -85,8 +85,10 @@ export abstract class ServiceAbstract<T> {
     getByField(field: keyof T, value: any): Observable<T[]> {
         return this.table.find({
             selector: {
-                [field]: value
-            }
+                [field]: {
+                    $eq: value
+                }
+            } as any
         }).$;
     }
 
@@ -94,11 +96,13 @@ export abstract class ServiceAbstract<T> {
         return this.table.count();
     }
 
-    countByField(field: string, value: any) {
+    countByField(field: keyof T, value: T[typeof field]) {
         return from(this.table.count({
             selector: {
-                [field]: value
-            }
+                [field]: {
+                    $eq: value
+                }
+            } as any
         }).$);
     }
 
@@ -134,7 +138,7 @@ export abstract class ServiceAbstract<T> {
                 [field]: {
                     $regex: new RegExp(value, 'i')
                 }
-            }
+            } as any
         }).$;
     }
 
