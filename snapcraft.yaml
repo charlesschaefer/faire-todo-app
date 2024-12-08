@@ -6,6 +6,7 @@ description: |
   Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
   It stores the data using the IndexedDb of your platform's embedded web browser. 
   Faire is the infinitive verb in french equivalent to "to do".
+license: GPL-3.0+
 
 grade: stable
 confinement: strict
@@ -22,6 +23,11 @@ layout:
 
 apps:
   faire-todo-app:
+    architectures:
+      - build-on: [arm64]
+      - build-on: [amd64]
+      - build-on: [arm64]
+        build-for: [armhf]
     extensions:
      - gnome
     command: usr/bin/faire-todo-app
