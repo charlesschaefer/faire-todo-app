@@ -25,7 +25,7 @@ apps:
     extensions:
      - gnome
     command: usr/bin/faire-todo-app
-    desktop: usr/share/applications/Faire\ Todo\ App.desktop
+    desktop: usr/share/applications/faire-todo-app.desktop
     plugs: 
       - wayland
       - x11
@@ -75,6 +75,7 @@ parts:
       if [ -d $SNAPCRAFT_PART_INSTALL/usr/share/icons/hicolor/32x32/apps ]; then
         sed -i -e "s|Icon=faire-todo-app|Icon=/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop
       fi
+      cp $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop $SNAPCRAFT_PART_INSTALL/usr/share/applications/faire-todo-app.desktop
 slots:
   dbus-daemon:
     interface: dbus
