@@ -96,7 +96,7 @@ export class TaskAddComponent implements OnInit {
                 cloneProjects.unshift({
                     id: 0,
                     name: "Inbox"
-                });
+                } as any);
             }
             this.projects = cloneProjects;
         });
@@ -149,7 +149,7 @@ export class TaskAddComponent implements OnInit {
             return;
         }
 
-        const order = await firstValueFrom(this.taskAddService.count());
+        const order = await firstValueFrom(this.taskAddService.count().$);
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,

@@ -96,7 +96,7 @@ export abstract class ServiceAbstract<T> {
         return this.table.count();
     }
 
-    countByField(field: keyof T, value: T[typeof field]) {
+    countByField<K extends keyof T>(field: K, value: T[K]) {
         return from(this.table.count({
             selector: {
                 [field]: {

@@ -102,7 +102,7 @@ export class TaskEditComponent implements OnInit {
                 cloneProjects.unshift({
                     id: 0,
                     name: "Inbox"
-                });
+                } as any);
             }
             this.projects = cloneProjects;
 

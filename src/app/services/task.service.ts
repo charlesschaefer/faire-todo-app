@@ -1,26 +1,25 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
-import { liveQuery } from 'dexie';
-import { Observable, Subject, firstValueFrom, from, zip } from 'rxjs';
+import { Observable, Subject, firstValueFrom, from } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';
+import { MyDatabaseCollections } from '../app.rxdb';
 
 interface SubtaskCount {
     subtasks: number;
     completed: number;
 }
 
-
 @Injectable({
     providedIn: 'root'
 })
 export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
-    storeName = "task";
+    storeName = "tasks" as keyof MyDatabaseCollections;
 
     constructor(
-        protected dbService: DbService,
+        protected override dbService: DbService,
         protected override authService: AuthService
     ) {
         super(authService);
@@ -28,12 +27,16 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     listParentTasks() {
-        return from(liveQuery(() => {
-            return this.table.where({
-                completed: 0,
-                parent: null
-            }).toArray();
-        }))
+        return this.table.find({
+            selector: {
+                completed: {
+                    $eq: 0
+                },
+                parent: {
+                    $exists: false
+                }
+            } as any
+        }).$;
     }
 
     orderTasks(tasks: T[]) {
@@ -44,47 +47,58 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    getFromProject(project: number): Observable<T[]> {
-        return from(liveQuery(() => {
-            return this.table.where({
+    getFromProject(project: string): Observable<T[]> {
+        return this.table.find({
+            selector: {
                 completed: 0,
                 project: project,
-            }).and((task) => !task.parent || task.parent  == null).toArray();
-        }));
+                parent: {
+                    $exists: false
+                }
+            } as any
+        }).$;
     }
 
     getForToday() {
-        const date = new Date;
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        return from(liveQuery(() => {
-            return this.table
-                .where('dueDate')
-                .belowOrEqual(date)
-                .and((task: TaskDto) => task.completed == 0)
-                .and((task: TaskDto) => !task.parent || task.parent == null)
-                .toArray();
-        }));
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        
+        return this.table.find({
+            selector: {
+                dueDate: {
+                    $lte: date.toISOString()
+                },
+                completed: 0,
+                parent: {
+                    $exists: false
+                }
+            } as any
+        }).$;
     }
 
     countForToday() {
-        const date = new Date;
-        date.setHours(0);
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-        return from(liveQuery(() => {
-            return this.table.where('dueDate').equals(date).and((task: TaskDto) => task.completed == 0).count();
-        }));
+        const date = new Date();
+        date.setHours(0, 0, 0, 0);
+        
+        return this.table.count({
+            selector: {
+                dueDate: date.toISOString(),
+                completed: 0
+            } as any
+        }).$;
     }
 
     getUpcoming() {
-        const minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
-        return from(liveQuery(() => {
-            return this.table.where('dueDate').above(minDate).and((task: TaskDto) => task.completed == 0).toArray();
-        }));
+        const minDate = DateTime.fromJSDate(new Date()).endOf('day').toJSDate();
+        
+        return this.table.find({
+            selector: {
+                dueDate: {
+                    $gt: minDate.toISOString()
+                },
+                completed: 0
+            } as any
+        }).$;
     }
 
     orderTasksByCompletion(tasks: TaskDto[]): TaskDto[] {
@@ -106,59 +120,70 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     getTaskSubtasks(task: TaskDto) {
-        return from(liveQuery(() => {
-            return this.table
-                .where('parent')
-                .equals(task.id)
-                .and((task) => task.completed == 0)
-                .toArray();
-        }));
+        return this.table.find({
+            selector: {
+                parent: task.id,
+                completed: 0
+            } as any
+        }).$;
     }
 
     countTaskSubtasks(task: TaskDto): Observable<SubtaskCount> {
         const countSubtasks$ = new Subject<SubtaskCount>();
         
-        zip(
-            from(liveQuery(() => this.table.where({
-                parent: task.id
-            }).count())),
-            from(liveQuery(() => this.table.where({
-                parent: task.id,
-                completed: 1
-            }).count()))
-        ).subscribe(([subtasks, completed]) => {
+        Promise.all([
+            firstValueFrom(this.table.count({
+                selector: {
+                    parent: task.id
+                } as any
+            }).$),
+            firstValueFrom(this.table.count({
+                selector: {
+                    parent: task.id,
+                    completed: 1
+                } as any
+            }).$)
+        ]).then(([subtasks, completed]) => {
             countSubtasks$.next({
                 subtasks, completed
             });
         });
+
         return countSubtasks$;        
     }
 
-    getProjectTasks(projectId: number) {
-        return from(liveQuery(() => {
-            return this.table.where({
+    getProjectTasks(projectId: string) {
+        return this.table.find({
+            selector: {
                 project: projectId,
-                completed: 0
-            }).and((task) => !task.parent || task.parent == null).toArray();
-        }))
+                completed: 0,
+                parent: {
+                    $exists: false
+                }
+            } as any
+        }).$;
     }
 
     getAllTasks() {
-        return from(liveQuery(() => {
-            return this.table.where({
-                completed: 0
-            }).and((task) => !task.parent || task.parent == null).toArray();
-        }))
+        return this.table.find({
+            selector: {
+                completed: 0,
+                parent: {
+                    $exists: false
+                }
+            } as any
+        }).$;
     }
 
     removeTask(task: TaskDto) {
         const removal$ = new Subject();
+        
         this.remove(task.id).subscribe({
             complete: () => {
                 this.getTaskSubtasks(task).subscribe({
                     next: (tasks) => {
                         tasks.forEach(task => {
-                            this.removeTask(task).subscribe({
+                            this.removeTask(task as any).subscribe({
                                 error: (err) => {
                                     removal$.error(err);
                                 }
@@ -166,7 +191,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                         });
                         removal$.complete();
                     }
-                })
+                });
             },
             error: () => {
                 throw new Error(`Couldn't remove task ${task.id}`);
@@ -179,17 +204,21 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     markTaskComplete(task: TaskDto) {
         const success$ = new Subject();
         task.completed = 1;
-        from(this.table.update(task.id, task)).subscribe({
+        
+        from(this.table.findOne(`id=${task.id}`).update({
+            $set: { completed: 1 }
+        })).subscribe({
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
-                    const aTask:Partial<TaskDto> = task;
+                    const aTask: Partial<TaskDto> = { ...task };
                     // removes id to enable creating a new task
-                    aTask.id = undefined;
+                    delete aTask.id;
                     aTask.completed = 0;
                     
                     const newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
+                    
                     switch (task.recurring) {
                         case RecurringType.DAILY:
                             date = date.plus(Duration.fromObject({day: 1}));
@@ -213,20 +242,16 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                     }
                    
                     newTask.dueDate = date.toJSDate();
-                    console.log(newTask);
-                    from(this.table.add(newTask)).subscribe({
-                        complete: () => {
-                            success$.complete();
-                        },
-                        error: (err) => {
-                            success$.error(err);
-                        }
-                    })
+                    this.add(newTask as T).subscribe({
+                        complete: () => success$.complete(),
+                        error: (err) => success$.error(err)
+                    });
                 } else {
                     success$.complete();
                 }
             }
         });
+        
         return success$;
     }
 }
