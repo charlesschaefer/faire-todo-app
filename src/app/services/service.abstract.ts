@@ -18,7 +18,7 @@ export abstract class ServiceAbstract<T> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache = true;
     protected abstract storeName: keyof MyDatabaseCollections;
-    protected table!: RxCollection;
+    protected table!: RxCollection<T>;
     protected abstract dbService: DbService;
     protected userUuid: string | null = null;
 
@@ -68,21 +68,21 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.bulkInsert(data));
     }
 
-    edit(id: string, data: T & UserBound) {
+    edit(id: number, data: T & UserBound) {
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;
         }
         this.clearCache();
-        return from(this.table.findOne(id).update({
+        return from(this.table.findOne(`id=${id}`).update({
             $set: data
         }));
     }
 
-    get(id: string) {
-        return this.table.findOne(id).$;
+    get(id: number) {
+        return this.table.findOne(`id=${id}`).$;
     }
 
-    getByField(field: string, value: any): Observable<T[]> {
+    getByField(field: keyof T, value: any): Observable<T[]> {
         return this.table.find({
             selector: {
                 [field]: value
@@ -138,14 +138,14 @@ export abstract class ServiceAbstract<T> {
         }).$;
     }
 
-    remove(id: string): Observable<any> {
-        return from(this.table.findOne(id).remove());
+    remove(id: number): Observable<any> {
+        return from(this.table.findOne(`id=${id}`).remove());
     }
 
     bulkRemove(ids: string[]) {
         return from(
             Promise.all(
-                ids.map(id => this.table.findOne(id).remove())
+                ids.map(id => this.table.findOne(`id=${id}`).remove())
             )
         );
     }
