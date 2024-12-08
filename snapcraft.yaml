@@ -73,7 +73,7 @@ parts:
       npm run tauri build -- --bundles deb
       dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
       if [ -d $SNAPCRAFT_PART_INSTALL/usr/share/icons/hicolor/32x32/apps ]; then
-        sed -i -e "s|Icon=faire-todo-app|Icon=/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/faire-todo-app.desktop
+        sed -i -e "s|Icon=faire-todo-app|Icon=/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop
       fi
 slots:
   dbus-daemon:
