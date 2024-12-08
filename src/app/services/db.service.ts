@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
-
-import { AppDb } from "../app.db";
-import { Table } from 'dexie';
+import { RxCollection, RxDatabase } from 'rxdb';
+import { AppRxDb, MyDatabaseCollections } from "../app.rxdb";
 
 @Injectable({
     providedIn: 'root'
 })
 export class DbService {
+    private db!: RxDatabase<MyDatabaseCollections>;
 
-    dbService:AppDb = new AppDb();
-
-    getTable(name: string): Table {
-        const table = name as keyof AppDb;
-        return this.dbService[table] as Table<any, any, any>;
+    async init() {
+        this.db = await AppRxDb.getInstance();
     }
 
+    getCollection(name: keyof MyDatabaseCollections): RxCollection {
+        return this.db[name];
+    }
+
+    getTable(name: keyof MyDatabaseCollections): RxCollection {
+        return this.getCollection(name);
+    }
 }

@@ -3,12 +3,13 @@ import { AuthService } from '../../services/auth.service';
 import { TestSyncDto } from '../dto/testsync.dto';
 import { DbService } from '../../services/db.service';
 import { ServiceAbstract } from '../../services/service.abstract';
+import { MyDatabaseCollections } from '../../app.rxdb';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TestSyncService<T> extends ServiceAbstract<TestSyncDto> {
-    storeName = "testsync";
+    storeName = "testsync" as keyof MyDatabaseCollections;
 
 
     constructor(

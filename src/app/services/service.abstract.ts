@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { liveQuery, Table } from "dexie";
+import { RxCollection } from 'rxdb';
 
 import { DbService } from "./db.service";
+import { MyDatabaseCollections } from "../app.rxdb";
 import { User } from "@supabase/supabase-js";
 import { AuthService } from "./auth.service";
 
@@ -15,8 +17,8 @@ export interface UserBound {
 export abstract class ServiceAbstract<T> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache = true;
-    protected abstract storeName: string;
-    protected table!: Table;
+    protected abstract storeName: keyof MyDatabaseCollections;
+    protected table!: RxCollection;
     protected abstract dbService: DbService;
     protected userUuid: string | null = null;
 
@@ -30,68 +32,74 @@ export abstract class ServiceAbstract<T> {
 
 
     setTable() {
-        console.log("Construindo o table do ", this.storeName)
         this.table = this.dbService.getTable(this.storeName);
-        console.log(this.table);
     }
 
     /**
-     * Gets a cached list of accounts
-     * 
-     * @returns Observable<BaseDto[]>
+     * Gets a list of items
      */
     list() {
-        return from(liveQuery(() => this.table.toArray()));
+        return this.table.$;
     }
 
     add(data: T & UserBound) {
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;
         }
-        return from(this.table.add(data));
+        const id = crypto.randomUUID();
+        return from(this.table.insert({
+            id,
+            ...data
+        }));
     }
 
     bulkAdd(data: (T & UserBound)[]) {
         if (this.userUuid) {
             data = data.map((item) => {
-                const user = {user_uuid: this.userUuid} as UserBound;
-                return { ...item, ...user };
+                const user = { user_uuid: this.userUuid } as UserBound;
+                return { 
+                    ...item, 
+                    ...user,
+                    id: crypto.randomUUID() 
+                };
             });
         }
         this.clearCache();
-        return from(this.table.bulkAdd(data));
+        return from(this.table.bulkInsert(data));
     }
 
-    edit(id: number, data: T & UserBound) {
+    edit(id: string, data: T & UserBound) {
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;
         }
         this.clearCache();
-        return from(this.table.update(id, data as object));/* 
-            .pipe(
-                map((response: T) => response),
-                catchError((error: T) => throwError(error))
-            ); */
+        return from(this.table.findOne(id).update({
+            $set: data
+        }));
     }
 
-    get(id: number) {
-        return from(liveQuery(() => this.table.where({id: id}).first()));
+    get(id: string) {
+        return this.table.findOne(id).$;
     }
 
     getByField(field: string, value: any): Observable<T[]> {
-        const where: Record<string, any> = {};
-        where[field] = value;
-        return from(liveQuery(() => this.table.where(where).toArray()));
+        return this.table.find({
+            selector: {
+                [field]: value
+            }
+        }).$;
     }
 
     count() {
-        return from(liveQuery(() => this.table.count()));
+        return this.table.count();
     }
 
     countByField(field: string, value: any) {
-        const where: Record<string, any> = {};
-        where[field] = value;
-        return from(liveQuery(() => this.table.where(where).count()));
+        return from(this.table.count({
+            selector: {
+                [field]: value
+            }
+        }).$);
     }
 
     getByDate(field: string, minDate?: Date, maxDate?: Date): Observable<T[]> {
@@ -99,37 +107,52 @@ export abstract class ServiceAbstract<T> {
             throw new Error("You should provide at least one of minDate or maxDate parameters!");
         }
         
-        let query;
+        let selector: any = {};
         if (minDate && maxDate) {
-            query = this.table.where(field).between(minDate, maxDate);
+            selector[field] = {
+                $gte: minDate.toISOString(),
+                $lte: maxDate.toISOString()
+            };
         } else if (minDate) {
-            query = this.table.where(field).above(minDate);
+            selector[field] = {
+                $gte: minDate.toISOString()
+            };
         } else {
-            query = this.table.where(field).below(maxDate);
+            selector[field] = {
+                $lte: maxDate!.toISOString()
+            };
         }
-        return from(liveQuery(() => query.toArray()));
+
+        return this.table.find({
+            selector
+        }).$;
     }
 
-    // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
     slowStringSearch(field: string, value: string) {
-        return from(liveQuery(() => {
-            return this.table.filter((item:T) => {
-                return Boolean((item[field as keyof T] as string).toLowerCase().match(value.toLowerCase()));
-            }).toArray()
-        }));
+        return this.table.find({
+            selector: {
+                [field]: {
+                    $regex: new RegExp(value, 'i')
+                }
+            }
+        }).$;
     }
 
-    remove(id: number): Observable<any> {
-        return from(this.table.delete(id));
+    remove(id: string): Observable<any> {
+        return from(this.table.findOne(id).remove());
     }
 
-    bulkRemove(ids: number[]) {
-        return from(this.table.where('id').anyOf(ids).delete());
+    bulkRemove(ids: string[]) {
+        return from(
+            Promise.all(
+                ids.map(id => this.table.findOne(id).remove())
+            )
+        );
     }
 
     clear(): Observable<any> {
         this.clearCache();
-        return from(this.table.clear());
+        return from(this.table.remove());
     }
 
     deactivateCache(): void {
