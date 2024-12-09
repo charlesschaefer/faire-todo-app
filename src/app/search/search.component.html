@@ -1,4 +1,4 @@
-<h2 translate class="page-title">Search</h2>
+<h2   class="page-title">{{ 'Search' | transloco }}</h2>
 
 <div class="search">
   <div class="search-box">
@@ -7,12 +7,12 @@
       <input 
         type="text" 
         pInputText 
-        [placeholder]="'Search' | translate"
+        [placeholder]="'Search' | transloco"
         [(ngModel)]="searchValue"
         class="search-box-input"
       />
     </p-iconField>
-    <p-button [label]="'Search' | translate" (onClick)="search()" />
+    <p-button [label]="'Search' | transloco" (onClick)="search()" />
   </div>
 </div>
 

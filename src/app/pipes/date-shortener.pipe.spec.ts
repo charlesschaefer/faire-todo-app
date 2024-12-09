@@ -1,3 +1,5 @@
+import { TranslocoService} from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { DateShortenerPipe } from './date-shortener.pipe';
 import { inject } from '@angular/core';
 

@@ -10,7 +10,8 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../../services/task.service';
@@ -37,13 +38,12 @@ import { TaskAbstractComponent } from '../task/task.abstract.component';
         ToastModule,
         ContextMenuModule,
         DateShortenerPipe,
-        TranslateModule,
+        TranslocoModule,
     ],
     providers: [
         MessageService,
         DialogService,
         ConfirmationService,
-        TranslateService
     ],
     templateUrl: '../task/task.component.html',
     styleUrl: 'subtask.component.scss'
@@ -55,7 +55,7 @@ export class SubtaskComponent extends TaskAbstractComponent {
         protected override messageService: MessageService,
         protected override taskService: TaskService<TaskDto>,
         protected override confirmationService: ConfirmationService,
-        protected override translate: TranslateService,
+        protected override translate: TranslocoService,
         protected override undoService: UndoService,
     ) {
         super(
@@ -70,7 +70,7 @@ export class SubtaskComponent extends TaskAbstractComponent {
 
     async showTaskEditDialog(task: TaskDto): Promise<void> {
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
-            header: await firstValueFrom(this.translate.get(`Edit Task`)),
+            header: await firstValueFrom(this.translate.selectTranslate(`Edit Task`)),
             width: '80%',
             height: '80%',
             breakpoints: {

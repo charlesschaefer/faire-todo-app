@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subject } from 'rxjs';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -36,7 +37,7 @@ import { UserBound } from '../../services/service.abstract';
         InputTextareaModule,
         DividerModule,
         ToastModule,
-        TranslateModule,
+        TranslocoModule,
         DropdownModule,
         CheckboxModule,
     ],
@@ -76,7 +77,7 @@ export class TaskAddComponent implements OnInit {
         private taskAddService: TaskService<TaskAddDto>,
         private messageService: MessageService,
         private router: Router,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private projectService: ProjectService<ProjectDto>,
     ) {}
 
@@ -105,7 +106,7 @@ export class TaskAddComponent implements OnInit {
             this.taskForm.patchValue({project: this.project.id});
         }
 
-        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        const notRecurringLabel = await firstValueFrom(this.translate.selectTranslate('Not recurring'));
         this.recurringOptions = [
             notRecurringLabel,
             RecurringType.DAILY,
@@ -143,8 +144,8 @@ export class TaskAddComponent implements OnInit {
         if (recurring && !dueDate) {
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.get('Unable to save')),
-                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+                summary: await firstValueFrom(this.translate.selectTranslate('Unable to save')),
+                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!"))
             });
             return;
         }
@@ -170,8 +171,8 @@ export class TaskAddComponent implements OnInit {
         this.taskAddService.add(saveData as TaskAddDto & UserBound).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Saved successfully`)),
-                    detail: await firstValueFrom(this.translate.get(`The task was saved successfully`)),
+                    summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),
+                    detail: await firstValueFrom(this.translate.selectTranslate(`The task was saved successfully`)),
                     severity: "success"
                 });
                 this.taskAddOp.hide();
@@ -180,8 +181,8 @@ export class TaskAddComponent implements OnInit {
             },
             error: async (err: Error) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Error`)),
-                    detail: await firstValueFrom(this.translate.get(`Couldn't save the task.`)) + err,
+                    summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
+                    detail: await firstValueFrom(this.translate.selectTranslate(`Couldn't save the task.`)) + err,
                     severity: "error"
                 });
             }

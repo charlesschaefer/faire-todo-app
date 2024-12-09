@@ -3,7 +3,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 import { FormsModule } from '@angular/forms';
 
 
@@ -25,7 +25,7 @@ import { ActivatedRoute } from '@angular/router';
         InputIconModule,
         InputTextModule,
         ButtonModule,
-        TranslateModule,
+        TranslocoModule,
         FormsModule,
     ],
     templateUrl: './search.component.html',

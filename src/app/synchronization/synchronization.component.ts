@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,6 +13,9 @@ import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 
 import { OtpGeneratorService } from '../services/otp-generator.service';
 import { BackupService } from '../services/backup.service';
@@ -23,13 +27,16 @@ import { fetch } from '@tauri-apps/plugin-http';
     standalone: true,
     imports: [
         DialogModule,
-        TranslateModule,
+        TranslocoModule,
         ButtonModule,
         CommonModule,
         ReactiveFormsModule,
         InputOtpModule,
         ProgressBarModule,
         ToastModule,
+        CheckboxModule,
+        InputTextModule,
+        FormsModule,
     ],
     providers: [],
     templateUrl: './synchronization.component.html',
@@ -51,13 +58,15 @@ export class SynchronizationComponent {
         otp: ["", Validators.required]
     });
 
+    useKnownIp = false;
+
     constructor(
         private otpGenerator: OtpGeneratorService,
         private backupService: BackupService,
         private httpClient: HttpClient,
         private messageService: MessageService,
-        private translateService: TranslateService,
-        private translate: TranslateService,
+        private translateService: TranslocoService,
+        private translate: TranslocoService,
     ) {}
 
     openFromOthers() {
@@ -93,8 +102,8 @@ export class SynchronizationComponent {
         invoke('search_network_sync_services').then(async (ipv4) => {
             console.log("Encountered the app in the machine with ip ", ipv4);
             this.messageService.add({
-                summary: await firstValueFrom(this.translate.get("Device found")),
-                detail: await firstValueFrom(this.translate.get("Your device was discovered with the IP: ")) + ipv4,
+                summary: await firstValueFrom(this.translate.selectTranslate("Device found")),
+                detail: await firstValueFrom(this.translate.selectTranslate("Your device was discovered with the IP: ")) + ipv4,
                 severity: "success",
                 key: "sync"
             });
@@ -111,8 +120,8 @@ export class SynchronizationComponent {
         const otp = this.otpForm.value.otp as unknown as string;
         if (!otp || otp.length < 6) {
             this.messageService.add({
-                summary: await firstValueFrom(this.translateService.get("Error")),
-                detail: await firstValueFrom(this.translateService.get("You need to type all the 6 letters correctly.")),
+                summary: await firstValueFrom(this.translateService.selectTranslate("Error")),
+                detail: await firstValueFrom(this.translateService.selectTranslate("You need to type all the 6 letters correctly.")),
                 severity: 'error',
                 key: "sync"
             });
@@ -146,8 +155,8 @@ export class SynchronizationComponent {
                     console.log("Backup restored. Showing messages");
                     // alert("Data sent and backup received. Restoring backup...");
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translateService.get("Synchronized successfully")),
-                        detail: await firstValueFrom(this.translateService.get("Your data was synchronized successfully.")),
+                        summary: await firstValueFrom(this.translateService.selectTranslate("Synchronized successfully")),
+                        detail: await firstValueFrom(this.translateService.selectTranslate("Your data was synchronized successfully.")),
                         severity: "success",
                         life: 4000,
                         key: "sync"
@@ -160,8 +169,8 @@ export class SynchronizationComponent {
                     console.log("Error recovering backup. Showing messages...", err);
                     // alert("Error recovering backup. Showing messages..." + err)
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translateService.get("Error synchronizing")),
-                        detail: await firstValueFrom(this.translateService.get(`Error trying to synchronize data: `)) + err.toString(),
+                        summary: await firstValueFrom(this.translateService.selectTranslate("Error synchronizing")),
+                        detail: await firstValueFrom(this.translateService.selectTranslate(`Error trying to synchronize data: `)) + err.toString(),
                         severity: 'error',
                         key: "sync"
                     });
@@ -179,5 +188,17 @@ export class SynchronizationComponent {
             return;
         }
 
+    }
+
+    isValidIp(ip: string): boolean {
+        if (!ip) return false;
+        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        if (!ipRegex.test(ip)) return false;
+        
+        const parts = ip.split('.');
+        return parts.every(part => {
+            const num = parseInt(part, 10);
+            return num >= 0 && num <= 255;
+        });
     }
 }
