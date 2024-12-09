@@ -46,17 +46,20 @@ import { CheckboxModule } from 'primeng/checkbox';
     styleUrl: './task-add.component.scss'
 })
 export class TaskAddComponent implements OnInit {
-    @Input() showOverlay$!: Subject<Event>;
+    @Input()  showOverlay$!: Subject<Event>;
+    @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
+
+
     @Input() project!: ProjectDto;
     @Input() parent!: TaskDto;
+    @Input() prefilledTitle!: string;
 
     @Output() onAddTask = new EventEmitter<any>;
-    @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
     @ViewChild('taskAddOp') taskAddOp!: OverlayPanel;
 
     private fb = inject(FormBuilder);
     taskForm = this.fb.group({
-        title: [null, Validators.required],
+        title: [this.prefilledTitle ||null, Validators.required],
         description: [null],
         dueDate: [null] as [null | Date],
         dueTime: [null] as [null | Date],
@@ -78,7 +81,7 @@ export class TaskAddComponent implements OnInit {
         private projectService: ProjectService<ProjectDto>,
     ) {}
 
-    async ngOnInit() {
+    ngOnInit() {
         // subscribes to the parent Subject to exhibit the overlay component
         this.showOverlay$.subscribe(event => {
             if (event) {
@@ -103,16 +106,23 @@ export class TaskAddComponent implements OnInit {
             this.taskForm.patchValue({project: this.project.id});
         }
 
-        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
-        this.recurringOptions = [
-            notRecurringLabel,
-            RecurringType.DAILY,
-            RecurringType.WEEKLY,
-            RecurringType.WEEKDAY,
-            RecurringType.MONTHLY,
-            RecurringType.YEARLY
-        ];
-        this.taskForm.patchValue({ recurring: notRecurringLabel });
+        let notRecurringLabel;
+        firstValueFrom(this.translate.get('Not recurring')).then(label => {
+            notRecurringLabel = label;
+            this.recurringOptions = [
+                notRecurringLabel,
+                RecurringType.DAILY,
+                RecurringType.WEEKLY,
+                RecurringType.WEEKDAY,
+                RecurringType.MONTHLY,
+                RecurringType.YEARLY
+            ];
+            this.taskForm.patchValue({ recurring: notRecurringLabel });
+        });
+
+        if (this.prefilledTitle) {
+            this.taskForm.patchValue({ title: this.prefilledTitle });
+        }
     }
 
     onClose(event: Event) {

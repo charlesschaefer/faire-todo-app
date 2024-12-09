@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -15,7 +15,7 @@ import {
     sendNotification,
 } from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
-
+import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
 
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
@@ -23,12 +23,13 @@ import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
-import { invoke } from '@tauri-apps/api/core';
+import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
 import { DbService } from './services/db.service';
 import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
+import { InboxComponent } from './inbox/inbox.component';
 
 
 export enum NotificationType {
@@ -61,6 +62,13 @@ export class AppComponent implements OnInit {
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
+    
+    shareListener!: PluginListener;
+    childComponentsData!: {
+        showAddTask: boolean,
+        sharetargetUrl: string,
+    };
+    showAddTaskSubscription!: Subscription;
 
     constructor (
         private themeService: ThemeService,
@@ -170,7 +178,30 @@ export class AppComponent implements OnInit {
         await this.setMenuItems(projectItems);
     }
 
-    async ngOnInit() {
+    /**
+     * If we received a sharetarget intent event, we detect when the router-outlet activates a component
+     * that is or extends InboxComponent, and subscribe to the event to open and close the task add overlay.
+     * 
+     */
+    onActivate(component: any) {
+        if (this.childComponentsData?.showAddTask) {
+            if (component instanceof InboxComponent) {
+                component.sharetargetUrl = this.childComponentsData.sharetargetUrl;
+                this.showAddTaskSubscription = component.showTaskAddOverlay$.subscribe(ev => {
+                    console.log("Limpando o childComponentsData", !ev?.target);
+                    if (!ev?.target) {
+                        this.childComponentsData = {
+                            showAddTask: false,
+                            sharetargetUrl: '',
+                        };
+                        this.showAddTaskSubscription.unsubscribe();
+                    }
+                });
+            }
+        }
+    }
+
+    ngOnInit() {
         //invoke("set_frontend_complete");
 
         this.setupMenu();
@@ -198,6 +229,23 @@ export class AppComponent implements OnInit {
         this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
             this.notificationService.setup(settings);
         });
+
+        listenForShareEvents((intent: ShareEvent) => {
+            if (intent.uri) {
+                this.childComponentsData = {
+                    showAddTask: true,
+                    sharetargetUrl: intent.uri,
+                };
+            }
+        }).then(listener => {
+            this.shareListener = listener;
+        });
+
+        // this.childComponentsData = {
+        //     showAddTask: true,
+        //     sharetargetUrl: "http://localhost:4200/inbox",
+        // };
+        // console.log("AppComponent.ngOnInit()", this.childComponentsData);
 
         // // starts the notification worker
         // if (typeof Worker !== 'undefined') {

@@ -18,7 +18,9 @@
 
 <section class="main">
   <div class="content">
-    <router-outlet />
+    <router-outlet 
+      (activate)="onActivate($event)"
+    />
   </div>
 </section>
 

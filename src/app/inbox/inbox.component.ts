@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -49,17 +49,34 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
 })
-export class InboxComponent implements OnInit {
+export class InboxComponent implements OnInit, AfterViewInit {
     tasks!: TaskDto[];
     subtasksCount!: Map<number, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
+
+    // The url received from the share event. This should be used to fill the title of a new task.
+    sharetargetUrl!: string;
 
     constructor(
         protected taskService: TaskService<TaskDto>,
         protected activatedRoute: ActivatedRoute,
     ) {}
     
+    /**
+     * This method is called after the view has been initialized.
+     * It is used to show the task add overlay if the sharetargetUrl is present.
+     */
+    ngAfterViewInit() {
+        if (this.sharetargetUrl) {
+            const event = {
+                ...(new CustomEvent('click') as Object),
+                target: document.querySelector('.task-add-line'),
+            } as Event;
+            this.onShowTaskAddOverlay(event);
+        }
+    }
+
     ngOnInit() {
         this.getTasks();
     }
@@ -83,10 +100,15 @@ export class InboxComponent implements OnInit {
 
     onAddTask() {
         this.getTasks();
+        this.sharetargetUrl = '';
     }
     
     onEditTask() {
         console.log("called Inbox.onEditTask()");
         this.getTasks();
+    }
+
+    onShowOverlayChange(event: any) {
+        this.sharetargetUrl = '';
     }
 }

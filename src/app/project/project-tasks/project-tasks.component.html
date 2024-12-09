@@ -2,4 +2,10 @@
 <app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
 
 <!-- Task add overlay panel -->
-<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" *ngIf="project" [project]="project" />
+<app-task-add 
+    [(showOverlay$)]="showTaskAddOverlay$" 
+    (onAddTask)="onAddTask()" 
+    *ngIf="project" [project]="project" 
+    [prefilledTitle]="sharetargetUrl" 
+    (showOverlay$Change)="onShowOverlayChange($event)"  
+/>
