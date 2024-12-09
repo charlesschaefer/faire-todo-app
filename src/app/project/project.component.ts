@@ -1,5 +1,6 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { MenuModule } from 'primeng/menu';
@@ -33,7 +34,7 @@ import { ToastModule } from 'primeng/toast';
         CardModule,
         InputTextModule,
         DividerModule,
-        TranslateModule,
+        TranslocoModule,
         ConfirmDialogModule,
         DialogModule,
         ToastModule,
@@ -66,7 +67,7 @@ export class ProjectComponent implements OnInit {
     constructor(
         private projectService: ProjectService<ProjectDto>,
         private projectAddService: ProjectService<ProjectAddDto>,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private taskService: TaskService<TaskDto>,
@@ -83,8 +84,8 @@ export class ProjectComponent implements OnInit {
 
     async confirmDeleteProject(id: number) {
         this.confirmationService.confirm({
-            header: await firstValueFrom(this.translate.get(`Are you sure?`)),
-            message: await firstValueFrom(this.translate.get(`Are you sure you want to delete this project? All of it's tasks will be removed too!`)),
+            header: await firstValueFrom(this.translate.selectTranslate(`Are you sure?`)),
+            message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this project? All of it's tasks will be removed too!`)),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -160,15 +161,15 @@ export class ProjectComponent implements OnInit {
         this.projectAddService.add(projectData).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get("Saved successfully")),
-                    detail: await firstValueFrom(this.translate.get("Project saved successfully")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Saved successfully")),
+                    detail: await firstValueFrom(this.translate.selectTranslate("Project saved successfully")),
                     severity: 'success'
                 });
                 setTimeout(() => window.location.reload(), 2000);
             },
             error: async (err: Error) => this.messageService.add({
-                summary: await firstValueFrom(this.translate.get("Error")),
-                detail: await firstValueFrom(this.translate.get("Couldn't save the Project.")) + err,
+                summary: await firstValueFrom(this.translate.selectTranslate("Error")),
+                detail: await firstValueFrom(this.translate.selectTranslate("Couldn't save the Project.")) + err,
                 severity: 'error'
             }),
         });

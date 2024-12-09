@@ -1,5 +1,5 @@
 <h2 translate>Synchronize data with other devices</h2>
-<p-dialog [header]="'Get data from other device' | translate" [modal]="true" [(visible)]="getFromOthersVisible">
+<p-dialog [header]="'Get data from other device' | transloco" [modal]="true" [(visible)]="getFromOthersVisible">
   <div class="sync-container-client">
     <p class="help" translate>
       Click the button below to look for the device in the network.
@@ -12,10 +12,10 @@
     </p>
     
     
-    <p-button *ngIf="!useKnownIp" [label]="'Search devices' | translate" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
+    <p-button *ngIf="!useKnownIp" [label]="'Search devices' | transloco" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
     <p></p>
     <div class="checkbox-container">
-      <p-checkbox [(ngModel)]="useKnownIp" [binary]="true" inputId="useKnownIp" [label]="'Synchronize using known IP' | translate" class="sync-known-ip-checkbox">
+      <p-checkbox [(ngModel)]="useKnownIp" [binary]="true" inputId="useKnownIp" [label]="'Synchronize using known IP' | transloco" class="sync-known-ip-checkbox">
       </p-checkbox>
     <!-- </div>
     <div *ngIf="useKnownIp" class="ip-input-container"> -->
@@ -28,7 +28,7 @@
       <form [formGroup]="otpForm" (ngSubmit)="sendEncryptedOTP($event)">
         <label for="otp">Type the code below</label>
         <p-inputOtp formControlName="otp" [length]="6" class="otp-field" />
-        <p-button [label]="'Send' | translate" type="submit" 
+        <p-button [label]="'Send' | transloco" type="submit" 
                   *ngIf="(!useKnownIp || (useKnownIp && isValidIp(serverIp))) && otpForm.valid" />
       </form>
     </div>
@@ -38,7 +38,7 @@
   </div>
 </p-dialog>
 
-<p-dialog [header]="'Send data to other device' | translate" [modal]="true" [(visible)]="sendToOthersVisible">
+<p-dialog [header]="'Send data to other device' | transloco" [modal]="true" [(visible)]="sendToOthersVisible">
   <div class="sync-container-server">
     <p class="help" translate>
       Open the app on other device, click the button "Get data from other devices" and follow instructions. Then, click the button bellow.
@@ -46,7 +46,7 @@
     <p class="help" translate>
       This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
     </p>
-    <p-button [label]="'Make device discoverable' | translate" (onClick)="makeDeviceDiscoverable()" />
+    <p-button [label]="'Make device discoverable' | transloco" (onClick)="makeDeviceDiscoverable()" />
     <div class="sync-otp" *ngIf="otpData">
       <p translate class="sync-otp-help">
         Type the code below on your other device:
@@ -59,8 +59,8 @@
 </p-dialog>
 
 <div class="sync-buttons flex gap-2">
-  <p-button [label]="'Get data from other devices' | translate" (onClick)="openFromOthers()" />
-  <p-button [label]="'Send data to other devices' | translate" (onClick)="openToOthers()" />
+  <p-button [label]="'Get data from other devices' | transloco" (onClick)="openFromOthers()" />
+  <p-button [label]="'Send data to other devices' | transloco" (onClick)="openToOthers()" />
 </div>
 
 <p-toast key="sync" />

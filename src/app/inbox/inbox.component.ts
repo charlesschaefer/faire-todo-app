@@ -19,7 +19,7 @@ import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskDto } from '../dto/task-dto';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskService } from '../services/task.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
 
 
@@ -44,7 +44,7 @@ import { ActivatedRoute } from '@angular/router';
         CalendarModule,
         TaskListComponent,
         TaskAddComponent,
-        TranslateModule,
+        TranslocoModule,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'

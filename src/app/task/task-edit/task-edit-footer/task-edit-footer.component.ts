@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-task-edit-footer',
     standalone: true,
     imports: [
         ButtonModule,
-        TranslateModule,
+        TranslocoModule,
     ],
     templateUrl: './task-edit-footer.component.html',
     styleUrl: './task-edit-footer.component.scss'

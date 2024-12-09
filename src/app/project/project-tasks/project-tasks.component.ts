@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 
 
@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
     imports: [
         TaskListComponent,
         TaskAddComponent,
-        TranslateModule,
+        TranslocoModule,
         CommonModule,
     ],
     templateUrl: './project-tasks.component.html',

@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -24,7 +25,7 @@ import { invoke } from '@tauri-apps/api/core';
         CardModule,
         CheckboxModule,
         CalendarModule,
-        TranslateModule,
+        TranslocoModule,
         ReactiveFormsModule,
         ToastModule,
     ],
@@ -45,7 +46,7 @@ export class SettingsComponent implements OnInit {
     constructor(
         private settingsService: SettingsService<SettingsDto>,
         private messageService: MessageService,
-        private translate: TranslateService,
+        private translate: TranslocoService,
     ) {}
 
     ngOnInit(): void {
@@ -77,8 +78,8 @@ export class SettingsComponent implements OnInit {
         savedData$.subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get("Success")),
-                    detail: await firstValueFrom(this.translate.get("Settings saved successfully")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Success")),
+                    detail: await firstValueFrom(this.translate.selectTranslate("Settings saved successfully")),
                     severity: 'success'
                 });
                 if (settingsData.notifications) {
@@ -87,8 +88,8 @@ export class SettingsComponent implements OnInit {
             },
             error: async (err) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get("Error")),
-                    detail: await firstValueFrom(this.translate.get("Error saving settings")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Error")),
+                    detail: await firstValueFrom(this.translate.selectTranslate("Error saving settings")),
                     severity: 'error'
                 });
             }
@@ -133,8 +134,8 @@ export class SettingsComponent implements OnInit {
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            const title = await firstValueFrom(this.translate.get('Notifications enabled'));
-            const largeBody = await firstValueFrom(this.translate.get(`Now you'll receive our notifications.`));
+            const title = await firstValueFrom(this.translate.selectTranslate('Notifications enabled'));
+            const largeBody = await firstValueFrom(this.translate.selectTranslate(`Now you'll receive our notifications.`));
             // sendNotification({
             //     title: title,
             //     largeBody: largeBody,

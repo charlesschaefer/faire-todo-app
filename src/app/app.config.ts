@@ -2,7 +2,8 @@ import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core
 import { provideRouter } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader} from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 
@@ -20,14 +21,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
-        importProvidersFrom(TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient]
-            },
-            defaultLanguage: 'en'
-        })), 
+        importProvidersFrom(TranslocoModule), 
         // provideHttpClient(), 
         provideTransloco({
             config: { 

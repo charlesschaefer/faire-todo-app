@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { SettingsDto } from '../dto/settings-dto';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { TaskService } from './task.service';
@@ -16,7 +16,7 @@ export class NotificationService {
     private unlistenToday: Function | undefined;
 
     constructor (
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private taskService: TaskService<TaskDto>
     ) { }
 
@@ -27,8 +27,8 @@ export class NotificationService {
             time_to_notify_today_tasks: [0, 0],
             send_notifications: !!settings?.notifications,
             send_today_notifications: false,
-            notification_title: await firstValueFrom(this.translate.get('Task duing')),
-            notification_body: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, {title: "{title}"}))
+            notification_title: await firstValueFrom(this.translate.selectTranslate('Task duing')),
+            notification_body: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is dueing now.`, {title: "{title}"}))
         }
         if (settings?.notifications) {
             if (settings.todayNotifications && settings.notificationTime) {

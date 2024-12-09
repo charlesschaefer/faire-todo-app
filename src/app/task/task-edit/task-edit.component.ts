@@ -1,7 +1,8 @@
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, ElementRef, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
@@ -35,7 +36,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         InputTextareaModule,
         DividerModule,
         DynamicDialogModule,
-        TranslateModule,
+        TranslocoModule,
         DropdownModule,
         TaskAddComponent,
         SubtaskComponent,
@@ -73,7 +74,7 @@ export class TaskEditComponent implements OnInit {
         private taskService: TaskService<TaskDto>,
         private messageService: MessageService,
         private dynamicDialogRef: DynamicDialogRef,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private projectService: ProjectService<ProjectDto>,
     ) {
 
@@ -124,7 +125,7 @@ export class TaskEditComponent implements OnInit {
             this.subtasksCompletedCount = countSubtasks.completed;
         });
 
-        const notRecurringLabel = await firstValueFrom(this.translate.get('Not recurring'));
+        const notRecurringLabel = await firstValueFrom(this.translate.selectTranslate('Not recurring'));
         this.recurringOptions = [
             notRecurringLabel,
             RecurringType.DAILY,
@@ -148,8 +149,8 @@ export class TaskEditComponent implements OnInit {
         if (recurring && !dueDate) {
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.get('Unable to save')),
-                detail: await firstValueFrom(this.translate.get("Can't save a recurring task without a due date!"))
+                summary: await firstValueFrom(this.translate.selectTranslate('Unable to save')),
+                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!"))
             });
             return;
         }
@@ -170,8 +171,8 @@ export class TaskEditComponent implements OnInit {
         this.taskService.edit(this.task.id, saveData).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Saved successfully`)),
-                    detail: await firstValueFrom(this.translate.get(`The task was saved successfully`)),
+                    summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),
+                    detail: await firstValueFrom(this.translate.selectTranslate(`The task was saved successfully`)),
                     severity: "success"
                 });
                 this.dynamicDialogRef.close(saveData);
@@ -180,8 +181,8 @@ export class TaskEditComponent implements OnInit {
             },
             error: async (err) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get(`Error`)),
-                    detail: await firstValueFrom(this.translate.get(`Couldn't save the task.`)) + err,
+                    summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
+                    detail: await firstValueFrom(this.translate.selectTranslate(`Couldn't save the task.`)) + err,
                     severity: "error"
                 });
             }
@@ -199,7 +200,7 @@ export class TaskEditComponent implements OnInit {
     }
 
     subtasksTitle() {
-        const title = this.translate.instant("Subtasks");
+        const title = this.translate.translate("Subtasks");
         return title + ` (${this.subtasksCompletedCount}/${this.subtasksCount})`;
     }
 

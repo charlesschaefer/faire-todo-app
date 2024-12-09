@@ -3,7 +3,7 @@ import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-dro
 import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule } from '@jsverse/transloco';
 
 import { TaskComponent } from '../task/task.component';
 import { TaskDto } from '../../dto/task-dto';
@@ -20,7 +20,7 @@ import { ProjectDto } from '../../dto/project-dto';
         TaskComponent,
         CdkDropList,
         PanelModule,
-        TranslateModule,
+        TranslocoModule,
     ],
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.scss'

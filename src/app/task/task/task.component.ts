@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
@@ -43,15 +44,14 @@ import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscro
         ContextMenuModule,
         TreeModule,
         DateShortenerPipe,
-        TranslateModule,
+        TranslocoModule,
         LinkifyPipe,
         NgxCdkDnDScrollFixerDirective
     ],
     providers: [
         MessageService,
         DialogService,
-        ConfirmationService,
-        TranslateService
+        ConfirmationService
     ],
     templateUrl: './task.component.html',
     styleUrl: './task.component.scss'
@@ -62,7 +62,7 @@ export class TaskComponent extends TaskAbstractComponent {
         protected override messageService: MessageService,
         protected override taskService: TaskService<TaskDto>,
         protected override confirmationService: ConfirmationService,
-        protected override translate: TranslateService,
+        protected override translate: TranslocoService,
         protected override undoService: UndoService,
     ) {
         super(
@@ -77,7 +77,7 @@ export class TaskComponent extends TaskAbstractComponent {
 
     async showTaskEditDialog(task: TaskDto): Promise<void> {
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
-            header: await firstValueFrom(this.translate.get(`Edit Task`)),
+            header: await firstValueFrom(this.translate.selectTranslate(`Edit Task`)),
             width: '80%',
             height: '80%',
             breakpoints: {

@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslocoService } from '@jsverse/transloco';
+import { TranslocoModule } from '@jsverse/transloco';
 import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -46,8 +47,8 @@ export enum NotificationType {
         ButtonModule,
         MenuModule,
         ToastModule,
-        TranslateModule,
-        SidebarModule
+        TranslocoModule,
+        SidebarModule,
     ],
     providers: [
         MessageService,
@@ -71,7 +72,7 @@ export class AppComponent implements OnInit {
 
     constructor (
         private themeService: ThemeService,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private undoService: UndoService,
         private messageService: MessageService,
         private projectService: ProjectService<ProjectDto>,
@@ -82,28 +83,28 @@ export class AppComponent implements OnInit {
         private router: Router,
     ) {
         translate.setDefaultLang('en');
-        //translate.use('en');
+        //translate.setActiveLang('en');
 
 
         let userLanguage = localStorage.getItem('language');
         if (!userLanguage) {
             userLanguage = 'en';
         }
-        this.translate.use(userLanguage);
+        this.translate.setActiveLang(userLanguage);
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
         let menuItems: MenuItem[] = [{
             label: " ",
             items: [
-                { label: await firstValueFrom(this.translate.get("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
-                { label: await firstValueFrom(this.translate.get(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
-                { label: await firstValueFrom(this.translate.get(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-                { label: await firstValueFrom(this.translate.get(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
-                { label: await firstValueFrom(this.translate.get(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
-                { label: await firstValueFrom(this.translate.get(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
                 { separator: true },
-                { label: await firstValueFrom(this.translate.get(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
             ],
         }];
         for (let item of additionalItems) {
@@ -114,36 +115,36 @@ export class AppComponent implements OnInit {
 
         this.settingsMenuItems = [
             {
-                label: await firstValueFrom(this.translate.get("Settings")),
+                label: await firstValueFrom(this.translate.selectTranslate("Settings")),
                 items: [
-                    { label: await firstValueFrom(this.translate.get("User Settings")), routerLink: '/settings' } as MenuItem,
+                    { label: await firstValueFrom(this.translate.selectTranslate("User Settings")), routerLink: '/settings' } as MenuItem,
                 ]
             },
             {
-                lable: await firstValueFrom(this.translate.get("Synchronize")),
+                lable: await firstValueFrom(this.translate.selectTranslate("Synchronize")),
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.get("Synchronize other devices")),
+                        label: await firstValueFrom(this.translate.selectTranslate("Synchronize other devices")),
                         routerLink: '/sync'
                     } as MenuItem
                 ]
             },
             {
-                label: await firstValueFrom(this.translate.get("Theme")),
+                label: await firstValueFrom(this.translate.selectTranslate("Theme")),
                 items: [
-                    { label: await firstValueFrom(this.translate.get("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
+                    { label: await firstValueFrom(this.translate.selectTranslate("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
                 ],
             },
             {
-                label: await firstValueFrom(this.translate.get("Language")),
+                label: await firstValueFrom(this.translate.selectTranslate("Language")),
                 icon: "pi pi-flag",
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.get("English")),
+                        label: await firstValueFrom(this.translate.selectTranslate("English")),
                         command: () => this.switchLanguage('en')
                     },
                     {
-                        label: await firstValueFrom(this.translate.get("Portuguese")),
+                        label: await firstValueFrom(this.translate.selectTranslate("Portuguese")),
                         command: () => this.switchLanguage('pt-BR')
                     }
                 ]
@@ -163,7 +164,7 @@ export class AppComponent implements OnInit {
             });
         }
         let projectMenuItems = {
-            label: await firstValueFrom(this.translate.get("Projects")),
+            label: await firstValueFrom(this.translate.selectTranslate("Projects")),
             items: projectItems
         };
 
@@ -286,7 +287,7 @@ export class AppComponent implements OnInit {
 
     switchLanguage(language: 'en' | 'pt-BR') {
         console.log("Changing language to ", language)
-        this.translate.use(language);
+        this.translate.setActiveLang(language);
         localStorage.setItem('language', language);
         this.setupMenu();
     }
@@ -309,8 +310,8 @@ export class AppComponent implements OnInit {
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
             sendNotification({
-                title: await firstValueFrom(this.translate.get('Task duing')),
-                largeBody: await firstValueFrom(this.translate.get(`The task "{{title}}" is dueing now.`, { title: task.title }))
+                title: await firstValueFrom(this.translate.selectTranslate('Task duing')),
+                largeBody: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is dueing now.`, { title: task.title }))
             });
         }
     }
@@ -329,8 +330,8 @@ export class AppComponent implements OnInit {
         if (permissionGranted) {
             let duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
-                title: await firstValueFrom(this.translate.get('Tasks duing today')),
-                largeBody: await firstValueFrom(this.translate.get(`You have {{total}} tasks duing today.`, { total: duingToday }))
+                title: await firstValueFrom(this.translate.selectTranslate('Tasks duing today')),
+                largeBody: await firstValueFrom(this.translate.selectTranslate(`You have {{total}} tasks duing today.`, { total: duingToday }))
             });
         }
     }
