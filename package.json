@@ -24,8 +24,6 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "@jsverse/transloco": "^7.5.0",
-    "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^8.0.0",
     "@tauri-apps/api": "^2.1.1",
     "@tauri-apps/plugin-http": "^2.0.1",
     "@tauri-apps/plugin-notification": "^2.0.0",

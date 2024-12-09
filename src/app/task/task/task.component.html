@@ -41,7 +41,7 @@
             @if (task.project && projects) {
                 <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}
             } @else {
-              <i class="pi pi-inbox"></i><span translate>Inbox</span>
+              <i class="pi pi-inbox"></i><span  >{{ 'Inbox' | transloco }}</span>
             }
           </div>
           @if (task.dueDate) {

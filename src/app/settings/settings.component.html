@@ -1,4 +1,4 @@
-<h2 translate class="page-title">Settings</h2>
+<h2   class="page-title">{{ 'Settings' | transloco }}</h2>
 
 <div class="settings">
   <p-card>
@@ -14,7 +14,7 @@
             class="settings-item-checkbox"
             (onChange)="receiveNotificationChanged()"
           />
-          <span translate>Receive app Notifications?</span>
+          <span  >{{ 'Receive app Notifications?' | transloco }}</span>
         </label>
       </div>
       <div class="field">
@@ -27,12 +27,13 @@
             class="settings-item-checkbox"
             (onChange)="todayNotificationsChanged()"
           />
-          <span translate>Notify tasks due today?</span>
+          <span  >{{ 'Notify tasks due today?' | transloco }}</span>
         </label>
       </div>
       <div class="field">
         <label for="notification-time" translate>
-          <span translate>Time to notify today tasks:</span>
+          <span  >{{ 'Time to notify today tasks:' | transloco }}</span>
+          
           <p-calendar
             [showIcon]="true"
             icon="pi pi-clock"
