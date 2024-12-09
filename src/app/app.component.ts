@@ -246,10 +246,16 @@ export class AppComponent implements OnInit {
 
         listenForShareEvents((intent: ShareEvent) => {
             if (intent.uri) {
+                const uri = parseIntentUri(intent.uri);
+                const url = decodeURIComponent(uri['S.android.intent.extra.TEXT']);
+                
                 this.childComponentsData = {
                     showAddTask: true,
-                    sharetargetUrl: intent.uri,
+                    sharetargetUrl: url,
                 };
+                
+                alert(`AppComponent.ngOnInit() ${url}`);
+                this.router.navigate(['/inbox']);
             }
         }).then(listener => {
             this.shareListener = listener;
@@ -357,4 +363,16 @@ export class AppComponent implements OnInit {
             invoke('start_http_server');
         })
     }
+}
+
+
+function parseIntentUri(uri: string) {
+    uri = uri.replace(/^#Intent;/, '').replace(/;end$/, '');
+    let parts = uri.split(';');
+    let result: { [key: string]: string } = {};
+    for (let part of parts) {
+        let [key, value] = part.split('=');
+        result[key] = value;
+    }
+    return result;
 }
