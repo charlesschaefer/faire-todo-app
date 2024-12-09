@@ -7,7 +7,7 @@
           pInputText 
           type="text"
           name="title"
-          [placeholder]="'Task title' | translate" 
+          [placeholder]="'Task title' | transloco" 
           formControlName="title"
           [autofocus]="true"
           (ngModelChange)="onTitleChange($event)"
@@ -16,7 +16,7 @@
       <div class="task-add-description">
         <textarea
           pInputTextarea
-          [placeholder]="'Description' | translate"
+          [placeholder]="'Description' | transloco"
           [autoResize]="true"
           rows="1"
           class="text-sm"
@@ -29,7 +29,7 @@
           [showButtonBar]="true"
           [showTime]="false"
           inputId="task-add-due-date"
-          [placeholder]="'Due date' | translate"
+          [placeholder]="'Due date' | transloco"
           formControlName="dueDate"
           class="task-add-dueDate"
         />
@@ -38,7 +38,7 @@
           icon="pi pi-clock"
           inputId="task-add-due-time"
           [timeOnly]="true"
-          [placeholder]="'Time' | translate"
+          [placeholder]="'Time' | transloco"
           formControlName="dueTime"
           class="task-add-dueTime"
         />
@@ -49,7 +49,7 @@
           optionValue="id"
           formControlName="project"
           name="project"
-          [placeholder]="'Project' | translate" 
+          [placeholder]="'Project' | transloco" 
           class="task-add-project"
         />
       </div>
