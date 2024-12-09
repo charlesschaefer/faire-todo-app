@@ -1051,6 +1051,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-http",
  "tauri-plugin-notification",
+ "tauri-plugin-sharetarget",
  "tokio",
 ]
 
@@ -4165,6 +4166,20 @@ dependencies = [
  "thiserror 1.0.69",
  "time",
  "url",
+]
+
+[[package]]
+name = "tauri-plugin-sharetarget"
+version = "0.1.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15a6e4638b6a5492a46847fc9e994df8cfd2dbc1bacc11f15c207d6a2163c341"
+dependencies = [
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin",
+ "thiserror 1.0.69",
 ]
 
 [[package]]

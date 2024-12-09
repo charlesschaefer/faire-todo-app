@@ -15,6 +15,7 @@
           "url": "http://*:9099/*"
         }
       ]
-    }
+    },
+    "sharetarget:default"
   ]
 }
