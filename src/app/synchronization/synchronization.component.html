@@ -1,15 +1,9 @@
-<h2 translate>Synchronize data with other devices</h2>
+<h2 [transloco]="'Synchronize data with other devices'"></h2>
 <p-dialog [header]="'Get data from other device' | transloco" [modal]="true" [(visible)]="getFromOthersVisible">
   <div class="sync-container-client">
-    <p class="help" translate>
-      Click the button below to look for the device in the network.
-    </p>
-    <p class="help" translate>
-      Then open the app on other device, click the button "Send data to other devices" and then click the button "Make device discoverable".
-    </p>
-    <p class="help" translate>
-      This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
-    </p>
+    <p class="help" >{{ 'Click the button below to look for the device in the network.' | transloco }}</p>
+    <p class="help" >{{ 'Then open the app on other device, click the button "Send data to other devices" and then click the button "Make device discoverable".' | transloco }}</p>
+    <p class="help" >{{ 'This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.' | transloco }}</p>
     
     
     <p-button *ngIf="!useKnownIp" [label]="'Search devices' | transloco" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
@@ -21,7 +15,7 @@
     <div *ngIf="useKnownIp" class="ip-input-container"> -->
       <span class="p-float-label" *ngIf="useKnownIp">
         <input pInputText id="ipAddress" [(ngModel)]="serverIp" class="sync-ip-field" />
-        <label for="ipAddress" translate>IP Address</label>
+        <label for="ipAddress"  [transloco]="'IP Address'"></label>
       </span>
     </div>
     <div class="sync-otp-field" *ngIf="showOTPField || useKnownIp">
@@ -40,17 +34,12 @@
 
 <p-dialog [header]="'Send data to other device' | transloco" [modal]="true" [(visible)]="sendToOthersVisible">
   <div class="sync-container-server">
-    <p class="help" translate>
-      Open the app on other device, click the button "Get data from other devices" and follow instructions. Then, click the button bellow.
-    </p>
-    <p class="help" translate>
-      This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.
-    </p>
+    <p class="help" >{{ 'Open the app on other device, click the button "Get data from other devices" and follow instructions. Then, click the button bellow.' | transloco }}</p>
+
+    <p class="help" >{{ 'This operation is secure, and your data is encrypted before being transfered between devices, to ensure the security.' | transloco }}</p>
     <p-button [label]="'Make device discoverable' | transloco" (onClick)="makeDeviceDiscoverable()" />
     <div class="sync-otp" *ngIf="otpData">
-      <p translate class="sync-otp-help">
-        Type the code below on your other device:
-      </p>
+      <p  class="sync-otp-help">{{ 'Type the code below on your other device:' | transloco }}</p>
       <div class="sync-otp-data">
         {{ otpData }}
       </div>

@@ -6,6 +6,7 @@ import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-all-tasks',
@@ -13,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
     imports: [
         TaskListComponent,
         TaskAddComponent,
+        TranslocoModule
     ],
     templateUrl: './all-tasks.component.html',
     styleUrl: './all-tasks.component.scss'

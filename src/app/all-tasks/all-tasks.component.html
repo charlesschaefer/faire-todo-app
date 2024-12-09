@@ -1,4 +1,4 @@
-<h2 translate class="page-title">All Tasks</h2>
+<h2   class="page-title">{{ 'All Tasks' | transloco }}</h2>
 <app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
 
 <!-- Task add overlay panel -->

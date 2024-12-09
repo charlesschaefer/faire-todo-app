@@ -5,6 +5,7 @@ import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { InboxComponent } from '../inbox/inbox.component';
 import { firstValueFrom } from 'rxjs';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-upcoming',
@@ -12,6 +13,7 @@ import { firstValueFrom } from 'rxjs';
     imports: [
         TaskListComponent,
         TaskAddComponent,
+        TranslocoModule
     ],
     templateUrl: './upcoming.component.html',
     styleUrl: './upcoming.component.scss'
