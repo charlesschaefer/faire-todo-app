@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -15,6 +15,8 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
+import { listen } from '@tauri-apps/api/event';
+import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
 import { AvatarModule } from 'primeng/avatar';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -28,11 +30,12 @@ import { ProjectService } from './services/project.service';
 import { ProjectDto } from './dto/project-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
-import { invoke } from '@tauri-apps/api/core';
+import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
 import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
+import { InboxComponent } from './inbox/inbox.component';
 import { AuthComponent } from './auth/auth.component';
 
 
@@ -72,6 +75,13 @@ export class AppComponent implements OnInit {
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
+    
+    shareListener!: PluginListener;
+    childComponentsData!: {
+        showAddTask: boolean,
+        sharetargetUrl: string,
+    };
+    showAddTaskSubscription!: Subscription;
 
     constructor (
         private themeService: ThemeService,
@@ -182,7 +192,30 @@ export class AppComponent implements OnInit {
         await this.setMenuItems(projectItems);
     }
 
-    async ngOnInit() {
+    /**
+     * If we received a sharetarget intent event, we detect when the router-outlet activates a component
+     * that is or extends InboxComponent, and subscribe to the event to open and close the task add overlay.
+     * 
+     */
+    onActivate(component: any) {
+        if (this.childComponentsData?.showAddTask) {
+            if (component instanceof InboxComponent) {
+                component.sharetargetUrl = this.childComponentsData.sharetargetUrl;
+                this.showAddTaskSubscription = component.showTaskAddOverlay$.subscribe(ev => {
+                    console.log("Limpando o childComponentsData", !ev?.target);
+                    if (!ev?.target) {
+                        this.childComponentsData = {
+                            showAddTask: false,
+                            sharetargetUrl: '',
+                        };
+                        this.showAddTaskSubscription.unsubscribe();
+                    }
+                });
+            }
+        }
+    }
+
+    ngOnInit() {
         //invoke("set_frontend_complete");
 
         this.setupMenu();
@@ -211,26 +244,22 @@ export class AppComponent implements OnInit {
             this.notificationService.setup(settings);
         });
 
-        // // starts the notification worker
-        // if (typeof Worker !== 'undefined') {
-        //     // Create a new
-        //     const worker = new Worker(new URL('./app.worker', import.meta.url));
-        //     worker.onmessage = ({ data }) => {
-        //         if (data.type == NotificationType.DueTask) {
-        //             this.notifyDuingTask(data.task);
-        //         } else if (data.type == NotificationType.TodayTasks) {
-        //             this.notifyTasksDuingToday();
-        //         }
-        //     };
-        //     worker.postMessage('hello');
-        // } else {
-        //     // Web Workers are not supported in this environment.
-        //     // You should add a fallback so that your program still executes correctly.
-        //     alert("Web Workers are not supported in this environment.");
-        // }
-        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
-            this.notificationService.setup(settings);
+        listenForShareEvents((intent: ShareEvent) => {
+            if (intent.uri) {
+                this.childComponentsData = {
+                    showAddTask: true,
+                    sharetargetUrl: intent.uri,
+                };
+            }
+        }).then(listener => {
+            this.shareListener = listener;
         });
+
+        // this.childComponentsData = {
+        //     showAddTask: true,
+        //     sharetargetUrl: "http://localhost:4200/inbox",
+        // };
+        // console.log("AppComponent.ngOnInit()", this.childComponentsData);
 
         // // starts the notification worker
         // if (typeof Worker !== 'undefined') {
