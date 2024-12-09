@@ -8,8 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri",
     "bump-version": "node scripts/version-bumper.js",
-    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
-    "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
+    "i18n:extract": "transloco-keys-manager extract",
+    "i18n:find": "transloco-keys-manager find",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -22,8 +23,8 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
-    "@ngx-translate/core": "^15.0.0",
-    "@ngx-translate/http-loader": "^8.0.0",
+    "@jsverse/transloco": "^7.5.0",
+    "@supabase/supabase-js": "~2.41.0",
     "@tauri-apps/api": "^2.1.1",
     "@tauri-apps/plugin-http": "^2.0.1",
     "@tauri-apps/plugin-notification": "^2.0.0",
@@ -38,8 +39,9 @@
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.3",
-    "rxjs": "~7.8.0",
+    "rxdb-supabase": "^1.0.4",
     "tauri-plugin-sharetarget-api": "^0.1.6",
+    "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
@@ -48,9 +50,14 @@
     "@angular/cli": "^18.0.0",
     "@angular/compiler-cli": "^18.0.0",
     "@angular/localize": "^18.1.1",
+    "@jsverse/transloco-keys-manager": "^6.0.0",
     "@tauri-apps/cli": "^2.1.0",
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.4.2",
+    "@typescript-eslint/parser": "^8.17.0",
+    "angular-eslint": "19.0.1",
+    "eslint": "^9.16.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "internal-ip": "^7.0.0",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -58,7 +65,13 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ngx-build-plus": "^18.0.0",
     "shelljs": "^0.8.5",
-    "typescript": "~5.4.0"
+    "typescript-eslint": "8.17.0"
+  },
+  "overrides": {
+    "@supabase/supabase-js": {
+      "@supabase/auth-js": "2.61.0"
+    }
   }
 }
