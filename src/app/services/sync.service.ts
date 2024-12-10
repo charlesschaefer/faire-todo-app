@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import Dexie from 'dexie';
 import 'dexie-syncable';
+import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { BehaviorSubject } from 'rxjs';
@@ -12,7 +13,7 @@ import { AppDb } from '../app.db';
 const Syncable = (Dexie as unknown as { Syncable: any }).Syncable;
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class SyncService {
     private supabase: SupabaseClient;
@@ -21,7 +22,7 @@ export class SyncService {
 
     constructor(
         private authService: AuthService,
-        private db: AppDb
+        @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = createClient(
             environment.supabaseUrl,
@@ -45,14 +46,17 @@ export class SyncService {
                             
                             switch (change.type) {
                                 case 1: // CREATE
+                                    console.log("SyncService.sync() -> CREATE", change);
                                     await this.supabase.from(change.table).insert(change.obj);
                                     break;
                                 case 2: // UPDATE
+                                    console.log("SyncService.sync() -> UPDATE", change);
                                     await this.supabase.from(change.table)
-                                        .update(change.obj)
-                                        .eq('uuid', change.obj.uuid);
+                                        .update(change.mods)
+                                        .eq('uuid', change.mods?.["uuid"]);
                                     break;
                                 case 3: // DELETE
+                                    console.log("SyncService.sync() -> DELETE", change);
                                     await this.supabase.from(change.table)
                                         .delete()
                                         .eq('uuid', change.key);

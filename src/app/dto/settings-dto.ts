@@ -7,6 +7,7 @@ export interface SettingsDto {
     notifications: number;
     todayNotifications: number;
     notificationTime: Date | null;
+    updated_at?: Date;
 }
 
 export type SettingsAddDto = Omit<SettingsDto, 'id'> & UserBound;

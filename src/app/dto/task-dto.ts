@@ -22,7 +22,8 @@ export interface TaskDto {
     order: number;
     parent: number | null;
     parent_uuid: string | null;
-    recurring: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null
+    recurring: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null;
+    updated_at?: Date;
 }
 
 export type TaskAddDto = Omit<TaskDto, "id" > & UserBound;

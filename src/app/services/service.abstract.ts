@@ -5,6 +5,7 @@ import { liveQuery, Table } from "dexie";
 import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
 import { AuthService } from "./auth.service";
+import { UserDto } from "../dto/user-dto";
 
 export interface UserBound {
     user_uuid: string;
@@ -63,7 +64,7 @@ export abstract class ServiceAbstract<T> {
     }
 
     edit(id: number, data: T & UserBound) {
-        if (this.userUuid) {
+        if (this.userUuid && this.storeName !== "user") {
             data["user_uuid"] = this.userUuid;
         }
         this.clearCache();

@@ -36,6 +36,7 @@ import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
 import Dexie from 'dexie';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 
 export enum NotificationType {
@@ -89,6 +90,7 @@ export class AppComponent implements OnInit {
         private notificationService: NotificationService,
         private router: Router,
         private syncService: SyncService,
+        private userService: UserService,
         public authService: AuthService,
     ) {
         translate.setDefaultLang('en');

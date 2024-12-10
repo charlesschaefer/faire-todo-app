@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { routes } from "./app.routes";
 import { environment } from '../environments/environment';
 import { SyncService } from './services/sync.service';
+import { AppDb } from "./app.db";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -36,6 +37,10 @@ export const appConfig: ApplicationConfig = {
         {
             provide: 'SUPABASE_KEY',
             useValue: environment.supabaseKey
+        },
+        {
+            provide: 'AppDb',
+            useClass: AppDb
         },
         MessageService,
         SyncService,
