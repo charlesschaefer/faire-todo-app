@@ -17,6 +17,7 @@ export class SettingsService<T> extends ServiceAbstract<T> {
     ) {
         super(authService);
         this.setTable();
+        console.log("Settings.table: ", this.table)
     }
 
 }

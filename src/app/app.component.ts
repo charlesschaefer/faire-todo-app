@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, Injector, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
@@ -42,6 +42,8 @@ import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { InboxComponent } from './inbox/inbox.component';
 import { AuthComponent } from './auth/auth.component';
+import { AppRxDb } from './app.rxdb';
+import { DbService } from './services/db.service';
 
 export enum NotificationType {
     DueTask,
@@ -69,11 +71,12 @@ export enum NotificationType {
     ],
     providers: [
         MessageService,
+        DbService
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
 
     showSidebar = false;
 
@@ -88,20 +91,22 @@ export class AppComponent implements OnInit {
     showAddTaskSubscription!: Subscription;
 
     constructor (
+        @Inject('AppRxdb') private appRxDb: AppRxDb,
+        private dbService: DbService,
         private themeService: ThemeService,
         private translate: TranslocoService,
         private undoService: UndoService,
         private messageService: MessageService,
-        private projectService: ProjectService<ProjectDto>,
-        private taskService: TaskService<TaskDto>,
+        // private projectService: ProjectService<ProjectDto>,
+        // private taskService: TaskService<TaskDto>,
         private httpClient: HttpClient,
-        private settingsService: SettingsService<SettingsDto>,
-        private notificationService: NotificationService,
+        // private settingsService: SettingsService<SettingsDto>,
+        // private notificationService: NotificationService,
         private router: Router,
+        private injector: Injector
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
-
 
         let userLanguage = localStorage.getItem('language');
         if (!userLanguage) {
@@ -170,7 +175,10 @@ export class AppComponent implements OnInit {
     }
 
     async getProjectMenuItems(): Promise<MenuItem[]> {
-        const projects = await firstValueFrom(this.projectService.list())
+        
+        const projectService = this.injector.get(ProjectService);
+
+        const projects = await firstValueFrom(projectService.list())
         if (!projects.length) return [];
         const projectItems: MenuItem[] = [];
         for (const project of projects) {
@@ -219,10 +227,28 @@ export class AppComponent implements OnInit {
         }
     }
 
+    ngAfterViewInit() {
+        
+        AppRxDb.getInstance().then(db => {
+            console.log("AppComponent.ngAfterViewInit() db: ", db);
+            this.setupMenu();
+            const settingsService = this.injector.get(SettingsService);
+
+            // this.settingsService.get(1).subscribe((settings: RxDocument<SettingsDto, {}>) => {
+            settingsService.get(1).pipe(
+                map((settings: RxDocument<SettingsDto, {}> | null) => {
+                    if (settings) {
+                        const notificationService = this.injector.get(NotificationService);
+                        notificationService.setup(settings);
+                    }
+                })
+            );
+        });
+    }
+
     ngOnInit() {
         //invoke("set_frontend_complete");
-
-        this.setupMenu();
+        
 
         const currentTheme = this.themeService.getCurrentTheme();
         let userTheme = localStorage.getItem('theme');
@@ -243,15 +269,6 @@ export class AppComponent implements OnInit {
                 life: 15000
             });
         });
-
-        // this.settingsService.get(1).subscribe((settings: RxDocument<SettingsDto, {}>) => {
-        this.settingsService.get(1).pipe(
-            map((settings: RxDocument<SettingsDto, {}> | null) => {
-                if (settings) {
-                    this.notificationService.setup(settings);
-                }
-            })
-        );
 
         listenForShareEvents((intent: ShareEvent) => {
             if (intent.uri) {
@@ -339,6 +356,7 @@ export class AppComponent implements OnInit {
     }
 
     async notifyTasksDuingToday() {
+        const taskService = this.injector.get(TaskService);
         // Do you have permission to send a notification?
         let permissionGranted = await isPermissionGranted();
 
@@ -350,7 +368,7 @@ export class AppComponent implements OnInit {
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            const duingToday = await firstValueFrom(this.taskService.countForToday());
+            const duingToday = await firstValueFrom(taskService.countForToday());
             sendNotification({
                 title: await firstValueFrom(this.translate.selectTranslate('Tasks duing today')),
                 largeBody: await firstValueFrom(this.translate.selectTranslate(`You have {{total}} tasks duing today.`, { total: duingToday }))

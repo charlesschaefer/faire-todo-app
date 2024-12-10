@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, from } from "rxjs";
+import { BehaviorSubject, Observable, Subject, from } from "rxjs";
 import { liveQuery, Table } from "dexie";
 import { RxCollection, RxDocument } from 'rxdb';
 
@@ -18,7 +18,7 @@ export abstract class ServiceAbstract<T> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache = true;
     protected abstract storeName: keyof MyDatabaseCollections;
-    protected table!: RxCollection<T>;
+    protected _table!: RxCollection<T>;
     protected abstract dbService: DbService;
     protected userUuid: string | null = null;
 
@@ -30,16 +30,55 @@ export abstract class ServiceAbstract<T> {
         });
     }
 
+    get table(): RxCollection<T> {
+        if (!this._table) {
+            const that = this;
+            const proxyCallers = new Proxy({}, {
+                get(target, prop) {
+                    if (that._table && prop in that._table) {
+                        return that._table[prop as keyof typeof that._table];
+                    }
+                    const $ = new Subject<any>();
+                    that.dbService.getTable(that.storeName).then((table: RxCollection) => {
+                        if (!table) {
+                            return that.dbService.getTable(that.storeName).then((_table: RxCollection) => {
+                                that._table = _table;
+                                const result = that._table[prop as keyof typeof that._table]();
+                                $.next(result);
+                                $.complete(); 
+                                return _table;
+                            });
+                        }
+                        that._table = table;
+                        const result = that._table[prop as keyof typeof that._table]();
+                        $.next(result);
+                        $.complete();
+                        return table;
+                    });
+                    return () => {
+                        console.log("Calling ", prop);
+                        return { $: $ }
+                    };
+                }
+            });
+            return proxyCallers as RxCollection<T>;
+        }
+        return this._table;
+    }
 
     setTable() {
-        this.table = this.dbService.getTable(this.storeName);
+        return this.dbService.getTable(this.storeName).then((table: RxCollection) => {
+            this._table = table;
+            return table;
+        });
     }
 
     /**
      * Gets a list of items
      */
     list() {
-        return this.table.find().$;
+        const result = this.table.find();
+        return result.$;
     }
 
     add(data: T & UserBound) {
@@ -146,7 +185,7 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.findOne(`id=${id}`).remove());
     }
 
-    bulkRemove(ids: string[]) {
+    bulkRemove(ids: number[]) {
         return from(
             Promise.all(
                 ids.map(id => this.table.findOne(`id=${id}`).remove())

@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PanelModule } from 'primeng/panel';
 import { MenuModule } from 'primeng/menu';
@@ -20,6 +19,7 @@ import { ToastModule } from 'primeng/toast';
 import { TestSyncService } from './services/testsync.service';
 import { TestSyncAddDto, TestSyncDto } from './dto/testsync.dto';
 import { UserBound } from '../services/service.abstract';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 
 @Component({
@@ -35,10 +35,10 @@ import { UserBound } from '../services/service.abstract';
         CardModule,
         InputTextModule,
         DividerModule,
-        TranslateModule,
         ConfirmDialogModule,
         DialogModule,
         ToastModule,
+        TranslocoModule
     ],
     templateUrl: './testsync.component.html',
     styleUrl: './testsync.component.scss'
@@ -71,7 +71,7 @@ export class TestSyncComponent implements OnInit {
     constructor(
         private testSyncService: TestSyncService<TestSyncDto>,
         private testSyncAddService: TestSyncService<TestSyncAddDto>,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private taskService: TaskService<TaskDto>,
@@ -88,8 +88,8 @@ export class TestSyncComponent implements OnInit {
 
     async confirmDeleteTestSync(id: number) {
         this.confirmationService.confirm({
-            header: await firstValueFrom(this.translate.get(`Are you sure?`)),
-            message: await firstValueFrom(this.translate.get(`Are you sure you want to delete this testSync? All of it's tasks will be removed too!`)),
+            header: await firstValueFrom(this.translate.selectTranslate('Are you sure?')),
+            message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this testSync? All of it's tasks will be removed too!`)),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -173,15 +173,15 @@ export class TestSyncComponent implements OnInit {
         this.testSyncAddService.add(testSyncData as TestSyncDto & UserBound).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.get("Saved successfully")),
-                    detail: await firstValueFrom(this.translate.get("TestSync saved successfully")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Saved successfully")),
+                    detail: await firstValueFrom(this.translate.selectTranslate("TestSync saved successfully")),
                     severity: 'success'
                 });
                 setTimeout(() => window.location.reload(), 2000);
             },
             error: async (err: Error) => this.messageService.add({
-                summary: await firstValueFrom(this.translate.get("Error")),
-                detail: await firstValueFrom(this.translate.get("Couldn't save the TestSync.")) + err,
+                summary: await firstValueFrom(this.translate.selectTranslate("Error")),
+                detail: await firstValueFrom(this.translate.selectTranslate("Couldn't save the TestSync.")) + err,
                 severity: 'error'
             }),
         });

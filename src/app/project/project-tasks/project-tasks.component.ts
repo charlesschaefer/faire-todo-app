@@ -44,7 +44,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
         const projectId = Number(this.route.snapshot.paramMap.get("id"));
-        this.project = await firstValueFrom(this.projectService.get(projectId));
+        this.project = await firstValueFrom(this.projectService.get(projectId)) as ProjectDto;
         super.ngOnInit();
     }
 

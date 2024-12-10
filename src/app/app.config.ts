@@ -1,30 +1,32 @@
 import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
 import { provideRouter } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HttpClient, provideHttpClient, withFetch } from '@angular/common/http';
-import { TranslateLoader} from '@ngx-translate/core';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslocoModule } from '@jsverse/transloco';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MessageService } from 'primeng/api';
 
 import { routes } from "./app.routes";
 import { environment } from '../environments/environment';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
+import { AppRxDb } from "./app.rxdb";
 
-// AoT requires an exported function for factories
-export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http);
-}
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        {
+            provide: 'AppRxdb',
+            // useFactory: (deps: any) => {
+            //     console.log("AppRxdb deps: ", deps)
+            //     return AppRxDb.getInstance();
+            // },
+            useClass: AppRxDb
+        },
         provideRouter(routes),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
         // importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
         importProvidersFrom(TranslocoModule), 
-        // provideHttpClient(), 
         provideTransloco({
             config: { 
                 availableLangs: ['en', 'pt-BR'],

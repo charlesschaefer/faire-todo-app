@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
 import { Observable, Subject, firstValueFrom, from } from 'rxjs';
+import { RxDocument } from 'rxdb';
 import { DateTime, Duration } from 'luxon';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';
@@ -47,7 +48,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    getFromProject(project: string): Observable<T[]> {
+    getFromProject(project: number): Observable<T[]> {
         return this.table.find({
             selector: {
                 completed: 0,
@@ -101,7 +102,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         }).$;
     }
 
-    orderTasksByCompletion(tasks: TaskDto[]): TaskDto[] {
+    orderTasksByCompletion(tasks: TaskDto[] | RxDocument<TaskDto, {}>[]): TaskDto[] {
         tasks.sort((a, b) => {
             if (a.completed == 0) return -1;
             if (b.completed == 0) return 1;
@@ -152,7 +153,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return countSubtasks$;        
     }
 
-    getProjectTasks(projectId: string) {
+    getProjectTasks(projectId: number) {
         return this.table.find({
             selector: {
                 project: projectId,

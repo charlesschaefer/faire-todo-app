@@ -20,7 +20,6 @@ import { ActivatedRoute } from '@angular/router';
     standalone: true,
     imports: [
         TaskListComponent,
-        TaskAddComponent,
         IconFieldModule,
         InputIconModule,
         InputTextModule,
@@ -49,13 +48,13 @@ export class SearchComponent extends InboxComponent implements OnInit {
         let tasks = await firstValueFrom(this.taskService.slowStringSearch('title', this.searchValue));
         
         const completedTasks: TaskDto[] = [];
-        tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
+        const orderedTasks = this.taskService.orderTasksByCompletion(tasks);
         // we trust that all the completed tasks are going to be in the end of the array
         // and that when we find an incomplete task all tasks before will be incomplete (so we break the loop)
-        for (let i = tasks.length - 1; i >= 0; i--) {
-            if (tasks[i].completed) {
-                const task = tasks.pop();
-                completedTasks.push(task);
+        for (let i = orderedTasks.length - 1; i >= 0; i--) {
+            if (orderedTasks[i].completed) {
+                const task = orderedTasks.pop();
+                task ? completedTasks.push(task) : null;
             } else {
                 break;
             }

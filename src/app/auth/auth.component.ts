@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -11,6 +10,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { User } from '@supabase/supabase-js';
 
 import { AuthService } from '../services/auth.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-auth',
@@ -18,7 +18,7 @@ import { AuthService } from '../services/auth.service';
   imports: [
     CommonModule,
     FormsModule,
-    TranslateModule,
+    TranslocoModule,
     ButtonModule,
     DialogModule,
     CheckboxModule,

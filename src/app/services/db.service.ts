@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { RxCollection, RxDatabase } from 'rxdb';
 import { AppRxDb, MyDatabaseCollections } from "../app.rxdb";
 
@@ -8,15 +8,26 @@ import { AppRxDb, MyDatabaseCollections } from "../app.rxdb";
 export class DbService {
     private db!: RxDatabase<MyDatabaseCollections>;
 
+    constructor(@Inject('AppRxdb') private appRxdb: AppRxDb) {
+        // this.appRxdb.db.then(db => this.db = db);
+        this.init();
+    }
+
     async init() {
         this.db = await AppRxDb.getInstance();
+        return this.db;
     }
 
-    getCollection(name: keyof MyDatabaseCollections): RxCollection {
-        return this.db[name];
+    async getCollection(name: keyof MyDatabaseCollections) {
+        if (!this.db) {
+            const db = await this.init();
+            return db.collections[name];
+        }
+        return this.db.collections[name];
+        
     }
 
-    getTable(name: keyof MyDatabaseCollections): RxCollection {
+    async getTable(name: keyof MyDatabaseCollections) {
         return this.getCollection(name);
     }
 }
