@@ -32,6 +32,9 @@ import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { AuthComponent } from './auth/auth.component';
+import { SyncService } from './services/sync.service';
+import Dexie from 'dexie';
+import { AuthService } from './services/auth.service';
 import { InboxComponent } from './inbox/inbox.component';
 
 export enum NotificationType {
@@ -70,6 +73,8 @@ export class AppComponent implements OnInit {
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
+
+    syncStatus: string = '';
     currentUser: User | null = null;
     
     shareListener!: PluginListener;
@@ -90,6 +95,8 @@ export class AppComponent implements OnInit {
         private settingsService: SettingsService<SettingsDto>,
         private notificationService: NotificationService,
         private router: Router,
+        private syncService: SyncService,
+        public authService: AuthService,
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
@@ -105,6 +112,20 @@ export class AppComponent implements OnInit {
             this.currentUser = user;
             if (user) {
                 this.setupMenu();
+            }
+        });
+
+        // Subscribe to sync status changes
+        this.syncService.syncStatus.subscribe(status => {
+            this.syncStatus = Dexie.Syncable.StatusTexts[status];
+        });
+
+        // Subscribe to auth changes
+        this.authService.user.subscribe(user => {
+            if (user) {
+                this.syncService.connect().catch(console.error);
+            } else {
+                this.syncService.disconnect().catch(console.error);
             }
         });
     }

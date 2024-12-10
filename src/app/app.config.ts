@@ -7,6 +7,7 @@ import { MessageService } from 'primeng/api';
 
 import { routes } from "./app.routes";
 import { environment } from '../environments/environment';
+import { SyncService } from './services/sync.service';
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
 
@@ -23,6 +24,8 @@ export const appConfig: ApplicationConfig = {
             provide: 'SUPABASE_KEY',
             useValue: environment.supabaseKey
         },
+        MessageService,
+        SyncService,
         importProvidersFrom(TranslocoModule), 
         // provideHttpClient(), 
         provideTransloco({

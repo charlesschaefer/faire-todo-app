@@ -68,8 +68,17 @@
 </p-toast>
 
 <p-sidebar [(visible)]="showSidebar" position="right">
-  <!-- Use the new auth component -->
   <app-auth></app-auth>
+
+  <div *ngIf="authService.currentUser" class="sync-status">
+    <i class="pi" [ngClass]="{
+      'pi-sync': syncStatus === 'online',
+      'pi-sync pi-spin': syncStatus === 'syncing',
+      'pi-exclamation-triangle': syncStatus === 'error',
+      'pi-clock': syncStatus === 'offline'
+    }"></i>
+    {{ syncStatus }}
+  </div>
 
   <p-menu #menu [model]="menuItems" class="side-bar-menu" />
 
