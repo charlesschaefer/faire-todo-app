@@ -52,7 +52,14 @@ jobs:
 
       - name: install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: npm install --save-dev @tauri-apps/cli # change this to npm or pnpm depending on which one you use.
+        #run: npm install --save-dev @tauri-apps/cli # change this to npm or pnpm depending on which one you use.
+        run: |
+          npm clean-install --include prod --include dev --include peer --verbose
+          npm install --save-dev @tauri-apps/cli @tauri-apps/api 
+          npm install --save-dev @tauri-apps/cli-linux-arm64-gnu @tauri-apps/cli-darwin-arm64 @tauri-apps/cli-darwin-x64 
+          npm install --save-dev @tauri-apps/cli-win32-ia32-msvc @tauri-apps/cli-win32-x64-msvc 
+          npm install --save-dev @rollup/rollup-darwin-arm64 @rollup/rollup-darwin-x64 @rollup/rollup-win32-x64-msvc @rollup/rollup-win32-ia32-msvc 
+          
 
       - uses: tauri-apps/tauri-action@v0
         env:
