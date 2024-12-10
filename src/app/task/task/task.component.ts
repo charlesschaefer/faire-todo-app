@@ -23,6 +23,8 @@ import { TaskService } from '../../services/task.service';
 import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { TaskAbstractComponent } from './task.abstract.component';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
+
 
 
 @Component({
@@ -42,6 +44,7 @@ import { TaskAbstractComponent } from './task.abstract.component';
         TreeModule,
         DateShortenerPipe,
         TranslocoModule,
+        LinkifyPipe,
     ],
     providers: [
         MessageService,

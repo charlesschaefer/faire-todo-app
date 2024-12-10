@@ -100,9 +100,51 @@ li.task-item:hover .task-item-menu {
     text-wrap: wrap;
 }
 
+:host ::ng-deep a.linkify-link:any-link {
+    // color: var(--lt-color-gray-700);
+    // color: color-mix(in srgb, var(--bluegray-600) 75%, #888888 10%);
+    color: color-mix(in srgb, var(--blue-600) 70%, #555555 60%);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+}
+
+:host ::ng-deep a.linkify-link:any-link:hover {
+    text-decoration: underline;
+}
+
+:host ::ng-deep pre > a.linkify-link:any-link {
+    font-size: 11px;
+}
+
+:host ::ng-deep a.linkify-link::before, :host ::ng-deep a.linkify-link::after {
+    font-family: 'primeicons';
+    font-weight: normal;
+}
+
+:host ::ng-deep a.linkify-link::before {
+    color: var(--bluegray-500);
+    font-size: 7px;
+    // content: "\e9c1";
+    content: "\e93c";
+    padding-right: 3px;
+    padding-left: 1px;
+    vertical-align: -2px;
+}
+
+// :host ::ng-deep a.linkify-link::after {
+//     content: "\e93c";
+//     color: var(--blue-700);
+//     font-size: 7px;
+//     padding-right: 4px;
+//     padding-left: 2px;
+//     vertical-align: 4px;
+// }
+
 .task-item-attributes {
     font-size: 12px;
-    padding-left: 30px;
+    // padding-left: 30px;
+    padding-left: 12px;
     display: flex;
     flex-direction: row;
 }

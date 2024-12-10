@@ -23,7 +23,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { Router } from '@angular/router';
-
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
 import { ProjectService } from './services/project.service';
@@ -37,7 +36,6 @@ import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { InboxComponent } from './inbox/inbox.component';
 import { AuthComponent } from './auth/auth.component';
-
 
 export enum NotificationType {
     DueTask,

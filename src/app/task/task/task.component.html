@@ -19,15 +19,13 @@
         <div class="task-item-content">
           <div class="task-item-title text-sm">
             @if (task.completed) {
-              <div class="task-item-title-completed">
-                {{task.title}}
-              </div>
+              <div class="task-item-title-completed" [innerHTML]="task.title | linkify"></div>
             } @else {
-              {{task.title}}
+              <div [innerHTML]="task.title | linkify"></div>
             }
           </div>
           <div class="task-item-description">
-            <pre>{{task.description}}</pre>
+            <pre [innerHTML]="task.description | linkify"></pre>
           </div>
         </div>
       </div>
