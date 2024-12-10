@@ -2,7 +2,7 @@ name: faire-todo-app
 base: core22
 architectures:
   - build-on: [arm64]
-  - build-on: [adm64]
+  - build-on: [amd64]
 version: '0.0.6'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
