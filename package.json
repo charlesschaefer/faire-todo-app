@@ -24,6 +24,8 @@
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
     "@jsverse/transloco": "^7.5.0",
+    "@ngx-translate/core": "^16.0.3",
+    "@ngx-translate/http-loader": "^16.0.0",
     "@supabase/supabase-js": "~2.41.0",
     "@tauri-apps/api": "^2.1.1",
     "@tauri-apps/plugin-http": "^2.0.1",
@@ -40,8 +42,8 @@
     "primeicons": "^7.0.0",
     "primeng": "^17.18.3",
     "rxdb-supabase": "^1.0.4",
-    "tauri-plugin-sharetarget-api": "^0.1.6",
     "rxjs": "~7.8.0",
+    "tauri-plugin-sharetarget-api": "^0.1.6",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },
@@ -67,6 +69,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "ngx-build-plus": "^18.0.0",
     "shelljs": "^0.8.5",
+    "typescript": "~5.4.0",
     "typescript-eslint": "8.17.0"
   },
   "overrides": {
