@@ -242,8 +242,13 @@ export class AppComponent implements OnInit {
                     sharetargetUrl: url,
                 };
                 
-                alert(`AppComponent.ngOnInit() ${url}`);
-                this.router.navigate(['/inbox']);
+                // alert(`AppComponent.ngOnInit() ${url}`);
+                console.log("AppComponent.ngOnInit() =====>>>>>", url); 
+                if (this.router.url.indexOf('today') !== -1) {
+                    this.router.navigate(['/inbox']);
+                } else {
+                    this.router.navigate(['/today']);
+                }
             }
         }).then(listener => {
             this.shareListener = listener;
