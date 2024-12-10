@@ -17,7 +17,6 @@ import {
 import { listen } from '@tauri-apps/api/event';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
 import { Router } from '@angular/router';
-
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
 import { ProjectService } from './services/project.service';
@@ -31,7 +30,6 @@ import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { InboxComponent } from './inbox/inbox.component';
-
 
 export enum NotificationType {
     DueTask,
@@ -49,7 +47,7 @@ export enum NotificationType {
         MenuModule,
         ToastModule,
         TranslateModule,
-        SidebarModule,
+        SidebarModule
     ],
     providers: [
         MessageService,

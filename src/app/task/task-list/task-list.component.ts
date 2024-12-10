@@ -11,6 +11,7 @@ import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 
+
 @Component({
     selector: 'app-task-list',
     standalone: true,

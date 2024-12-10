@@ -21,6 +21,7 @@ import { Subject, firstValueFrom } from 'rxjs';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskAbstractComponent } from '../task/task.abstract.component';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
 
 
 @Component({
@@ -39,6 +40,7 @@ import { TaskAbstractComponent } from '../task/task.abstract.component';
         ContextMenuModule,
         DateShortenerPipe,
         TranslateModule,
+        LinkifyPipe,
     ],
     providers: [
         MessageService,
