@@ -1,5 +1,8 @@
 name: faire-todo-app
 base: core22
+architectures:
+  - build-on: [arm64]
+  - build-on: [adm64]
 version: '0.0.6'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
@@ -24,13 +27,13 @@ layout:
 apps:
   faire-todo-app:
     # architectures:
-      # - arm64
-      # - amd64
-      # - build-on: [arm64]
-      #   build-for: [armhf]
-    platforms:
-      amd64:
-      arm64:
+    #   - arm64
+    #   - amd64
+    #   - build-on: [arm64]
+    #     build-for: [armhf]
+    # platforms:
+    #   amd64:
+    #   arm64:
     extensions:
      - gnome
     command: usr/bin/faire-todo-app
