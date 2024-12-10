@@ -1,4 +1,4 @@
-cargo-features = ["codegen-backend"]
+#cargo-features = ["codegen-backend"]
 
 [package]
 name = "faire-todo-app"
@@ -36,7 +36,7 @@ tauri-plugin-http = "2"
 tauri-plugin-sharetarget = "0.1.6"
 
 
-[profile.dev]
-codegen-backend = "cranelift"
+#[profile.dev]
+#codegen-backend = "cranelift"
 
 
