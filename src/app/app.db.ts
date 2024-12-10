@@ -1,4 +1,5 @@
 import { Dexie, Table } from 'dexie';
+import 'dexie-syncable';
 
 import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';
@@ -128,6 +129,14 @@ export class AppDb extends Dexie {
             settings: '++id, notifications, todayNotifications, notificationTime, uuid, user_uuid',
         });
         
+        this.version(12).stores({
+            user: '++id, email, name, created_at, uuid, avatar_url',
+            task: '++id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, uuid, user_uuid, project_uuid, parent_uuid, updated_at',
+            project: '++id, name, uuid, user_uuid, updated_at',
+            tag: '++id, name, uuid, user_uuid, updated_at',
+            task_tag: 'task, tag, user_uuid, task_uuid, tag_uuid, updated_at',
+            settings: '++id, notifications, todayNotifications, notificationTime, uuid, user_uuid, updated_at',
+        });
 
         this.on('populate', () => this.populate());
     }
