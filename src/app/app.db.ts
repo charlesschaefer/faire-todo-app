@@ -1,5 +1,6 @@
 import { Dexie, Table } from 'dexie';
 import 'dexie-syncable';
+import 'dexie-observable';
 
 import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';

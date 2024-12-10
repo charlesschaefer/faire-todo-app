@@ -5,6 +5,7 @@ export interface TagDto {
     uuid: string;
     user_uuid: string;
     name: string;
+    updated_at?: Date;
 }
 
 export type TagAddDto = Omit<TagDto, "id" > & UserBound;

@@ -15,7 +15,6 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
-} from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
 import { AvatarModule } from 'primeng/avatar';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
@@ -35,6 +34,7 @@ import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
 import Dexie from 'dexie';
 import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 import { InboxComponent } from './inbox/inbox.component';
 
 export enum NotificationType {
@@ -96,6 +96,7 @@ export class AppComponent implements OnInit {
         private notificationService: NotificationService,
         private router: Router,
         private syncService: SyncService,
+        private userService: UserService,
         public authService: AuthService,
     ) {
         translate.setDefaultLang('en');

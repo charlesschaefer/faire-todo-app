@@ -12,7 +12,9 @@ export class AuthService {
   private userSubject: BehaviorSubject<User | null>;
   public user: Observable<User | null>;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router
+  ) {
     // Initialize Supabase client
     this.supabase = createClient(
       environment.supabaseUrl,
@@ -40,6 +42,7 @@ export class AuthService {
     this.supabase.auth.onAuthStateChange((event, session) => {
       console.log("AuthService.onAuthStateChange", event, session);
       this.userSubject.next(session?.user ?? null);
+      
     });
   }
 

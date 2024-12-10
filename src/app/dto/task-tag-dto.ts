@@ -6,4 +6,5 @@ export interface TaskTagDto {
     task_uuid: string;
     tag: number;
     tag_uuid: string;
+    updated_at?: Date;
 }
