@@ -16,6 +16,7 @@ import {
 } from '@tauri-apps/plugin-notification';
 import { listen } from '@tauri-apps/api/event';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
+import { Router } from '@angular/router';
 
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
@@ -58,7 +59,7 @@ export enum NotificationType {
 })
 export class AppComponent implements OnInit {
 
-    showSidebar: boolean = false;
+    showSidebar = false;
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
