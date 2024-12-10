@@ -1,6 +1,6 @@
 name: faire-todo-app
 base: core22
-version: '0.0.5'
+version: '0.0.6'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
   Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
