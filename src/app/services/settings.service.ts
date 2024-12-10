@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';
+import { MyDatabaseCollections } from '../app.rxdb';
 
 @Injectable({
     providedIn: 'root'
 })
 export class SettingsService<T> extends ServiceAbstract<T> {
     
-    storeName = "settings";
+    storeName: keyof MyDatabaseCollections = "settings";
 
     constructor(
         protected dbService: DbService,

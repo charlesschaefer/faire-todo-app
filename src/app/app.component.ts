@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, map, Subject, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -23,6 +23,12 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { Router } from '@angular/router';
+import { RxDocument } from 'rxdb';
+// RxDB creates rxjs observables outside of angulars zone So you have to import the rxjs patch to ensure the angular change detection works correctly. 
+// @link: https://www.bennadel.com/blog/3448-binding-rxjs-observable-sources-outside-of-the-ngzone-in-angular-6-0-2.htm
+import 'zone.js/plugins/zone-patch-rxjs';
+
+
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
 import { ProjectService } from './services/project.service';
@@ -238,9 +244,14 @@ export class AppComponent implements OnInit {
             });
         });
 
-        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
-            this.notificationService.setup(settings);
-        });
+        // this.settingsService.get(1).subscribe((settings: RxDocument<SettingsDto, {}>) => {
+        this.settingsService.get(1).pipe(
+            map((settings: RxDocument<SettingsDto, {}> | null) => {
+                if (settings) {
+                    this.notificationService.setup(settings);
+                }
+            })
+        );
 
         listenForShareEvents((intent: ShareEvent) => {
             if (intent.uri) {

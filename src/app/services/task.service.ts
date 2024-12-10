@@ -16,7 +16,7 @@ interface SubtaskCount {
     providedIn: 'root'
 })
 export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
-    storeName = "tasks" as keyof MyDatabaseCollections;
+    storeName: keyof MyDatabaseCollections = "task";
 
     constructor(
         protected override dbService: DbService,

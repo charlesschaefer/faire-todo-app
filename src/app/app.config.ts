@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
         provideRouter(routes),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
-        importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
+        // importProvidersFrom(NgxIndexedDBModule.forRoot(dbConfig)),
         importProvidersFrom(TranslocoModule), 
         // provideHttpClient(), 
         provideTransloco({

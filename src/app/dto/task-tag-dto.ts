@@ -1,6 +1,6 @@
 export interface TaskTagDto {
     id: number;
-    uuid: string;
+    // uuid: string;
     user_uuid: string;
     task: number;
     task_uuid: string;

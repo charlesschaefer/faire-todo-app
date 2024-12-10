@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, from } from "rxjs";
 import { liveQuery, Table } from "dexie";
-import { RxCollection } from 'rxdb';
+import { RxCollection, RxDocument } from 'rxdb';
 
 import { DbService } from "./db.service";
 import { MyDatabaseCollections } from "../app.rxdb";
@@ -82,7 +82,7 @@ export abstract class ServiceAbstract<T> {
         return this.table.findOne(`id=${id}`).$;
     }
 
-    getByField(field: keyof T, value: any): Observable<T[]> {
+    getByField(field: keyof T, value: any) {
         return this.table.find({
             selector: {
                 [field]: {
@@ -106,7 +106,7 @@ export abstract class ServiceAbstract<T> {
         }).$);
     }
 
-    getByDate(field: string, minDate?: Date, maxDate?: Date): Observable<T[]> {
+    getByDate(field: string, minDate?: Date, maxDate?: Date) {
         if (!minDate && !maxDate) {
             throw new Error("You should provide at least one of minDate or maxDate parameters!");
         }
