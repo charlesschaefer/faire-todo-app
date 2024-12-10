@@ -26,8 +26,8 @@ apps:
     architectures:
       - build-on: [arm64]
       - build-on: [amd64]
-      - build-on: [arm64]
-        build-for: [armhf]
+      # - build-on: [arm64]
+      #   build-for: [armhf]
     extensions:
      - gnome
     command: usr/bin/faire-todo-app
