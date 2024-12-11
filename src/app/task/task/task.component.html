@@ -1,4 +1,4 @@
-<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100">
+<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" (contextmenu)="cancelContextMenu($event)">
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
     <div class="task-item-handle"><i class="pi pi-equals"></i></div>
@@ -72,4 +72,3 @@
 </li>
 <p-confirmDialog />
 <p-toast key="task" />
-<p-contextMenu [target]="taskRow" [model]="taskMenuItems" appendTo="body" />
