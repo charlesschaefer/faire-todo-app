@@ -1,13 +1,12 @@
 use std::sync::Mutex;
 
-
 #[cfg(desktop)]
 mod desktop;
 
+mod data;
 mod http;
 mod mdns;
 mod notification;
-mod data;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -42,9 +41,7 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
-
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
 }
-
