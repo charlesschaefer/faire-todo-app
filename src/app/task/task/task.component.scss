@@ -7,16 +7,23 @@ li.task-item {
     padding: 15px 0px;
     cursor: pointer;
     color: var(--text-color);
+    touch-action: pan-x;
 }
 
-li.task-item:hover {
+li.task-item:hover,
+li.task-item-pressed {
+    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+}
+
+li.task-item.swipe-menu-visible {
+    width: calc(100% - 100px);
     background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 
 li.task-item:active {
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .task-item-drag-placeholder {
@@ -24,8 +31,8 @@ li.task-item:active {
     min-height: 60px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+        0 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .cdk-drag-animating {
@@ -58,11 +65,24 @@ li.task-item:hover .task-item-handle i {
     display: none;
 }
 
-li.task-item:hover .task-item-menu {
+li.task-item:hover .task-item-menu,
+li.task-item-pressed .task-item-menu {
     display: inherit;
 }
 
 :host ::ng-deep .task-item-menu .p-button.p-button-icon-only {
+    width: 20px;
+}
+
+li.task-item .task-item-swipe-menu {
+    display: none;
+}
+
+li.task-item.swipe-menu-visible .task-item-swipe-menu {
+    display: inherit;
+}
+
+.task-item-swipe-menu-button {
     width: 20px;
 }
 
@@ -113,11 +133,12 @@ li.task-item:hover .task-item-menu {
     text-decoration: underline;
 }
 
-:host ::ng-deep pre > a.linkify-link:any-link {
+:host ::ng-deep pre>a.linkify-link:any-link {
     font-size: 11px;
 }
 
-:host ::ng-deep a.linkify-link::before, :host ::ng-deep a.linkify-link::after {
+:host ::ng-deep a.linkify-link::before,
+:host ::ng-deep a.linkify-link::after {
     font-family: 'primeicons';
     font-weight: normal;
 }

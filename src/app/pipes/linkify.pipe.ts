@@ -14,7 +14,7 @@ export interface LinkifyOptions {
   standalone: true
 })
 export class LinkifyPipe implements PipeTransform {
-  constructor(private sanitizer: DomSanitizer) {}
+  constructor(private sanitizer: DomSanitizer) { }
 
   transform(value: string | null | undefined, args: LinkifyOptions | undefined = undefined): SafeHtml {
     if (!value) {

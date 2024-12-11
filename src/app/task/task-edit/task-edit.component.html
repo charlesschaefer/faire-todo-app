@@ -1,77 +1,37 @@
 <p-card>
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" id="task-edit-form">
-    <div  class="task-add flex flex-column gap-3">
+    <div class="task-add flex flex-column gap-3">
       <div class="task-add-title">
-        <input 
-          class="task-title-input font-semibold px-2" 
-          pInputText 
-          type="text"
-          name="title"
-          [placeholder]="'Task title' | translate" 
-          formControlName="title"
-          [autofocus]="true"
-          (ngModelChange)="onTitleChange($event)"
-        />
+        <input class="task-title-input font-semibold px-2" pInputText type="text" name="title"
+          [placeholder]="'Task title' | translate" formControlName="title" [autofocus]="true"
+          (ngModelChange)="onTitleChange($event)" (keydown.enter)="saveTask()" />
       </div>
       <div class="task-add-description">
-        <textarea
-          pInputTextarea
-          [placeholder]="'Description' | translate"
-          [autoResize]="true"
-          rows="1"
-          class="text-sm"
-          formControlName="description"
-        ></textarea>
+        <textarea pInputTextarea [placeholder]="'Description' | translate" [autoResize]="true" rows="1" class="text-sm"
+          formControlName="description"></textarea>
       </div>
       <div class="task-add-menu">
-        <p-calendar
-          [showIcon]="true"
-          [showButtonBar]="true"
-          [showTime]="false"
-          inputId="task-add-due-date"
-          [placeholder]="'Due date' | translate"
-          formControlName="dueDate"
-          class="task-add-dueDate"
-        />
-        <p-calendar
-          [showIcon]="true"
-          icon="pi pi-clock"
-          inputId="task-add-due-time"
-          [timeOnly]="true"
-          [placeholder]="'Time' | translate"
-          formControlName="dueTime"
-          class="task-add-dueTime"
-        />
+        <p-calendar [showIcon]="true" [showButtonBar]="true" [showTime]="false" inputId="task-add-due-date"
+          [placeholder]="'Due date' | translate" formControlName="dueDate" class="task-add-dueDate" />
+        <p-calendar [showIcon]="true" icon="pi pi-clock" inputId="task-add-due-time" [timeOnly]="true"
+          [placeholder]="'Time' | translate" formControlName="dueTime" class="task-add-dueTime" />
 
-        <p-dropdown 
-          [options]="projects"
-          optionLabel="name"
-          optionValue="id"
-          formControlName="project"
-          name="project"
-          [placeholder]="'Project' | translate" 
-          class="task-add-project"
-        />
+        <p-dropdown [options]="projects" optionLabel="name" optionValue="id" formControlName="project" name="project"
+          [placeholder]="'Project' | translate" class="task-add-project" />
       </div>
       <div class="task-add-recurring-task align-items-center flex flex-row gap-3">
         <i class="pi pi-history"></i>
-        <p-dropdown 
-          [options]="recurringOptions"
-          formControlName="recurring"
-          name="recurring"
-          class="task-add-recurring"
-          inputId="recurring"
-          id="recurring"
-        />
+        <p-dropdown [options]="recurringOptions" formControlName="recurring" name="recurring" class="task-add-recurring"
+          inputId="recurring" id="recurring" />
       </div>
       @if (subTasks?.length) {
       <div class="task-add-list-subtasks">
         <p-accordion>
           <p-accordionTab [header]="subtasksTitle()" [selected]="true">
             <div>
-            @for (task of subTasks; track task.id) {
+              @for (task of subTasks; track task.id) {
               <app-subtask [task]="task" [projects]="projectsMap" />
-            }
+              }
             </div>
           </p-accordionTab>
         </p-accordion>

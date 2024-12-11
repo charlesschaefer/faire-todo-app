@@ -2,19 +2,20 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
+import { Button } from 'primeng/button';
 
 
 @Component({
     selector: 'app-task',
     standalone: true,
-    templateUrl: './task.abstract.component.html'
+    templateUrl: './task.abstract.component.html',
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
@@ -40,7 +41,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     subtasksCompletedCount!: number;
 
     isMobile!: boolean;
-
+    taskPressed: boolean = false;
+    swipeMenuActive: boolean = false;
     constructor(
         protected dialogService: DialogService,
         protected messageService: MessageService,
@@ -85,11 +87,11 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             this.due = false;
             return;
         }
-        
+
         let dueDate = DateTime.fromJSDate(this.task.dueDate);
         const today = DateTime.fromJSDate(this.today);
 
-        if (dueDate.diff(today).as('seconds') < 0 ) {
+        if (dueDate.diff(today).as('seconds') < 0) {
             this.due = true;
             return;
         }
@@ -122,11 +124,12 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                         label: await firstValueFrom(this.translate.get(`Edit`)),
                         icon: 'pi pi-pencil',
                         command: () => {
+                            this.taskPressed = false;
                             this.showTaskEditDialog(this.task);
                         },
                     } as MenuItem
                 ]
-            }  as MenuItem
+            } as MenuItem
         ]
     }
 
@@ -162,7 +165,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 this.undoService.register(undo).subscribe(data => {
                     this.undoDelete(data);
                 });
-            }, 
+            },
             error: async (err) => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.get(`Error`)) + err,
@@ -185,7 +188,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                         key: "task"
                     });
                     this.onEditTask.emit();
-                }, 
+                },
                 error: async (err) => {
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.get(`Error`)) + err,
@@ -276,6 +279,35 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 }
             });
         }
+    }
+
+    onContextMenu(event: any) {
+        event.preventDefault();
+        console.log("onContextMenu", event);
+        return false;
+    }
+
+    onPressTask(event: any, menuButton: Button) {
+        // event.srcEvent.preventDefault();
+        // event.preventDefault();
+        console.log("onPressTask", event);
+        this.taskPressed = true;
+        menuButton.el.nativeElement.firstChild.click();
+        return false;
+    }
+
+    // onPressEndTask(event: any) {
+    //     setTimeout(() => this.taskPressed = false, 300);
+    //     console.log("onPressEndTask", event);
+    // }
+
+    onSwipeTask(event: any) {
+        console.log("onSwipeTask", event);
+        const horizontalSwipe = Math.abs(event.deltaX);
+        if (horizontalSwipe > 50) {
+            this.swipeMenuActive = true;
+        }
+        return false;
     }
 
     ngOnDestroy(): void {

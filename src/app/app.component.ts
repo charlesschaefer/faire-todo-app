@@ -30,6 +30,8 @@ import { SettingsService } from './services/settings.service';
 import { SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { InboxComponent } from './inbox/inbox.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { enableDebugTools } from '@angular/platform-browser';
 
 export enum NotificationType {
     DueTask,
@@ -47,7 +49,7 @@ export enum NotificationType {
         MenuModule,
         ToastModule,
         TranslateModule,
-        SidebarModule
+        SidebarModule,
     ],
     providers: [
         MessageService,
@@ -61,7 +63,7 @@ export class AppComponent implements OnInit {
 
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
-    
+
     shareListener!: PluginListener;
     childComponentsData!: {
         showAddTask: boolean,
@@ -69,7 +71,7 @@ export class AppComponent implements OnInit {
     };
     showAddTaskSubscription!: Subscription;
 
-    constructor (
+    constructor(
         private themeService: ThemeService,
         private translate: TranslateService,
         private undoService: UndoService,
@@ -234,14 +236,14 @@ export class AppComponent implements OnInit {
             if (intent.uri) {
                 const uri = parseIntentUri(intent.uri);
                 const url = decodeURIComponent(uri['S.android.intent.extra.TEXT']);
-                
+
                 this.childComponentsData = {
                     showAddTask: true,
                     sharetargetUrl: url,
                 };
-                
+
                 // alert(`AppComponent.ngOnInit() ${url}`);
-                console.log("AppComponent.ngOnInit() =====>>>>>", url); 
+                console.log("AppComponent.ngOnInit() =====>>>>>", url);
                 if (this.router.url.indexOf('today') !== -1) {
                     this.router.navigate(['/inbox']);
                 } else {

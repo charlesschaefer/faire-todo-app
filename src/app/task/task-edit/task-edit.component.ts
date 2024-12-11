@@ -55,7 +55,7 @@ export class TaskEditComponent implements OnInit {
 
     projects!: ProjectDto[];
     projectsMap!: Map<number, ProjectDto>;
-    
+
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
 
@@ -80,7 +80,7 @@ export class TaskEditComponent implements OnInit {
 
     async ngOnInit() {
         this.task = this.dynamicDialogConfig.data.task;
-        
+
         console.log("Recorrência da tarefa: ", this.task.recurring);
         this.taskForm = this.fb.group({
             title: [this.task.title, Validators.required],
@@ -91,7 +91,7 @@ export class TaskEditComponent implements OnInit {
             parent: [this.task.parent || null],
             recurring: [this.task.recurring || 0]
         });
-        
+
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
             this.saveTask();
         });
@@ -100,7 +100,7 @@ export class TaskEditComponent implements OnInit {
             let cloneProjects = projects.slice();
             let projectsMap = new Map<number, ProjectDto>();
 
-            if (cloneProjects[0].id != 0) {
+            if (cloneProjects[0]?.id != 0) {
                 cloneProjects.unshift({
                     id: 0,
                     name: "Inbox"
@@ -137,7 +137,7 @@ export class TaskEditComponent implements OnInit {
     async saveTask() {
         const form = this.taskForm.value;
 
-        let dueDate:Date | null | undefined = form.dueDate;
+        let dueDate: Date | null | undefined = form.dueDate;
         let recurring = form.recurring;
         // checks if the value is not a "not recurring" option
         if (!Object.values(RecurringType).includes(recurring as unknown as RecurringType)) {
@@ -206,7 +206,7 @@ export class TaskEditComponent implements OnInit {
         let doc = nlp<DatesMethods>(event);
         let dates;
         if (dates = doc.dates().get()) {
-            const dateView = dates[0] as {start:string};
+            const dateView = dates[0] as { start: string };
             if (dateView?.start) {
                 let date = new Date(dateView.start);
                 this.taskForm.patchValue({

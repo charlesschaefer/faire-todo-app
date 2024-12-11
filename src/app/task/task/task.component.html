@@ -1,75 +1,79 @@
-<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100">
+<li
+  [class]="'task-item ' + (taskPressed ? 'task-item-pressed ' : ' ') + (swipeMenuActive ? 'swipe-menu-visible ' : ' ')"
+  cdkDrag [cdkDragStartDelay]="isMobile ? 300 : 100" (contextmenu)="onContextMenu($event)">
+  <!-- (touchend)="onPressEndTask($event)" -->
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
-    <div class="task-item-handle"><i class="pi pi-equals"></i></div>
-    <div class="task-item-mark-complete">
-      <p-checkbox
-        #rbutton
-        name="mark-task-complete-{{task.id}}" 
-        [value]="task.id"
-        inputId="mark-task-complete-{{task.id}}" 
-        [(ngModel)]="completed"
-        (onChange)="markTaskAsCompleted()"
-        [binary]="true"
-      />
-      
-    </div>
-    <div class="task-item-row" (click)="showTaskEditDialog(task)" #taskRow>
-      <div class="task-item-row-first">
-        <div class="task-item-content">
-          <div class="task-item-title text-sm">
-            @if (task.completed) {
-              <div class="task-item-title-completed" [innerHTML]="task.title | linkify"></div>
-            } @else {
-              <div [innerHTML]="task.title | linkify"></div>
-            }
-          </div>
-          <div class="task-item-description">
-            <pre [innerHTML]="task.description | linkify"></pre>
-          </div>
-        </div>
-      </div>
-      <div class="task-item-row-second">
-        <div class="task-item-attributes gap-3">
-          @if (subtasksCount) {
-          <div class="task-item-attributes-subtask">
-            <div class="subtask-icon"></div>
-            <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
-          </div>
-          }
-          <div class="task-item-attributes-project">
-            @if (task.project && projects) {
-                <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}
-            } @else {
-              <i class="pi pi-inbox"></i><span translate>Inbox</span>
-            }
-          </div>
-          @if (task.dueDate) {
-          <div class="task-item-attributes-duedate">
-            @if (due) {
-              <div class="task-item-attributes-past-dueDate"></div>
-            }
-            <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
-            @if (task.dueTime) {
-            <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
-            }
-          </div>
-          }
+  <div class="task-item-handle"><i class="pi pi-equals"></i></div>
+  <div class="task-item-mark-complete">
+    <p-checkbox #rbutton name="mark-task-complete-{{task.id}}" [value]="task.id"
+      inputId="mark-task-complete-{{task.id}}" [(ngModel)]="completed" (onChange)="markTaskAsCompleted()"
+      [binary]="true" />
 
-          @if (task.recurring) {
-          <div class="task-item-attributes-recurring">
-            <i class="pi pi-history"></i> {{task.recurring}}
-          </div>
+  </div>
+  <!-- <p-contextMenu [target]="taskRow" [appendTo]="taskRow" [model]="taskMenuItems" appendTo="body" [global]="true" /> -->
+  <div class="task-item-row " (click)="showTaskEditDialog(task)" (press)="onPressTask($event, menuButton)">
+    <!-- (touchend)="onPressEndTask($event)"> -->
+    <div class="task-item-row-first">
+      <div class="task-item-content">
+        <div class="task-item-title text-sm">
+          @if (task.completed) {
+          <div class="task-item-title-completed" [innerHTML]="task.title | linkify"></div>
+          } @else {
+          <div [innerHTML]="task.title | linkify"></div>
           }
-          
+        </div>
+        <div class="task-item-description">
+          <pre [innerHTML]="task.description | linkify"></pre>
         </div>
       </div>
     </div>
-    <div class="task-item-menu">
-      <p-menu #menu [model]="taskMenuItems" [popup]="true" appendTo="body" />
-      <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
+    <div class="task-item-row-second">
+      <div class="task-item-attributes gap-3">
+        @if (subtasksCount) {
+        <div class="task-item-attributes-subtask">
+          <div class="subtask-icon"></div>
+          <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
+        </div>
+        }
+        <div class="task-item-attributes-project">
+          @if (task.project && projects) {
+          <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}
+          } @else {
+          <i class="pi pi-inbox"></i><span translate>Inbox</span>
+          }
+        </div>
+        @if (task.dueDate) {
+        <div class="task-item-attributes-duedate">
+          @if (due) {
+          <div class="task-item-attributes-past-dueDate"></div>
+          }
+          <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
+          @if (task.dueTime) {
+          <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
+          }
+        </div>
+        }
+
+        @if (task.recurring) {
+        <div class="task-item-attributes-recurring">
+          <i class="pi pi-history"></i> {{task.recurring}}
+        </div>
+        }
+
+      </div>
     </div>
+  </div>
+  <div class="task-item-menu">
+    <p-menu #menu [model]="taskMenuItems" [popup]="true" appendTo="body" (onShow)="taskPressed = true"
+      (onHide)="taskPressed = false" />
+    <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" #menuButton
+      (onClick)="menu.toggle($event)" />
+  </div>
+  <div class="task-item-swipe-menu">
+    <p-button icon="pi pi-trash" label="" class="task-item-swipe-menu-button" severity="danger"
+      (onClick)="deleteTask()" />
+  </div>
 </li>
 <p-confirmDialog />
 <p-toast key="task" />
-<p-contextMenu [target]="taskRow" [model]="taskMenuItems" appendTo="body" />

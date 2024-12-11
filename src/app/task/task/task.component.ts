@@ -75,6 +75,9 @@ export class TaskComponent extends TaskAbstractComponent {
     }
 
     async showTaskEditDialog(task: TaskDto): Promise<void> {
+        if (this.taskPressed) {
+            return;
+        }
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
             header: await firstValueFrom(this.translate.get(`Edit Task`)),
             width: '80%',

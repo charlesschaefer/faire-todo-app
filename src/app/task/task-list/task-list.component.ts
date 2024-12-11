@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDragSortEvent, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
@@ -38,11 +38,11 @@ export class TaskListComponent implements OnInit {
     constructor(
         private taskService: TaskService<TaskDto>,
         private projectService: ProjectService<ProjectDto>,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.projectService.list().subscribe((projects: ProjectDto[]) => {
-            let indexedProjects:Map<number, ProjectDto> = new Map();
+            let indexedProjects: Map<number, ProjectDto> = new Map();
             projects.forEach(project => indexedProjects.set(project.id, project));
             this.projects = indexedProjects;
         });
@@ -53,7 +53,7 @@ export class TaskListComponent implements OnInit {
     }
 
     onTaskRemoved(id: number) {
-        let newTasks:TaskDto[] = [];
+        let newTasks: TaskDto[] = [];
         this.tasks.forEach(task => {
             if (task.id != id) {
                 newTasks.push(task);

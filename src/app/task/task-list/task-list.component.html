@@ -1,32 +1,33 @@
 <!-- <p-dataView #dv [value]="tasks"  rows="2">
   <ng-template pTemplate="list" let-tasks> -->
-    <div class="tasks-container">
-      @if (tasks?.length) {
-      <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
-        @for (task of tasks; track task.id) {
-          <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
-        }
-      </ul>
-      }
-      @if (completedTasks?.length) {
-        <p-panel [toggleable]="true" [header]="'Completed tasks' | translate" [collapsed]="true">
-          <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
-            @for (task of completedTasks; track task.id) {
-              <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
-            }
-          </ul>
-        </p-panel>
-      }
-      @if (showAddTask) {
-      <div class="task-add-line" (click)="showTaskAddPanel($event)">
-        <div class="task-add-button">
-          <i class="pi pi-plus"></i>
-        </div>
-        <div class="task-add-title">
-          <span translate>Add task</span>
-        </div>
-      </div>
+<div class="tasks-container">
+  @if (tasks?.length) {
+  <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)" [cdkDropListOrientation]="'vertical'">
+    @for (task of tasks; track task.id) {
+    <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
     }
+  </ul>
+  }
+  @if (completedTasks?.length) {
+  <p-panel [toggleable]="true" [header]="'Completed tasks' | translate" [collapsed]="true">
+    <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
+      @for (task of completedTasks; track task.id) {
+      <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)"
+        (onEditTask)="onTaskEdit()" />
+      }
+    </ul>
+  </p-panel>
+  }
+  @if (showAddTask) {
+  <div class="task-add-line" (click)="showTaskAddPanel($event)">
+    <div class="task-add-button">
+      <i class="pi pi-plus"></i>
     </div>
-  <!-- </ng-template>
+    <div class="task-add-title">
+      <span translate>Add task</span>
+    </div>
+  </div>
+  }
+</div>
+<!-- </ng-template>
 </p-dataView> -->

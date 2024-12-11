@@ -52,7 +52,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
     styleUrl: 'subtask.component.scss'
 })
 export class SubtaskComponent extends TaskAbstractComponent {
-    
+
     constructor(
         protected override dialogService: DialogService,
         protected override messageService: MessageService,
@@ -72,6 +72,9 @@ export class SubtaskComponent extends TaskAbstractComponent {
     }
 
     async showTaskEditDialog(task: TaskDto): Promise<void> {
+        if (this.taskPressed) {
+            return;
+        }
         this.dialogRef = this.dialogService.open(TaskEditComponent, {
             header: await firstValueFrom(this.translate.get(`Edit Task`)),
             width: '80%',
