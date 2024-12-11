@@ -1,5 +1,6 @@
 .tasks-container ul.tasks-list {
     padding-inline-start: 5px;
+    min-height: 50px;
 }
 
 .task-add-line {
@@ -16,4 +17,9 @@
 
 .task-add-button i {
     font-size: 12px;
+}
+
+.tasks-list.dndDragover {
+    background: rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }

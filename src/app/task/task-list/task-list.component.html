@@ -2,18 +2,30 @@
   <ng-template pTemplate="list" let-tasks> -->
 <div class="tasks-container">
   @if (tasks?.length) {
-  <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)" [cdkDropListOrientation]="'vertical'">
+  <ul class="tasks-list" dndDropzone (dndDrop)="onTaskDrop($event)" [dndHorizontal]="false" dndEffectAllowed="copyMove">
+    <div dndPlaceholderRef class="dndPlaceholder border rounded-1 bg-opacity-25">
+      Esse é o placeholder
+    </div>
     @for (task of tasks; track task.id) {
-    <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
+    <div [dndDraggable]="task" [dndEffectAllowed]="'all'">
+      <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)"
+        (onEditTask)="onTaskEdit()" />
+    </div>
     }
   </ul>
   }
   @if (completedTasks?.length) {
   <p-panel [toggleable]="true" [header]="'Completed tasks' | translate" [collapsed]="true">
-    <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
+    <ul class="tasks-list" dndDropzone (dndDrop)="onTaskDrop($event)" [dndHorizontal]="false"
+      dndEffectAllowed="copyMove">
+      <div dndPlaceholderRef class="dndPlaceholder border rounded-1 bg-opacity-25">
+        Esse é o placeholder
+      </div>
       @for (task of completedTasks; track task.id) {
-      <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)"
-        (onEditTask)="onTaskEdit()" />
+      <div [dndDraggable]="true" [dndEffectAllowed]="'all'">
+        <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)"
+          (onEditTask)="onTaskEdit()" />
+      </div>
       }
     </ul>
   </p-panel>

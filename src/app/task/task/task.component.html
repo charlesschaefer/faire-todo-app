@@ -1,6 +1,5 @@
-<li
-  [class]="'task-item ' + (taskPressed ? 'task-item-pressed ' : ' ') + (swipeMenuActive ? 'swipe-menu-visible ' : ' ')"
-  cdkDrag [cdkDragStartDelay]="isMobile ? 300 : 100" (contextmenu)="onContextMenu($event)">
+<li class="task-item" [class.task-item-pressed]="taskPressed" [class.swipe-menu-visible]="swipeMenuActive"
+  (contextmenu)="onContextMenu($event)" dndHandle>
   <!-- (touchend)="onPressEndTask($event)" -->
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>

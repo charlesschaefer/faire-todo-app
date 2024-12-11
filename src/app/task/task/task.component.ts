@@ -14,6 +14,14 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { TreeModule } from 'primeng/tree';
+import {
+    DndModule, DndDraggableDirective,
+    DndDropEvent,
+    DndDropzoneDirective,
+    DndPlaceholderRefDirective,
+} from 'ngx-drag-drop';
+
+
 
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
@@ -24,6 +32,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { TaskAbstractComponent } from './task.abstract.component';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 
@@ -36,8 +45,6 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         ButtonModule,
         MenuModule,
         ConfirmDialogModule,
-        CdkDrag,
-        CdkDragPlaceholder,
         CheckboxModule,
         ToastModule,
         ContextMenuModule,
@@ -45,6 +52,8 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         DateShortenerPipe,
         TranslateModule,
         LinkifyPipe,
+        DndModule,
+        DndDraggableDirective,
     ],
     providers: [
         MessageService,
@@ -102,5 +111,17 @@ export class TaskComponent extends TaskAbstractComponent {
                 this.checkTaskIsDue();
             }
         });
+    }
+
+    onDragStart(event: DragEvent) {
+        if (this.isMobile) {
+            // Add any mobile-specific drag start handling
+        }
+    }
+
+    onDragEnd(event: DragEvent) {
+        if (this.isMobile) {
+            // Add any mobile-specific drag end handling
+        }
     }
 }

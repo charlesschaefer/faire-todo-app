@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { CdkDragDrop, CdkDragSortEvent, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DndDropEvent, DndModule } from 'ngx-drag-drop';
 import { DataViewModule } from 'primeng/dataview';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
@@ -11,14 +11,13 @@ import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 
-
 @Component({
     selector: 'app-task-list',
     standalone: true,
     imports: [
         DataViewModule,
         TaskComponent,
-        CdkDropList,
+        DndModule,
         PanelModule,
         TranslateModule,
     ],
@@ -62,14 +61,23 @@ export class TaskListComponent implements OnInit {
         this.tasks = newTasks;
     }
 
-    onTaskOrder(event: CdkDragDrop<TaskDto[]>) {
-        moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
-        this.tasks.forEach((task, index) => {
-            task.order = index;
-            this.taskService.edit(task.id, task).subscribe({
-                error: err => console.error(err)
+    onTaskDrop(event: DndDropEvent) {
+        if (event.dropEffect === 'move') {
+            const prevIndex = this.tasks.findIndex(t => t.id === event.data.id);
+            const currIndex = event.index || 0;
+
+            // Move the task in the array
+            const [removed] = this.tasks.splice(prevIndex, 1);
+            this.tasks.splice(currIndex, 0, removed);
+
+            // Update order for all tasks
+            this.tasks.forEach((task, index) => {
+                task.order = index;
+                this.taskService.edit(task.id, task).subscribe({
+                    error: err => console.error(err)
+                });
             });
-        });
+        }
     }
 
     onTaskEdit() {
