@@ -36,5 +36,9 @@ tauri-plugin-http         = "2"
 tauri-plugin-sharetarget  = "0.1.6"
 
 
-#[profile.dev]
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
 #codegen-backend = "cranelift"
