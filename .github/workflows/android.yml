@@ -169,7 +169,7 @@ jobs:
             - name: Google Play AAB Upload
               uses: italankin/google-play-aab-uploader@1.3
               with:
-                package-name: com.faire.todo
+                package-name: com.fairetodoapp
                 aab-path: src-tauri/gen/android/app/build/outputs/bundle/universalRelease/app-universal-release.aab
                 key-json: '${{ secrets.GOOGLE_SERVICE_KEY_JSON }}'
             
