@@ -9,9 +9,9 @@
           name="title"
           [placeholder]="'Task title' | translate" 
           formControlName="title"
-          [autofocus]="true"
           (ngModelChange)="onTitleChange($event)"
-        />
+          />
+          <!-- [autofocus]="true" -->
       </div>
       <div class="task-add-description">
         <textarea
@@ -77,7 +77,7 @@
         </p-accordion>
       </div>
       }
-      <p-divider />
+      <p-divider [autofocus]="true" />
       <div class="task-add-subtask">
         <div class="task-add-line" (click)="showTaskAddPanel($event)">
           <div class="task-add-button">

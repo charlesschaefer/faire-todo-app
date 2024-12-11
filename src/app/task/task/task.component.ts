@@ -83,6 +83,7 @@ export class TaskComponent extends TaskAbstractComponent {
                 '500px': '90%',
                 '400px': '100%'
             },
+            focusOnShow: false,
             data: {
                 task: task,
                 saveSubject$: new Subject(),
