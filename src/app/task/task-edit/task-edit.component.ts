@@ -1,6 +1,6 @@
 import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, OnInit, Output, ViewChild } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { DropdownModule } from 'primeng/dropdown';
@@ -10,10 +10,9 @@ import { firstValueFrom, Subject } from 'rxjs';
 import { MessageService, TreeNode } from 'primeng/api';
 import { CardModule } from 'primeng/card';
 import { AccordionModule } from 'primeng/accordion';
-
+import { InplaceModule } from 'primeng/inplace';
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
-
 nlp.plugin(dates);
 
 import { TaskAddComponent } from '../task-add/task-add.component';
@@ -24,6 +23,7 @@ import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { TaskComponent } from '../task/task.component';
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { CheckboxModule } from 'primeng/checkbox';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
 
 @Component({
     selector: 'app-task-edit',
@@ -40,9 +40,10 @@ import { CheckboxModule } from 'primeng/checkbox';
         TaskAddComponent,
         SubtaskComponent,
         AccordionModule,
-        TaskComponent,
         CheckboxModule,
         FormsModule,
+        InplaceModule,
+        LinkifyPipe,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -220,5 +221,20 @@ export class TaskEditComponent implements OnInit {
                 }
             }
         }
+    }
+
+    onActivateField(event: any) {
+        const parent = event.target.parentNode.parentNode;
+        setTimeout(() => {
+            parent.querySelector("input, textarea").focus();
+        }, 500)
+
+    }
+
+    onTitleEnter(event: any) {
+        event.preventDefault();
+        event.target.dispatchEvent(new KeyboardEvent('keydown', {
+            key: "Tab"
+        }))
     }
 }

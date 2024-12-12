@@ -19,6 +19,14 @@
     border-radius: 6px;
 }
 
+:host ::ng-deep .p-inplace-display {
+    padding: inherit
+}
+
+:host ::ng-deep .p-inplace-display:hover {
+    background: none;
+}
+
 .task-add-menu {
     display: flex;
     flex-wrap: wrap;
