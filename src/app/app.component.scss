@@ -49,6 +49,9 @@ footer {
 :host ::ng-deep .side-bar-menu .p-menuitem {
     height: 40px;
 }
+:host ::ng-deep .side-bar-menu .p-menuitem.p-focus >.p-menuitem-content {
+    background: none;
+}
 
 :host ::ng-deep .side-bar-menu .p-menuitem-separator {
     margin: 10px 0;
@@ -56,6 +59,10 @@ footer {
 
 :host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-icon {
     color: var(--primary-color);
+}
+
+:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-link-active {
+    background-color: var(--primary-100);
 }
 
 @media (max-width: 600px) {
