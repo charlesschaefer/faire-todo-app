@@ -1,4 +1,4 @@
-<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" (contextmenu)="cancelContextMenu($event)">
+<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" (contextmenu)="cancelContextMenu($event)" appNgxCdkDnDScrollFixer>
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
     <div class="task-item-handle"><i class="pi pi-equals"></i></div>

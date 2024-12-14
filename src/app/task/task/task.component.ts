@@ -24,7 +24,7 @@ import { UndoItem, UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { TaskAbstractComponent } from './task.abstract.component';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
-
+import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 
 
 @Component({
@@ -45,6 +45,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         DateShortenerPipe,
         TranslateModule,
         LinkifyPipe,
+        NgxCdkDnDScrollFixerDirective
     ],
     providers: [
         MessageService,

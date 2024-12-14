@@ -7,6 +7,7 @@ li.task-item {
     padding: 15px 0px;
     cursor: pointer;
     color: var(--text-color);
+    touch-action: none;
 }
 
 li.task-item:hover {

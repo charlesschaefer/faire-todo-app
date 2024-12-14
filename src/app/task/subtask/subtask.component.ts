@@ -22,6 +22,7 @@ import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskAbstractComponent } from '../task/task.abstract.component';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 
 
 @Component({
@@ -41,6 +42,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         DateShortenerPipe,
         TranslateModule,
         LinkifyPipe,
+        NgxCdkDnDScrollFixerDirective
     ],
     providers: [
         MessageService,
