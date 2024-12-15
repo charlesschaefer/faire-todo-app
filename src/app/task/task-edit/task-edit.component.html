@@ -9,7 +9,7 @@
           </ng-template>
           <ng-template pTemplate="content">
             <!-- <input class="task-title-input font-semibold px-2" pInputText type="text" name="title"
-              [placeholder]="'Task title' | translate" formControlName="title" (ngModelChange)="onTitleChange($event)" /> -->
+              [placeholder]="'Task title' | transloco" formControlName="title" (ngModelChange)="onTitleChange($event)" /> -->
             <textarea 
               class="task-title-input font-semibold px-2" 
               pInputText type="text" 
@@ -23,7 +23,7 @@
         </p-inplace>
         } @else {
           <textarea class="task-title-input font-semibold px-2" pInputText type="text" name="title"
-            [placeholder]="'Task title' | translate" formControlName="title" (ngModelChange)="onTitleChange($event)"
+            [placeholder]="'Task title' | transloco" formControlName="title" (ngModelChange)="onTitleChange($event)"
             (keydown.enter)="onTitleEnter($event)"></textarea>
         }
         
@@ -34,7 +34,7 @@
         <p-inplace (onActivate)="onActivateField($event)" >
           <ng-template pTemplate="display">
             @if (task.description == "") {
-              <span class="placeholder-like-inplace text-sm">{{ "Description" | translate }}</span>
+              <span class="placeholder-like-inplace text-sm">{{ "Description" | transloco }}</span>
             } @else {
               <span [innerHTML]="task.description | linkify"  class="text-sm"></span>
             }
@@ -51,7 +51,7 @@
           </ng-template>
         </p-inplace>
         } @else {
-        <textarea  pInputTextarea [placeholder]="'Description' | translate" [autoResize]="true" rows="1" class="text-sm"
+        <textarea  pInputTextarea [placeholder]="'Description' | transloco" [autoResize]="true" rows="1" class="text-sm"
           formControlName="description"></textarea>
         }
       </div>
