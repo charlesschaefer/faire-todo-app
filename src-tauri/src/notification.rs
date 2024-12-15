@@ -69,7 +69,7 @@ pub fn start_notification_daemon(
 ) {
     let mut app_data = state.lock().unwrap();
     app_data.settings = settings;
-    let mut create_thread = true;
+    let create_thread = true;
 
     if !app_data.settings.send_notifications {
         println!("Not sending notifications");
@@ -133,7 +133,7 @@ pub fn start_notification_daemon(
             app.emit("get-today-tasks", "").unwrap();
 
             // get the due tasks and notify the user
-            if app_data.tasks_duing_now.tasks.len() > 0 {
+            if !app_data.tasks_duing_now.tasks.is_empty() {
                 println!("Due tasks: {:?}", app_data.tasks_duing_now.tasks);
                 app_data.tasks_duing_now.tasks.iter().for_each(|task| {
                     let local_app = app.clone();
@@ -155,7 +155,7 @@ pub fn start_notification_daemon(
                 app_data.settings.send_today_notifications,
                 app_data.settings.time_to_notify_today_tasks
             );
-            if app_data.tasks_duing_today.tasks.len() > 0
+            if !app_data.tasks_duing_today.tasks.is_empty()
                 && app_data.settings.send_today_notifications
             {
                 let current_hour = Local::now().hour();

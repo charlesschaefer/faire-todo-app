@@ -41,7 +41,7 @@ pub async fn start_http_server(otp_code: String, backup_data: String) {
     if !server.running {
         server.set_running(true);
         SERVER.lock().await.replace(server.clone());
-        let _ = start_server().await.unwrap();
+        start_server().await.unwrap();
     }
 }
 
@@ -121,7 +121,7 @@ impl Service<Request<IncomingBody>> for HttpServer {
             "/handshake" => {
                 println!("Handshaking...");
                 if let Some(otp_token) = request.headers().get("x-signed-token") {
-                    if otp_token.len() == 0 {
+                    if otp_token.is_empty() {
                         mk_response("Empty token".to_string(), 500)
                     } else {
                         let json_data = self.json_data.clone();
@@ -133,7 +133,7 @@ impl Service<Request<IncomingBody>> for HttpServer {
             },
             "/disconnect" => {
                 tokio::spawn(async move {
-                    let _ = stop_server().await.unwrap();
+                    stop_server().await.unwrap();
                 });
                 mk_response("retornando do close".to_string(), 200)
             },
@@ -171,7 +171,7 @@ pub async fn start_server() -> Result<(), Box<dyn std::error::Error + Send + Syn
         drop(guard);
         println!("Listening for connections with the OTP: {:?}", svc.otp_code);
     
-        let stop_conns = STOP_CONNECTIONS.lock().await.unwrap().clone();
+        let stop_conns = STOP_CONNECTIONS.lock().await.unwrap();
         if stop_conns {
             println!("Stoping to receive connections");
             drop(listener);
