@@ -288,12 +288,6 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         }
     }
 
-    cancelContextMenu(event: any) {
-        event.preventDefault();
-        console.log("cancelContextMenu() - PreventDefault()")
-
-    }
-
     ngOnDestroy(): void {
         this.dialogRef?.close();
     }
