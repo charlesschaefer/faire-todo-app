@@ -76,7 +76,6 @@ export class NgxCdkDnDScrollFixerDirective {
         this.startScrollY = window.scrollY;
         this.startTime = Date.now();
         this.timeoutId = setTimeout(() => {
-            console.log("Passou o timeout. Vamos seguir sem scroll")
             if (this.dragging) this.currentAction = 'dnd';
         }, this.timeoutDuration);
         this.dragging = true;
@@ -84,7 +83,6 @@ export class NgxCdkDnDScrollFixerDirective {
     }
 
     pointerMove(ev: TapEvent) {
-        console.log("Dragging? ", this.dragging, this.currentAction);
         const coords = this.getEventCoordinates(ev);
         if (!this.dragging) return;
         if (this.currentAction == 'dnd') return;
@@ -94,7 +92,6 @@ export class NgxCdkDnDScrollFixerDirective {
         const xMoved = coords.x - this.startX;
         const yMoved = coords.y - this.startMouseY;
 
-        //console.error(`Movimento x: ${xMoved} - y: ${yMoved} => ${this.currentAction}`)
 
         // ainda não sabemos a intenção do usuário
         if (this.currentAction == '') {
@@ -123,7 +120,6 @@ export class NgxCdkDnDScrollFixerDirective {
             if (this.currentAction == 'scroll') {
                 // we keep scrolling only if user kept holding the screen for some time (100ms)
                 if (this.lastScrollTime && (Date.now() - this.lastScrollTime) < this.stopScrollDuration) {
-                    console.log(`Last scroll: ${this.lastScrollTime}, duration: ${Date.now() - this.lastScrollTime}, stop: ${this.stopScrollDuration}`);
                     this.keepScrolling();
                     return;
                 }
@@ -159,7 +155,6 @@ export class NgxCdkDnDScrollFixerDirective {
             window.requestAnimationFrame(() => {
                 const distance = window.scrollY - this.updatedY;
                 const time = Date.now();
-                console.warn(`Movendo de ${window.scrollY} para ${this.updatedY} => ${distance}px em ${time - this.lastScrollTime}ms`)
                 this.saveDistance(distance, time);
 
                 const currentY = coords.y;
@@ -179,12 +174,10 @@ export class NgxCdkDnDScrollFixerDirective {
     keepScrolling() {
         this.scrollFinishedSubscription = this.scrollFinished$.subscribe(() => {
             if (!this.calculateAccelerationAndSpeed()) {
-                console.warn("Sem info para velocidade e aceleração")
                 this.clearUp();
                 return;
             }
             this.keepScroll = true;
-            console.log("Vamos continuar o scroll com velocidade ", this.speed, "px/ms e aceleração ", this.acceleration, "px/ms²");
             this.continuedScroll()
         })
     }
@@ -194,13 +187,11 @@ export class NgxCdkDnDScrollFixerDirective {
             return;
         }
         const time = Date.now();
-        console.log(`Vamos continuar o scroll agora (${time}ms)`)
         // keep scrolling after the user left the element, calculating deacceleration
         this.keepScrollAnimationFrameId = window.requestAnimationFrame(() => {
             const elapsedTime = Date.now() - time;
             const scroll = elapsedTime * this.speed;
             const pos = window.scrollY - scroll;
-            console.log(`Movendo ${scroll}px depois de ${elapsedTime}ms, nova posição: ${pos}`);
 
             window.scroll({
                 top: pos,
@@ -208,7 +199,6 @@ export class NgxCdkDnDScrollFixerDirective {
             });
 
             if (this.updateSpeed()) {
-                console.log("Velocidade ainda acima de zero: ", this.speed);
                 // after updating the position, checks if the position was really updated. 
                 // if not, it means we reached the end of the window and the scroll can stop
                 this.continuedScroll(() => {
@@ -216,10 +206,8 @@ export class NgxCdkDnDScrollFixerDirective {
                     // if (window.scrollY <= 0 || (window.scrollY >= (document.body.scrollHeight - window.screen.availHeight))) {
                         this.keepScroll = false;
                     }
-                    console.log(`Vamos continuar? ${this.keepScroll} Window: ${window.scrollY}, última posição: ${pos}`)
                 });
             } else {
-                console.log("Velocidade zerou: ", this.speed);
             }
             if (callback) {
                 callback();
@@ -241,7 +229,7 @@ export class NgxCdkDnDScrollFixerDirective {
     updateSpeed(): number {
         const priorSpeed = this.speed;
         if (this.acceleration) {
-            this.speed -= (this.acceleration);
+            this.speed -= (this.acceleration / 2);
         }
         if (this.speed < priorSpeed && this.speed < 0) {
             this.speed = 0
@@ -261,15 +249,12 @@ export class NgxCdkDnDScrollFixerDirective {
         }
 
         this.lastDistances.set(time, distance);
-        console.log(`Salvando ${distance}px em ${time}ms => ${distance}px / ${time - this.lastScrollTime}ms`)
     }
 
     calculateAccelerationAndSpeed() {
         let lastTime:number = 0, lastDistance:number = 0;
         const speeds = [];
         const times = [];
-        console.warn(`Distâncias: `);
-        console.dir(Array.from(this.lastDistances))
 
         if (this.lastDistances.size < 2) {
             return [];
@@ -286,17 +271,18 @@ export class NgxCdkDnDScrollFixerDirective {
             times.push(timeDiff);
             lastTime = time;
         }
-        console.warn(`Speeds: ${speeds}`);
         // average speed of the last 3 distances
         this.speed = speeds.reduce((prev, curr) => prev + curr, 0) / speeds.length;
-
+        const negative = this.speed < 0;
         const accelerations = [];
         for (let i = 1; i < speeds.length; i++) {
-            console.warn(`${speeds[i]} - ${speeds[i-1]} / ${times[i]} - ${times[i-1]}`);
+            let acceleration = (speeds[i] - speeds[i - 1]) / (Math.abs((times[i] - times[i - 1])) || 1);
+            if (acceleration > 0 && negative || acceleration < 0 && !negative) {
+                acceleration = -acceleration;
+            }
             // acceleration = Δspeed/Δtime px/ms²
-            accelerations.push((speeds[i] - speeds[i-1]) / (Math.abs((times[i] - times[i-1])) || 0));
+            accelerations.push(acceleration);
         }
-        console.warn(`Acelerations: ${accelerations}`);
         // average acceleration
         this.acceleration = accelerations.reduce((prev, curr) => prev + curr, 0) / accelerations.length;
 
