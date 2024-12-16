@@ -15,7 +15,6 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
-import { listen } from '@tauri-apps/api/event';
 import { AvatarModule } from 'primeng/avatar';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
 import { Router } from '@angular/router';
@@ -36,6 +35,12 @@ import Dexie from 'dexie';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
 import { InboxComponent } from './inbox/inbox.component';
+import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MessageModule } from 'primeng/message';
+import { User } from '@supabase/supabase-js';
+import { DbService } from './services/db.service';
 
 export enum NotificationType {
     DueTask,
@@ -109,7 +114,7 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        this.authService.currentUser.subscribe(user => {
+        this.authService.user.subscribe(user => {
             this.currentUser = user;
             if (user) {
                 this.setupMenu();
@@ -408,7 +413,7 @@ export class AppComponent implements OnInit {
 
     async signOut() {
         try {
-            await this.authService.logout();
+            await this.authService.signOut();
         } catch (error) {
             console.error('Error signing out:', error);
         }
@@ -425,29 +430,4 @@ function parseIntentUri(uri: string) {
         result[key] = value;
     }
     return result;
-}
-
-function checkDuedTasks() {
-    const date = new Date;
-    date.setHours(0);
-    date.setMinutes(0);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
-
-    const time = new Date;
-
-    const dbService = new DbService();
-    let taskService = new TaskService<TaskDto>(dbService);
-    taskService.getByField('dueDate', date).subscribe(tasks => {
-        const duingTasks: {tasks: {title: string}[]} = {tasks: []};
-        tasks.reduce((acc, task) => {
-            if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
-                console.log(`We need to notify user that ${task.title} task is duing now`);
-                // task dueing now, notifying the user
-                acc.tasks.push({title: task.title});
-            }
-            return acc;
-        }, duingTasks);
-        invoke('set_due_tasks', duingTasks);
-    })
 }
