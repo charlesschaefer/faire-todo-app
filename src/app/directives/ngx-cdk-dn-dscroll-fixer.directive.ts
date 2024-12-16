@@ -31,6 +31,13 @@ export class NgxCdkDnDScrollFixerDirective {
     private ticking = false;
     private dragging = false;
     private startScrollY = 0;
+    private lastDisplacementsDistance: Map<number, number> = new Map();
+    private speed!: number;
+    private acceleration!: number;
+    private lastScrollTime!: number;
+    private stopScrollDuration = 100;
+    private keepScroll = false;
+
 
 
     constructor(private el: ElementRef) { 
@@ -53,6 +60,7 @@ export class NgxCdkDnDScrollFixerDirective {
     }
 
     pointerDown(ev: TapEvent) {
+        this.keepScroll = false;
         const coords = this.getEventCoordinates(ev);
         const rect = (ev.target as HTMLElement).getBoundingClientRect();
         this.startX = rect.x;
@@ -103,7 +111,15 @@ export class NgxCdkDnDScrollFixerDirective {
 
     pointerUp(ev: TapEvent) {
         if (this.timeoutId) clearTimeout(this.timeoutId);
+
         if (this.dragging) {
+            if (this.currentAction == 'scroll') {
+                // we keep scrolling only if user kept holding the screen for some time (100ms)
+                if (this.lastScrollTime && (Date.now() - this.lastScrollTime) > this.stopScrollDuration) {
+                    this.keepScrolling();
+                    return;
+                }
+            }
             // Reset position
             this.dragging = false;
             this.startX = -1;
@@ -112,8 +128,18 @@ export class NgxCdkDnDScrollFixerDirective {
             this.startScrollY = 0;
             this.currentAction = '';
             this.startTime = 0;
+            this.lastScrollTime = 0;
+            this.acceleration = 0;
+            this.speed = 0;
+            this.lastDisplacementsDistance = new Map();
             delete this.timeoutId;
         }
+    }
+
+    keepScrolling() {
+        this.keepScroll = true;
+
+        // keep scrolling after the user left the element, calculating deacceleration
     }
 
     updateScroll(ev: TapEvent) {
@@ -123,11 +149,15 @@ export class NgxCdkDnDScrollFixerDirective {
         this.updatedX = coords.x;
         // this.updatedY = (this.startY - (this.startMouseY));
         // this.updatedY = (coords.y - (this.startMouseY));
-        this.updatedY = this.startScrollY + (this.startMouseY - coords.y);
-        
+        const displacement = (this.startMouseY - coords.y)
+        this.updatedY = this.startScrollY + displacement;
+        this.lastScrollTime = Date.now();
+
         if (!this.ticking) {
             window.requestAnimationFrame(() => {
-            // setTimeout(() => {
+                const displacement = Math.abs(window.scrollY - this.updatedY);
+                this.saveDisplacement(displacement);
+                
                 const currentY = coords.y;
                 window.scroll({
                     top: this.updatedY,
@@ -151,4 +181,46 @@ export class NgxCdkDnDScrollFixerDirective {
         return {x, y};
     }
 
+    updateSpeed(): number {
+        if (this.acceleration) {
+            this.speed -= this.acceleration;
+        }
+        if (this.speed < 0) 
+            this.speed = 0;
+        
+        return this.speed;
+    }
+
+    saveDisplacement(displacement: number) {
+        if (this.lastDisplacementsDistance.size == 3) {
+            const first = this.lastDisplacementsDistance.keys().next().value;
+            if (first) {
+                this.lastDisplacementsDistance.delete(first)
+            }
+        }
+        const time = Date.now();
+
+        this.lastDisplacementsDistance.set(time, displacement);
+    }
+
+    calculateAcceleration() {
+        let lastTime:number = 0, lastDisplacement:number = 0;
+        const speeds = [];
+        for (let [time, displacement] of this.lastDisplacementsDistance.entries()) {
+            if (!lastTime && !lastDisplacement) {
+                [lastTime, lastDisplacement] = [time, displacement];
+                continue;
+            }
+            let timeDiff = time - lastTime
+            let displacementDiff = displacement - lastDisplacement;
+            speeds.push(displacementDiff / timeDiff);
+            [lastTime, lastDisplacement] = [time, displacement];
+        }
+        const accelerations = [];
+        for (let i = 1; i < speeds.length; i++) {
+            accelerations.push(speeds[i] - speeds[i-1]);
+        }
+        this.acceleration = accelerations.reduce((prev, curr) => prev + curr, 0) / accelerations.length;
+        return this.acceleration;
+    }
 }
