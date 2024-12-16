@@ -8,7 +8,13 @@ import { NotificationType } from "./app.component";
 import { SettingsDto } from "./dto/settings-dto";
 import { DbService } from "./services/db.service";
 
-addEventListener('message', ({ data }) => {
+addEventListener('message', (message) => {
+
+    // checks if the message is coming from the main window
+    if (message.origin.indexOf(import.meta.url) === -1) {
+        return;
+    }
+
     const dbService = new DbService();
     const settingsService = new SettingsService(dbService);
     // checks if there are tasks dueing now every minute
