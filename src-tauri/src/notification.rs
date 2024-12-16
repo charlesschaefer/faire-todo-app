@@ -5,7 +5,7 @@ use tauri_plugin_notification::NotificationExt;
 
 use crate::data;
 
-const NOTIFICATION_DAEMON_SLEEP_TIME: u64 = 5;
+const NOTIFICATION_DAEMON_SLEEP_TIME: u64 = 60;
 
 pub fn notify(app_handle: tauri::AppHandle, title: String, body: String, channel: Option<String>) {
     let channel = channel.unwrap_or("general".to_string());
