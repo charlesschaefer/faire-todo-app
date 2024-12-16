@@ -2,8 +2,7 @@ import { style } from '@angular/animations';
 import { Directive, ElementRef } from '@angular/core';
 import { add, remove } from 'dexie';
 import { DateTime } from 'luxon';
-import { concatAll, of, timer } from 'rxjs';
-import { fromEvent, Observable } from 'rxjs';
+import { fromEvent, Subject, Subscription } from 'rxjs';
 
 type Timer = ReturnType<typeof setTimeout>;
 
@@ -17,12 +16,8 @@ type Point = { x: number, y: number };
 })
 export class NgxCdkDnDScrollFixerDirective {
 
-    private clickEventObserver!: Observable<TapEvent>;
-    private moveEventObserver!: Observable<TapEvent>;
-    private startY = -1;
     private startMouseY = -1;
     private startX = -1;
-    private updatedX = -1;
     private updatedY = -1;
     private startTime = 0;
     private timeoutDuration = 400; // milliseconds
@@ -31,14 +26,15 @@ export class NgxCdkDnDScrollFixerDirective {
     private ticking = false;
     private dragging = false;
     private startScrollY = 0;
-    private lastDisplacementsDistance: Map<number, number> = new Map();
+    private lastDistances: Map<number, number> = new Map();
     private speed!: number;
     private acceleration!: number;
     private lastScrollTime!: number;
     private stopScrollDuration = 100;
     private keepScroll = false;
-
-
+    private keepScrollAnimationFrameId!: number;
+    private scrollFinished$ = new Subject<any>();
+    private scrollFinishedSubscription!: Subscription;
 
     constructor(private el: ElementRef) { 
         fromEvent<TapEvent>(el.nativeElement, 'touchstart', {capture: true})
@@ -57,14 +53,25 @@ export class NgxCdkDnDScrollFixerDirective {
             });
         
         (el.nativeElement as HTMLElement).addEventListener('contextmenu', ev => ev.preventDefault());
+
+
     }
 
     pointerDown(ev: TapEvent) {
         this.keepScroll = false;
+        if (this.keepScrollAnimationFrameId) {
+            window.cancelAnimationFrame(this.keepScrollAnimationFrameId);
+        }
+
+        if (this.scrollFinishedSubscription) {
+            this.scrollFinished$.unsubscribe();
+            // creates a new Observable, since after the unsubscriprion it becames useless.
+            this.scrollFinished$ = new Subject<any>();
+        }
+
         const coords = this.getEventCoordinates(ev);
         const rect = (ev.target as HTMLElement).getBoundingClientRect();
         this.startX = rect.x;
-        this.startY = rect.y;
         this.startMouseY = coords.y;
         this.startScrollY = window.scrollY;
         this.startTime = Date.now();
@@ -87,7 +94,7 @@ export class NgxCdkDnDScrollFixerDirective {
         const xMoved = coords.x - this.startX;
         const yMoved = coords.y - this.startMouseY;
 
-        console.error(`Movimento x: ${xMoved} - y: ${yMoved} => ${this.currentAction}`)
+        //console.error(`Movimento x: ${xMoved} - y: ${yMoved} => ${this.currentAction}`)
 
         // ainda não sabemos a intenção do usuário
         if (this.currentAction == '') {
@@ -115,49 +122,46 @@ export class NgxCdkDnDScrollFixerDirective {
         if (this.dragging) {
             if (this.currentAction == 'scroll') {
                 // we keep scrolling only if user kept holding the screen for some time (100ms)
-                if (this.lastScrollTime && (Date.now() - this.lastScrollTime) > this.stopScrollDuration) {
+                if (this.lastScrollTime && (Date.now() - this.lastScrollTime) < this.stopScrollDuration) {
+                    console.log(`Last scroll: ${this.lastScrollTime}, duration: ${Date.now() - this.lastScrollTime}, stop: ${this.stopScrollDuration}`);
                     this.keepScrolling();
                     return;
                 }
             }
-            // Reset position
-            this.dragging = false;
-            this.startX = -1;
-            this.startY = -1;
-            this.startMouseY = -1;
-            this.startScrollY = 0;
-            this.currentAction = '';
-            this.startTime = 0;
-            this.lastScrollTime = 0;
-            this.acceleration = 0;
-            this.speed = 0;
-            this.lastDisplacementsDistance = new Map();
-            delete this.timeoutId;
+            this.clearUp();
         }
     }
 
-    keepScrolling() {
-        this.keepScroll = true;
-
-        // keep scrolling after the user left the element, calculating deacceleration
+    clearUp() {
+        // Reset position
+        this.dragging = false;
+        this.startX = -1;
+        this.startMouseY = -1;
+        this.startScrollY = 0;
+        this.currentAction = '';
+        this.startTime = 0;
+        this.lastScrollTime = 0;
+        this.acceleration = 0;
+        this.speed = 0;
+        this.lastDistances = new Map();
+        delete this.timeoutId;
     }
 
     updateScroll(ev: TapEvent) {
         const coords = this.getEventCoordinates(ev);
         const rect = (ev.target as Element).getBoundingClientRect();
 
-        this.updatedX = coords.x;
-        // this.updatedY = (this.startY - (this.startMouseY));
-        // this.updatedY = (coords.y - (this.startMouseY));
-        const displacement = (this.startMouseY - coords.y)
-        this.updatedY = this.startScrollY + displacement;
+        const distance = (this.startMouseY - coords.y)
+        this.updatedY = this.startScrollY + distance;
         this.lastScrollTime = Date.now();
 
         if (!this.ticking) {
             window.requestAnimationFrame(() => {
-                const displacement = Math.abs(window.scrollY - this.updatedY);
-                this.saveDisplacement(displacement);
-                
+                const distance = window.scrollY - this.updatedY;
+                const time = Date.now();
+                console.warn(`Movendo de ${window.scrollY} para ${this.updatedY} => ${distance}px em ${time - this.lastScrollTime}ms`)
+                this.saveDistance(distance, time);
+
                 const currentY = coords.y;
                 window.scroll({
                     top: this.updatedY,
@@ -165,10 +169,63 @@ export class NgxCdkDnDScrollFixerDirective {
                 });
 
                 this.ticking = false;
+                this.scrollFinished$.next(null);
             });
 
             this.ticking = true;
         }
+    }
+
+    keepScrolling() {
+        this.scrollFinishedSubscription = this.scrollFinished$.subscribe(() => {
+            if (!this.calculateAccelerationAndSpeed()) {
+                console.warn("Sem info para velocidade e aceleração")
+                this.clearUp();
+                return;
+            }
+            this.keepScroll = true;
+            console.log("Vamos continuar o scroll com velocidade ", this.speed, "px/ms e aceleração ", this.acceleration, "px/ms²");
+            this.continuedScroll()
+        })
+    }
+    
+    continuedScroll(callback?: Function) {
+        if (!this.keepScroll) {
+            return;
+        }
+        const time = Date.now();
+        console.log(`Vamos continuar o scroll agora (${time}ms)`)
+        // keep scrolling after the user left the element, calculating deacceleration
+        this.keepScrollAnimationFrameId = window.requestAnimationFrame(() => {
+            const elapsedTime = Date.now() - time;
+            const scroll = elapsedTime * this.speed;
+            const pos = window.scrollY - scroll;
+            console.log(`Movendo ${scroll}px depois de ${elapsedTime}ms, nova posição: ${pos}`);
+
+            window.scroll({
+                top: pos,
+                left: this.startX
+            });
+
+            if (this.updateSpeed()) {
+                console.log("Velocidade ainda acima de zero: ", this.speed);
+                // after updating the position, checks if the position was really updated. 
+                // if not, it means we reached the end of the window and the scroll can stop
+                this.continuedScroll(() => {
+                    if ((scroll < 0 && window.scrollY < pos) || (scroll > 0 && window.scrollY > pos)) {
+                    // if (window.scrollY <= 0 || (window.scrollY >= (document.body.scrollHeight - window.screen.availHeight))) {
+                        this.keepScroll = false;
+                    }
+                    console.log(`Vamos continuar? ${this.keepScroll} Window: ${window.scrollY}, última posição: ${pos}`)
+                });
+            } else {
+                console.log("Velocidade zerou: ", this.speed);
+            }
+            if (callback) {
+                callback();
+            }
+        });
+
     }
 
     getEventCoordinates(event: TapEvent): Point {
@@ -182,45 +239,67 @@ export class NgxCdkDnDScrollFixerDirective {
     }
 
     updateSpeed(): number {
+        const priorSpeed = this.speed;
         if (this.acceleration) {
-            this.speed -= this.acceleration;
+            this.speed -= (this.acceleration);
         }
-        if (this.speed < 0) 
+        if (this.speed < priorSpeed && this.speed < 0) {
+            this.speed = 0
+        } else if (this.speed > priorSpeed && this.speed > 0) {
             this.speed = 0;
+        }
         
         return this.speed;
     }
 
-    saveDisplacement(displacement: number) {
-        if (this.lastDisplacementsDistance.size == 3) {
-            const first = this.lastDisplacementsDistance.keys().next().value;
+    saveDistance(distance: number, time: number) {
+        if (this.lastDistances.size == 10) {
+            const first = this.lastDistances.keys().next().value;
             if (first) {
-                this.lastDisplacementsDistance.delete(first)
+                this.lastDistances.delete(first)
             }
         }
-        const time = Date.now();
 
-        this.lastDisplacementsDistance.set(time, displacement);
+        this.lastDistances.set(time, distance);
+        console.log(`Salvando ${distance}px em ${time}ms => ${distance}px / ${time - this.lastScrollTime}ms`)
     }
 
-    calculateAcceleration() {
-        let lastTime:number = 0, lastDisplacement:number = 0;
+    calculateAccelerationAndSpeed() {
+        let lastTime:number = 0, lastDistance:number = 0;
         const speeds = [];
-        for (let [time, displacement] of this.lastDisplacementsDistance.entries()) {
-            if (!lastTime && !lastDisplacement) {
-                [lastTime, lastDisplacement] = [time, displacement];
+        const times = [];
+        console.warn(`Distâncias: `);
+        console.dir(Array.from(this.lastDistances))
+
+        if (this.lastDistances.size < 2) {
+            return [];
+        }
+
+        for (let [time, distance] of this.lastDistances.entries()) {
+            if (!lastTime) {
+                lastTime = time;
                 continue;
             }
             let timeDiff = time - lastTime
-            let displacementDiff = displacement - lastDisplacement;
-            speeds.push(displacementDiff / timeDiff);
-            [lastTime, lastDisplacement] = [time, displacement];
+            // speed = Δdistance / Δtime;
+            speeds.push(distance / timeDiff);
+            times.push(timeDiff);
+            lastTime = time;
         }
+        console.warn(`Speeds: ${speeds}`);
+        // average speed of the last 3 distances
+        this.speed = speeds.reduce((prev, curr) => prev + curr, 0) / speeds.length;
+
         const accelerations = [];
         for (let i = 1; i < speeds.length; i++) {
-            accelerations.push(speeds[i] - speeds[i-1]);
+            console.warn(`${speeds[i]} - ${speeds[i-1]} / ${times[i]} - ${times[i-1]}`);
+            // acceleration = Δspeed/Δtime px/ms²
+            accelerations.push((speeds[i] - speeds[i-1]) / (Math.abs((times[i] - times[i-1])) || 0));
         }
+        console.warn(`Acelerations: ${accelerations}`);
+        // average acceleration
         this.acceleration = accelerations.reduce((prev, curr) => prev + curr, 0) / accelerations.length;
-        return this.acceleration;
+
+        return [this.speed, this.acceleration];
     }
 }
