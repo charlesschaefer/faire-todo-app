@@ -33,7 +33,6 @@ import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
 import Dexie from 'dexie';
 import { AuthService } from './services/auth.service';
-import { UserService } from './services/user.service';
 import { InboxComponent } from './inbox/inbox.component';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -101,7 +100,6 @@ export class AppComponent implements OnInit {
         private notificationService: NotificationService,
         private router: Router,
         private syncService: SyncService,
-        private userService: UserService,
         public authService: AuthService,
     ) {
         translate.setDefaultLang('en');
@@ -114,26 +112,34 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        this.authService.user.subscribe(user => {
+        this.authService.user.subscribe(async user => {
+            console.log("Entrou no this.authService.user.subscribe(). User: ", user);
             this.currentUser = user;
             if (user) {
-                this.setupMenu();
+                this.messageService.add({
+                    severity: 'info',
+                    detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
+                })
+                this.syncService.connect().catch(console.error).then((result) => {
+                    this.syncService.syncStatus.subscribe((status) => {
+                        this.syncStatus = Dexie.Syncable.StatusTexts[status];
+                        console.warn("Synchronization new status: ", this.syncStatus)
+                        
+                    });
+                });
+            } else {
+                this.syncService.disconnect().catch(console.error);
             }
         });
-
+        
         // Subscribe to sync status changes
         this.syncService.syncStatus.subscribe(status => {
             this.syncStatus = Dexie.Syncable.StatusTexts[status];
         });
 
-        // Subscribe to auth changes
-        this.authService.user.subscribe(user => {
-            if (user) {
-                this.syncService.connect().catch(console.error);
-            } else {
-                this.syncService.disconnect().catch(console.error);
-            }
-        });
+        // close the sidebar everytime the route triggers an event
+        this.router.events.subscribe((e) => this.showSidebar = false);
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {

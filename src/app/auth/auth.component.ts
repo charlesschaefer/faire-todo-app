@@ -10,6 +10,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { User } from '@supabase/supabase-js';
 
 import { AuthService } from '../services/auth.service';
+import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-auth',
@@ -22,7 +23,8 @@ import { AuthService } from '../services/auth.service';
     CheckboxModule,
     MessageModule,
     AvatarModule,
-    ToastModule
+    ToastModule,
+    TranslocoModule
   ],
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss']

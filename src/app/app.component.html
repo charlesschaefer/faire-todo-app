@@ -67,7 +67,7 @@
   </ng-template>
 </p-toast>
 
-<p-sidebar [(visible)]="showSidebar" position="right">
+<p-sidebar [(visible)]="showSidebar" position="right" #sidebar>
   <app-auth></app-auth>
 
   <div *ngIf="authService.currentUser" class="sync-status">
@@ -80,7 +80,8 @@
     {{ syncStatus }}
   </div>
 
-  <p-menu #menu [model]="menuItems" class="side-bar-menu" />
+  <p-menu #menu [model]="menuItems" class="side-bar-menu" (onShow)="(showSidebar=false)">
+  </p-menu>
 
   <ng-template pTemplate="footer">
     <div class="flex align-items-center justify-content-end gap-2">

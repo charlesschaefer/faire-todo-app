@@ -7,6 +7,17 @@ import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { BehaviorSubject } from 'rxjs';
 import { AppDb } from '../app.db';
+import { TaskService } from './task.service';
+import { TagService } from './tag.service';
+import { TaskTagService } from './task-tag.service';
+import { SettingsService } from './settings.service';
+import { ProjectService } from './project.service';
+import { TaskDto } from '../dto/task-dto';
+import { TagDto } from '../dto/tag-dto';
+import { TaskTagDto } from '../dto/task-tag-dto';
+import { SettingsDto } from '../dto/settings-dto';
+import { ProjectDto } from '../dto/project-dto';
+import { DbService } from './db.service';
 
 
 // Then use it like this:
@@ -21,7 +32,13 @@ export class SyncService {
     private syncConnection: number | undefined;
 
     constructor(
+        private dbService: DbService,
         private authService: AuthService,
+        private taskService: TaskService<TaskDto>,
+        private tagService: TagService<TagDto>,
+        private taskTagService: TaskTagService<TaskTagDto>,
+        private settingsService: SettingsService<SettingsDto>,
+        private projectService: ProjectService<ProjectDto>,
         @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = createClient(
@@ -103,17 +120,30 @@ export class SyncService {
         });
     }
 
-    connect() {
+    async connect() {
         const user = this.authService.currentUser;
         if (!user) {
             return Promise.reject(new Error('User not authenticated'));
         }
 
+        // updates all tables with the user uuid
+        await this.taskService.updateUserUUID();
+        await this.tagService.updateUserUUID();
+        await this.taskTagService.updateUserUUID();
+        await this.settingsService.updateUserUUID();
+        await this.projectService.updateUserUUID();
+
         if (this.syncConnection !== undefined) {
             return Promise.resolve(this.syncConnection);
         }
-
-        return this.db.syncable.connect("supabase", environment.supabaseUrl)
+        (this.db as AppDb).syncable.connect
+        return this.db.syncable.connect("supabase", environment.supabaseUrl).then(() => {
+            this.syncConnection = 1;
+            return this.db.syncable.on('statusChanged', (newStatus, url) => {
+                console.log("Sync Status changed: " + Dexie.Syncable.StatusTexts[newStatus]);
+                this.syncState.next(newStatus);
+            });
+        });
     }
 
     disconnect() {

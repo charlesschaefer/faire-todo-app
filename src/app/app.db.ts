@@ -17,7 +17,8 @@ import { TaskTagDto } from './dto/task-tag-dto';
 import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { UserDto } from './dto/user-dto';
 
- 
+Dexie.debug = true
+
 function runTaskSerial(fn: CallableFunction, results: any) {
      
     return fn(results);
@@ -146,6 +147,59 @@ export class AppDb extends Dexie {
             task_tag: 'task, tag, user_uuid, task_uuid, tag_uuid, updated_at',
             settings: '++id, notifications, todayNotifications, notificationTime, uuid, user_uuid, updated_at',
         });
+
+        this.version(13).stores({
+            user: null,
+            user_temp: '$$uuid, id, email, name, created_at, avatar_url',
+            task: null,
+            task_temp: '$$uuid, id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            project: null,
+            project_temp: '$$uuid, id, name, user_uuid, updated_at',
+            tag: null,
+            tag_temp: '$$uuid, id, name, user_uuid, updated_at',
+            task_tag: 'task, tag, user_uuid, task_uuid, tag_uuid, updated_at',
+            settings: null,
+            settings_temp: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
+        }).upgrade(async transaction => {
+            const tasks = await transaction.table('task').toArray();
+            await transaction.table('task_temp').bulkAdd(tasks).catch(console.error);
+
+            const projects = await transaction.table('project').toArray();
+            await transaction.table('project_temp').bulkAdd(projects).catch(console.error);
+
+            const tags = await transaction.table('tag').toArray();
+            await transaction.table('tag_temp').bulkAdd(tags).catch(console.error);
+
+            const settings = await transaction.table('settings').toArray();
+            await transaction.table('settings_temp').bulkAdd(settings).catch(console.error);
+        });
+
+        this.version(14).stores({
+            user: '$$uuid, id, email, name, created_at, avatar_url',
+            user_temp: null,
+            task: '$$uuid, id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            task_temp: null,
+            project: '$$uuid, id, name, user_uuid, updated_at',
+            project_temp: null,
+            tag: '$$uuid, id, name, user_uuid, updated_at',
+            tag_temp: null,
+            task_tag: '[task_uuid+tag_uuid], task, tag, user_uuid, updated_at',
+            settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
+            settings_temp: null,
+        }).upgrade(async transaction => {
+            const tasks = await transaction.table('task_temp').toArray();
+            await transaction.table('task').bulkAdd(tasks).catch(console.error);
+
+            const projects = await transaction.table('project_temp').toArray();
+            await transaction.table('project').bulkAdd(projects).catch(console.error);
+
+            const tags = await transaction.table('tag_temp').toArray();
+            await transaction.table('tag').bulkAdd(tags).catch(console.error);
+
+            const settings = await transaction.table('settings_temp').toArray();
+            await transaction.table('settings').bulkAdd(settings).catch(console.error);
+        });
+
 
         this.on('populate', () => this.populate());
     }

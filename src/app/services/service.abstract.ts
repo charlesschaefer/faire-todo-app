@@ -63,6 +63,13 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.bulkAdd(data));
     }
 
+    updateUserUUID() {
+        if (!this.userUuid) {
+            throw new Error("User UUID not present on the session");
+        }
+        return from(this.table.where("user_uuid").notEqual("").modify({user_uuid: this.userUuid}));
+    }
+
     edit(id: number, data: T & UserBound) {
         if (this.userUuid && this.storeName !== "user") {
             data["user_uuid"] = this.userUuid;

@@ -3,17 +3,16 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../../services/auth.service';
-import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({
     selector: 'app-auth-callback',
     standalone: true,
-    imports: [CommonModule, TranslateModule],
+    imports: [CommonModule, TranslocoModule],
     template: `
     <div class="callback-container">
-      {{ 'Processing authentication...' | translate }}
+      {{ 'Processing authentication...' | transloco }}
     </div>
   `,
     styles: [`
@@ -32,7 +31,7 @@ export class AuthCallbackComponent implements OnInit {
         private authService: AuthService,
         private router: Router,
         private messageService: MessageService,
-        private translate: TranslateService,
+        private translate: TranslocoService,
         private activatedRoute: ActivatedRoute
     ) { }
 
@@ -52,8 +51,8 @@ export class AuthCallbackComponent implements OnInit {
                 // Show success message
                 this.messageService.add({
                     severity: 'info',
-                    summary: await firstValueFrom(this.translate.get('Authentication Successful')),
-                    detail: await firstValueFrom(this.translate.get('You can now save your tasks online')),
+                    summary: await firstValueFrom(this.translate.selectTranslate('Authentication Successful')),
+                    detail: await firstValueFrom(this.translate.selectTranslate('You can now save your tasks online')),
                     life: 5000,
                     key: 'auth-messages'
                 });
@@ -68,10 +67,10 @@ export class AuthCallbackComponent implements OnInit {
             // Show error message
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.get('Authentication Failed')),
+                summary: await firstValueFrom(this.translate.selectTranslate('Authentication Failed')),
                 detail: error instanceof Error
                     ? error.message
-                    : await firstValueFrom(this.translate.get('An unexpected error occurred during authentication')),
+                    : await firstValueFrom(this.translate.selectTranslate('An unexpected error occurred during authentication')),
                 life: 8000
             });
         }
