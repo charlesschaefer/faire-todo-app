@@ -1,6 +1,14 @@
 import { Dexie, Table } from 'dexie';
 import 'dexie-syncable';
 import 'dexie-observable';
+import { v4 } from 'uuid';
+
+let randomUUID: any;
+if (!crypto.randomUUID) {
+    randomUUID = v4;
+} else {
+    randomUUID = crypto.randomUUID;
+}
 
 import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';
@@ -52,7 +60,7 @@ export class AppDb extends Dexie {
                 // create a new user register, since we hadn't one before
                 const serialFns = {
                     createUser: () =>transaction.table<UserDto, number>('user').add({
-                        uuid: crypto.randomUUID(),
+                        uuid: randomUUID(),
                         email: '',
                         name: '',
                         created_at: new Date()
@@ -61,25 +69,25 @@ export class AppDb extends Dexie {
                     addUuidToItems: (user: UserDto) => Promise.all([
                         transaction.table<TaskDto, number>('task').toCollection().modify(item => {
                             if (!item.uuid) {
-                                item.uuid = crypto.randomUUID();
+                                item.uuid = randomUUID();
                             }
                             item.user_uuid = user.uuid;
                         }),
                         transaction.table<ProjectDto, number>('project').toCollection().modify(item => {
                             if (!item.uuid) {
-                                item.uuid = crypto.randomUUID();
+                                item.uuid = randomUUID();
                             }
                             item.user_uuid = user.uuid;
                         }),
                         transaction.table<TagDto, number>('tag').toCollection().modify(item => {
                             if (!item.uuid) {
-                                item.uuid = crypto.randomUUID();
+                                item.uuid = randomUUID();
                             }
                             item.user_uuid = user.uuid;
                         }),
                         transaction.table<SettingsDto, number>('settings').toCollection().modify(item => {
                             if (!item.uuid) {
-                                item.uuid = crypto.randomUUID();
+                                item.uuid = randomUUID();
                             }
                             item.user_uuid = user.uuid;
                         })
@@ -147,8 +155,8 @@ export class AppDb extends Dexie {
             notifications: 1,
             todayNotifications: 0,
             notificationTime: null,
-            // uuid: crypto.randomUUID(),
-            // user_uuid: crypto.randomUUID()
+            // uuid: randomUUID(),
+            // user_uuid: randomUUID()
         } as SettingsAddDto);
     }
 }

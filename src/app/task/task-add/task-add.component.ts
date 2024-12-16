@@ -12,6 +12,15 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
 
+import { v4 } from 'uuid';
+
+let randomUUID: any;
+if (!crypto.randomUUID) {
+    randomUUID = v4;
+} else {
+    randomUUID = crypto.randomUUID;
+}
+
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
 
@@ -174,7 +183,7 @@ export class TaskAddComponent implements OnInit {
             order: order,
             parent: this.parent?.id || null,
             recurring: recurring || null,
-            uuid: crypto.randomUUID(),
+            uuid: randomUUID(),
             project_uuid: this.project?.uuid,
             parent_uuid: this.parent?.uuid,
             user_uuid: this.authService.currentUser?.id as string

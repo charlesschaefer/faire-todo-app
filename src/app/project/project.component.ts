@@ -12,6 +12,15 @@ import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 
+import { v4 } from 'uuid';
+
+let randomUUID: any;
+if (!crypto.randomUUID) {
+    randomUUID = v4;
+} else {
+    randomUUID = crypto.randomUUID;
+}
+
 import { ProjectService } from '../services/project.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
@@ -156,7 +165,7 @@ export class ProjectComponent implements OnInit {
         const form = this.projectForm.value;
         const projectData: ProjectAddDto = {
             name: form.name as unknown as string,
-            uuid: crypto.randomUUID(),
+            uuid: randomUUID(),
             user_uuid: ''
         };
 

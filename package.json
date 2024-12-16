@@ -58,6 +58,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/luxon": "^3.4.2",
     "@types/sanitize-html": "^2.13.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/parser": "^8.17.0",
     "angular-eslint": "19.0.1",
     "eslint": "^9.16.0",
@@ -72,7 +73,8 @@
     "ngx-build-plus": "^18.0.0",
     "shelljs": "^0.8.5",
     "typescript": "~5.4.0",
-    "typescript-eslint": "8.17.0"
+    "typescript-eslint": "8.17.0",
+    "uuid": "^11.0.3"
   },
   "overrides": {
     "@supabase/supabase-js": {

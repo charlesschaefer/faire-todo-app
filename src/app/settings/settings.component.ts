@@ -13,9 +13,17 @@ import {
     requestPermission,
   } from '@tauri-apps/plugin-notification';
 
+import { v4 } from 'uuid';
+
+let randomUUID: any;
+if (!crypto.randomUUID) {
+    randomUUID = v4;
+} else {
+    randomUUID = crypto.randomUUID;
+}
+
 import { SettingsService } from '../services/settings.service';
 import { SettingsDto } from '../dto/settings-dto';
-import { invoke } from '@tauri-apps/api/core';
 import { invoke } from '@tauri-apps/api/core';
 
 @Component({
@@ -67,7 +75,7 @@ export class SettingsComponent implements OnInit {
             notifications: Number(form.notifications),
             todayNotifications: Number(form.todayNotifications),
             notificationTime: form.notificationTime as unknown as Date,
-            uuid: crypto.randomUUID(),
+            uuid: randomUUID(),
             user_uuid: ''
         };
         const settings = await firstValueFrom(this.settingsService.get(1));
