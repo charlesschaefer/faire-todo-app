@@ -51,7 +51,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class InboxComponent implements OnInit, AfterViewInit {
     tasks!: TaskDto[];
-    subtasksCount!: Map<number, number>;
+    subtasksCount!: Map<string, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
 
@@ -70,7 +70,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         if (this.sharetargetUrl) {
             const event = {
-                ...(new CustomEvent('click') as Object),
+                ...(new CustomEvent('click') as object),
                 target: document.querySelector('.task-add-line'),
             } as Event;
             this.onShowTaskAddOverlay(event);

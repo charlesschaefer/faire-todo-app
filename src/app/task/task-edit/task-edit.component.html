@@ -33,7 +33,7 @@
         @if (task.description) {
         <p-inplace (onActivate)="onActivateField($event)" >
           <ng-template pTemplate="display">
-            @if (task.description == "") {
+            @if (task.description === "") {
               <span class="placeholder-like-inplace text-sm">{{ "Description" | transloco }}</span>
             } @else {
               <span [innerHTML]="task.description | linkify"  class="text-sm"></span>
@@ -78,7 +78,7 @@
         <p-dropdown 
           [options]="projects"
           optionLabel="name"
-          optionValue="id"
+          optionValue="uuid"
           formControlName="project"
           name="project"
           [placeholder]="'Project' | transloco" 
@@ -96,12 +96,12 @@
           id="recurring"
         />
       </div>
-      @if (subTasks?.length) {
+      @if (subTasks.length) {
       <div class="task-add-list-subtasks">
         <p-accordion>
           <p-accordionTab [header]="subtasksTitle()" [selected]="true">
             <div>
-            @for (task of subTasks; track task.id) {
+            @for (task of subTasks; track task.uuid) {
               <app-subtask [task]="task" [projects]="projectsMap" />
             }
             </div>
@@ -111,7 +111,8 @@
       }
       <p-divider [autofocus]="true" />
       <div class="task-add-subtask">
-        <div class="task-add-line" (click)="showTaskAddPanel($event)">
+        <!--eslint-disable-next-line @angular-eslint/template/interactive-supports-focus-->
+        <div class="task-add-line" (click)="showTaskAddPanel($event)" (keypress)="showTaskAddPanel($event)">
           <div class="task-add-button">
             <i class="pi pi-plus"></i>
           </div>

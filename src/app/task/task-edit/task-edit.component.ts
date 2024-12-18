@@ -55,7 +55,7 @@ export class TaskEditComponent implements OnInit {
     @Output() showTaskAdd = new EventEmitter<Event>();
 
     projects!: ProjectDto[];
-    projectsMap!: Map<number, ProjectDto>;
+    projectsMap!: Map<string, ProjectDto>;
     
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
@@ -99,18 +99,18 @@ export class TaskEditComponent implements OnInit {
 
         this.projectService.list().subscribe(projects => {
             const cloneProjects = projects.slice();
-            const projectsMap = new Map<number, ProjectDto>();
+            const projectsMap = new Map<string, ProjectDto>();
 
-            if (cloneProjects[0].id != 0) {
+            if (cloneProjects[0].uuid != 0) {
                 cloneProjects.unshift({
-                    id: 0,
+                    uuid: 0,
                     name: "Inbox"
                 });
             }
             this.projects = cloneProjects;
 
             projects.forEach(project => {
-                projectsMap.set(project.id, project);
+                projectsMap.set(project.uuid, project);
             });
             this.projectsMap = projectsMap;
         });
@@ -171,7 +171,7 @@ export class TaskEditComponent implements OnInit {
             parent_uuid: this.task.parent_uuid
         };
 
-        this.taskService.edit(this.task.id, saveData).subscribe({
+        this.taskService.edit(this.task.uuid, saveData).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),

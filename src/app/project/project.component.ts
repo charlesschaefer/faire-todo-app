@@ -65,7 +65,7 @@ export class ProjectComponent implements OnInit {
     });
 
     projectEditForm = this.fb.group({
-        id: [0, Validators.required],
+        uuid: ['', Validators.required],
         name: ['', Validators.required]
     });
 
@@ -91,7 +91,7 @@ export class ProjectComponent implements OnInit {
         this.projectService.list().subscribe(projects => this.projects = projects);
     }
 
-    async confirmDeleteProject(id: number) {
+    async confirmDeleteProject(uuid: string) {
         this.confirmationService.confirm({
             header: await firstValueFrom(this.translate.selectTranslate(`Are you sure?`)),
             message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this project? All of it's tasks will be removed too!`)),
@@ -99,18 +99,18 @@ export class ProjectComponent implements OnInit {
             acceptIcon: "none",
             rejectIcon: "none",
             accept: () => {
-                this.deleteProject(id);
+                this.deleteProject(uuid);
             }
         });
     }
 
-    deleteProject(id: number) {
+    deleteProject(uuid: string) {
         // deletes the project
-        this.projectService.remove(id).subscribe({
+        this.projectService.remove(uuid).subscribe({
             complete: () => {
-                this.taskService.getByField('project', id).subscribe(tasks => {
-                    const tasksIds: number[] = [];
-                    tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
+                this.taskService.getByField('project_uuid', uuid).subscribe(tasks => {
+                    const tasksIds: string[] = [];
+                    tasks.forEach((task: TaskDto) => tasksIds.push(task.uuid));
                     // then deletes the tasks of the project
                     this.taskService.bulkRemove(tasksIds);
                     this.messageService.add({
@@ -129,11 +129,11 @@ export class ProjectComponent implements OnInit {
         });
     }
 
-    editProjectDialog(id: number) {
-        const project = this.projects.filter(project => project.id == id)[0];
+    editProjectDialog(uuid: string) {
+        const project = this.projects.filter(project => project.uuid == uuid)[0];
         this.projectEditForm.patchValue({
             name: project.name as unknown as string,
-            id: project.id as unknown as number
+            uuid: project.uuid as unknown as string
         });
         this.editProjectVisible = true;
     }
@@ -141,10 +141,10 @@ export class ProjectComponent implements OnInit {
     editProject() {
         const form = this.projectEditForm.value;
         const formData = {
-            id: form.id as number,
+            uuid: form.uuid as string,
             name: form.name as string,
         } as ProjectDto;
-        this.projectService.edit(form.id as number, formData).subscribe({
+        this.projectService.edit(form.uuid as string, formData).subscribe({
             complete: () => {
                 this.editProjectVisible = false;
                 setTimeout(() => window.location.reload(), 2000);
@@ -197,7 +197,7 @@ export class ProjectComponent implements OnInit {
         return true;
     }
 
-    buildUrl(id: number) {
+    buildUrl(id: number|string) {
         return `/project/${id}/tasks`;
     }
 }

@@ -80,8 +80,8 @@ export class SettingsComponent implements OnInit {
         };
         const settings = await firstValueFrom(this.settingsService.get(1));
         let savedData$;
-        if (settings?.id) {
-            savedData$ = this.settingsService.edit(1, settingsData);
+        if (settings?.uuid) {
+            savedData$ = this.settingsService.edit(settings.uuid, settingsData);
         } else {
             savedData$ = this.settingsService.add(settingsData);
         }

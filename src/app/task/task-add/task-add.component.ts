@@ -75,7 +75,8 @@ export class TaskAddComponent implements OnInit {
         description: [null],
         dueDate: [null] as [null | Date],
         dueTime: [null] as [null | Date],
-        project: [this.project?.id || null],
+        //project: [this.project?.id || null],
+        project_uuid: [this.project?.uuid || null],
         parent: [this.parent || null],
         recurring: [null]
     });
@@ -107,9 +108,9 @@ export class TaskAddComponent implements OnInit {
             if (!projects.length) return;
             const cloneProjects = projects.slice();
 
-            if (cloneProjects[0].id != 0) {
+            if (cloneProjects[0].uuid != 0) {
                 cloneProjects.unshift({
-                    id: 0,
+                    uuid: 0,
                     name: "Inbox"
                 });
             }
@@ -117,7 +118,7 @@ export class TaskAddComponent implements OnInit {
         });
 
         if (this.project) {
-            this.taskForm.patchValue({project: this.project.id});
+            this.taskForm.patchValue({project_uuid: this.project.uuid});
         }
 
         let notRecurringLabel;
@@ -178,13 +179,14 @@ export class TaskAddComponent implements OnInit {
             description: form.description || null,
             dueDate: dueDate || null,
             dueTime: form.dueTime || null,
-            project: this.parent?.project || form.project || 0,
+            project: this.parent?.project || 0,
+            project_uuid: this.parent?.project_uuid || form.project_uuid || '',
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
             recurring: recurring || null,
             uuid: randomUUID(),
-            project_uuid: this.project?.uuid,
+            // project_uuid: this.project?.uuid,
             parent_uuid: this.parent?.uuid,
             user_uuid: this.authService.currentUser?.id as string
         };
@@ -216,8 +218,10 @@ export class TaskAddComponent implements OnInit {
             description: null,
             dueDate: null,
             dueTime: null,
-            project: this.parent?.project || this.project?.id,
+            //project: this.parent?.project || this.project?.id,
+            project_uuid: this.parent?.project_uuid || this.project?.uuid,
             parent: this.parent || null,
+            // parent_uuid: this.parent || null,
             recurring: this.recurringOptions[0]
         });
         return true;

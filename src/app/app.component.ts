@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
@@ -208,7 +208,7 @@ export class AppComponent implements OnInit {
             projectItems.push({
                 label: project.name,
                 icon: 'pi pi-hashtag',
-                routerLink: `/project/${project.id}/tasks`
+                routerLink: `/project/${project.uuid}/tasks`
             });
         }
         const projectMenuItems = {

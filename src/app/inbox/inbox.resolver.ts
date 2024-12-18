@@ -8,7 +8,7 @@ import { from, map, mergeMap } from 'rxjs';
 
 interface InboxResolvedData {
     tasks: TaskDto[];
-    subtasksCount: Map<number, number>;
+    subtasksCount: Map<string, number>;
 }
 
 @Injectable({ providedIn: 'root'})
@@ -17,7 +17,7 @@ export class InboxResolver implements Resolve<InboxResolvedData> {
         private taskService: TaskService<TaskDto>
     ) {}
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<InboxResolvedData> {
-        return this.taskService.getFromProject(0).pipe(
+        return this.taskService.getFromProject('').pipe(
             mergeMap((tasks) => {
                 tasks = this.taskService.orderTasks(tasks);
                 return from(this.taskService.countTasksSubtasks(tasks)).pipe(

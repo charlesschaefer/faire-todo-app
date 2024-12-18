@@ -43,13 +43,13 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
     override async ngOnInit() {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
-        const projectId = Number(this.route.snapshot.paramMap.get("id"));
+        const projectId = this.route.snapshot.paramMap.get("id") as string;
         this.project = await firstValueFrom(this.projectService.get(projectId));
         super.ngOnInit();
     }
 
     override async getTasks() {
-        const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.id));
+        const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.uuid));
         // now filter only tasks not completed
         const filteredTasks = tasks.filter(task => task.completed == 0);
         this.tasks = this.taskService.orderTasks(filteredTasks);

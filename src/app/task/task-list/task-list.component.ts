@@ -32,7 +32,7 @@ export class TaskListComponent implements OnInit {
     @Output() onEditTask = new EventEmitter();
     @Input() showAddTask = true;
 
-    projects!: Map<number, ProjectDto>;
+    projects!: Map<string, ProjectDto>;
 
     constructor(
         private taskService: TaskService<TaskDto>,
@@ -41,8 +41,8 @@ export class TaskListComponent implements OnInit {
 
     ngOnInit(): void {
         this.projectService.list().subscribe((projects: ProjectDto[]) => {
-            const indexedProjects = new Map<number, ProjectDto>();
-            projects.forEach(project => indexedProjects.set(project.id, project));
+            const indexedProjects = new Map<string, ProjectDto>();
+            projects.forEach(project => indexedProjects.set(project.uuid, project));
             this.projects = indexedProjects;
         });
     }
@@ -51,10 +51,10 @@ export class TaskListComponent implements OnInit {
         this.showTaskAdd.emit(event);
     }
 
-    onTaskRemoved(id: number) {
+    onTaskRemoved(uuid: string) {
         const newTasks:TaskDto[] = [];
         this.tasks.forEach(task => {
-            if (task.id != id) {
+            if (task.uuid != uuid) {
                 newTasks.push(task);
             }
         });
@@ -65,7 +65,7 @@ export class TaskListComponent implements OnInit {
         moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
         this.tasks.forEach((task, index) => {
             task.order = index;
-            this.taskService.edit(task.id, task).subscribe({
+            this.taskService.edit(task.uuid, task).subscribe({
                 error: err => console.error(err)
             });
         });

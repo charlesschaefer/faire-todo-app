@@ -5,16 +5,17 @@
     <div class="task-item-mark-complete">
       <p-checkbox
         #rbutton
-        name="mark-task-complete-{{task.id}}" 
-        [value]="task.id"
-        inputId="mark-task-complete-{{task.id}}" 
+        name="mark-task-complete-{{task.uuid}}" 
+        [value]="task.uuid"
+        inputId="mark-task-complete-{{task.uuid}}" 
         [(ngModel)]="completed"
         (onChange)="markTaskAsCompleted()"
         [binary]="true"
       />
       
     </div>
-    <div class="task-item-row" (click)="showTaskEditDialog(task)" #taskRow>
+    <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+    <div class="task-item-row" (click)="showTaskEditDialog(task)" (keypress)="showTaskEditDialog(task)" #taskRow>
       <div class="task-item-row-first">
         <div class="task-item-content">
           <div class="task-item-title text-sm">
@@ -38,8 +39,8 @@
           </div>
           }
           <div class="task-item-attributes-project">
-            @if (task.project && projects) {
-                <i class="pi pi-clipboard"></i>{{projects.get(task.project)?.name}}
+            @if (task.project_uuid && projects) {
+                <i class="pi pi-clipboard"></i>{{projects.get(task.project_uuid)?.name}}
             } @else {
               <i class="pi pi-inbox"></i><span  >{{ 'Inbox' | transloco }}</span>
             }

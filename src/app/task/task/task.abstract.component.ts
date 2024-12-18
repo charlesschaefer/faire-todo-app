@@ -20,10 +20,10 @@ import { inject } from '@angular/core';
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
-    @Input() projects!: Map<number, ProjectDto>;
+    @Input() projects!: Map<string, ProjectDto>;
 
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-    @Output() onTaskRemoved = new EventEmitter<number>();
+    @Output() onTaskRemoved = new EventEmitter<string>();
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix
     @Output() onEditTask = new EventEmitter<Event>();
 
@@ -166,7 +166,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                     detail: await firstValueFrom(this.translate.selectTranslate(`Task removed successfully`)),
                     severity: "success"
                 });
-                this.onTaskRemoved.emit(this.task.id);
+                this.onTaskRemoved.emit(this.task.uuid);
                 this.undoService.register(undo).subscribe(data => {
                     this.undoDelete(data);
                 });
@@ -240,7 +240,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 }
             })
         } else {
-            this.taskService.edit(task.id, task).subscribe({
+            this.taskService.edit(task.uuid, task).subscribe({
                 complete: async () => {
                     successMsg();
                     console.log("emiting Task.onEditTask()")
@@ -260,7 +260,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         if (undoData.type == 'task.markComplete') {
             const task = undoData.data as TaskDto;
             console.log("Lets save the task again");
-            this.taskService.edit(task.id, task).subscribe({
+            this.taskService.edit(task.uuid, task).subscribe({
                 complete: async () => {
                     console.log("undoMarkAsComplete().complete")
                     this.messageService.add({
