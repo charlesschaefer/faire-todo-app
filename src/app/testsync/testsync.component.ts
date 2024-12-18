@@ -65,7 +65,7 @@ export class TestSyncComponent implements OnInit {
 
     testSyncEditForm = this.fb.group({
         id: [0, Validators.required],
-        uuid: [null, Validators.required],
+        uuid: ['', Validators.required],
         name: ['', Validators.required],
         created: [new Date()],
         description: [''],
@@ -94,7 +94,7 @@ export class TestSyncComponent implements OnInit {
         this.testSyncService.list().subscribe(testSyncs => this.testSyncs = testSyncs);
     }
 
-    async confirmDeleteTestSync(id: number) {
+    async confirmDeleteTestSync(uuid: string) {
         this.confirmationService.confirm({
             header: await firstValueFrom(this.translate.selectTranslate(`Are you sure?`)),
             message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this testSync? All of it's tasks will be removed too!`)),
@@ -102,18 +102,18 @@ export class TestSyncComponent implements OnInit {
             acceptIcon: "none",
             rejectIcon: "none",
             accept: () => {
-                this.deleteTestSync(id);
+                this.deleteTestSync(uuid);
             }
         });
     }
 
-    deleteTestSync(id: number) {
+    deleteTestSync(uuid: string) {
         // deletes the testSync
-        this.testSyncService.remove(id).subscribe({
+        this.testSyncService.remove(uuid).subscribe({
             complete: () => {
-                this.taskService.getByField('testSync', id).subscribe(tasks => {
-                    const tasksIds: number[] = [];
-                    tasks.forEach((task: TaskDto) => tasksIds.push(task.id));
+                this.taskService.getByField('testSync', uuid).subscribe(tasks => {
+                    const tasksIds: string[] = [];
+                    tasks.forEach((task: TaskDto) => tasksIds.push(task.uuid));
                     // then deletes the tasks of the testSync
                     this.taskService.bulkRemove(tasksIds);
                     this.messageService.add({
@@ -132,8 +132,8 @@ export class TestSyncComponent implements OnInit {
         });
     }
 
-    editTestSyncDialog(id: number) {
-        const testSync = this.testSyncs.filter(testSync => testSync.id == id)[0];
+    editTestSyncDialog(uuid: string) {
+        const testSync = this.testSyncs.filter(testSync => testSync.uuid == uuid)[0];
         this.testSyncEditForm.patchValue({
             name: testSync.name as unknown as string,
             id: testSync.id as unknown as number
@@ -150,7 +150,7 @@ export class TestSyncComponent implements OnInit {
             description: form.description as string,
             enabled: form.enabled as number
         } as TestSyncDto;
-        this.testSyncService.edit(form.id as number, formData).subscribe({
+        this.testSyncService.edit(form.uuid as string, formData).subscribe({
             complete: () => {
                 this.editTestSyncVisible = false;
                 setTimeout(() => window.location.reload(), 2000);
@@ -206,7 +206,7 @@ export class TestSyncComponent implements OnInit {
         return true;
     }
 
-    buildUrl(id: number) {
-        return `/testSync/${id}/tasks`;
+    buildUrl(uuid: string) {
+        return `/testSync/${uuid}/tasks`;
     }
 }

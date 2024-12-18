@@ -1,14 +1,14 @@
 <!-- <p-dataView #dv [value]="tasks"  rows="2">
   <ng-template pTemplate="list" let-tasks> -->
     <div class="tasks-container">
-      @if (tasks.length) {
+      @if (tasks?.length) {
       <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
-        @for (task of tasks; track task.id) {
+        @for (task of tasks; track task.uuid) {
           <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
         }
       </ul>
       }
-      @if (completedTasks.length) {
+      @if (completedTasks?.length) {
         <p-panel [toggleable]="true" [header]="'Completed tasks' | transloco" [collapsed]="true">
           <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
             @for (task of completedTasks; track task.uuid) {

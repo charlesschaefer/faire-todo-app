@@ -45,7 +45,7 @@ export class SyncService {
             environment.supabaseUrl,
             environment.supabaseKey
         );
-        if (this.db.verno >= 17) {
+        if (this.db.verno >= 20) {
             // Register Supabase sync protocol
             Dexie.Syncable.registerSyncProtocol("supabase", {
                 sync: async (context, url, options, baseRevision, syncedRevision, changes, partial, applyRemoteChanges, onChangesAccepted, onSuccess, onError) => {
@@ -122,7 +122,7 @@ export class SyncService {
     }
 
     async connect() {
-        if (this.db.verno < 17) {
+        if (this.db.verno < 20) {
             throw new Error('Wrong version of the database');
         }
         const user = this.authService.currentUser;

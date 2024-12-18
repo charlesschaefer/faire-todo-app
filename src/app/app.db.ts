@@ -105,8 +105,8 @@ export class AppDb extends Dexie {
                     }),
                     addForeignKeysUUID: ([tasksMap, projectsMap, tagsMap]: Map<number, string>[]) => Promise.all([
                         transaction.table('task').toCollection().modify((item: TaskDto) => {
-                            item.project_uuid = item.project ? projectsMap.get(item.project) as string : null;
-                            item.parent_uuid = item.parent ? tasksMap.get(item.parent) as string : null;
+                            item.project_uuid = item.project ? projectsMap.get(item.project) as string : '';
+                            item.parent_uuid = item.parent ? tasksMap.get(item.parent) as string : '';
                         }),
                         transaction.table("task_tag").toCollection().modify((item: TaskTagDto) => {
                             item.task_uuid = item.task ? tasksMap.get(item.task) as string : '';
@@ -229,6 +229,14 @@ export class AppDb extends Dexie {
             project_temp: null,
             tag_temp: null,
             settings_temp: null,
+        });
+
+        this.version(17).stores({
+            user: '$$uuid, id, email, name, created_at, avatar_url',
+            task: '$$uuid, id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            project: '$$uuid, id, name, user_uuid, updated_at',
+            tag: '$$uuid, id, name, user_uuid, updated_at',
+            settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
         });
 
         this.on('populate', () => this.populate());

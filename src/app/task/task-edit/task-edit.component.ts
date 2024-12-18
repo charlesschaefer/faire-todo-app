@@ -90,7 +90,7 @@ export class TaskEditComponent implements OnInit {
             dueTime: [this.task.dueTime],
             project: [this.task.project != null ? this.task.project : 0],
             parent: [this.task.parent || null],
-            recurring: [this.task.recurring || 0]
+            recurring: [this.task.recurring || '0']
         });
         
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
@@ -101,7 +101,7 @@ export class TaskEditComponent implements OnInit {
             const cloneProjects = projects.slice();
             const projectsMap = new Map<string, ProjectDto>();
 
-            if (cloneProjects[0].uuid != 0) {
+            if (cloneProjects[0] && cloneProjects[0].uuid != 0) {
                 cloneProjects.unshift({
                     uuid: 0,
                     name: "Inbox"

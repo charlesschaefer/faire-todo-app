@@ -2,14 +2,14 @@
 <p-card [header]="testSyncs.length + (' testSyncs' | transloco)" class="testSync-list">
 
   <ul class="testSync-items">
-    @for (testSync of testSyncs; track testSync.id) {
+    @for (testSync of testSyncs; track testSync.uuid) {
       <li class="testSync-item">
-        <div class="testSync-item-name text-sm" (click)="router.navigate([buildUrl(testSync.id)])">
+        <div class="testSync-item-name text-sm" (click)="router.navigate([buildUrl(testSync.uuid)])">
           {{testSync.name}}
         </div>
         <div class="testSync-item-menu">
-          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteTestSync(testSync.id)" [rounded]="true" />
-          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editTestSyncDialog(testSync.id)" [rounded]="true" />
+          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteTestSync(testSync.uuid)" [rounded]="true" />
+          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editTestSyncDialog(testSync.uuid)" [rounded]="true" />
         </div>
       </li>
     }

@@ -45,6 +45,10 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     getFromProject(project_uuid: string): Observable<T[]> {
+        console.log("Criteria: ", {
+            completed: 0,
+            project_uuid: project_uuid,
+        });
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,
@@ -99,7 +103,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     async countTasksSubtasks(tasks: TaskDto[]) {
         const countMap = new Map<string, number>();
         for (const task of tasks) {
-            const count = await firstValueFrom(this.countByField('parent', task.uuid));
+            const count = await firstValueFrom(this.countByField('parent_uuid', task.uuid));
             countMap.set(task.uuid, count);
         };
         return countMap;
@@ -108,7 +112,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     getTaskSubtasks(task: TaskDto) {
         return from(liveQuery(() => {
             return this.table
-                .where('parent')
+                .where('parent_uuid')
                 .equals(task.uuid)
                 .and((task) => task.completed == 0)
                 .toArray();
@@ -120,10 +124,10 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         
         zip(
             from(liveQuery(() => this.table.where({
-                parent: task.uuid
+                parent_uuid: task.uuid
             }).count())),
             from(liveQuery(() => this.table.where({
-                parent: task.uuid,
+                parent_uuid: task.uuid,
                 completed: 1
             }).count()))
         ).subscribe(([subtasks, completed]) => {
