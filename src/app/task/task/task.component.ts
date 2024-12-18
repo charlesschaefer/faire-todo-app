@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { DateTime } from 'luxon';
 import { firstValueFrom, Subject } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -45,7 +44,7 @@ import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscro
         DateShortenerPipe,
         TranslocoModule,
         LinkifyPipe,
-        NgxCdkDnDScrollFixerDirective
+        NgxCdkDnDScrollFixerDirective,
     ],
     providers: [
         MessageService,

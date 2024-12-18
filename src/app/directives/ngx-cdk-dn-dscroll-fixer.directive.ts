@@ -1,14 +1,11 @@
-import { style } from '@angular/animations';
 import { Directive, ElementRef } from '@angular/core';
-import { add, remove } from 'dexie';
-import { DateTime } from 'luxon';
 import { fromEvent, Subject, Subscription } from 'rxjs';
 
 type Timer = ReturnType<typeof setTimeout>;
 
 type TapEvent = MouseEvent | PointerEvent | TouchEvent;
 
-type Point = { x: number, y: number };
+interface Point { x: number, y: number }
 
 @Directive({
     selector: '[appNgxCdkDnDScrollFixer]',
@@ -26,7 +23,7 @@ export class NgxCdkDnDScrollFixerDirective {
     private ticking = false;
     private dragging = false;
     private startScrollY = 0;
-    private lastDistances: Map<number, number> = new Map();
+    private lastDistances = new Map<number, number>();
     private speed!: number;
     private acceleration!: number;
     private lastScrollTime!: number;
@@ -48,8 +45,8 @@ export class NgxCdkDnDScrollFixerDirective {
             });
 
         fromEvent<TapEvent>(el.nativeElement, 'touchend', { capture: true })
-            .subscribe((ev) => {
-                this.pointerUp(ev);
+            .subscribe(() => {
+                this.pointerUp();
             });
         
         (el.nativeElement as HTMLElement).addEventListener('contextmenu', ev => ev.preventDefault());
@@ -87,7 +84,6 @@ export class NgxCdkDnDScrollFixerDirective {
         if (!this.dragging) return;
         if (this.currentAction == 'dnd') return;
 
-        const rect = (ev.target as Element).getBoundingClientRect();
         const timeoutExpired = Date.now() - this.startTime >= this.timeoutDuration;
         const xMoved = coords.x - this.startX;
         const yMoved = coords.y - this.startMouseY;
@@ -113,7 +109,7 @@ export class NgxCdkDnDScrollFixerDirective {
         }
     }
 
-    pointerUp(ev: TapEvent) {
+    pointerUp() {
         if (this.timeoutId) clearTimeout(this.timeoutId);
 
         if (this.dragging) {
@@ -145,7 +141,6 @@ export class NgxCdkDnDScrollFixerDirective {
 
     updateScroll(ev: TapEvent) {
         const coords = this.getEventCoordinates(ev);
-        const rect = (ev.target as Element).getBoundingClientRect();
 
         const distance = (this.startMouseY - coords.y)
         this.updatedY = this.startScrollY + distance;
@@ -157,7 +152,6 @@ export class NgxCdkDnDScrollFixerDirective {
                 const time = Date.now();
                 this.saveDistance(distance, time);
 
-                const currentY = coords.y;
                 window.scroll({
                     top: this.updatedY,
                     left: this.startX
@@ -182,7 +176,7 @@ export class NgxCdkDnDScrollFixerDirective {
         })
     }
     
-    continuedScroll(callback?: Function) {
+    continuedScroll(callback?: () => void) {
         if (!this.keepScroll) {
             return;
         }
@@ -207,7 +201,6 @@ export class NgxCdkDnDScrollFixerDirective {
                         this.keepScroll = false;
                     }
                 });
-            } else {
             }
             if (callback) {
                 callback();
@@ -252,7 +245,7 @@ export class NgxCdkDnDScrollFixerDirective {
     }
 
     calculateAccelerationAndSpeed() {
-        let lastTime:number = 0, lastDistance:number = 0;
+        let lastTime = 0;
         const speeds = [];
         const times = [];
 
@@ -260,12 +253,12 @@ export class NgxCdkDnDScrollFixerDirective {
             return [];
         }
 
-        for (let [time, distance] of this.lastDistances.entries()) {
+        for (const [time, distance] of this.lastDistances.entries()) {
             if (!lastTime) {
                 lastTime = time;
                 continue;
             }
-            let timeDiff = time - lastTime
+            const timeDiff = time - lastTime
             // speed = Δdistance / Δtime;
             speeds.push(distance / timeDiff);
             times.push(timeDiff);

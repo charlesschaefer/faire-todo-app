@@ -5,7 +5,6 @@ import { liveQuery, Table } from "dexie";
 import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
 import { AuthService } from "./auth.service";
-import { UserDto } from "../dto/user-dto";
 
 export interface UserBound {
     user_uuid: string;
@@ -45,6 +44,9 @@ export abstract class ServiceAbstract<T> {
         return from(liveQuery(() => this.table.toArray()));
     }
 
+    /**
+     * @TODO: verificar se o dexie gera o uuid automaticamente ou não
+     */
     add(data: T & UserBound) {
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;

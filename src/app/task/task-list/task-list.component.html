@@ -1,14 +1,14 @@
 <!-- <p-dataView #dv [value]="tasks"  rows="2">
   <ng-template pTemplate="list" let-tasks> -->
     <div class="tasks-container">
-      @if (tasks?.length) {
+      @if (tasks.length) {
       <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
         @for (task of tasks; track task.id) {
           <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" />
         }
       </ul>
       }
-      @if (completedTasks?.length) {
+      @if (completedTasks.length) {
         <p-panel [toggleable]="true" [header]="'Completed tasks' | transloco" [collapsed]="true">
           <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
             @for (task of completedTasks; track task.id) {
@@ -18,7 +18,8 @@
         </p-panel>
       }
       @if (showAddTask) {
-      <div class="task-add-line" (click)="showTaskAddPanel($event)">
+      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+      <div class="task-add-line" (click)="showTaskAddPanel($event)" (keypress)="showTaskAddPanel($event)">
         <div class="task-add-button">
           <i class="pi pi-plus"></i>
         </div>

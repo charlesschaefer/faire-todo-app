@@ -1,8 +1,8 @@
-import { Component, ElementRef, EventEmitter, Inject, Input, OnDestroy, OnInit, Output, afterRender } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
-import { concat, concatAll, firstValueFrom, fromEvent, merge, Observable, Observer, of, Subject } from 'rxjs';
-import { ConfirmationService, MenuItem, MessageService, TreeNode } from 'primeng/api';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 
@@ -11,16 +11,12 @@ import { TaskService } from '../../services/task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
 import { inject } from '@angular/core';
-import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 
 
 @Component({
     selector: 'app-task',
     standalone: true,
     templateUrl: './task.abstract.component.html',
-    imports: [
-        NgxCdkDnDScrollFixerDirective
-    ]
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;

@@ -1,5 +1,4 @@
-import { Pipe, PipeTransform, SecurityContext } from '@angular/core';
-import * as linkify from "linkifyjs";
+import { Pipe, PipeTransform } from '@angular/core';
 import linkifyHtml from "linkify-html";
 import sanitizeHtml from 'sanitize-html';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';

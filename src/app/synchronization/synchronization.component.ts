@@ -11,8 +11,8 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
-import { Message, MessageService } from 'primeng/api';
-import { firstValueFrom, from } from 'rxjs';
+import { MessageService } from 'primeng/api';
+import { firstValueFrom } from 'rxjs';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
@@ -113,7 +113,8 @@ export class SynchronizationComponent {
         });
     }
 
-    async sendEncryptedOTP(event: Event) {
+    // eslint-disable-next-line unused-imports/no-unused-vars
+    async sendEncryptedOTP(_event: Event) {
         this.showProgressBar = true;
         console.log("Sending encripted data. OTP: ", this.otpForm.value.otp);
         //alert("Let's start the otp validation");

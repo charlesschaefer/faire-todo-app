@@ -2,14 +2,14 @@
 <p-card [header]="projects.length + (' projects' | transloco)" class="project-list">
 
   <ul class="project-items">
-    @for (project of projects; track project.id) {
+    @for (project of projects; track project.uuid) {
       <li class="project-item">
-        <div class="project-item-name text-sm" (click)="router.navigate([buildUrl(project.id)])">
+        <div class="project-item-name text-sm" (click)="router.navigate([buildUrl(project.uuid)])">
           {{project.name}}
         </div>
         <div class="project-item-menu">
-          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteProject(project.id)" [rounded]="true" />
-          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editProjectDialog(project.id)" [rounded]="true" />
+          <p-button icon="pi pi-trash" severity="secondary" (onClick)="confirmDeleteProject(project.uuid)" [rounded]="true" />
+          <p-button icon="pi pi-pencil" severity="secondary" (onClick)="editProjectDialog(project.uuid)" [rounded]="true" />
         </div>
       </li>
     }

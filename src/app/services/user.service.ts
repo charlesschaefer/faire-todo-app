@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ServiceAbstract, UserBound } from './service.abstract';
+import { ServiceAbstract } from './service.abstract';
 import { UserDto } from '../dto/user-dto';
 import { DbService } from './db.service';
 import { AuthService } from './auth.service';

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -39,7 +39,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
-import { DbService } from './services/db.service';
 
 export enum NotificationType {
     DueTask,
@@ -78,7 +77,7 @@ export class AppComponent implements OnInit {
     menuItems!: MenuItem[];
     settingsMenuItems!: MenuItem[];
 
-    syncStatus: string = '';
+    syncStatus = '';
     currentUser: User | null = null;
     
     shareListener!: PluginListener;
@@ -121,7 +120,7 @@ export class AppComponent implements OnInit {
                     detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
                     summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
                 })
-                this.syncService.connect().catch(console.error).then((result) => {
+                this.syncService.connect().catch(console.error).then(() => {
                     this.syncService.syncStatus.subscribe((status) => {
                         this.syncStatus = Dexie.Syncable.StatusTexts[status];
                         console.warn("Synchronization new status: ", this.syncStatus)
@@ -139,7 +138,7 @@ export class AppComponent implements OnInit {
         });
 
         // close the sidebar everytime the route triggers an event
-        this.router.events.subscribe((e) => this.showSidebar = false);
+        this.router.events.subscribe(() => this.showSidebar = false);
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
@@ -212,7 +211,7 @@ export class AppComponent implements OnInit {
                 routerLink: `/project/${project.id}/tasks`
             });
         }
-        let projectMenuItems = {
+        const projectMenuItems = {
             label: await firstValueFrom(this.translate.selectTranslate("Projects")),
             items: projectItems
         };
@@ -305,30 +304,6 @@ export class AppComponent implements OnInit {
         }).then(listener => {
             this.shareListener = listener;
         });
-
-        // this.childComponentsData = {
-        //     showAddTask: true,
-        //     sharetargetUrl: "http://localhost:4200/inbox",
-        // };
-        // console.log("AppComponent.ngOnInit()", this.childComponentsData);
-
-        // // starts the notification worker
-        // if (typeof Worker !== 'undefined') {
-        //     // Create a new
-        //     const worker = new Worker(new URL('./app.worker', import.meta.url));
-        //     worker.onmessage = ({ data }) => {
-        //         if (data.type == NotificationType.DueTask) {
-        //             this.notifyDuingTask(data.task);
-        //         } else if (data.type == NotificationType.TodayTasks) {
-        //             this.notifyTasksDuingToday();
-        //         }
-        //     };
-        //     worker.postMessage('hello');
-        // } else {
-        //     // Web Workers are not supported in this environment.
-        //     // You should add a fallback so that your program still executes correctly.
-        //     alert("Web Workers are not supported in this environment.");
-        // }
     }
 
     switchTheme() {
@@ -429,10 +404,10 @@ export class AppComponent implements OnInit {
 
 function parseIntentUri(uri: string) {
     uri = uri.replace(/^#Intent;/, '').replace(/;end$/, '');
-    let parts = uri.split(';');
-    let result: { [key: string]: string } = {};
-    for (let part of parts) {
-        let [key, value] = part.split('=');
+    const parts = uri.split(';');
+    const result: Record<string, string> = {};
+    for (const part of parts) {
+        const [key, value] = part.split('=');
         result[key] = value;
     }
     return result;

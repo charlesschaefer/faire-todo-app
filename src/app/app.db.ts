@@ -162,28 +162,28 @@ export class AppDb extends Dexie {
             settings_temp: '$$uuid, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
         }).upgrade(async transaction => {
             const tasks = (await transaction.table('task').toArray()).map((item) => {
-                const newItem: { [key: string]: any } = {};
+                const newItem: Record<string, any> = {};
                 Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
                 return newItem;
             });
             await transaction.table('task_temp').bulkAdd(tasks).catch(console.error);
 
             const projects = (await transaction.table('project').toArray()).map((item) => {
-                const newItem: { [key: string]: any } = {};
+                const newItem: Record<string, any> = {};
                 Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
                 return newItem;
             });
             await transaction.table('project_temp').bulkAdd(projects).catch(console.error);
 
             const tags = (await transaction.table('tag').toArray()).map((item) => {
-                const newItem: { [key: string]: any } = {};
+                const newItem: Record<string, any> = {};
                 Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
                 return newItem;
             });
             await transaction.table('tag_temp').bulkAdd(tags).catch(console.error);
 
             const settings = (await transaction.table('settings').toArray()).map((item) => {
-                const newItem: { [key: string]: any } = {};
+                const newItem: Record<string, any> = {};
                 Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
                 return newItem;
             });

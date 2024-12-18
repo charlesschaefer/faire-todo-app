@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 
 
 import { TaskListComponent } from "../task/task-list/task-list.component";
-import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { InboxComponent } from '../inbox/inbox.component';
 import { TaskService } from '../services/task.service';
 import { TaskDto } from '../dto/task-dto';
@@ -20,7 +19,6 @@ import { ActivatedRoute } from '@angular/router';
     standalone: true,
     imports: [
         TaskListComponent,
-        TaskAddComponent,
         IconFieldModule,
         InputIconModule,
         InputTextModule,
@@ -43,7 +41,9 @@ export class SearchComponent extends InboxComponent implements OnInit {
         super(taskService, activatedRoute);
     }
 
-    override async ngOnInit() { }
+    override async ngOnInit() { 
+        console.log("")
+    }
 
     async search() {
         let tasks = await firstValueFrom(this.taskService.slowStringSearch('title', this.searchValue));
