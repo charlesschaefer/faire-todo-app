@@ -149,43 +149,66 @@ export class AppDb extends Dexie {
         });
 
         this.version(13).stores({
-            user: null,
-            user_temp: '$$uuid, id, email, name, created_at, avatar_url',
-            task: null,
-            task_temp: '$$uuid, id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
-            project: null,
-            project_temp: '$$uuid, id, name, user_uuid, updated_at',
-            tag: null,
-            tag_temp: '$$uuid, id, name, user_uuid, updated_at',
+            // user: null,
+            user_temp: '$$uuid, email, name, created_at, avatar_url',
+            // task: null,
+            task_temp: '$$uuid, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            // project: null,
+            project_temp: '$$uuid, name, user_uuid, updated_at',
+            // tag: null,
+            tag_temp: '$$uuid, name, user_uuid, updated_at',
             task_tag: 'task, tag, user_uuid, task_uuid, tag_uuid, updated_at',
-            settings: null,
-            settings_temp: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
+            // settings: null,
+            settings_temp: '$$uuid, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
         }).upgrade(async transaction => {
-            const tasks = await transaction.table('task').toArray();
+            const tasks = (await transaction.table('task').toArray()).map((item) => {
+                const newItem: { [key: string]: any } = {};
+                Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
+                return newItem;
+            });
             await transaction.table('task_temp').bulkAdd(tasks).catch(console.error);
 
-            const projects = await transaction.table('project').toArray();
+            const projects = (await transaction.table('project').toArray()).map((item) => {
+                const newItem: { [key: string]: any } = {};
+                Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
+                return newItem;
+            });
             await transaction.table('project_temp').bulkAdd(projects).catch(console.error);
 
-            const tags = await transaction.table('tag').toArray();
+            const tags = (await transaction.table('tag').toArray()).map((item) => {
+                const newItem: { [key: string]: any } = {};
+                Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
+                return newItem;
+            });
             await transaction.table('tag_temp').bulkAdd(tags).catch(console.error);
 
-            const settings = await transaction.table('settings').toArray();
+            const settings = (await transaction.table('settings').toArray()).map((item) => {
+                const newItem: { [key: string]: any } = {};
+                Object.keys(item).forEach(key => key !== 'id' ? newItem[key] = item[key] : null);
+                return newItem;
+            });
             await transaction.table('settings_temp').bulkAdd(settings).catch(console.error);
         });
 
         this.version(14).stores({
-            user: '$$uuid, id, email, name, created_at, avatar_url',
-            user_temp: null,
-            task: '$$uuid, id, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
-            task_temp: null,
-            project: '$$uuid, id, name, user_uuid, updated_at',
-            project_temp: null,
-            tag: '$$uuid, id, name, user_uuid, updated_at',
-            tag_temp: null,
-            task_tag: '[task_uuid+tag_uuid], task, tag, user_uuid, updated_at',
-            settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
-            settings_temp: null,
+            user: null,
+            // user_temp: '$$uuid, email, name, created_at, avatar_url',
+            task: null,
+            // task_temp: '$$uuid, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            project: null,
+            // project_temp: '$$uuid, name, user_uuid, updated_at',
+            tag: null,
+            // tag_temp: '$$uuid, name, user_uuid, updated_at',
+            settings: null,
+            // settings_temp: '$$uuid, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
+        });
+
+        this.version(15).stores({
+            user: '$$uuid, email, name, created_at, avatar_url',
+            task: '$$uuid, title, description, dueDate, dueTime, project, completed, order, parent, recurring, user_uuid, project_uuid, parent_uuid, updated_at',
+            project: '$$uuid, name, user_uuid, updated_at',
+            tag: '$$uuid, name, user_uuid, updated_at',
+            settings: '$$uuid, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
         }).upgrade(async transaction => {
             const tasks = await transaction.table('task_temp').toArray();
             await transaction.table('task').bulkAdd(tasks).catch(console.error);
@@ -200,6 +223,13 @@ export class AppDb extends Dexie {
             await transaction.table('settings').bulkAdd(settings).catch(console.error);
         });
 
+        this.version(16).stores({
+            user_temp: null,
+            task_temp: null,
+            project_temp: null,
+            tag_temp: null,
+            settings_temp: null,
+        });
 
         this.on('populate', () => this.populate());
     }

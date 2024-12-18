@@ -70,20 +70,27 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.where("user_uuid").notEqual("").modify({user_uuid: this.userUuid}));
     }
 
-    edit(id: number, data: T & UserBound) {
+    edit(uuid: string, data: T & UserBound) {
         if (this.userUuid && this.storeName !== "user") {
             data["user_uuid"] = this.userUuid;
         }
         this.clearCache();
-        return from(this.table.update(id, data as object));/* 
+        return from(this.table.update(uuid, data as object));/* 
             .pipe(
                 map((response: T) => response),
                 catchError((error: T) => throwError(error))
             ); */
     }
 
-    get(id: number) {
-        return from(liveQuery(() => this.table.where({id: id}).first()));
+    get(uuid: string | number) {
+        let key: string;
+        if (typeof uuid == 'string') {
+            key = 'uuid';
+        } else {
+            key = 'id';
+        }
+        const where = {[key]: uuid};
+        return from(liveQuery(() => this.table.where(where).first()));
     }
 
     getByField(field: string, value: any): Observable<T[]> {
@@ -127,12 +134,12 @@ export abstract class ServiceAbstract<T> {
         }));
     }
 
-    remove(id: number): Observable<any> {
-        return from(this.table.delete(id));
+    remove(uuid: string): Observable<any> {
+        return from(this.table.delete(uuid));
     }
 
-    bulkRemove(ids: number[]) {
-        return from(this.table.where('id').anyOf(ids).delete());
+    bulkRemove(uuids: string[]) {
+        return from(this.table.where('uuid').anyOf(uuids).delete());
     }
 
     clear(): Observable<any> {

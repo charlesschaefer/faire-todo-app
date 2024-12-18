@@ -31,7 +31,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,
-                parent: null
+                parent_uuid: null
             }).toArray();
         }))
     }
@@ -44,12 +44,12 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    getFromProject(project: number): Observable<T[]> {
+    getFromProject(project_uuid: string): Observable<T[]> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,
-                project: project,
-            }).and((task) => !task.parent || task.parent  == null).toArray();
+                project_uuid: project_uuid,
+            }).and((task) => !task.parent_uuid || task.parent_uuid  == null).toArray();
         }));
     }
 
@@ -64,7 +64,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                 .where('dueDate')
                 .belowOrEqual(date)
                 .and((task: TaskDto) => task.completed == 0)
-                .and((task: TaskDto) => !task.parent || task.parent == null)
+                .and((task: TaskDto) => !task.parent_uuid || task.parent_uuid == null)
                 .toArray();
         }));
     }
@@ -97,10 +97,10 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     }
 
     async countTasksSubtasks(tasks: TaskDto[]) {
-        const countMap = new Map<number, number>();
+        const countMap = new Map<string, number>();
         for (const task of tasks) {
-            const count = await firstValueFrom(this.countByField('parent', task.id));
-            countMap.set(task.id, count);
+            const count = await firstValueFrom(this.countByField('parent', task.uuid));
+            countMap.set(task.uuid, count);
         };
         return countMap;
     }
@@ -109,7 +109,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table
                 .where('parent')
-                .equals(task.id)
+                .equals(task.uuid)
                 .and((task) => task.completed == 0)
                 .toArray();
         }));
@@ -120,10 +120,10 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         
         zip(
             from(liveQuery(() => this.table.where({
-                parent: task.id
+                parent: task.uuid
             }).count())),
             from(liveQuery(() => this.table.where({
-                parent: task.id,
+                parent: task.uuid,
                 completed: 1
             }).count()))
         ).subscribe(([subtasks, completed]) => {
@@ -134,12 +134,12 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return countSubtasks$;        
     }
 
-    getProjectTasks(projectId: number) {
+    getProjectTasks(projectUuid: string) {
         return from(liveQuery(() => {
             return this.table.where({
-                project: projectId,
+                project_uuid: projectUuid,
                 completed: 0
-            }).and((task) => !task.parent || task.parent == null).toArray();
+            }).and((task) => !task.parent_uuid || task.parent_uuid == null).toArray();
         }))
     }
 
@@ -147,13 +147,13 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0
-            }).and((task) => !task.parent || task.parent == null).toArray();
+            }).and((task) => !task.parent_uuid || task.parent_uuid == null).toArray();
         }))
     }
 
     removeTask(task: TaskDto) {
         const removal$ = new Subject();
-        this.remove(task.id).subscribe({
+        this.remove(task.uuid).subscribe({
             complete: () => {
                 this.getTaskSubtasks(task).subscribe({
                     next: (tasks) => {
@@ -169,7 +169,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
                 })
             },
             error: () => {
-                throw new Error(`Couldn't remove task ${task.id}`);
+                throw new Error(`Couldn't remove task ${task.uuid}`);
             }
         });
 
@@ -179,13 +179,13 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
     markTaskComplete(task: TaskDto) {
         const success$ = new Subject();
         task.completed = 1;
-        from(this.table.update(task.id, task)).subscribe({
+        from(this.table.update(task.uuid, task)).subscribe({
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
                     const aTask:Partial<TaskDto> = task;
                     // removes id to enable creating a new task
-                    aTask.id = undefined;
+                    aTask.uuid = undefined;
                     aTask.completed = 0;
                     
                     const newTask = aTask as TaskAddDto;
