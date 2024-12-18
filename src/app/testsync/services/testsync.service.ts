@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { TestSyncDto } from '../dto/testsync.dto';
+import { TestSyncAddDto, TestSyncDto } from '../dto/testsync.dto';
 import { DbService } from '../../services/db.service';
 import { ServiceAbstract } from '../../services/service.abstract';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TestSyncService<T> extends ServiceAbstract<TestSyncDto> {
+export class TestSyncService extends ServiceAbstract<TestSyncDto | TestSyncAddDto> {
     storeName = "testsync";
 
 

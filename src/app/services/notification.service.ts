@@ -17,7 +17,7 @@ export class NotificationService {
 
     constructor (
         private translate: TranslocoService,
-        private taskService: TaskService<TaskDto>
+        private taskService: TaskService
     ) { }
 
     async setup(settings: SettingsDto) {

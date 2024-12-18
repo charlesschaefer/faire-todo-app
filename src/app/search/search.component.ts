@@ -35,7 +35,7 @@ export class SearchComponent extends InboxComponent implements OnInit {
     completedTasks!: TaskDto[];
 
     constructor(
-        protected override taskService: TaskService<TaskDto>,
+        protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
     ) {
         super(taskService, activatedRoute);

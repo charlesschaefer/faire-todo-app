@@ -14,13 +14,13 @@ interface InboxResolvedData {
 @Injectable({ providedIn: 'root'})
 export class InboxResolver implements Resolve<InboxResolvedData> {
     constructor(
-        private taskService: TaskService<TaskDto>
+        private taskService: TaskService
     ) {}
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<InboxResolvedData> {
         return this.taskService.getFromProject('').pipe(
             mergeMap((tasks) => {
-                tasks = this.taskService.orderTasks(tasks);
-                return from(this.taskService.countTasksSubtasks(tasks)).pipe(
+                tasks = this.taskService.orderTasks(tasks as TaskDto[]);
+                return from(this.taskService.countTasksSubtasks(tasks as TaskDto[])).pipe(
                     map(subtasksCount => {
                         return { 
                             tasks: tasks, 

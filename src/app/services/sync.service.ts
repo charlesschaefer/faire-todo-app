@@ -38,11 +38,11 @@ export class SyncService {
     constructor(
         private dbService: DbService,
         private authService: AuthService,
-        private taskService: TaskService<TaskDto>,
-        private tagService: TagService<TagDto>,
-        private taskTagService: TaskTagService<TaskTagDto>,
-        private settingsService: SettingsService<SettingsDto>,
-        private projectService: ProjectService<ProjectDto>,
+        private taskService: TaskService,
+        private tagService: TagService,
+        private taskTagService: TaskTagService,
+        private settingsService: SettingsService,
+        private projectService: ProjectService,
         private userService: UserService,
         @Inject('AppDb') private db: AppDb
     ) {
@@ -80,6 +80,7 @@ export class SyncService {
                         if (changes.length > 0) {
                             for (let key = 0; key < changes.length; key++) {
                                 // @TODO: check if the settings table already exists and update local table with uuid from remote
+                                // @TODO: idea: use the same uuid of user in the settings table.
                                 const change = changes[key];
                                 if (change.table == 'user' && change.type == 1 /* create */) {
                                     console.log("SyncService.sync() -> CREATE", change);

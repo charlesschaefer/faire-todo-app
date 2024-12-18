@@ -1,4 +1,6 @@
-export interface TestSyncDto {
+import { Updatable } from "../../services/service.abstract";
+
+export interface TestSyncDto extends Updatable {
     uuid: string;
     id: number;
     user_uuid: string;

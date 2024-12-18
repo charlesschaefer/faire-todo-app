@@ -77,8 +77,8 @@ export class TestSyncComponent implements OnInit {
     testSyncMenuItems!: MenuItem[];
 
     constructor(
-        private testSyncService: TestSyncService<TestSyncDto>,
-        private testSyncAddService: TestSyncService<TestSyncAddDto>,
+        private testSyncService: TestSyncService,
+        private testSyncAddService: TestSyncService,
         private translate: TranslocoService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
@@ -113,7 +113,7 @@ export class TestSyncComponent implements OnInit {
             complete: () => {
                 this.taskService.getByField('testSync', uuid).subscribe(tasks => {
                     const tasksIds: string[] = [];
-                    tasks.forEach((task: TaskDto) => tasksIds.push(task.uuid));
+                    tasks.forEach(task => tasksIds.push(task.uuid));
                     // then deletes the tasks of the testSync
                     this.taskService.bulkRemove(tasksIds);
                     this.messageService.add({

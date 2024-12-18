@@ -5,6 +5,7 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { InboxComponent } from '../inbox/inbox.component';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
+import { TaskDto } from '../dto/task-dto';
 
 @Component({
     selector: 'app-upcoming',
@@ -23,7 +24,7 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
         const tasks = await firstValueFrom(this.taskService.getUpcoming());
     
         // now filter only tasks not completed
-        this.tasks = this.taskService.orderTasks(tasks);
+        this.tasks = this.taskService.orderTasks(tasks) as TaskDto[];
         this.countSubtasks();
     }
 }

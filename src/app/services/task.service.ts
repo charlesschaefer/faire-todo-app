@@ -38,7 +38,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         }))
     }
 
-    orderTasks(tasks: Tasks[]) {
+    orderTasks(tasks: TaskDto[]) {
         tasks.sort((a, b) => {
             if (a.order > b.order) return 1;
             return -1;

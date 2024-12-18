@@ -27,11 +27,11 @@ interface BackupData {
 export class BackupService {
     
     constructor(
-        private taskService: TaskService<TaskDto>,
-        private projectService: ProjectService<ProjectDto>,
-        private settingsService: SettingsService<SettingsDto>,
-        private tagService: TagService<TagDto>,
-        private taskTagService: TaskTagService<TaskTagDto>,
+        private taskService: TaskService,
+        private projectService: ProjectService,
+        private settingsService: SettingsService,
+        private tagService: TagService,
+        private taskTagService: TaskTagService,
     ) { }
     
     backupData(encryptKey: string): Subject<string> {
