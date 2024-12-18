@@ -24,6 +24,8 @@ function runTaskSerial(fn: CallableFunction, results: any) {
     return fn(results);
 }
 
+export type TableKeys = 'task' | 'project' | 'tag' | 'task_tag' | 'settings' | 'user';
+
 export class AppDb extends Dexie {
     task!: Table<TaskDto, number>;
     project!: Table<ProjectDto, number>;
@@ -239,6 +241,10 @@ export class AppDb extends Dexie {
             settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at',
         });
 
+        this.version(18).stores({
+            user: '$$uuid, id, email, name, created_at, avatar_url, updated_at',
+        });
+
         this.on('populate', () => this.populate());
     }
 
@@ -250,6 +256,10 @@ export class AppDb extends Dexie {
             // uuid: randomUUID(),
             // user_uuid: randomUUID()
         } as SettingsAddDto);
+    }
+
+    getTable(table: TableKeys) {
+        return this[table];
     }
 }
 

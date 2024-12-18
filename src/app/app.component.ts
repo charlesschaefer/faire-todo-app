@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom, from, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -32,6 +32,8 @@ import { NotificationService } from './services/notification.service';
 import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
 import Dexie from 'dexie';
+import 'dexie-syncable';
+import 'dexie-observable';
 import { AuthService } from './services/auth.service';
 import { InboxComponent } from './inbox/inbox.component';
 import { DialogModule } from 'primeng/dialog';
@@ -119,12 +121,24 @@ export class AppComponent implements OnInit {
                     severity: 'info',
                     detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
                     summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
-                })
-                this.syncService.connect().catch(console.error).then(() => {
-                    this.syncService.syncStatus.subscribe((status) => {
-                        this.syncStatus = Dexie.Syncable.StatusTexts[status];
-                        console.warn("Synchronization new status: ", this.syncStatus)
-                        
+                });
+
+                // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
+                // before starting the sincronization
+                this.syncService.updateRowsUserUuid().subscribe(changed => {
+                    console.log("======> Changed itens: ");
+                    console.info("taskChanged: ", changed.taskChanged);
+                    console.info("tagChanged: ", changed.tagChanged);
+                    console.info("taskTagChanged: ", changed.taskTagChanged);
+                    console.info("settingsChanged: ", changed.settingsChanged);
+                    console.info("projectChanged: ", changed.projectChanged);
+                    
+                    this.syncService.connect().catch(console.error).then(() => {
+                        this.syncService.syncStatus.subscribe((status) => {
+                            this.syncStatus = Dexie.Syncable.StatusTexts[status];
+                            console.warn("Synchronization new status: ", this.syncStatus)
+                            
+                        });
                     });
                 });
             } else {

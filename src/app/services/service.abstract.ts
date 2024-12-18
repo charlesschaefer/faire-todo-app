@@ -54,6 +54,13 @@ export abstract class ServiceAbstract<T> {
         return from(this.table.add(data));
     }
 
+    upsert(data: T & UserBound) {
+        if (this.userUuid) {
+            data['user_uuid'] = this.userUuid;
+        }
+        return from(this.table.put(data));
+    }
+
     bulkAdd(data: (T & UserBound)[]) {
         if (this.userUuid) {
             data = data.map((item) => {
@@ -69,7 +76,10 @@ export abstract class ServiceAbstract<T> {
         if (!this.userUuid) {
             throw new Error("User UUID not present on the session");
         }
-        return from(this.table.where("user_uuid").notEqual("").modify({user_uuid: this.userUuid}));
+        return from(this.table
+            .filter((item) => !item.user_uuid || item.user_uuid == '')
+            .modify({user_uuid: this.userUuid})
+        );
     }
 
     edit(uuid: string, data: T & UserBound) {
