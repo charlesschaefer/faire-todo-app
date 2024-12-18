@@ -26,7 +26,7 @@ import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
 import { TaskService } from '../services/task.service';
-import { TaskDto } from '../dto/task-dto';
+import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 
@@ -74,12 +74,12 @@ export class ProjectComponent implements OnInit {
     projectMenuItems!: MenuItem[];
 
     constructor(
-        private projectService: ProjectService<ProjectDto>,
-        private projectAddService: ProjectService<ProjectAddDto>,
+        private projectService: ProjectService,
+        private projectAddService: ProjectService,
         private translate: TranslocoService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private taskService: TaskService<TaskDto>,
+        private taskService: TaskService,
         protected router: Router,
     ) { }
 
@@ -110,7 +110,7 @@ export class ProjectComponent implements OnInit {
             complete: () => {
                 this.taskService.getByField('project_uuid', uuid).subscribe(tasks => {
                     const tasksIds: string[] = [];
-                    tasks.forEach((task: TaskDto) => tasksIds.push(task.uuid));
+                    (tasks as TaskDto[]).forEach((task: TaskDto) => tasksIds.push(task.uuid));
                     // then deletes the tasks of the project
                     this.taskService.bulkRemove(tasksIds);
                     this.messageService.add({

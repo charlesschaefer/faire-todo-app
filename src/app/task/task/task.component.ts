@@ -58,7 +58,7 @@ export class TaskComponent extends TaskAbstractComponent {
     constructor(
         protected override dialogService: DialogService,
         protected override messageService: MessageService,
-        protected override taskService: TaskService<TaskDto>,
+        protected override taskService: TaskService,
         protected override confirmationService: ConfirmationService,
         protected override translate: TranslocoService,
         protected override undoService: UndoService,

@@ -52,7 +52,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     constructor(
         protected dialogService: DialogService,
         protected messageService: MessageService,
-        protected taskService: TaskService<TaskDto>,
+        protected taskService: TaskService,
         protected confirmationService: ConfirmationService,
         protected translate: TranslocoService,
         protected undoService: UndoService,

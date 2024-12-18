@@ -82,7 +82,7 @@ export class TestSyncComponent implements OnInit {
         private translate: TranslocoService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private taskService: TaskService<TaskDto>,
+        private taskService: TaskService,
         protected router: Router,
     ) { }
 

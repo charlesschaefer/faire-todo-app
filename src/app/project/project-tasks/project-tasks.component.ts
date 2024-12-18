@@ -31,8 +31,8 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
     project!: ProjectDto;
 
     constructor(
-        private projectService: ProjectService<ProjectDto>,
-        protected override taskService: TaskService<TaskDto>,
+        private projectService: ProjectService,
+        protected override taskService: TaskService,
         private route: ActivatedRoute,
         private router: Router,
         protected override activatedRoute: ActivatedRoute,
@@ -52,7 +52,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.uuid));
         // now filter only tasks not completed
         const filteredTasks = tasks.filter(task => task.completed == 0);
-        this.tasks = this.taskService.orderTasks(filteredTasks);
+        this.tasks = this.taskService.orderTasks(filteredTasks) as TaskDto[];
         this.countSubtasks();
     }
 

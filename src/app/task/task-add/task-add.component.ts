@@ -89,11 +89,11 @@ export class TaskAddComponent implements OnInit {
     // authService: any;
 
     constructor(
-        private taskAddService: TaskService<TaskAddDto>,
+        private taskAddService: TaskService,
         private messageService: MessageService,
         private router: Router,
         private translate: TranslocoService,
-        private projectService: ProjectService<ProjectDto>,
+        private projectService: ProjectService,
         private authService: AuthService,
     ) {}
 

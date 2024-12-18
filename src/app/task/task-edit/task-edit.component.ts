@@ -70,11 +70,11 @@ export class TaskEditComponent implements OnInit {
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
-        private taskService: TaskService<TaskDto>,
+        private taskService: TaskService,
         private messageService: MessageService,
         private dynamicDialogRef: DynamicDialogRef,
         private translate: TranslocoService,
-        private projectService: ProjectService<ProjectDto>,
+        private projectService: ProjectService,
     ) {
 
     }

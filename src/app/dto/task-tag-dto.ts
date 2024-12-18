@@ -1,4 +1,5 @@
-import { Updatable } from "../services/service.abstract";
+import { Updatable, UserBound } from "../services/service.abstract";
+import { TaskDto } from "./task-dto";
 
 export interface TaskTagDto extends Updatable {
     id: number;
@@ -10,3 +11,4 @@ export interface TaskTagDto extends Updatable {
     tag_uuid: string;
     updated_at?: Date;
 }
+export type TaskTagAddDto = Omit<TaskTagDto, "id" > & UserBound;

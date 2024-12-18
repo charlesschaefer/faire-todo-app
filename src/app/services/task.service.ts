@@ -12,11 +12,13 @@ interface SubtaskCount {
     completed: number;
 }
 
+type Tasks = TaskAddDto | TaskDto;
+
 
 @Injectable({
     providedIn: 'root'
 })
-export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
+export class TaskService extends ServiceAbstract<Tasks> {
     storeName = "task";
 
     constructor(
@@ -36,7 +38,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         }))
     }
 
-    orderTasks(tasks: T[]) {
+    orderTasks(tasks: Tasks[]) {
         tasks.sort((a, b) => {
             if (a.order > b.order) return 1;
             return -1;
@@ -44,7 +46,7 @@ export class TaskService<T extends TaskAddDto> extends ServiceAbstract<T> {
         return tasks;
     }
 
-    getFromProject(project_uuid: string): Observable<T[]> {
+    getFromProject(project_uuid: string): Observable<Tasks[]> {
         console.log("Criteria: ", {
             completed: 0,
             project_uuid: project_uuid,

@@ -52,7 +52,7 @@ export class SettingsComponent implements OnInit {
     });
 
     constructor(
-        private settingsService: SettingsService<SettingsDto>,
+        private settingsService: SettingsService,
         private messageService: MessageService,
         private translate: TranslocoService,
     ) {}

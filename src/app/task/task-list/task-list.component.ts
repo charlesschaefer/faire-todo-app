@@ -35,8 +35,8 @@ export class TaskListComponent implements OnInit {
     projects!: Map<string, ProjectDto>;
 
     constructor(
-        private taskService: TaskService<TaskDto>,
-        private projectService: ProjectService<ProjectDto>,
+        private taskService: TaskService,
+        private projectService: ProjectService,
     ) {}
 
     ngOnInit(): void {

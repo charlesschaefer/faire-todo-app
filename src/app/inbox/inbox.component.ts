@@ -59,7 +59,7 @@ export class InboxComponent implements OnInit, AfterViewInit {
     sharetargetUrl!: string;
 
     constructor(
-        protected taskService: TaskService<TaskDto>,
+        protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
     ) {}
     

@@ -22,7 +22,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 export class AllTasksComponent  extends InboxComponent {
     
     constructor(
-        protected override taskService: TaskService<TaskDto>,
+        protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
     ) {
         super(taskService, activatedRoute);
@@ -31,7 +31,7 @@ export class AllTasksComponent  extends InboxComponent {
     override async getTasks() {
         const tasks = await firstValueFrom(this.taskService.getAllTasks());
         
-        this.tasks = this.taskService.orderTasks(tasks);
+        this.tasks = this.taskService.orderTasks(tasks) as TaskDto[];
         this.countSubtasks();
     }
 }
