@@ -118,7 +118,8 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "webWorkerTsConfig": "tsconfig.worker.json"
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "karmaConfig": "karma.conf.js"
           }
         },
         "lint": {
