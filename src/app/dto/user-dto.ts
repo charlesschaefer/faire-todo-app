@@ -1,4 +1,6 @@
-export interface UserDto {
+import { Updatable } from "../services/service.abstract";
+
+export interface UserDto extends Updatable {
     id: number;
     uuid: string;
     email: string;

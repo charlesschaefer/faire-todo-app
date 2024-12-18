@@ -1,4 +1,6 @@
-export interface TaskTagDto {
+import { Updatable } from "../services/service.abstract";
+
+export interface TaskTagDto extends Updatable {
     id: number;
     uuid: string;
     user_uuid: string;

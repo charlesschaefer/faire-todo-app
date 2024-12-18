@@ -10,9 +10,13 @@ export interface UserBound {
     user_uuid: string;
 }
 
+export interface Updatable {
+    updated_at?: Date;
+}
+
 
 @Injectable({ providedIn: 'root' })
-export abstract class ServiceAbstract<T> {
+export abstract class ServiceAbstract<T extends Updatable> {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache = true;
     protected abstract storeName: string;
@@ -51,12 +55,18 @@ export abstract class ServiceAbstract<T> {
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;
         }
+        if (!data['updated_at']) {
+            data['updated_at'] = new Date();
+        }
         return from(this.table.add(data));
     }
 
     upsert(data: T & UserBound) {
         if (this.userUuid) {
             data['user_uuid'] = this.userUuid;
+        }
+        if (!data['updated_at']) {
+            data['updated_at'] = new Date();
         }
         return from(this.table.put(data));
     }
@@ -65,6 +75,9 @@ export abstract class ServiceAbstract<T> {
         if (this.userUuid) {
             data = data.map((item) => {
                 const user = {user_uuid: this.userUuid} as UserBound;
+                if (!item['updated_at']) {
+                    item['updated_at'] = new Date();
+                }
                 return { ...item, ...user };
             });
         }
@@ -78,7 +91,7 @@ export abstract class ServiceAbstract<T> {
         }
         return from(this.table
             .filter((item) => !item.user_uuid || item.user_uuid == '')
-            .modify({user_uuid: this.userUuid})
+            .modify({user_uuid: this.userUuid, updated_at: new Date()})
         );
     }
 
@@ -86,12 +99,11 @@ export abstract class ServiceAbstract<T> {
         if (this.userUuid && this.storeName !== "user") {
             data["user_uuid"] = this.userUuid;
         }
+        if (!data['updated_at']) {
+            data['updated_at'] = new Date();
+        }
         this.clearCache();
-        return from(this.table.update(uuid, data as object));/* 
-            .pipe(
-                map((response: T) => response),
-                catchError((error: T) => throwError(error))
-            ); */
+        return from(this.table.update(uuid, data as object));
     }
 
     get(uuid: string | number) {

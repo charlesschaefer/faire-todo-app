@@ -1,4 +1,4 @@
-import { UserBound } from "../services/service.abstract";
+import { Updatable, UserBound } from "../services/service.abstract";
 
 export enum RecurringType {
     DAILY = 'daily',
@@ -8,7 +8,7 @@ export enum RecurringType {
     YEARLY = 'yearly'
 }
 
-export interface TaskDto {
+export interface TaskDto extends Updatable {
     id: number;
     uuid: string;
     user_uuid: string;

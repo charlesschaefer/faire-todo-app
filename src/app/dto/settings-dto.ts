@@ -1,6 +1,6 @@
-import { UserBound } from "../services/service.abstract";
+import { Updatable, UserBound } from "../services/service.abstract";
 
-export interface SettingsDto {
+export interface SettingsDto extends Updatable {
     id: number;
     uuid: string;
     user_uuid: string;
