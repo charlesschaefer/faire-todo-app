@@ -211,6 +211,18 @@ export class AppComponent implements OnInit {
                 ]
             } as MenuItem
         ];
+        if (this.currentUser && this.currentUser.id) {
+            this.settingsMenuItems.push({
+                label: await firstValueFrom(this.translate.selectTranslate("Synchronization")),
+                icon: "pi pi-sync",
+                items: [
+                    {
+                        label: await firstValueFrom(this.translate.selectTranslate("Repair synchronization status")),
+                        command: () => this.syncService.fixSynchronization()
+                    }
+                ]
+            })
+        }
     }
 
     async getProjectMenuItems(): Promise<MenuItem[]> {

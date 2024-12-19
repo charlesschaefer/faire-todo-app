@@ -15,11 +15,12 @@ import { DialogModule } from 'primeng/dialog';
 import { v4 } from 'uuid';
 
 let randomUUID: any;
-if (!crypto.randomUUID) {
+// if (!crypto.randomUUID) {
     randomUUID = v4;
-} else {
-    randomUUID = crypto.randomUUID;
-}
+// } else {
+//     randomUUID = crypto.randomUUID;
+//     randomUUID();
+// }
 
 import { ProjectService } from '../services/project.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';

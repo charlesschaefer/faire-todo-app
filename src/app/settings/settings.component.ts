@@ -16,11 +16,11 @@ import {
 import { v4 } from 'uuid';
 
 let randomUUID: any;
-if (!crypto.randomUUID) {
+// if (!crypto.randomUUID) {
     randomUUID = v4;
-} else {
-    randomUUID = crypto.randomUUID;
-}
+// } else {
+//     randomUUID = crypto.randomUUID;
+// }
 
 import { SettingsService } from '../services/settings.service';
 import { SettingsDto } from '../dto/settings-dto';

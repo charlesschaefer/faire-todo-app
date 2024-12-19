@@ -5,7 +5,7 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
 import { AppDb, TableKeys } from '../app.db';
 import { TaskService } from './task.service';
 import { TagService } from './tag.service';
@@ -18,6 +18,8 @@ import { UserDto } from '../dto/user-dto';
 import { UserBound } from './service.abstract';
 import { IPersistedContext } from 'dexie-syncable/api';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { TranslocoService } from '@jsverse/transloco';
 
 
 // Then use it like this:
@@ -41,6 +43,8 @@ export class SyncService {
         private projectService: ProjectService,
         private userService: UserService,
         private routerService: Router,
+        private messageService: MessageService,
+        private translate: TranslocoService,
         @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = createClient(
@@ -187,28 +191,21 @@ export class SyncService {
                                             }
                                         }
                                     }
-                                        let change: any = {
-                                            table,
-                                            key: item.uuid,
-                                            obj: item,
-                                        };
-                                        // if (exists) {
-                                        //     change = {
-                                        //         ...change, 
-                                        //         type: 2, // UPDATE
-                                        //         // oldObj: exists
-                                        //     };
-                                        // } else {
-                                            change['type'] = 1; // CREATE
-                                        // }
-                                        remoteChanges.push(change);
-                                        const updateDate = new Date(item.updated_at);
-                                        if (updateDate > newRevision) {
-                                            newRevision = updateDate;
-                                        }
-                                        console.error("Tempo da nova revisão: ", newRevision);
 
-                                    // });
+                                    let change: any = {
+                                        table,
+                                        key: item.uuid,
+                                        obj: item,
+                                    };
+
+                                    change['type'] = 1; // CREATE
+                                    remoteChanges.push(change);
+                                    const updateDate = new Date(item.updated_at);
+                                    if (updateDate > newRevision) {
+                                        newRevision = updateDate;
+                                    }
+                                    console.error("Tempo da nova revisão: ", newRevision);
+
                                 }
                             }
                         }
@@ -216,10 +213,17 @@ export class SyncService {
                         if (remoteChanges.length > 0) {
                             // await applyRemoteChanges(remoteChanges, Date.now());
                             await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false)
+                            this.messageService.add({
+                                key: 'auth-messages',
+                                severity: 'info',
+                                summary: await firstValueFrom(this.translate.selectTranslate('New data arrived')),
+                                detail: await firstValueFrom(this.translate.selectTranslate('We updated your data with fresh data from the server.')),
+                                life: 5000,
+                            });
                         }
 
-                        onSuccess({ again: 6000 }); // Sync again in 1 minute
-                        // onSuccess({ again: 60000 }); // Sync again in 1 minute
+                        // onSuccess({ again: 6000 }); // Sync again in 1 minute
+                        onSuccess({ again: 60000 }); // Sync again in 1 minute
                         if (context.first !== undefined && context.first === false) {
                             const url = this.routerService.url;
                             this.routerService.navigateByUrl('/all-tasks', {skipLocationChange: true}).then(() => {
@@ -375,5 +379,13 @@ export class SyncService {
 
     get syncStatus() {
         return this.syncState.asObservable();
+    }
+
+    async fixSynchronization() {
+        await this.db._allTables['_intercomm'].clear()
+        await this.db._allTables['_changes'].clear()
+        this.db._allTables['_syncNodes'].clear().then(() => {
+            window.location.reload();
+        })
     }
 } 

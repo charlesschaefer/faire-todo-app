@@ -99,8 +99,9 @@ export abstract class ServiceAbstract<T extends Updatable> {
         if (this.userUuid && this.storeName !== "user") {
             data["user_uuid"] = this.userUuid;
         }
-        if (!data['updated_at']) {
-            data['updated_at'] = new Date();
+        const today = new Date();
+        if (!data['updated_at'] || !(data['updated_at'] instanceof Date) || data['updated_at'] < today) {
+            data['updated_at'] = today;
         }
         this.clearCache();
         return from(this.table.update(uuid, data as object));

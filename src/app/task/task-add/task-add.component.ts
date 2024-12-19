@@ -15,11 +15,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { v4 } from 'uuid';
 
 let randomUUID: any;
-if (!crypto.randomUUID) {
+// if (!crypto.randomUUID) {
     randomUUID = v4;
-} else {
-    randomUUID = crypto.randomUUID;
-}
+// } else {
+//     randomUUID = crypto.randomUUID;
+// }
 
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';

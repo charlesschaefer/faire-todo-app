@@ -54,6 +54,7 @@ export class AuthService {
   }
 
   async signInWithGoogle() {
+    console.warn(`After signing in, we're redirecting to: ${window.location.origin}/auth/callback`)
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {

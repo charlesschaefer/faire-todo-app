@@ -13,11 +13,11 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { v4 } from 'uuid';
 
 let randomUUID: any;
-if (!crypto.randomUUID) {
+// if (!crypto.randomUUID) {
     randomUUID = v4;
-} else {
-    randomUUID = crypto.randomUUID;
-}
+// } else {
+//     randomUUID = crypto.randomUUID;
+// }
 
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';

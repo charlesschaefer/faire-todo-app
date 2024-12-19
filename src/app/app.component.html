@@ -7,7 +7,10 @@
         <img src="assets/icon.svg" id="logo-icon" aria-label="logo svg" />
       </a>
     </div>
-    <div class="p-toolbar-group-center">
+    <div class="p-toolbar-group-center text-sm">
+      @if (this.currentUser) {
+      <strong>{{"Sync Status" | transloco}}: </strong> <span>{{this.syncStatus}}</span>
+      }
     </div>
     <div class="p-toolbar-group-end">
       <!-- Sidebar toggle -->
@@ -84,7 +87,13 @@
   </p-menu>
 
   <ng-template pTemplate="footer">
-    <div class="flex align-items-center justify-content-end gap-2">
+    <div class="flex align-items-center justify-content-around gap-2">
+      @if (this.currentUser) {
+        <div class="flex align-items-start justify-content-start text-sm">
+          <span style="padding-right: 5px;font-weight: bold;">{{"Sync statuts" | transloco}}: </span>{{this.syncStatus}}
+        </div>
+        <div></div>
+      }
       <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
     </div>
     <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" class="side-bar-header-menu" appendTo="body" />

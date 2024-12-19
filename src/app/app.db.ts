@@ -4,11 +4,11 @@ import 'dexie-observable';
 import { v4 } from 'uuid';
 
 let randomUUID: any;
-if (!crypto.randomUUID) {
+// if (!crypto.randomUUID) {
     randomUUID = v4;
-} else {
-    randomUUID = crypto.randomUUID;
-}
+// } else {
+//     randomUUID = crypto.randomUUID;
+// }
 
 import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';
