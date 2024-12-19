@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "tauri": "tauri",
     "bump-version": "node scripts/version-bumper.js",
+    "generate-env": "node scripts/generate-environment.js",
     "i18n:extract": "transloco-keys-manager extract",
     "i18n:find": "transloco-keys-manager find",
     "lint": "ng lint"
