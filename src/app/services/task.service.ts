@@ -33,8 +33,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,
-                parent_uuid: null
-            }).toArray();
+            }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
         }))
     }
 
@@ -54,8 +53,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0,
-                project_uuid: project_uuid,
-            }).and((task) => !task.parent_uuid || task.parent_uuid  == null).toArray();
+                // project_uuid: project_uuid,
+            }).and((task) => task.project_uuid === project_uuid || (!project_uuid && task.project_uuid === null || task.project_uuid === '' || !task.project_uuid)).toArray();
         }));
     }
 
@@ -70,7 +69,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 .where('dueDate')
                 .belowOrEqual(date)
                 .and((task: TaskDto) => task.completed == 0)
-                .and((task: TaskDto) => !task.parent_uuid || task.parent_uuid == null)
+                .and((task: TaskDto) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid)
                 .toArray();
         }));
     }
@@ -143,9 +142,9 @@ export class TaskService extends ServiceAbstract<Tasks> {
     getProjectTasks(projectUuid: string) {
         return from(liveQuery(() => {
             return this.table.where({
-                project_uuid: projectUuid,
+                project_uuid: projectUuid || '',
                 completed: 0
-            }).and((task) => !task.parent_uuid || task.parent_uuid == null).toArray();
+            }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
         }))
     }
 
@@ -153,7 +152,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return from(liveQuery(() => {
             return this.table.where({
                 completed: 0
-            }).and((task) => !task.parent_uuid || task.parent_uuid == null).toArray();
+            }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
         }))
     }
 
@@ -219,7 +218,6 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     }
                    
                     newTask.dueDate = date.toJSDate();
-                    console.log(newTask);
                     from(this.table.add(newTask)).subscribe({
                         complete: () => {
                             success$.complete();

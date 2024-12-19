@@ -5,23 +5,19 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, forkJoin, from, merge } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { AppDb, TableKeys } from '../app.db';
 import { TaskService } from './task.service';
 import { TagService } from './tag.service';
 import { TaskTagService } from './task-tag.service';
 import { SettingsService } from './settings.service';
 import { ProjectService } from './project.service';
-import { TaskDto } from '../dto/task-dto';
-import { TagDto } from '../dto/tag-dto';
-import { TaskTagDto } from '../dto/task-tag-dto';
-import { SettingsDto } from '../dto/settings-dto';
-import { ProjectDto } from '../dto/project-dto';
 import { DbService } from './db.service';
 import { UserService } from './user.service';
 import { UserDto } from '../dto/user-dto';
 import { UserBound } from './service.abstract';
-import { ICreateChange, IDatabaseChange, IUpdateChange } from 'dexie-observable/api';
+import { IPersistedContext } from 'dexie-syncable/api';
+import { Router } from '@angular/router';
 
 
 // Then use it like this:
@@ -44,6 +40,7 @@ export class SyncService {
         private settingsService: SettingsService,
         private projectService: ProjectService,
         private userService: UserService,
+        private routerService: Router,
         @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = createClient(
@@ -53,7 +50,7 @@ export class SyncService {
         if (this.db.verno >= 17) {
             // Register Supabase sync protocol
             Dexie.Syncable.registerSyncProtocol("supabase", {
-                sync: async (context, url, options, baseRevision, syncedRevision, changes, partial, applyRemoteChanges, onChangesAccepted, onSuccess, onError) => {
+                sync: async (context: IPersistedContext | any, url, options, baseRevision, syncedRevision, changes, partial, applyRemoteChanges, onChangesAccepted, onSuccess, onError) => {
                     /// <param name="context" type="IPersistedContext"></param>
                     /// <param name="url" type="String"></param>
                     /// <param name="changes" type="Array" elementType="IDatabaseChange"></param>
@@ -61,6 +58,15 @@ export class SyncService {
                     /// <param name="onSuccess" value="function (continuation) {}"></param>
                     /// <param name="onError" value="function (error, again) {}"></param>
                     try {
+                        // stores if this is the first passage by the sync protocol, to allow or not to redirect in the end of sync process
+                        if (context.first === undefined) {
+                            context.first = true;
+                            context.save();
+                        } else {
+                            context.first = false;
+                            context.save();
+                        }
+
                         const user = this.authService.currentUser;
                         if (!user) {
                             onError(new Error('User not authenticated'));
@@ -115,6 +121,24 @@ export class SyncService {
 
                             // sync tables in order, because of foreign keys
                             for (const table of tables) {
+                                if (table == 'task') {
+                                    let result = await this.synchronizeTasksWithoutParent(changes);
+                                    if (result?.error && result.error.code !== '23505') {
+                                        console.error(result.error);
+                                        onError(result.error);
+                                        return;
+                                    }
+
+                                    result = await this.synchronizeTasksWithParent(changes);
+                                    
+                                    // 23505 means the item is already in the database, so we shouldnt be doing a create query
+                                    if (result?.error && result.error.code !== '23505') {
+                                        console.error(result.error);
+                                        onError(result.error);
+                                        return;
+                                    }
+                                    continue;
+                                } 
                                 for (const change of changes) {
                                     if (change.table == table) {
                                         const result = await this.syncChange(change);
@@ -148,10 +172,21 @@ export class SyncService {
 
                             if (data) {
                                 for (const item of data) {
-                                    // await this.db.transaction('r!', this.db.getTable(table), async () => {
-                                    // await Dexie.ignoreTransaction(async () => {
-                                        // const exists = await this.db.getTable(table).get(item.uuid);
-                                        // const exists = await this.db.getTable(table).where('uuid').equals(item.uuid).count();
+                                    for (const key in item) {
+                                        // changes all empty *uuid fields from null to '' (empty string)
+                                        // because of a constraint from indexeddb
+                                        if (key.indexOf('uuid') !== -1) {
+                                            if (item[key] === null) {
+                                                item[key] = '';
+                                            }
+                                        }
+                                        // changes all date fields to Date
+                                        if (key.match(/(dueDate|dueTime|update_at|created_at|notificationTime)/g)) {
+                                            if (item[key]) {
+                                                item[key] = new Date(item[key]);
+                                            }
+                                        }
+                                    }
                                         let change: any = {
                                             table,
                                             key: item.uuid,
@@ -167,7 +202,11 @@ export class SyncService {
                                             change['type'] = 1; // CREATE
                                         // }
                                         remoteChanges.push(change);
-                                        newRevision = new Date(item.updated_at);
+                                        const updateDate = new Date(item.updated_at);
+                                        if (updateDate > newRevision) {
+                                            newRevision = updateDate;
+                                        }
+                                        console.error("Tempo da nova revisão: ", newRevision);
 
                                     // });
                                 }
@@ -179,7 +218,14 @@ export class SyncService {
                             await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false)
                         }
 
-                        onSuccess({ again: 60000 }); // Sync again in 1 minute
+                        onSuccess({ again: 6000 }); // Sync again in 1 minute
+                        // onSuccess({ again: 60000 }); // Sync again in 1 minute
+                        if (context.first !== undefined && context.first === false) {
+                            const url = this.routerService.url;
+                            this.routerService.navigateByUrl('/all-tasks', {skipLocationChange: true}).then(() => {
+                                this.routerService.navigate([`/${url}`]).then(() => console.log("Reloading route: ", url));
+                            });
+                        }
                         // onSuccess({
                         //     react: (changes, baseRevision, partial, onChangesAccepted) => {
                         //         console.log("Changes: ", changes);
@@ -196,11 +242,66 @@ export class SyncService {
         }
     }
 
+    async synchronizeTasksWithoutParent(changes: any[]) {
+        return await this._synchronizeTasks(changes, false);
+    }
+
+    async synchronizeTasksWithParent(changes: any[]) {
+        return await this._synchronizeTasks(changes, true);
+    }
+
+    /**
+     * Synchronizes the tasks, differentiating with and without parent tasks
+     * 
+     * @param changes list of changes
+     * @param withParent If false, will only process tasks without parent (i.e. parent_uuid empty)
+     * @returns `syncChange()` result
+     */
+    async _synchronizeTasks(changes: any[], withParent: boolean = false) {
+        let result: any;
+        for (const change of changes) {
+            if (change.table !== 'task') {
+                continue;
+            }
+            
+            if (
+                (change.obj && change.obj.parent_uuid !== undefined && (
+                    // process only tasks with parent
+                    (withParent && !change.obj.parent_uuid) ||
+                    // process only tasks without parent
+                    (!withParent && change.obj.parent_uuid)
+                )) ||
+                (change.mods && change.mods.parent_uuid !== undefined && (
+                    // process only tasks with parent
+                    (withParent && !change.mods.parent_uuid) ||
+                    // process only tasks without parent
+                    (!withParent && change.mods.parent_uuid)
+                )) ||
+                // this avoids tasks with partial updates to be processed twice
+                withParent && (
+                    (change.obj && change.obj.parent_uuid === undefined) ||
+                    (change.mods && change.mods.parent_uuid === undefined)
+                )
+            ) {
+                continue;
+            }
+
+            result = await this.syncChange(change);
+
+            // 23505 means the item is already in the database, so we shouldnt be doing a create query
+            if (result?.error && result.error.code !== '23505') {
+                console.error(result.error);
+                return result;
+            }
+        }
+        return result;
+    }
+
     async syncChange(change: any) {
         switch (change.type) {
             case 1: // CREATE
                 console.log("SyncService.sync() -> CREATE", change);
-                return await this.supabase.from(change.table).insert(change.obj);
+                return await this.supabase.from(change.table).upsert(change.obj);
                 break;
             case 2: // UPDATE
                 console.log("SyncService.sync() -> UPDATE", change);

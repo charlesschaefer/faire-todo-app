@@ -185,7 +185,7 @@ export class TaskAddComponent implements OnInit {
             completed: 0,
             order: order,
             parent: this.parent?.id || null,
-            parent_uuid: this.parent?.uuid || null,
+            parent_uuid: this.parent?.uuid || '',
             recurring: recurring || null,
             uuid: randomUUID(),
             user_uuid: this.authService.currentUser?.id as string
@@ -219,9 +219,9 @@ export class TaskAddComponent implements OnInit {
             dueDate: null,
             dueTime: null,
             //project: this.parent?.project || this.project?.id,
-            project_uuid: this.parent?.project_uuid || this.project?.uuid,
+            project_uuid: this.parent?.project_uuid || this.project?.uuid || '',
             // parent: this.parent || null,
-            parent_uuid: this.parent || null,
+            parent_uuid: this.parent || '',
             recurring: this.recurringOptions[0]
         });
         return true;

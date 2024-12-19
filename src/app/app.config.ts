@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
-import { provideRouter } from "@angular/router";
+import { provideRouter, RouterModule, withDebugTracing, withRouterConfig, withViewTransitions } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -12,9 +12,21 @@ import { AppDb } from "./app.db";
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
 
+const DEBUG = isDevMode();
+
+const debugTracing = [];
+DEBUG ? debugTracing.push(withDebugTracing()) : null;
+
 export const appConfig: ApplicationConfig = {
     providers: [
-        provideRouter(routes),
+        // importProvidersFrom(RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })),
+        provideRouter(routes, 
+            ...debugTracing,
+            withRouterConfig({
+                onSameUrlNavigation: 'reload',
+                urlUpdateStrategy: 'eager'
+            })
+        ),
         provideAnimationsAsync(),
         provideHttpClient(withFetch()),
         {
@@ -46,6 +58,7 @@ export const appConfig: ApplicationConfig = {
                 }
             },
             loader: TranslocoHttpLoader
-        })
+        }),
     ],
 };
+

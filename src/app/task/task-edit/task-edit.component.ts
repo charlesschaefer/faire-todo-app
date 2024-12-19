@@ -88,8 +88,10 @@ export class TaskEditComponent implements OnInit {
             description: [this.task.description],
             dueDate: [this.task.dueDate],
             dueTime: [this.task.dueTime],
-            project: [this.task.project != null ? this.task.project : 0],
-            parent: [this.task.parent || null],
+            // project: [this.task.project_uuid != null ? this.task.project_uuid : ''],
+            project_uuid: [this.task.project_uuid != null ? this.task.project_uuid : ''],
+            // parent: [this.task.parent_uuid || ''],
+            parent_uuid: [this.task.parent_uuid || ''],
             recurring: [this.task.recurring || '0']
         });
         
@@ -160,14 +162,14 @@ export class TaskEditComponent implements OnInit {
             description: form.description || null,
             dueDate: form.dueDate || null,
             dueTime: form.dueTime || null,
-            project: form.project || 0,
+            project: 0,
             completed: 0,
             order: this.task.order,
             parent: this.task.parent,
             recurring: recurring || null,
             uuid: this.task.uuid,
             user_uuid: this.task.user_uuid,
-            project_uuid: this.task.project_uuid,
+            project_uuid: form.project_uuid || '',
             parent_uuid: this.task.parent_uuid
         };
 

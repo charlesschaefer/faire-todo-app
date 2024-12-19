@@ -90,7 +90,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
             throw new Error("User UUID not present on the session");
         }
         return from(this.table
-            .filter((item) => !item.user_uuid || item.user_uuid == '')
+            .filter((item) => !item.user_uuid || item.user_uuid == '' || item.user_uuid !== this.userUuid)
             .modify({user_uuid: this.userUuid, updated_at: new Date()})
         );
     }
