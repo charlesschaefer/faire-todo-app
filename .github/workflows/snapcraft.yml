@@ -1,0 +1,25 @@
+name: Snapcraft Builds
+
+on:
+    push:
+        branches:
+            - release
+    workflow_dispatch:
+
+jobs:
+  build-snapcraft:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Snap package
+      uses: snapcore/action-build@v1
+      id: build
+    
+    - name: Publish to snap store
+      uses: snapcore/action-publish@v1
+      env:
+        SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+      with:
+        snap: ${{ steps.build.outputs.snap }}
+        release: edge
