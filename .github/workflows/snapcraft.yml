@@ -11,7 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: setup node
+      uses: actions/setup-node@v4
+      with:
+          node-version: lts/*
+          #cache: 'npm'
     
+    - name: Installs shelljs
+      run: npm i shelljs
+
+    - name: generate environment files
+      run: SUPABASE_URL="${{ secrets.SUPABASE_URL }}" SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" npm run generate-env
+
     - name: Build Snap package
       uses: snapcore/action-build@v1
       id: build
