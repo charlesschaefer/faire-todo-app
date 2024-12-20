@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient } from '@supabase/supabase-js';
 import Dexie from 'dexie';
 import 'dexie-syncable';
 import 'dexie-observable';
@@ -48,10 +48,7 @@ export class SyncService {
         private translate: TranslocoService,
         @Inject('AppDb') private db: AppDb
     ) {
-        this.supabase = createClient(
-            environment.supabaseUrl,
-            environment.supabaseKey
-        );
+        this.supabase = this.authService.client;
         if (this.db.verno >= 17) {
             // Register Supabase sync protocol
             Dexie.Syncable.registerSyncProtocol("supabase", {

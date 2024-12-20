@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecionando</title>
-    <script>
-        // This script logs a message to the console
-        const hash = window.location.hash;
-        window.location = 'tauri://localhost/auth/callback/' + hash;
-        // console.log(hash);
-    </script>
 </head>
 <body>
     <h1>We're redirecting you back to the app...</h1>
+    <script type="text/javascript">
+        // This script logs a message to the console
+        const hash = window.location.hash;
+        const url = 'http://tauri.localhost/auth/callback/' + hash;
+        document.body.innerHTML += `<a href="${url}">Faire Todo App</a>`;
+        window.location = url;
+        // console.log(hash);
+    </script>
 </body>
 </html>

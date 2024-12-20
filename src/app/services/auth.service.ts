@@ -1,9 +1,10 @@
 import { Injectable, isDevMode } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { Observable, Subject } from 'rxjs';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { open } from '@tauri-apps/plugin-shell';
+import { HttpUrlEncodingCodec } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class AuthService {
   private _currentUser?: User | null;
 
   constructor(
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
     // Initialize Supabase client
     this.supabase = createClient(
@@ -26,7 +28,8 @@ export class AuthService {
           lock: <R>(name: string, acquireTimeout: number, fn: () => Promise<R>) => {
             console.log("AuthService.lock", name, acquireTimeout);
             return fn();
-          }
+          },
+          debug: true
         }
       }
     );
@@ -52,6 +55,10 @@ export class AuthService {
 
   get authenticatedUser(): Subject<User | null> {
     return this.userSubject;
+  }
+
+  get client() {
+    return this.supabase;
   }
 
   get currentUser(): User | null {
@@ -81,7 +88,18 @@ export class AuthService {
   }
 
   async handleAuthCallback() {
-    const { data: { session }, error } = await this.supabase.auth.getSession();
+    const fragment = await firstValueFrom(this.activatedRoute.fragment);
+    if (!fragment) {
+      // Redirect to home
+      await this.router.navigate(['/']);
+      return;
+    }
+
+    const encoder = new URLSearchParams(fragment);
+    let  [access_token, refresh_token] = [ encoder.get('access_token') || '', encoder.get('refresh_token') || '' ];
+    const {data: { session }, error } = await this.supabase.auth.setSession({ access_token, refresh_token });;
+
+    // const { data: { session }, error } = await this.supabase.auth.getSession();
     // const { data: { session }, error } = await this.supabase.auth.refreshSession();
     if (error) throw error;
     return session;

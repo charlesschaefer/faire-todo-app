@@ -116,12 +116,15 @@ export class AppComponent implements OnInit {
         onOpenUrl((urls) => {
             if (urls) {
                 let index;
-                if ((index = urls[0].indexOf('#')) !== -1) {
-                    const fragment = urls[0].slice(index + 1);
-                    this.router.navigate(['/auth/callback'], {fragment: fragment})
-                    return;
-                }
-                window.location.assign(urls[0]);
+                this.router.navigate(["/auth"])
+                setTimeout(() => {
+                    if ((index = urls[0].indexOf('#')) !== -1) {
+                        const fragment = urls[0].slice(index + 1);
+                        this.router.navigate(['/auth/callback'], {fragment: fragment})
+                        return;
+                    }
+                }, 2000);
+                // window.location.assign(urls[0]);
             }
         });
     }
