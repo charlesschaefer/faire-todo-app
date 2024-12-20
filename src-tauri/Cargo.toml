@@ -34,6 +34,8 @@ chrono                    = { version = "0.4.38", features = ["now"] }
 tauri-plugin-notification = "2"
 tauri-plugin-http         = "2"
 tauri-plugin-sharetarget  = "0.1.6"
+tauri-plugin-shell        = "2"
+tauri-plugin-deep-link    = "2"
 
 
 

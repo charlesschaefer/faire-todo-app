@@ -31,5 +31,15 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "deep-link": {
+      "mobile": [
+        { "host": "charlesschaefer.net", "pathPrefix": ["/faire-todo-app"] }
+      ],
+      "desktop": {
+        "schemes": ["tauri", "fairetodoapp"]
+      }
+    }
   }
 }

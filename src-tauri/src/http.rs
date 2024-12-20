@@ -35,7 +35,7 @@ pub async fn start_http_server(otp_code: String, backup_data: String) {
     println!("Conseguiu pegar o lock() do server");
     STOP_CONNECTIONS.lock().await.replace(false);
     //let server = HttpServer::new().set_data(otp_code, backup_data);
-    
+
     println!("Let's start the server... with new otp: {:?}", otp_code);
     println!("Server was running? {:?}", server.running);
     if !server.running {
@@ -63,7 +63,7 @@ lazy_static! {
 pub struct HttpServer {
     otp_code: String,
     json_data: String,
-    running: bool
+    running: bool,
 }
 
 impl HttpServer {
@@ -71,7 +71,7 @@ impl HttpServer {
         Self {
             otp_code: String::new(),
             json_data: String::new(),
-            running: false
+            running: false,
         }
     }
 
@@ -130,13 +130,13 @@ impl Service<Request<IncomingBody>> for HttpServer {
                 } else {
                     mk_response("Token not provided".to_string(), 500)
                 }
-            },
+            }
             "/disconnect" => {
                 tokio::spawn(async move {
                     stop_server().await.unwrap();
                 });
                 mk_response("retornando do close".to_string(), 200)
-            },
+            }
             _ => mk_response("Request not found".to_string(), 200),
         };
 
@@ -152,7 +152,6 @@ pub async fn start_server() -> Result<(), Box<dyn std::error::Error + Send + Syn
     let (tx, rx) = watch::channel::<()>(());
     SHUTDOWN_TX.lock().await.replace(tx);
 
-
     let mut rx_clone = rx.clone();
     tokio::spawn(async move {
         //let mut keep = keep_receiving_connections.clone();
@@ -160,17 +159,17 @@ pub async fn start_server() -> Result<(), Box<dyn std::error::Error + Send + Syn
             Ok(_) => {
                 dbg!("Received the stop server signal. Telling the loop to stop receiving connections");
                 STOP_CONNECTIONS.lock().await.replace(true);
-            },
+            }
             Err(_) => println!("Sender dropped"),
         };
     });
-    
+
     loop {
         let guard = SERVER.lock().await;
         let mut svc = guard.as_ref().unwrap().clone();
         drop(guard);
         println!("Listening for connections with the OTP: {:?}", svc.otp_code);
-    
+
         let stop_conns = STOP_CONNECTIONS.lock().await.unwrap();
         if stop_conns {
             println!("Stoping to receive connections");

@@ -16,6 +16,8 @@
         }
       ]
     },
-    "sharetarget:default"
+    "sharetarget:default",
+    "shell:allow-open",
+    "deep-link:default"
   ]
 }

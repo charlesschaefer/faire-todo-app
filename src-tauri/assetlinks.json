@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.fairetodoapp",
+            "sha256_cert_fingerprints": [
+                "31:AA:16:B6:15:06:78:CA:52:30:54:70:20:89:D5:E0:B2:63:DA:C4:34:D8:89:E6:BD:86:C6:3B:28:74:6F:4B"
+            ]
+        }
+    }
+]

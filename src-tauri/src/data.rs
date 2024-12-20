@@ -1,7 +1,5 @@
 use serde::Deserialize;
 
-
-
 #[derive(Default, Deserialize, Debug)]
 pub struct Task {
     pub title: String,
@@ -31,6 +29,6 @@ pub struct Settings {
 pub struct AppData {
     pub tasks_duing_now: TasksDuingNow,
     pub tasks_duing_today: TasksDuingToday,
-    pub settings: Settings, 
+    pub settings: Settings,
     pub thread_handle: Option<std::thread::JoinHandle<()>>,
 }
