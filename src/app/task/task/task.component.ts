@@ -47,7 +47,6 @@ import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscro
         NgxCdkDnDScrollFixerDirective,
     ],
     providers: [
-        MessageService,
         DialogService,
         ConfirmationService
     ],

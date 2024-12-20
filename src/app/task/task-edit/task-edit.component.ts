@@ -151,7 +151,8 @@ export class TaskEditComponent implements OnInit {
             this.messageService.add({
                 severity: 'error',
                 summary: await firstValueFrom(this.translate.selectTranslate('Unable to save')),
-                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!"))
+                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!")),
+                key: 'task'
             });
             return;
         }
@@ -178,7 +179,8 @@ export class TaskEditComponent implements OnInit {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),
                     detail: await firstValueFrom(this.translate.selectTranslate(`The task was saved successfully`)),
-                    severity: "success"
+                    severity: "success",
+                    key: 'task'
                 });
                 this.dynamicDialogRef.close(saveData);
                 // triggers a chain of events until it reaches Inbox class
@@ -188,7 +190,8 @@ export class TaskEditComponent implements OnInit {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
                     detail: await firstValueFrom(this.translate.selectTranslate(`Couldn't save the task.`)) + err,
-                    severity: "error"
+                    severity: "error",
+                    key: 'task'
                 });
             }
         });

@@ -28,7 +28,7 @@ export class NotificationService {
             send_notifications: !!settings?.notifications,
             send_today_notifications: false,
             notification_title: await firstValueFrom(this.translate.selectTranslate('Task duing')),
-            notification_body: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is dueing now.`, {title: "{title}"}))
+            notification_body: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is duing now.`, {title: "{title}"}))
         }
         if (settings?.notifications) {
             if (settings.todayNotifications && settings.notificationTime) {
@@ -66,7 +66,7 @@ export class NotificationService {
             duingTasks = tasks.reduce((acc, task) => {
                 if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
                     console.log(`We need to notify user that ${task.title} task is duing now`);
-                    // task dueing now, notifying the user
+                    // task duing now, notifying the user
                     acc.tasks.push({title: task.title});
                 }
                 return acc;

@@ -37,9 +37,7 @@ import { invoke } from '@tauri-apps/api/core';
         ReactiveFormsModule,
         ToastModule,
     ],
-    providers: [
-        MessageService,
-    ],
+    providers: [],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'
 })

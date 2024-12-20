@@ -16,11 +16,6 @@ export class UserService extends ServiceAbstract<UserDto | UserAddDto> {
     ) {
         super(authService);
         this.setTable();
-        console.log("UserService.constructor() -> this.authService.authenticatedUser", this.authService.authenticatedUser);
-        const subscription = this.authService.authenticatedUser.subscribe(user => {
-            console.log("UserService.constructor() -> .authenticatedUser.subscribe()", user);
-            
-        });
     }
 
     getByUuid(uuid: string) {

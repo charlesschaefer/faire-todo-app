@@ -50,7 +50,6 @@ import { ToastModule } from 'primeng/toast';
         ToastModule,
     ],
     providers: [
-        MessageService,
         ConfirmationService
     ],
     templateUrl: './project.component.html',
@@ -117,7 +116,8 @@ export class ProjectComponent implements OnInit {
                     this.messageService.add({
                         summary: "Removed",
                         detail: "Project and it's tasks removed successfully!",
-                        severity: "success"
+                        severity: "success",
+                        key: 'task'
                     });
                     setTimeout(() => window.location.reload(), 2000);
                 });
@@ -125,7 +125,8 @@ export class ProjectComponent implements OnInit {
             error: (err) => this.messageService.add({
                 summary: "Error",
                 detail: "Error trying to delete the project and it's tasks" + err,
-                severity: 'error'
+                severity: 'error',
+                key: 'task'
             })
         });
     }
@@ -153,7 +154,8 @@ export class ProjectComponent implements OnInit {
             error: (err) => this.messageService.add({
                 summary: "Error",
                 detail: "Error editing project." + err,
-                severity: "error"
+                severity: "error",
+                key: 'task'
             })
         });
     }
@@ -175,14 +177,16 @@ export class ProjectComponent implements OnInit {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate("Saved successfully")),
                     detail: await firstValueFrom(this.translate.selectTranslate("Project saved successfully")),
-                    severity: 'success'
+                    severity: 'success',
+                    key: 'task'
                 });
                 setTimeout(() => window.location.reload(), 2000);
             },
             error: async (err: Error) => this.messageService.add({
                 summary: await firstValueFrom(this.translate.selectTranslate("Error")),
                 detail: await firstValueFrom(this.translate.selectTranslate("Couldn't save the Project.")) + err,
-                severity: 'error'
+                severity: 'error',
+                key: 'task'
             }),
         });
 

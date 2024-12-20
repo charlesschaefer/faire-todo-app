@@ -9,6 +9,7 @@ import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { ProjectDto } from '../../dto/project-dto';
+import { ToastModule } from 'primeng/toast';
 
 
 @Component({

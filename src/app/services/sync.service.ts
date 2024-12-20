@@ -5,7 +5,7 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, forkJoin, Observable } from 'rxjs';
 import { AppDb, TableKeys } from '../app.db';
 import { TaskService } from './task.service';
 import { TagService } from './tag.service';
@@ -32,6 +32,7 @@ export class SyncService {
     private supabase: SupabaseClient;
     private syncState = new BehaviorSubject<number>(0);
     private syncConnection: number | undefined;
+    private rowsUpdated = false;
 
     constructor(
         private dbService: DbService,
@@ -204,7 +205,7 @@ export class SyncService {
                                     if (updateDate > newRevision) {
                                         newRevision = updateDate;
                                     }
-                                    console.error("Tempo da nova revisão: ", newRevision);
+                                    //console.error("Tempo da nova revisão: ", newRevision);
 
                                 }
                             }
@@ -325,12 +326,25 @@ export class SyncService {
     }
 
     updateRowsUserUuid() {
+        if (this.rowsUpdated) {
+            const changes = {
+                userUpserted: 0,
+                taskChanged: 0,
+                tagChanged: 0,
+                taskTagChanged: 0,
+                settingsChanged: 0,
+                projectChanged: 0,
+
+            };
+            return (new BehaviorSubject<typeof changes>(changes)).asObservable();
+        }
+
         const user = this.authService.currentUser;
         if (!user) {
             throw new Error('User not authenticated');
         }
 
-        return forkJoin({
+        const result = forkJoin({
             userUpserted: this.userService.upsert({
                 avatar_url: user.user_metadata["avatar_url"],
                 created_at: new Date(user.created_at),
@@ -345,6 +359,8 @@ export class SyncService {
             settingsChanged: this.settingsService.updateUserUUID(),
             projectChanged: this.projectService.updateUserUUID(),
         });
+        result.subscribe(() => this.rowsUpdated = true);
+        return result;
     }
 
     async connect() {

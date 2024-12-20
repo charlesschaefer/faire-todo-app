@@ -164,7 +164,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Removed`)),
                     detail: await firstValueFrom(this.translate.selectTranslate(`Task removed successfully`)),
-                    severity: "success"
+                    severity: "success",
+                    key: 'task'
                 });
                 this.onTaskRemoved.emit(this.task.uuid);
                 this.undoService.register(undo).subscribe(data => {
@@ -175,7 +176,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Error`)) + err,
                     detail: await firstValueFrom(this.translate.selectTranslate(`Error removing task.`)) + err,
-                    severity: "error"
+                    severity: "error",
+                    key: 'task'
                 })
             }
         })
@@ -218,31 +220,41 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         const successMsg = async () => this.messageService.add({
             summary: await firstValueFrom(this.translate.selectTranslate(`Marked as complete`)),
             detail: await firstValueFrom(this.translate.selectTranslate(`Task marked as complete`)),
-            severity: 'success'
+            severity: 'success',
+            key: 'task',
         });
+
         const errorMsg = async (err: any) => this.messageService.add({
             summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
             detail: await firstValueFrom(this.translate.selectTranslate(`Error marking task as complete.`)) + err,
-            severity: 'error'
+            severity: 'error',
+            key: 'task'
         });
         if (task.completed) {
             this.taskService.markTaskComplete(task).subscribe({
                 complete: async () => {
-                    successMsg();
+                    // await successMsg();
+                    this.messageService.add({
+                        summary: await firstValueFrom(this.translate.selectTranslate(`Marked as complete`)),
+                        detail: await firstValueFrom(this.translate.selectTranslate(`Task marked as complete`)),
+                        severity: 'success',
+                        key: 'task',
+                    })
                     console.log("emiting Task.onEditTask()")
                     this.onEditTask.emit();
+                    
                     this.undoService.register(undo).subscribe((data) => {
                         this.undoMarkAsComplete(data);
                     });
                 },
                 error: async (err) => {
-                    errorMsg(err);
+                    await errorMsg(err);
                 }
             })
         } else {
             this.taskService.edit(task.uuid, task).subscribe({
                 complete: async () => {
-                    successMsg();
+                    await successMsg();
                     console.log("emiting Task.onEditTask()")
                     this.onEditTask.emit();
                     this.undoService.register(undo).subscribe((data) => {

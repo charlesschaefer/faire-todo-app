@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecionando</title>
+    <script>
+        // This script logs a message to the console
+        const hash = window.location.hash;
+        window.location = 'tauri://localhost/auth/callback/' + hash;
+        // console.log(hash);
+    </script>
+</head>
+<body>
+    <h1>We're redirecting you back to the app...</h1>
+</body>
+</html>

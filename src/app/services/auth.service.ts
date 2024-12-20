@@ -1,16 +1,18 @@
-import { Injectable } from '@angular/core';
+import { Injectable, isDevMode } from '@angular/core';
 import { Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { open } from '@tauri-apps/plugin-shell';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private supabase: SupabaseClient;
-  private userSubject: BehaviorSubject<User | null>;
+  private userSubject: Subject<User | null>;
   public user: Observable<User | null>;
+  private _currentUser?: User | null;
 
   constructor(
     private router: Router
@@ -30,7 +32,7 @@ export class AuthService {
     );
 
     // Initialize user state
-    this.userSubject = new BehaviorSubject<User | null>(null);
+    this.userSubject = new Subject<User | null>();
     this.user = this.userSubject.asObservable();
 
     // Check active sessions
@@ -41,33 +43,46 @@ export class AuthService {
     // Listen for auth changes
     this.supabase.auth.onAuthStateChange((event, session) => {
       console.log("AuthService.onAuthStateChange", event, session);
-      this.userSubject.next(session?.user ?? null);
+      if (event == 'SIGNED_IN' || event == 'SIGNED_OUT') {
+        this._currentUser = session?.user;
+        this.userSubject.next(session?.user ?? null);
+      }
     });
   }
 
-  get authenticatedUser(): BehaviorSubject<User | null> {
+  get authenticatedUser(): Subject<User | null> {
     return this.userSubject;
   }
 
   get currentUser(): User | null {
-    return this.userSubject.value;
+    return this._currentUser || null;
   }
 
   async signInWithGoogle() {
-    console.warn(`After signing in, we're redirecting to: ${window.location.origin}/auth/callback`)
+    console.warn(`After signing in, we're redirecting to: ${window.location.origin}/auth/callback`);
     const { data, error } = await this.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        // redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: "https://charlesschaefer.net/faire-todo-app/redirect.htm",
+        skipBrowserRedirect: true
       }
     });
 
     if (error) throw error;
+    if (isDevMode()) {
+      window.location.assign(data.url);
+    } else {
+      // opens the auth url in a new browser session 
+      await open(data.url);
+    }
+
     return data;
   }
 
   async handleAuthCallback() {
     const { data: { session }, error } = await this.supabase.auth.getSession();
+    // const { data: { session }, error } = await this.supabase.auth.refreshSession();
     if (error) throw error;
     return session;
   }

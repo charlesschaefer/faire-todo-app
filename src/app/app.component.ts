@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { delay, firstValueFrom, Subscription } from 'rxjs';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -40,6 +40,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 
 export enum NotificationType {
     DueTask,
@@ -104,7 +105,7 @@ export class AppComponent implements OnInit {
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
-
+        console.warn("AppComponent::Constructor()")
 
         let userLanguage = localStorage.getItem('language');
         if (!userLanguage) {
@@ -112,46 +113,17 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        this.authService.user.subscribe(async user => {
-            console.log("Entrou no this.authService.user.subscribe(). User: ", user);
-            this.currentUser = user;
-            if (user) {
-                this.messageService.add({
-                    severity: 'info',
-                    detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
-                    summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
-                });
-
-                // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
-                // before starting the sincronization
-                this.syncService.updateRowsUserUuid().subscribe(changed => {
-                    console.log("======> Changed itens: ");
-                    console.info("taskChanged: ", changed.taskChanged);
-                    console.info("tagChanged: ", changed.tagChanged);
-                    console.info("taskTagChanged: ", changed.taskTagChanged);
-                    console.info("settingsChanged: ", changed.settingsChanged);
-                    console.info("projectChanged: ", changed.projectChanged);
-                    
-                    this.syncService.connect().catch(console.error).then(() => {
-                        this.syncService.syncStatus.subscribe((status) => {
-                            this.syncStatus = Dexie.Syncable.StatusTexts[status];
-                            console.warn("Synchronization new status: ", this.syncStatus)
-                            
-                        });
-                    });
-                });
-            } else {
-                this.syncService.disconnect().catch(console.error);
+        onOpenUrl((urls) => {
+            if (urls) {
+                let index;
+                if ((index = urls[0].indexOf('#')) !== -1) {
+                    const fragment = urls[0].slice(index + 1);
+                    this.router.navigate(['/auth/callback'], {fragment: fragment})
+                    return;
+                }
+                window.location.assign(urls[0]);
             }
         });
-        
-        // Subscribe to sync status changes
-        this.syncService.syncStatus.subscribe(status => {
-            this.syncStatus = Dexie.Syncable.StatusTexts[status];
-        });
-
-        // close the sidebar everytime the route triggers an event
-        this.router.events.subscribe(() => this.showSidebar = false);
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
@@ -280,55 +252,20 @@ export class AppComponent implements OnInit {
 
         this.setupMenu();
 
-        const currentTheme = this.themeService.getCurrentTheme();
-        let userTheme = localStorage.getItem('theme');
-        if (!userTheme) {
-            userTheme = currentTheme;
-        }
-        if (userTheme != currentTheme) {
-            this.themeService.switchTheme(userTheme);
-        }
+        this.applyUserTheme();
 
-        // watches for undo calls, so we exhibit a toast to the user
-        this.undoService.watch().subscribe(() => {
-            // exhibits the toast with a link to the undo() method
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Undo',
-                detail: 'Action completed.',
-                life: 15000
-            });
-        });
+        this.handleUserAuthenticationState();
+
+        // close the sidebar everytime the route triggers an event
+        this.router.events.subscribe(() => this.showSidebar = false);
+
+        this.watchForUndoCalls();
 
         this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
             this.notificationService.setup(settings);
         });
 
-        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
-            this.notificationService.setup(settings);
-        });
-
-        listenForShareEvents((intent: ShareEvent) => {
-            if (intent.uri) {
-                const uri = parseIntentUri(intent.uri);
-                const url = decodeURIComponent(uri['S.android.intent.extra.TEXT']);
-                
-                this.childComponentsData = {
-                    showAddTask: true,
-                    sharetargetUrl: url,
-                };
-                
-                // alert(`AppComponent.ngOnInit() ${url}`);
-                console.log("AppComponent.ngOnInit() =====>>>>>", url); 
-                if (this.router.url.indexOf('today') !== -1) {
-                    this.router.navigate(['/inbox']);
-                } else {
-                    this.router.navigate(['/today']);
-                }
-            }
-        }).then(listener => {
-            this.shareListener = listener;
-        });
+        this.listenForShareEvents();
     }
 
     switchTheme() {
@@ -423,6 +360,106 @@ export class AppComponent implements OnInit {
         } catch (error) {
             console.error('Error signing out:', error);
         }
+    }
+
+    private applyUserTheme() {
+        const currentTheme = this.themeService.getCurrentTheme();
+        let userTheme = localStorage.getItem('theme');
+        if (!userTheme) {
+            userTheme = currentTheme;
+        }
+        if (userTheme != currentTheme) {
+            this.themeService.switchTheme(userTheme);
+        }
+    }
+
+    private handleUserAuthenticationState() {
+        this.authService.user.subscribe(async user => {
+            if (this.currentUser && !user) {
+                this.currentUser = null;
+                
+                console.log("User signed out... disconnecting synchronization")
+                
+                return this.syncService.disconnect().catch(console.error);
+            }
+
+            if (!user && !this.currentUser) {
+                console.error("Unknown user authentication state...")
+                return;
+            }
+
+            if (this.currentUser && user) {
+                console.log("authService.user.next() sent the same user again...")
+                return;
+            }
+
+            console.log("User signed in... connecting synchronization")
+
+            this.currentUser = user;
+            
+            this.messageService.add({
+                severity: 'info',
+                detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
+                summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
+                key: 'auth-messages'
+            });
+
+            // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
+            // before starting the sincronization
+            this.syncService.updateRowsUserUuid().subscribe(changed => {
+                console.log("======> Changed itens: ");
+                console.info("taskChanged: ", changed.taskChanged);
+                console.info("tagChanged: ", changed.tagChanged);
+                console.info("taskTagChanged: ", changed.taskTagChanged);
+                console.info("settingsChanged: ", changed.settingsChanged);
+                console.info("projectChanged: ", changed.projectChanged);
+
+                this.syncService.connect().catch(console.error);
+                
+                // changes the syncStatus based on connection status
+                this.syncService.syncStatus.subscribe((status) => {
+                    this.syncStatus = Dexie.Syncable.StatusTexts[status];
+                    console.warn("Synchronization new status: ", this.syncStatus)
+                });
+            });
+        });
+    }
+
+    private watchForUndoCalls() {
+        // watches for undo calls, so we exhibit a toast to the user
+        this.undoService.watch().pipe(delay(700)).subscribe(() => {
+            // exhibits the toast with a link to the undo() method
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Undo',
+                detail: 'Action completed.',
+                life: 15000
+            });
+        });
+    }
+
+    private listenForShareEvents() {
+        listenForShareEvents((intent: ShareEvent) => {
+            if (intent.uri) {
+                const uri = parseIntentUri(intent.uri);
+                const url = decodeURIComponent(uri['S.android.intent.extra.TEXT']);
+
+                this.childComponentsData = {
+                    showAddTask: true,
+                    sharetargetUrl: url,
+                };
+
+                // alert(`AppComponent.ngOnInit() ${url}`);
+                console.log("AppComponent.ngOnInit() =====>>>>>", url);
+                if (this.router.url.indexOf('today') !== -1) {
+                    this.router.navigate(['/inbox']);
+                } else {
+                    this.router.navigate(['/today']);
+                }
+            }
+        }).then(listener => {
+            this.shareListener = listener;
+        });
     }
 }
 

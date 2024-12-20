@@ -53,6 +53,9 @@
     </div>
   </ng-template>
 </p-toast>
+
+<p-toast [key]="'task'" [position]="'top-right'" />
+
 <p-toast [key]="'auth-messages'" [position]="'top-center'">
   <ng-template let-message pTemplate="auth-message">
     <div class="flex flex-column align-items-start" style="flex: 1">
