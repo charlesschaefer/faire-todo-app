@@ -62,6 +62,14 @@ footer {
     color: var(--primary-color);
 }
 
+:host ::ng-deep p-sidebar p-menu .p-menu .project-menu-item .p-menuitem-icon {
+    color: var(--blue-700);
+}
+
+:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-badge {
+    background-color: var(--blue-700);
+}
+
 :host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-link-active {
     background-color: var(--primary-100);
 }

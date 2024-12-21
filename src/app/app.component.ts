@@ -113,7 +113,7 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        onOpenUrl((urls) => {
+        /* onOpenUrl((urls) => {
             if (urls) {
                 let index;
                 this.router.navigate(["/auth"])
@@ -126,7 +126,7 @@ export class AppComponent implements OnInit {
                 }, 2000);
                 // window.location.assign(urls[0]);
             }
-        });
+        }); */
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {
@@ -136,7 +136,7 @@ export class AppComponent implements OnInit {
                 { label: await firstValueFrom(this.translate.selectTranslate("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project' } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1].items?.length } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
                 { separator: true },
@@ -208,12 +208,13 @@ export class AppComponent implements OnInit {
             projectItems.push({
                 label: project.name,
                 icon: 'pi pi-hashtag',
-                routerLink: `/project/${project.uuid}/tasks`
+                routerLink: `/project/${project.uuid}/tasks`,
+                styleClass: 'project-menu-item'
             });
         }
         const projectMenuItems = {
             label: await firstValueFrom(this.translate.selectTranslate("Projects")),
-            items: projectItems
+            items: projectItems,
         };
 
         return [

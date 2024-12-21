@@ -34,6 +34,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     today!: Date;
     due = false;
+    future = false;
 
     dialogRef: DynamicDialogRef | undefined;
 
@@ -96,6 +97,10 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         
         let dueDate = DateTime.fromJSDate(this.task.dueDate);
         const today = DateTime.fromJSDate(this.today);
+
+        if (dueDate.diff(today).as('days') > 0) {
+            this.future = true;
+        }
 
         if (dueDate.diff(today).as('seconds') < 0 ) {
             this.due = true;
