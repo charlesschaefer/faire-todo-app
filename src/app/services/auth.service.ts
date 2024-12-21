@@ -1,4 +1,4 @@
-import { Injectable, isDevMode } from '@angular/core';
+import { Inject, Injectable, isDevMode } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
@@ -18,6 +18,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    @Inject('DEBUG') private DEBUG: boolean
   ) {
     // Initialize Supabase client
     this.supabase = createClient(
@@ -29,7 +30,7 @@ export class AuthService {
             console.log("AuthService.lock", name, acquireTimeout);
             return fn();
           },
-          debug: true
+          debug: DEBUG
         }
       }
     );

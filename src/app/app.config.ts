@@ -41,6 +41,10 @@ export const appConfig: ApplicationConfig = {
             provide: 'AppDb',
             useClass: AppDb
         },
+        {
+            provide: 'DEBUG',
+            useValue: DEBUG
+        },
         MessageService,
         SyncService,
         importProvidersFrom(TranslocoModule), 
