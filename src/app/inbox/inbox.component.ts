@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -21,6 +21,8 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskService } from '../services/task.service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
+import { add } from 'dexie';
+import { TaskComponent } from '../task/task/task.component';
 
 
 @Component({
@@ -58,6 +60,10 @@ export class InboxComponent implements OnInit, AfterViewInit {
     // The url received from the share event. This should be used to fill the title of a new task.
     sharetargetUrl!: string;
 
+    isAddTaskOpen = false;
+    isEditTaskOpen = false;
+    @ViewChild('appTaskList') appTaskList?: TaskListComponent
+
     constructor(
         protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
@@ -79,6 +85,11 @@ export class InboxComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.getTasks();
+
+        this.showTaskAddOverlay$.subscribe(() => {
+            this.isAddTaskOpen = true;
+            this.isEditTaskOpen = false;
+        })
     }
 
     onShowTaskAddOverlay(event: Event) {
@@ -100,15 +111,46 @@ export class InboxComponent implements OnInit, AfterViewInit {
 
     onAddTask() {
         this.getTasks();
+
         this.sharetargetUrl = '';
+        this.isAddTaskOpen  = false;
+        this.isEditTaskOpen = false;
     }
     
     onEditTask() {
         console.log("called Inbox.onEditTask()");
         this.getTasks();
+
+        this.isAddTaskOpen = false;
+        this.isEditTaskOpen = false;
     }
 
     onShowOverlayChange(event: any) {
         this.sharetargetUrl = '';
+
+        this.isAddTaskOpen = false;
+        this.isEditTaskOpen = false;
+    }
+
+    @HostListener('document:keydown.shift.n', ['$event'])
+    shortcutNewTask(event: KeyboardEvent) {
+        const active = document.activeElement;
+        // won't activate if the focused element is not the body
+        if (!(active instanceof HTMLBodyElement)) {
+            return;
+        }
+
+        if (this.isAddTaskOpen || this.isEditTaskOpen) {
+            return;
+        }
+        console.log(this.appTaskList);
+
+        const clickEvent = new MouseEvent('click')
+        const target = document.querySelector(".task-add-button");
+        target?.dispatchEvent(clickEvent);
+
+        this.onShowTaskAddOverlay(clickEvent);
+
+        console.log("Entrou", document.activeElement)
     }
 }

@@ -1,6 +1,6 @@
 # Faire Todo App
 
-Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser.
+Faire is an offline-first OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser. You can synchronize the tasks between your devices using P2P-like "synchronization" (you move all the tasks from one device to other, overwriting the receiver data - they need to be on the same network to work). Alternativelly you can sign in using Google OAuth, and the data will be synchronized between signed in devices using Supabase's servers.
 
 Faire is the infinitive verb in french equivalent to "to do".
 
@@ -23,6 +23,8 @@ Faire is the infinitive verb in french equivalent to "to do".
 - [x] Recurring tasks
 - [x] Synchronization of data between devices connected in the same network
 - [x] Fill the due date and due time based on dates typed in the task title (i.e.: "Do this today" sets the due date for today automatically).
+- [x] Google OAuth sign in option
+- [x] Devices synchronization using Supabase's servers for signed in users
 - [ ] A calendar view of the tasks
 - [ ] A time tracker to track each task
 
@@ -74,6 +76,18 @@ npm run tauri dev
 # or to test on android emulator or device:
 npm run tauri android dev
 ```
+
+# Supabase and Google OAuth Authentication
+In order to be able to make OAuth authentication to work on Android Devices, we needed to implement two Tauri plugins in the project:
+- [shell](https://v2.tauri.app/plugin/shell/): Allows us to open an URL outside the app (opens in the user's default browser)
+- [deep-linking](https://v2.tauri.app/plugin/deep-linking/): Allows us to associate the App as the one that will be used to open some kind of URLs.
+
+By using shell plugin, we can ask the Android system to open supabase's authentication URL in a new browser window, allowing the user to reuse their current Google's session, instead of needing to login inside the App's webview. Our supabase authentication server was configured to redirect the user to an external URL (in this case, https://charlesschaefer.net/faire-todo-app/* prefixed URLs). 
+
+Then, when the authentication is finished, Google redirects the user to something like **$URL/redirect.html#auth_token=....&refresh_token=....**. As Faire is registered as the app that opens this prefixed URLs, the user is automatically redirected to the app, that will receive the URL (including the needed tokens). We can then finish the signin process.
+
+Check the file `src/app/services/auth.service.ts` (methods `signInWithGoogle` and `handleAuthCallback`).
+
 
 # Download
 

@@ -90,7 +90,7 @@
   </p-menu>
 
   <ng-template pTemplate="footer">
-    <div class="flex align-items-center justify-content-around gap-2">
+    <div class="flex align-items-center gap-2" [ngClass]="this.currentUser ? 'justify-content-around' : 'justify-content-end'">
       @if (this.currentUser) {
         <div class="flex align-items-start justify-content-start text-sm">
           <span style="padding-right: 5px;font-weight: bold;">{{"Sync statuts" | transloco}}: </span>{{this.syncStatus}}

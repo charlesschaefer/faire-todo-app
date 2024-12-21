@@ -1,5 +1,5 @@
 <p-card>
-  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" id="task-edit-form">
+  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" id="task-edit-form" #form>
     <div  class="task-add flex flex-column gap-3">
       <div class="task-add-title">
         @if (task.title) {
@@ -64,6 +64,7 @@
           [placeholder]="'Due date' | transloco"
           formControlName="dueDate"
           class="task-add-dueDate"
+          (keydown.enter)="saveTask()"
         />
         <p-calendar
           [showIcon]="true"
@@ -73,6 +74,7 @@
           [placeholder]="'Time' | transloco"
           formControlName="dueTime"
           class="task-add-dueTime"
+          (keydown.enter)="saveTask()"
         />
 
         <p-dropdown 

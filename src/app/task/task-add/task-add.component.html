@@ -1,6 +1,6 @@
 
 <p-overlayPanel #taskAddOp (onHide)="onClose($event)">
-  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()">
+  <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" #form>
     <p-card>
       <div  class="task-add flex flex-column gap-3">
         <div class="task-add-title">
@@ -12,12 +12,13 @@
             [placeholder]="'Task title' | transloco" 
             formControlName="title"
             autocomplete="off"
-           
+	          [autofocus]="true"
             (ngModelChange)="onTitleChange($event)"
           />
         </div>
         <div class="task-add-description">
           <textarea
+	    #description
             pInputTextarea
             [placeholder]="'Description' | transloco"
             [autoResize]="true"

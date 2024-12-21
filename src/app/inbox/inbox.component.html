@@ -1,5 +1,5 @@
 <h2   class="page-title">{{ 'Inbox' | transloco }}</h2>
-<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" />
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" #appTaskList />
 
 <!-- Task add overlay panel -->
 <app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" />
