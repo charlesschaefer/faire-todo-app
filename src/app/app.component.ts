@@ -382,9 +382,15 @@ export class AppComponent implements OnInit {
             if (this.currentUser && !user) {
                 this.currentUser = null;
                 
-                console.log("User signed out... disconnecting synchronization")
-                
-                return this.syncService.disconnect().catch(console.error);
+                console.log("User signed out... disconnecting synchronization")                
+                return this.syncService.disconnect().catch(console.error).then(async () => {
+                   this.messageService.add({
+                       severity: 'info',
+                       summary: await firstValueFrom(this.translate.selectTranslate("Signed off")),
+                       detail: await firstValueFrom(this.translate.selectTranslate("You were signed off. Now your tasks will be saved only locally.")),
+                       key: 'auth-messages'
+                   }) 
+                });
             }
 
             if (!user && !this.currentUser) {
@@ -408,9 +414,43 @@ export class AppComponent implements OnInit {
                 key: 'auth-messages'
             });
 
-            // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
-            // before starting the sincronization
-            this.syncService.updateRowsUserUuid().subscribe(changed => {
+            
+            // start watching for changes on the synchronization status
+            this.syncService.syncStatus.subscribe((status) => {
+                this.syncStatus = Dexie.Syncable.StatusTexts[status];
+                console.warn("Synchronization new status: ", this.syncStatus)
+            });
+
+            try {
+                this.linkUserDataAndSynchronize();
+            } catch (error) {
+                this.messageService.add({
+                    severity: 'warning',
+                    detail: await firstValueFrom(this.translate.selectTranslate("We couldn't stabilsh a connection with our synchronization servers. We're going to try again.")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Failed to synchronize with server.")),
+                    key: 'auth-messages'
+                });
+                
+                console.log("Error starting synchronization: ", error);
+                console.log("Trying to connect synchronization again")
+                await this.syncService.disconnect();
+                await this.syncService.connect().catch(console.error);
+            }
+        });
+    }
+
+    linkUserDataAndSynchronize() {
+        // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
+        // before starting the sincronization
+        this.syncService.updateRowsUserUuid().subscribe({
+            next: async changed => {
+                this.messageService.add({
+                    severity: 'success',
+                    detail: await firstValueFrom(this.translate.selectTranslate("Your data was successfully linked to your Google User.")),
+                    summary: await firstValueFrom(this.translate.selectTranslate("Linking your data to your Google User")),
+                    key: 'auth-messages'
+                });
+
                 console.log("======> Changed itens: ");
                 console.info("taskChanged: ", changed.taskChanged);
                 console.info("tagChanged: ", changed.tagChanged);
@@ -418,14 +458,12 @@ export class AppComponent implements OnInit {
                 console.info("settingsChanged: ", changed.settingsChanged);
                 console.info("projectChanged: ", changed.projectChanged);
 
-                this.syncService.connect().catch(console.error);
-                
-                // changes the syncStatus based on connection status
-                this.syncService.syncStatus.subscribe((status) => {
-                    this.syncStatus = Dexie.Syncable.StatusTexts[status];
-                    console.warn("Synchronization new status: ", this.syncStatus)
-                });
-            });
+                await this.syncService.connect().catch(console.error);
+            },
+            error: async () => {
+                await this.syncService.disconnect();
+                this.linkUserDataAndSynchronize();
+            }
         });
     }
 
