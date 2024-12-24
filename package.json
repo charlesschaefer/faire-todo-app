@@ -1,6 +1,6 @@
 {
   "name": "faire-todo-app",
-  "version": "0.0.13",
+  "version": "0.0.15",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
