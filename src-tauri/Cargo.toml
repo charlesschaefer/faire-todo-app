@@ -21,7 +21,7 @@ tauri-build = { version = "2", features = [] }
 tauri                     = { version = "2", features = ["tray-icon", "image-png", "devtools"] }
 serde                     = { version = "1", features = ["derive"] }
 serde_json                = { version = "1", features = ["std"] }
-mdns-sd                   = "0.12"
+mdns-sd                   = "0.13"
 hostname                  = "0.4.0"
 local-ip-addr             = "0.1.1"
 hyper                     = { version = "1.4.1", features = ["full"] }
@@ -37,7 +37,6 @@ tauri-plugin-sharetarget  = "0.1.6"
 tauri-plugin-shell        = "2"
 tauri-plugin-deep-link    = "2"
 tauri-plugin-os = "2"
-glib = "0.20.0"
 
 
 
