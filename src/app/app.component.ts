@@ -41,6 +41,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
 import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { platform } from '@tauri-apps/plugin-os';
 
 export enum NotificationType {
     DueTask,
@@ -113,20 +114,23 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        /* onOpenUrl((urls) => {
-            if (urls) {
-                let index;
-                this.router.navigate(["/auth"])
-                setTimeout(() => {
-                    if ((index = urls[0].indexOf('#')) !== -1) {
-                        const fragment = urls[0].slice(index + 1);
-                        this.router.navigate(['/auth/callback'], {fragment: fragment})
-                        return;
-                    }
-                }, 2000);
-                // window.location.assign(urls[0]);
-            }
-        }); */
+        // conditionally registering the deep-link handler for android, because it is broken on  linux
+        if (platform() == 'android') {
+            onOpenUrl((urls) => {
+                if (urls) {
+                    let index;
+                    this.router.navigate(["/auth"])
+                    setTimeout(() => {
+                        if ((index = urls[0].indexOf('#')) !== -1) {
+                            const fragment = urls[0].slice(index + 1);
+                            this.router.navigate(['/auth/callback'], {fragment: fragment})
+                            return;
+                        }
+                    }, 2000);
+                    // window.location.assign(urls[0]);
+                }
+            });
+        }
     }
 
     async setMenuItems(additionalItems: MenuItem[]) {

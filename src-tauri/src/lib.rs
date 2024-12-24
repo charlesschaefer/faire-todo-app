@@ -15,6 +15,7 @@ pub fn run() {
     //mdns::broadcast_service();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_http::init())
