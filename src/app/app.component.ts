@@ -15,18 +15,20 @@ import {
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
-import { AvatarModule } from 'primeng/avatar';
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
+import { platform } from '@tauri-apps/plugin-os';
+import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
+import { AvatarModule } from 'primeng/avatar';
 import { Router } from '@angular/router';
 import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
 import { ProjectService } from './services/project.service';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './services/task.service';
-import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { HttpClient } from '@angular/common/http';
 import { SettingsService } from './services/settings.service';
-import { SettingsDto } from './dto/settings-dto';
+import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
 import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
@@ -40,9 +42,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
-import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
-import { platform } from '@tauri-apps/plugin-os';
 
+export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
     DueTask,
     TodayTasks
@@ -115,7 +116,7 @@ export class AppComponent implements OnInit {
         this.translate.setActiveLang(userLanguage);
 
         // conditionally registering the deep-link handler for android, because it is broken on  linux
-        if (platform() == 'android') {
+        if (TAURI_BACKEND && platform() == 'android') {
             onOpenUrl((urls) => {
                 if (urls) {
                     let index;
@@ -140,7 +141,7 @@ export class AppComponent implements OnInit {
                 { label: await firstValueFrom(this.translate.selectTranslate("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1].items?.length } as MenuItem,
+                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1]?.items?.length } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
                 { label: await firstValueFrom(this.translate.selectTranslate(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
                 { separator: true },
@@ -485,6 +486,7 @@ export class AppComponent implements OnInit {
     }
 
     private listenForShareEvents() {
+        if (!TAURI_BACKEND) return;
         listenForShareEvents((intent: ShareEvent) => {
             if (intent.uri) {
                 const uri = parseIntentUri(intent.uri);
