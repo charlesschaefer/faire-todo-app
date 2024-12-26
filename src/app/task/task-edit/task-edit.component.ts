@@ -17,8 +17,8 @@ import dates, { DatesMethods } from 'compromise-dates';
 nlp.plugin(dates);
 
 import { TaskAddComponent } from '../task-add/task-add.component';
-import { ProjectService } from '../../services/project.service';
-import { TaskService } from '../../services/task.service';
+import { ProjectService } from '../../project/project.service';
+import { TaskService } from '../task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { SubtaskComponent } from '../subtask/subtask.component';

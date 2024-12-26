@@ -22,7 +22,7 @@ let randomUUID: any;
 //     randomUUID = crypto.randomUUID;
 // }
 
-import { SettingsService } from '../services/settings.service';
+import { SettingsService } from './settings.service';
 import { SettingsDto } from '../dto/settings-dto';
 import { invoke } from '@tauri-apps/api/core';
 

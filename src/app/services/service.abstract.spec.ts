@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ServiceAbstract } from './service.abstract';
 import { MockInstance, MockService } from 'ng-mocks';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth/auth.service';
 import { DbService } from './db.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { User } from '@supabase/supabase-js';

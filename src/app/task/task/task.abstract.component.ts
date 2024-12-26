@@ -7,7 +7,7 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
 
 import { TaskDto } from '../../dto/task-dto';
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../task.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
 import { inject } from '@angular/core';

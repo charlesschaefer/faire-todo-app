@@ -1,8 +1,8 @@
 /// <reference lib="webworker" />
 
 import { TaskDto } from "./dto/task-dto";
-import { TaskService } from "./services/task.service";
-import { SettingsService } from "./services/settings.service";
+import { TaskService } from "./task/task.service";
+import { SettingsService } from "./settings/settings.service";
 import { NotificationType } from "./app.component";
 import { SettingsDto } from "./dto/settings-dto";
 import { DbService } from "./services/db.service";

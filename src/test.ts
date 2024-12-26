@@ -1,6 +1,6 @@
 import { ngMocks } from 'ng-mocks';
 import { EMPTY, map } from "rxjs";
-import { AuthService } from "./app/services/auth.service";
+import { AuthService } from "./app/auth/auth.service";
 
 
 // All methods in mock declarations and providers

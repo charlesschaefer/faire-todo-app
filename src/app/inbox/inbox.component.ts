@@ -18,7 +18,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskDto } from '../dto/task-dto';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
-import { TaskService } from '../services/task.service';
+import { TaskService } from '../task/task.service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
 import { add } from 'dexie';

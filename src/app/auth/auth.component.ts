@@ -9,7 +9,7 @@ import { ToastModule } from 'primeng/toast';
 import { AvatarModule } from 'primeng/avatar';
 import { User } from '@supabase/supabase-js';
 
-import { AuthService } from '../services/auth.service';
+import { AuthService } from './auth.service';
 import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from './service.abstract';
 import { DbService } from './db.service';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth/auth.service';
 import { TagAddDto, TagDto } from '../dto/tag-dto';
 
 @Injectable({

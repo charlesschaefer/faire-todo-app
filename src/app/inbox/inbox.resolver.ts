@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, MaybeAsync, Resolve, RouterStateSnapshot } from
 
 
 import { TaskDto } from '../dto/task-dto';
-import { TaskService } from '../services/task.service';
 import { from, map, mergeMap } from 'rxjs';
+import { TaskService } from '../task/task.service';
 
 interface InboxResolvedData {
     tasks: TaskDto[];

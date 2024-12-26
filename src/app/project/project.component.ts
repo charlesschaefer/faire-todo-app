@@ -22,11 +22,11 @@ let randomUUID: any;
 //     randomUUID();
 // }
 
-import { ProjectService } from '../services/project.service';
+import { ProjectService } from './project.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
-import { TaskService } from '../services/task.service';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { TaskService } from '../task/task.service';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';

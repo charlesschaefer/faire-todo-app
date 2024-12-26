@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { InboxComponent } from '../inbox/inbox.component';
-import { TaskService } from '../services/task.service';
+import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskAddComponent } from '../task/task-add/task-add.component';

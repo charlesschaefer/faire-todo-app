@@ -6,8 +6,8 @@ import { TranslocoModule } from '@jsverse/transloco';
 
 import { TaskComponent } from '../task/task.component';
 import { TaskDto } from '../../dto/task-dto';
-import { TaskService } from '../../services/task.service';
-import { ProjectService } from '../../services/project.service';
+import { TaskService } from '../task.service';
+import { ProjectService } from '../../project/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { ToastModule } from 'primeng/toast';
 

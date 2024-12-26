@@ -18,7 +18,7 @@ import { TreeModule } from 'primeng/tree';
 import { TaskDto } from '../../dto/task-dto';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../task.service';
 import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { TaskAbstractComponent } from './task.abstract.component';

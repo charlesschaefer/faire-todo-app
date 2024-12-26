@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ServiceAbstract } from './service.abstract';
+import { ServiceAbstract } from '../services/service.abstract';
 import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
 import { Observable, Subject, firstValueFrom, from, zip } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
-import { DbService } from './db.service';
-import { AuthService } from './auth.service';
+import { DbService } from '../services/db.service';
+import { AuthService } from '../auth/auth.service';
+import { DataUpdatedService } from '../services/data-updated.service';
 
 interface SubtaskCount {
     subtasks: number;
@@ -23,7 +24,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
     constructor(
         protected dbService: DbService,
-        protected override authService: AuthService
+        protected override authService: AuthService,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
         super(authService);
         this.setTable();
@@ -34,7 +36,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
             return this.table.where({
                 completed: 0,
             }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
-        }))
+        })) as Observable<TaskDto[]>
     }
 
     orderTasks(tasks: TaskDto[]) {
@@ -45,7 +47,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return tasks;
     }
 
-    getFromProject(project_uuid: string): Observable<Tasks[]> {
+    getFromProject(project_uuid: string): Observable<TaskDto[]> {
         console.log("Criteria: ", {
             completed: 0,
             project_uuid: project_uuid,
@@ -55,7 +57,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 completed: 0,
                 // project_uuid: project_uuid,
             }).and((task) => task.project_uuid === project_uuid || (!project_uuid && task.project_uuid === null || task.project_uuid === '' || !task.project_uuid)).toArray();
-        }));
+        })) as Observable<TaskDto[]>;
     }
 
     getForToday() {
@@ -68,10 +70,10 @@ export class TaskService extends ServiceAbstract<Tasks> {
             return this.table
                 .where('dueDate')
                 .belowOrEqual(date)
-                .and((task: TaskDto) => task.completed == 0)
-                .and((task: TaskDto) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid)
+                .and((task: Tasks) => task.completed == 0)
+                .and((task: Tasks) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid)
                 .toArray();
-        }));
+        })) as Observable<TaskDto[]>;
     }
 
     countForToday() {
@@ -81,15 +83,15 @@ export class TaskService extends ServiceAbstract<Tasks> {
         date.setSeconds(0);
         date.setMilliseconds(0);
         return from(liveQuery(() => {
-            return this.table.where('dueDate').equals(date).and((task: TaskDto) => task.completed == 0).count();
+            return this.table.where('dueDate').equals(date).and((task: Tasks) => task.completed == 0).count();
         }));
     }
 
     getUpcoming() {
         const minDate = DateTime.fromJSDate(new Date).endOf('day').toJSDate();
         return from(liveQuery(() => {
-            return this.table.where('dueDate').above(minDate).and((task: TaskDto) => task.completed == 0).toArray();
-        }));
+            return this.table.where('dueDate').above(minDate).and((task: Tasks) => task.completed == 0).toArray();
+        })) as Observable<TaskDto[]>;
     }
 
     orderTasksByCompletion(tasks: TaskDto[]): TaskDto[] {
@@ -117,7 +119,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 .equals(task.uuid)
                 .and((task) => task.completed == 0)
                 .toArray();
-        }));
+        })) as Observable<TaskDto[]>;
     }
 
     countTaskSubtasks(task: TaskDto): Observable<SubtaskCount> {
@@ -145,7 +147,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 project_uuid: projectUuid || '',
                 completed: 0
             }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
-        }))
+        })) as Observable<TaskDto[]>
     }
 
     getAllTasks() {
@@ -153,7 +155,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
             return this.table.where({
                 completed: 0
             }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray();
-        }))
+        })) as Observable<TaskDto[]>
     }
 
     removeTask(task: TaskDto) {
@@ -163,7 +165,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 this.getTaskSubtasks(task).subscribe({
                     next: (tasks) => {
                         tasks.forEach(task => {
-                            this.removeTask(task).subscribe({
+                            this.removeTask(task as TaskDto).subscribe({
                                 error: (err) => {
                                     removal$.error(err);
                                 }

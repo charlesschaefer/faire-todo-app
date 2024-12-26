@@ -4,7 +4,9 @@ import { liveQuery, Table } from "dexie";
 
 import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
-import { AuthService } from "./auth.service";
+import { AuthService } from "../auth/auth.service";
+import { Changes, DataUpdatedService } from "./data-updated.service";
+import { DatabaseChangeType } from "dexie-observable/api";
 
 export interface UserBound {
     user_uuid: string;

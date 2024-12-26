@@ -27,14 +27,14 @@ import dates, { DatesMethods } from 'compromise-dates';
 nlp.plugin(dates);
 
 
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../task.service';
 import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
 import { Router } from '@angular/router';
-import { ProjectService } from '../../services/project.service';
+import { ProjectService } from '../../project/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UserBound } from '../../services/service.abstract';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
     selector: 'app-task-add',

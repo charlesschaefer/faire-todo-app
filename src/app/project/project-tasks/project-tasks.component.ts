@@ -6,9 +6,9 @@ import { firstValueFrom } from 'rxjs';
 
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskAddComponent } from '../../task/task-add/task-add.component';
-import { ProjectService } from '../../services/project.service';
+import { ProjectService } from '../project.service';
 import { ProjectAddDto, ProjectDto } from '../../dto/project-dto';
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../../task/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
 import { CommonModule } from '@angular/common';

@@ -41,6 +41,7 @@ export class AuthService {
 
     // Check active sessions
     this.supabase.auth.getSession().then(({ data: { session } }) => {
+      this._currentUser = session?.user;
       this.userSubject.next(session?.user ?? null);
     });
 

@@ -9,10 +9,11 @@ import { FormsModule } from '@angular/forms';
 
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { InboxComponent } from '../inbox/inbox.component';
-import { TaskService } from '../services/task.service';
+import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { DataUpdatedService } from '../services/data-updated.service';
 
 @Component({
     selector: 'app-search',

@@ -1,9 +1,9 @@
 import { AES, enc } from 'crypto-js';
 
 import { Injectable } from '@angular/core';
-import { TaskService } from './task.service';
-import { ProjectService } from './project.service';
-import { SettingsService } from './settings.service';
+import { TaskService } from '../task/task.service';
+import { ProjectService } from '../project/project.service';
+import { SettingsService } from '../settings/settings.service';
 import { TagService } from './tag.service';
 import { TaskTagService } from './task-tag.service';
 import { TaskDto } from '../dto/task-dto';
