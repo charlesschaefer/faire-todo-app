@@ -45,7 +45,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
      * @returns Observable<BaseDto[]>
      */
     list() {
-        return from(liveQuery(() => this.table.toArray()));
+        return this.table.toArray();
     }
 
     /**
@@ -89,7 +89,8 @@ export abstract class ServiceAbstract<T extends Updatable> {
         if (!this.userUuid) {
             throw new Error("User UUID not present on the session");
         }
-        return from(this.table
+        return from(
+            this.table
             .filter((item) => !item.user_uuid || item.user_uuid == '' || item.user_uuid !== this.userUuid)
             .modify({user_uuid: this.userUuid, updated_at: new Date()})
         );
@@ -107,7 +108,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
         return from(this.table.update(uuid, data as object));
     }
 
-    get(uuid: string | number) {
+    get(uuid: string | number): Promise<T> {
         let key: string;
         if (typeof uuid == 'string') {
             key = 'uuid';
@@ -115,26 +116,26 @@ export abstract class ServiceAbstract<T extends Updatable> {
             key = 'id';
         }
         const where = {[key]: uuid};
-        return from(liveQuery(() => this.table.where(where).first()));
+        return this.table.where(where).first();
     }
 
-    getByField(field: string, value: any): Observable<T[]> {
+    getByField(field: string, value: any) {
         const where: Record<string, any> = {};
         where[field] = value;
-        return from(liveQuery(() => this.table.where(where).toArray()));
+        return this.table.where(where).toArray();
     }
 
     count() {
-        return from(liveQuery(() => this.table.count()));
+        return this.table.count();
     }
 
     countByField(field: string, value: any) {
         const where: Record<string, any> = {};
         where[field] = value;
-        return from(liveQuery(() => this.table.where(where).count()));
+        return this.table.where(where).count();
     }
 
-    getByDate(field: string, minDate?: Date, maxDate?: Date): Observable<T[]> {
+    getByDate(field: string, minDate?: Date, maxDate?: Date): Promise<T[]> {
         if (!minDate && !maxDate) {
             throw new Error("You should provide at least one of minDate or maxDate parameters!");
         }
@@ -147,16 +148,14 @@ export abstract class ServiceAbstract<T extends Updatable> {
         } else {
             query = this.table.where(field).below(maxDate);
         }
-        return from(liveQuery(() => query.toArray()));
+        return query.toArray();
     }
 
     // @Todo: finalizar a busca e verificar pq está pegando apenas um item do cursor.
-    slowStringSearch(field: string, value: string) {
-        return from(liveQuery(() => {
-            return this.table.filter((item:T) => {
+    slowStringSearch(field: string, value: string): Promise<T[]> {
+        return this.table.filter((item:T) => {
                 return Boolean((item[field as keyof T] as string).toLowerCase().match(value.toLowerCase()));
-            }).toArray()
-        }));
+            }).toArray();
     }
 
     remove(uuid: string): Observable<any> {

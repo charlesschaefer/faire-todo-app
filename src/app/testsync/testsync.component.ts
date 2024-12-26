@@ -91,7 +91,7 @@ export class TestSyncComponent implements OnInit {
     }
 
     getTestSyncs() {
-        this.testSyncService.list().subscribe(testSyncs => this.testSyncs = testSyncs);
+        this.testSyncService.list().then(testSyncs => this.testSyncs = testSyncs);
     }
 
     async confirmDeleteTestSync(uuid: string) {
@@ -111,7 +111,7 @@ export class TestSyncComponent implements OnInit {
         // deletes the testSync
         this.testSyncService.remove(uuid).subscribe({
             complete: () => {
-                this.taskService.getByField('testSync', uuid).subscribe(tasks => {
+                this.taskService.getByField('testSync', uuid).then(tasks => {
                     const tasksIds: string[] = [];
                     tasks.forEach(task => tasksIds.push(task.uuid));
                     // then deletes the tasks of the testSync

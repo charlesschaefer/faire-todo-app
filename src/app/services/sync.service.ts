@@ -76,19 +76,10 @@ export class SyncService {
                         }
 
                         const tables: TableKeys[] = ['settings', 'project', 'tag', 'task', 'task_tag'];
-                        // const presentKeys: any = {};
-                        // // get all the keys available on each table
-                        // for (const table of tables) {
-                        //     presentKeys[table] = [];
-                        //     (await this.db.getTable(table).toArray()).forEach(item => presentKeys[table].push(item.uuid));
-                        // }
-                        // console.log("PresentKeys: ", presentKeys)
 
                         // Process local changes
                         if (changes.length > 0) {
                             for (let key = 0; key < changes.length; key++) {
-                                // @TODO: check if the settings table already exists and update local table with uuid from remote
-                                // @TODO: idea: use the same uuid of user in the settings table.
                                 const change = changes[key];
                                 if (change.table == 'user' && change.type == 1 /* create */) {
                                     console.log("SyncService.sync() -> CREATE", change);

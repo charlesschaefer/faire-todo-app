@@ -205,7 +205,7 @@ export class AppComponent implements OnInit {
     }
 
     async getProjectMenuItems(): Promise<MenuItem[]> {
-        const projects = await firstValueFrom(this.projectService.list())
+        const projects = await this.projectService.list()
         if (!projects.length) return [];
         const projectItems: MenuItem[] = [];
         for (const project of projects) {
@@ -269,8 +269,8 @@ export class AppComponent implements OnInit {
 
         this.watchForUndoCalls();
 
-        this.settingsService.get(1).subscribe(async (settings: SettingsDto) => {
-            this.notificationService.setup(settings);
+        this.settingsService.get(1).then(async (settings: SettingsDto | SettingsAddDto) => {
+            TAURI_BACKEND && this.notificationService.setup(settings as SettingsDto);
         });
 
         this.listenForShareEvents();

@@ -41,7 +41,7 @@ export class TaskListComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.projectService.list().subscribe((projects: ProjectDto[]) => {
+        this.projectService.list().then((projects: ProjectDto[]) => {
             const indexedProjects = new Map<string, ProjectDto>();
             projects.forEach(project => indexedProjects.set(project.uuid, project));
             this.projects = indexedProjects;

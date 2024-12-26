@@ -103,7 +103,7 @@ export class TaskAddComponent implements OnInit {
             }
         });
 
-        this.projectService.list().subscribe(projects => {
+        this.projectService.list().then(projects => {
             if (!projects.length) return;
             const cloneProjects = projects.slice();
 
@@ -172,7 +172,7 @@ export class TaskAddComponent implements OnInit {
             return;
         }
 
-        const order = await firstValueFrom(this.taskAddService.count());
+        const order = await this.taskAddService.count();
         
         const saveData: TaskAddDto = {
             title: form.title as unknown as string,

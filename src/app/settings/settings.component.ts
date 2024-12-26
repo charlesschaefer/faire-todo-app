@@ -56,7 +56,7 @@ export class SettingsComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.settingsService.get(1).subscribe(settings => {
+        this.settingsService.get(1).then(settings => {
             this.settingsForm.patchValue({
                 notifications: settings?.notifications ? true : false,
                 todayNotifications: settings?.todayNotifications ? true : false,
@@ -76,7 +76,7 @@ export class SettingsComponent implements OnInit {
             uuid: randomUUID(),
             user_uuid: ''
         };
-        const settings = await firstValueFrom(this.settingsService.get(1));
+        const settings = await this.settingsService.get(1);
         let savedData$;
         if (settings?.uuid) {
             savedData$ = this.settingsService.edit(settings.uuid, settingsData);

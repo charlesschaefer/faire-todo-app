@@ -99,7 +99,7 @@ export class TaskEditComponent implements OnInit {
             this.saveTask();
         });
 
-        this.projectService.list().subscribe(projects => {
+        this.projectService.list().then(projects => {
             const cloneProjects = projects.slice();
             const projectsMap = new Map<string, ProjectDto>();
 

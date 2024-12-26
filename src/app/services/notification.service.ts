@@ -61,7 +61,7 @@ export class NotificationService {
     
         const time = new Date;
     
-        this.taskService.getByField('dueDate', date).subscribe(tasks => {
+        this.taskService.getByField('dueDate', date).then(tasks => {
             let duingTasks: {tasks: {title: string}[]} = {tasks: []};
             duingTasks = tasks.reduce((acc, task) => {
                 if (task.dueTime?.getHours() == time.getHours() && task.dueTime?.getMinutes() == time.getMinutes()) {
@@ -82,7 +82,7 @@ export class NotificationService {
         const final = new Date;
         final.setHours(23, 59, 59, 999);
 
-        this.taskService.getByDate('dueDate', initial, final).subscribe(tasks => {
+        this.taskService.getByDate('dueDate', initial, final).then(tasks => {
             let duingTasks: {tasks: {title: string}[]} = {tasks: []};
             duingTasks = tasks.reduce((acc, task) => {
                 console.log(`We need to notify user that ${task.title} task is duing now`);

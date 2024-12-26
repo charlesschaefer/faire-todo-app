@@ -104,7 +104,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
     async countTasksSubtasks(tasks: TaskDto[]) {
         const countMap = new Map<string, number>();
         for (const task of tasks) {
-            const count = await firstValueFrom(this.countByField('parent_uuid', task.uuid));
+            const count = await this.countByField('parent_uuid', task.uuid);
             countMap.set(task.uuid, count);
         };
         return countMap;

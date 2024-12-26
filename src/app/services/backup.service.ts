@@ -38,11 +38,11 @@ export class BackupService {
         let backupObj: BackupData;
         const backupSubject$ = new Subject<string>();
 
-        this.taskService.list().subscribe(task => {
-            this.projectService.list().subscribe(project => {
-                this.settingsService.list().subscribe(settings => {
-                    this.tagService.list().subscribe(tag => {
-                        this.taskTagService.list().subscribe(taskTag => {
+        this.taskService.list().then(task => {
+            this.projectService.list().then(project => {
+                this.settingsService.list().then(settings => {
+                    this.tagService.list().then(tag => {
+                        this.taskTagService.list().then(taskTag => {
                             backupObj = {
                                 task, project, settings, tag, taskTag
                             } as BackupData;

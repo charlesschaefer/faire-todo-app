@@ -46,7 +46,7 @@ export class SearchComponent extends InboxComponent implements OnInit {
     }
 
     async search() {
-        let tasks = await firstValueFrom(this.taskService.slowStringSearch('title', this.searchValue));
+        let tasks = await this.taskService.slowStringSearch('title', this.searchValue);
         
         const completedTasks: TaskDto[] = [];
         tasks = this.taskService.orderTasksByCompletion(tasks as TaskDto[]);
@@ -55,12 +55,12 @@ export class SearchComponent extends InboxComponent implements OnInit {
         for (let i = tasks.length - 1; i >= 0; i--) {
             if (tasks[i].completed) {
                 const task = tasks.pop();
-                completedTasks.push(task);
+                completedTasks.push(task as TaskDto);
             } else {
                 break;
             }
         }
-        this.tasks = tasks;
+        this.tasks = tasks as TaskDto[];
         this.completedTasks = completedTasks;
         this.countSubtasks();
     }

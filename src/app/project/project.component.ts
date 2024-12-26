@@ -88,7 +88,7 @@ export class ProjectComponent implements OnInit {
     }
 
     getProjects() {
-        this.projectService.list().subscribe(projects => this.projects = projects);
+        this.projectService.list().then(projects => this.projects = projects);
     }
 
     async confirmDeleteProject(uuid: string) {
@@ -108,7 +108,7 @@ export class ProjectComponent implements OnInit {
         // deletes the project
         this.projectService.remove(uuid).subscribe({
             complete: () => {
-                this.taskService.getByField('project_uuid', uuid).subscribe(tasks => {
+                this.taskService.getByField('project_uuid', uuid).then(tasks => {
                     const tasksIds: string[] = [];
                     (tasks as TaskDto[]).forEach((task: TaskDto) => tasksIds.push(task.uuid));
                     // then deletes the tasks of the project

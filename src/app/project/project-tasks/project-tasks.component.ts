@@ -7,7 +7,7 @@ import { firstValueFrom } from 'rxjs';
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskAddComponent } from '../../task/task-add/task-add.component';
 import { ProjectService } from '../../services/project.service';
-import { ProjectDto } from '../../dto/project-dto';
+import { ProjectAddDto, ProjectDto } from '../../dto/project-dto';
 import { TaskService } from '../../services/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
@@ -44,7 +44,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
         const projectId = this.route.snapshot.paramMap.get("id") as string;
-        this.project = await firstValueFrom(this.projectService.get(projectId));
+        this.project = await this.projectService.get(projectId) as ProjectDto;
         super.ngOnInit();
     }
 
