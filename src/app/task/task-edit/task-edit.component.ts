@@ -1,9 +1,9 @@
-import { DynamicDialogConfig, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { DividerModule } from 'primeng/divider';
@@ -32,9 +32,8 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         ReactiveFormsModule,
         CardModule,
         CalendarModule,
-        InputTextareaModule,
+        TextareaModule,
         DividerModule,
-        DynamicDialogModule,
         TranslocoModule,
         DropdownModule,
         TaskAddComponent,

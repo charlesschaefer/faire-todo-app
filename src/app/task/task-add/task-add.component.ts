@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom, Subject } from 'rxjs';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -35,21 +35,24 @@ import { ProjectDto } from '../../dto/project-dto';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UserBound } from '../../services/service.abstract';
 import { AuthService } from '../../auth/auth.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-task-add',
     standalone: true,
     imports: [
+        FormsModule,
         ReactiveFormsModule,
         OverlayPanelModule,
         CardModule,
         CalendarModule,
-        InputTextareaModule,
+        TextareaModule,
         DividerModule,
         ToastModule,
         TranslocoModule,
         DropdownModule,
         CheckboxModule,
+        ButtonModule
     ],
     providers: [],
     templateUrl: './task-add.component.html',

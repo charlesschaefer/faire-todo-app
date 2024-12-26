@@ -39,17 +39,6 @@
               "src/assets"
             ],
             "styles": [
-              {
-                "input": "node_modules/primeng/resources/themes/aura-light-amber/theme.css",
-                "bundleName": "aura-light",
-                "inject": false
-              },
-              {
-                "input": "node_modules/primeng/resources/themes/aura-dark-amber/theme.css",
-                "bundleName": "aura-dark",
-                "inject": false
-              },
-              "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeflex/primeflex.css",
               "src/styles.scss"

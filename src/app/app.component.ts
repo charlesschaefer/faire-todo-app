@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { delay, firstValueFrom, Subscription } from 'rxjs';
@@ -68,6 +68,7 @@ export enum NotificationType {
         FormsModule,
         MessageModule,
         AuthComponent,
+        RouterLink
     ],
     providers: [
         MessageService,

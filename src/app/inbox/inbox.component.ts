@@ -9,9 +9,9 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ChipsModule } from 'primeng/chips';
+import { ChipModule } from 'primeng/chip';
 import { CardModule } from 'primeng/card';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { DividerModule } from 'primeng/divider';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -40,9 +40,9 @@ import { DataUpdatedService } from '../services/data-updated.service';
         InputGroupModule,
         InputGroupAddonModule,
         InputTextModule,
-        ChipsModule,
+        ChipModule,
         CardModule,
-        InputTextareaModule,
+        TextareaModule,
         DividerModule,
         CalendarModule,
         TaskListComponent,

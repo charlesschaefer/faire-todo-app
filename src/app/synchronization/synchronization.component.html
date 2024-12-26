@@ -9,8 +9,9 @@
     <p-button *ngIf="!useKnownIp" [label]="'Search devices' | transloco" (onClick)="discoverDevices()" [disabled]="!enableDiscoverButton" />
     <p></p>
     <div class="checkbox-container">
-      <p-checkbox [(ngModel)]="useKnownIp" [binary]="true" inputId="useKnownIp" [label]="'Synchronize using known IP' | transloco" class="sync-known-ip-checkbox">
+      <p-checkbox [(ngModel)]="useKnownIp" [binary]="true" inputId="useKnownIp" class="sync-known-ip-checkbox">
       </p-checkbox>
+      <label for="useKnownIp">{{ 'Synchronize using known IP' | transloco }}</label>
     <!-- </div>
     <div *ngIf="useKnownIp" class="ip-input-container"> -->
       <span class="p-float-label" *ngIf="useKnownIp">

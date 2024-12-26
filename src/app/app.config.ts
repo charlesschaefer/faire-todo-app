@@ -11,6 +11,9 @@ import { SyncService } from './services/sync.service';
 import { AppDb } from "./app.db";
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
+import { providePrimeNG } from "primeng/config";
+import Aura from '@primeng/themes/aura';
+import { AppTheme } from "./app.theme";
 
 const DEBUG = isDevMode();
 
@@ -27,7 +30,6 @@ export const appConfig: ApplicationConfig = {
                 urlUpdateStrategy: 'eager'
             })
         ),
-        provideAnimationsAsync(),
         provideHttpClient(withFetch()),
         {
             provide: 'SUPABASE_URL',
@@ -63,6 +65,16 @@ export const appConfig: ApplicationConfig = {
             },
             loader: TranslocoHttpLoader
         }),
+        provideAnimationsAsync(),
+        providePrimeNG({
+            ripple: true,
+            theme: {
+                preset: AppTheme,
+                options: {
+                    darkModeSelector: '.my-app-dark'
+                }
+            }
+        })
     ],
 };
 

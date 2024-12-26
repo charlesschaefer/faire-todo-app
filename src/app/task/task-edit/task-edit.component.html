@@ -41,7 +41,7 @@
           </ng-template>
           <ng-template pTemplate="content" [type]="'test'">
             <textarea
-              pInputTextarea
+              pTextarea
               [placeholder]="'Description' | transloco"
               [autoResize]="true"
               rows="1"
@@ -51,7 +51,7 @@
           </ng-template>
         </p-inplace>
         } @else {
-        <textarea  pInputTextarea [placeholder]="'Description' | transloco" [autoResize]="true" rows="1" class="text-sm"
+        <textarea  pTextarea [placeholder]="'Description' | transloco" [autoResize]="true" rows="1" class="text-sm"
           formControlName="description"></textarea>
         }
       </div>

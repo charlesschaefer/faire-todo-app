@@ -26,6 +26,7 @@ import { SettingsService } from './settings.service';
 import { SettingsDto } from '../dto/settings-dto';
 import { invoke } from '@tauri-apps/api/core';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-settings',
@@ -37,6 +38,7 @@ import { DataUpdatedService } from '../services/data-updated.service';
         TranslocoModule,
         ReactiveFormsModule,
         ToastModule,
+        ButtonModule
     ],
     providers: [],
     templateUrl: './settings.component.html',
