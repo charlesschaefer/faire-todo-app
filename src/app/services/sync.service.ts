@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { SupabaseClient } from '@supabase/supabase-js';
+import { SupabaseClient, User } from '@supabase/supabase-js';
 import Dexie from 'dexie';
 import 'dexie-syncable';
 import 'dexie-observable';
@@ -16,11 +16,15 @@ import { DbService } from './db.service';
 import { UserService } from './user.service';
 import { UserDto } from '../dto/user-dto';
 import { UserBound } from './service.abstract';
-import { IPersistedContext } from 'dexie-syncable/api';
+import { ApplyRemoteChangesFunction, IPersistedContext, PollContinuation, ReactiveContinuation } from 'dexie-syncable/api';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TranslocoService } from '@jsverse/transloco';
+import { DataUpdatedService } from './data-updated.service';
+import { IDatabaseChange } from 'dexie-observable/api';
 
+
+const SYNC_INTERVAL = 60000;
 
 // Then use it like this:
 const Syncable = (Dexie as unknown as { Syncable: any }).Syncable;
@@ -43,196 +47,225 @@ export class SyncService {
         private settingsService: SettingsService,
         private projectService: ProjectService,
         private userService: UserService,
-        private routerService: Router,
         private messageService: MessageService,
         private translate: TranslocoService,
+        private dataUpdatedService: DataUpdatedService,
         @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = this.authService.client;
         if (this.db.verno >= 17) {
             // Register Supabase sync protocol
             Dexie.Syncable.registerSyncProtocol("supabase", {
-                sync: async (context: IPersistedContext | any, url, options, baseRevision, syncedRevision, changes, partial, applyRemoteChanges, onChangesAccepted, onSuccess, onError) => {
-                    /// <param name="context" type="IPersistedContext"></param>
-                    /// <param name="url" type="String"></param>
-                    /// <param name="changes" type="Array" elementType="IDatabaseChange"></param>
-                    /// <param name="applyRemoteChanges" value="function (changes, lastRevision, partial, clear) {}"></param>
-                    /// <param name="onSuccess" value="function (continuation) {}"></param>
-                    /// <param name="onError" value="function (error, again) {}"></param>
-                    try {
-                        // stores if this is the first passage by the sync protocol, to allow or not to redirect in the end of sync process
-                        if (context.first === undefined) {
-                            context.first = true;
-                            context.save();
-                        } else {
-                            context.first = false;
-                            context.save();
-                        }
-
-                        const user = this.authService.currentUser;
-                        if (!user) {
-                            onError(new Error('User not authenticated'));
-                            return;
-                        }
-
-                        const tables: TableKeys[] = ['settings', 'project', 'tag', 'task', 'task_tag'];
-
-                        // Process local changes
-                        if (changes.length > 0) {
-                            for (let key = 0; key < changes.length; key++) {
-                                const change = changes[key];
-                                if (change.table == 'user' && change.type == 1 /* create */) {
-                                    console.log("SyncService.sync() -> CREATE", change);
-                                    if (change.obj['user_uuid']) {
-                                        delete change.obj['user_uuid'];
-                                    }
-                                    const result = await this.supabase.from(change.table).insert(change.obj);
-                                    if (result.error) {
-                                        if (result.error.code !== '23505') {
-                                            // this error means that the user already exists in the database
-                                            console.error(result.error);
-                                            onError(result.error);
-                                            return;
-                                        }
-                                    }
-                                    // removes the user from the list of changes.
-                                    changes.splice(key, 1);
-                                    console.log("REmovendo o usuário da lista de mudanças");
-                                    break;
-                                }
-                            }
-                            for (const change of changes) {
-                                if (change.type == 1 || change.type == 2) {
-                                    for (const key in change.obj) {
-                                        // nullifies empty fields to avoid foreign key errors
-                                        if (change.obj[key] === '') {
-                                            change.obj[key] = null;
-                                        }
-                                    }
-                                }
-                            }
-
-                            // sync tables in order, because of foreign keys
-                            for (const table of tables) {
-                                if (table == 'task') {
-                                    let result = await this.synchronizeTasksWithoutParent(changes);
-                                    if (result?.error && result.error.code !== '23505') {
-                                        console.error(result.error);
-                                        onError(result.error);
-                                        return;
-                                    }
-
-                                    result = await this.synchronizeTasksWithParent(changes);
-                                    
-                                    // 23505 means the item is already in the database, so we shouldnt be doing a create query
-                                    if (result?.error && result.error.code !== '23505') {
-                                        console.error(result.error);
-                                        onError(result.error);
-                                        return;
-                                    }
-                                    continue;
-                                } 
-                                for (const change of changes) {
-                                    if (change.table == table) {
-                                        const result = await this.syncChange(change);
-
-                                        // 23505 means the item is already in the database, so we shouldnt be doing a create query
-                                        if (result?.error && result.error.code !== '23505') { 
-                                            console.error(result.error);
-                                            onError(result.error);
-                                            return;
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        onChangesAccepted();
-
-                        // Fetch remote changes
-                        const remoteChanges: any[] = [];
-
-                        const lastUpdate = new Date(baseRevision);
-                        let newRevision: Date = new Date();
-                        for (const table of tables) {
-                            const { data, error } = await this.supabase
-                                .from(table)
-                                .select('*')
-                                .eq('user_uuid', user.id)
-                                .gt('updated_at', lastUpdate.toISOString());
-
-                            if (error) throw error;
-
-                            if (data) {
-                                for (const item of data) {
-                                    for (const key in item) {
-                                        // changes all empty *uuid fields from null to '' (empty string)
-                                        // because of a constraint from indexeddb
-                                        if (key.indexOf('uuid') !== -1) {
-                                            if (item[key] === null) {
-                                                item[key] = '';
-                                            }
-                                        }
-                                        // changes all date fields to Date
-                                        if (key.match(/(dueDate|dueTime|update_at|created_at|notificationTime)/g)) {
-                                            if (item[key]) {
-                                                item[key] = new Date(item[key]);
-                                            }
-                                        }
-                                    }
-
-                                    let change: any = {
-                                        table,
-                                        key: item.uuid,
-                                        obj: item,
-                                    };
-
-                                    change['type'] = 1; // CREATE
-                                    remoteChanges.push(change);
-                                    const updateDate = new Date(item.updated_at);
-                                    if (updateDate > newRevision) {
-                                        newRevision = updateDate;
-                                    }
-                                    //console.error("Tempo da nova revisão: ", newRevision);
-
-                                }
-                            }
-                        }
-
-                        if (remoteChanges.length > 0) {
-                            // await applyRemoteChanges(remoteChanges, Date.now());
-                            await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false)
-                            this.messageService.add({
-                                key: 'auth-messages',
-                                severity: 'info',
-                                summary: await firstValueFrom(this.translate.selectTranslate('New data arrived')),
-                                detail: await firstValueFrom(this.translate.selectTranslate('We updated your data with fresh data from the server.')),
-                                life: 5000,
-                            });
-                        }
-
-                        // onSuccess({ again: 6000 }); // Sync again in 1 minute
-                        onSuccess({ again: 60000 }); // Sync again in 1 minute
-                        if (context.first !== undefined && context.first === false) {
-                            const url = this.routerService.url;
-                            this.routerService.navigateByUrl('/all-tasks', {skipLocationChange: true}).then(() => {
-                                this.routerService.navigate([`/${url}`]).then(() => console.log("Reloading route: ", url));
-                            });
-                        }
-                        // onSuccess({
-                        //     react: (changes, baseRevision, partial, onChangesAccepted) => {
-                        //         console.log("Changes: ", changes);
-                        //     },
-                        //     disconnect: () => {
-                        //         this.disconnect();
-                        //     }
-                        // })
-                    } catch (error) {
-                        onError(error);
-                    }
-                }
+                sync: async (...parameters) => await this.syncableProtocolHandler(...parameters)
             });
         }
+    }
+
+    /**
+     * This method is used to handle the syncable protocol.
+     * It takes in various parameters and performs the necessary operations for synchronization.
+     * @param context - The context of the sync operation.
+     * @param url - The URL of the remote server.
+     * @param options - The options for the sync operation.
+     * @param baseRevision - The current revision on the remote node
+     * @param syncedRevision - The last revision we applied to our local database
+     * @param changes - The changes to be synced from local db to remote DB. In the first sync trial, it have all local DB data.
+     * @param partial - Says if the changes array is all the changes (false) or just a bucket of partial changes (true)
+     * @param applyRemoteChanges - The function to apply remote changes. It receives all the changes received from the remote node and will apply to local DB.
+     * @param onChangesAccepted - After all the local changes were applied to remote server, call this function to notify dexie about that.
+     * @param onSuccess - The function to call when the sync operation is successful (i.e. local changes synced to remote and remote changes synced to local). 
+     *                    This will commit the current transaction on local DB.
+     * @param onError - The function to call when an error occurs during the sync operation.
+     */
+    async syncableProtocolHandler(
+        context: IPersistedContext | any, 
+        url: string, 
+        options: any, 
+        baseRevision: any, 
+        syncedRevision: any, 
+        changes: IDatabaseChange[], 
+        partial: any,
+        applyRemoteChanges: ApplyRemoteChangesFunction, 
+        onChangesAccepted: () => void, 
+        onSuccess: (continuation: PollContinuation | ReactiveContinuation) => void, 
+        onError: (error: any, again?: number) => void
+    ) {
+        try {
+            // stores if this is the first passage by the sync protocol, to allow or not to redirect in the end of sync process
+            if (context.first === undefined) {
+                context.first = true;
+                context.save();
+            } else {
+                context.first = false;
+                context.save();
+            }
+
+            const user = this.authService.currentUser;
+            if (!user) {
+                onError(new Error('User not authenticated'));
+                return;
+            }
+
+            const tables: TableKeys[] = ['settings', 'project', 'tag', 'task', 'task_tag'];
+
+            // Process local changes
+            if (changes.length > 0) {
+                try {
+                    await this.applyLocalChanges(tables, changes);
+                } catch (error: any) {
+                    return onError(error);
+                }
+
+            }
+            onChangesAccepted();
+
+            // Fetch remote changes
+
+            const lastUpdate = new Date(baseRevision);
+            const newRevision: Date = new Date();
+            const remoteChanges: any[] = await this.fetchRemoteChanges(tables, lastUpdate, newRevision, user);
+
+            if (remoteChanges.length > 0) {
+                // await applyRemoteChanges(remoteChanges, Date.now());
+                await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false)
+                this.messageService.add({
+                    key: 'auth-messages',
+                    severity: 'info',
+                    summary: await firstValueFrom(this.translate.selectTranslate('New data arrived')),
+                    detail: await firstValueFrom(this.translate.selectTranslate('We updated your data with fresh data from the server.')),
+                    life: 5000,
+                });
+            }
+
+            // onSuccess({ again: 6000 }); // Sync again in 1 minute
+            onSuccess({ again: SYNC_INTERVAL }); // Sync again in 1 minute
+            if (context.first !== undefined && context.first === false && remoteChanges.length) {
+                this.dataUpdatedService.next(remoteChanges);
+            }
+            // onSuccess({
+            //     react: (changes, baseRevision, partial, onChangesAccepted) => {
+            //         console.log("Changes: ", changes);
+            //     },
+            //     disconnect: () => {
+            //         this.disconnect();
+            //     }
+            // })
+        } catch (error) {
+            onError(error);
+        }
+    }
+
+    async applyLocalChanges(tables: string[], changes: any) {
+        for (let key = 0; key < changes.length; key++) {
+            const change = changes[key];
+            if (change.table == 'user' && change.type == 1 /* create */) {
+                console.log("SyncService.sync() -> CREATE", change);
+                if (change.obj['user_uuid']) {
+                    delete change.obj['user_uuid'];
+                }
+                const result = await this.supabase.from(change.table).insert(change.obj);
+                if (result.error) {
+                    if (result.error.code !== '23505') {
+                        // this error means that the user already exists in the database
+                        console.error(result.error);
+                        throw new Error(result.error.message);
+                    }
+                }
+                // removes the user from the list of changes.
+                changes.splice(key, 1);
+                console.log("REmovendo o usuário da lista de mudanças");
+                break;
+            }
+        }
+        for (const change of changes) {
+            if (change.type == 1 || change.type == 2) {
+                for (const key in change.obj) {
+                    // nullifies empty fields to avoid foreign key errors
+                    if (change.obj[key] === '') {
+                        change.obj[key] = null;
+                    }
+                }
+            }
+        }
+
+        // sync tables in order, because of foreign keys
+        for (const table of tables) {
+            if (table == 'task') {
+                let result = await this.synchronizeTasksWithoutParent(changes);
+                if (result?.error && result.error.code !== '23505') {
+                    console.error(result.error);
+                    throw new Error(result.error.message);
+                }
+
+                result = await this.synchronizeTasksWithParent(changes);
+
+                // 23505 means the item is already in the database, so we shouldnt be doing a create query
+                if (result?.error && result.error.code !== '23505') {
+                    console.error(result.error);
+                    throw new Error(result.error.message);
+                }
+                continue;
+            }
+            for (const change of changes) {
+                if (change.table == table) {
+                    const result = await this.syncChange(change);
+
+                    // 23505 means the item is already in the database, so we shouldnt be doing a create query
+                    if (result?.error && result.error.code !== '23505') {
+                        console.error(result.error);
+                        throw new Error(result.error.message);
+                    }
+                }
+            }
+        }
+    }
+
+    async fetchRemoteChanges(tables: string[], since: Date, newRevision: Date, user: User) {
+        const remoteChanges: any[] = [];
+
+        for (const table of tables) {
+            const { data, error } = await this.supabase
+                .from(table)
+                .select('*')
+                .eq('user_uuid', user.id)
+                .gt('updated_at', since.toISOString());
+
+            if (error) throw error;
+
+            if (data) {
+                for (const item of data) {
+                    for (const key in item) {
+                        // changes all empty *uuid fields from null to '' (empty string)
+                        // because of a constraint from indexeddb
+                        if (key.indexOf('uuid') !== -1) {
+                            if (item[key] === null) {
+                                item[key] = '';
+                            }
+                        }
+                        // changes all date fields to Date
+                        if (key.match(/(dueDate|dueTime|update_at|created_at|notificationTime)/g)) {
+                            if (item[key]) {
+                                item[key] = new Date(item[key]);
+                            }
+                        }
+                    }
+
+                    let change: any = {
+                        table,
+                        key: item.uuid,
+                        obj: item,
+                    };
+
+                    change['type'] = 1; // CREATE
+                    remoteChanges.push(change);
+                    const updateDate = new Date(item.updated_at);
+                    if (updateDate > newRevision) {
+                        newRevision.setTime(updateDate.getTime());
+                    }
+                }
+            }
+        }
+        return remoteChanges;
     }
 
     async synchronizeTasksWithoutParent(changes: any[]) {
@@ -375,10 +408,10 @@ export class SyncService {
     }
 
     disconnect() {
-        if (this.syncConnection !== undefined) {
-            return this.db.syncable.disconnect(environment.supabaseUrl);
-        }
-        return Promise.resolve();
+        // if (this.syncConnection !== undefined) {
+        return this.db.syncable.disconnect(environment.supabaseUrl);
+        // }
+        // return Promise.resolve();
     }
 
     get syncStatus() {

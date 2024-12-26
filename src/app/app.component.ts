@@ -42,6 +42,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
+import { DataUpdatedService } from './services/data-updated.service';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -70,6 +71,7 @@ export enum NotificationType {
     ],
     providers: [
         MessageService,
+        DataUpdatedService
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
@@ -104,6 +106,7 @@ export class AppComponent implements OnInit {
         private router: Router,
         private syncService: SyncService,
         public authService: AuthService,
+        private dataUpdatedService: DataUpdatedService,
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
@@ -265,6 +268,8 @@ export class AppComponent implements OnInit {
 
         this.handleUserAuthenticationState();
 
+        this.handleDataUpdates();
+
         // close the sidebar everytime the route triggers an event
         this.router.events.subscribe(() => this.showSidebar = false);
 
@@ -404,7 +409,7 @@ export class AppComponent implements OnInit {
             }
 
             if (this.currentUser && user) {
-                console.log("authService.user.next() sent the same user again...")
+                console.log("authService.user.next() sent the same user again... we won't call the sync service")
                 return;
             }
 
@@ -439,12 +444,13 @@ export class AppComponent implements OnInit {
                 console.log("Error starting synchronization: ", error);
                 console.log("Trying to connect synchronization again")
                 await this.syncService.disconnect();
-                await this.syncService.connect().catch(console.error);
+                await this.syncService.connect().catch(console.error)
             }
         });
     }
 
     linkUserDataAndSynchronize() {
+        // @TODO: checar todas as linhas que não têm user_uuid, para saber se temos que chamar isso agora.
         // updates all tasks, projects, tags, settings and task_tags with the current user.uuid
         // before starting the sincronization
         this.syncService.updateRowsUserUuid().subscribe({
@@ -465,7 +471,8 @@ export class AppComponent implements OnInit {
 
                 await this.syncService.connect().catch(console.error);
             },
-            error: async () => {
+            error: async (error) => {
+                console.log("AppComponent:linkUserDataAndSynchronize() -> Error updating table rows' user_uuid: ", error);
                 await this.syncService.disconnect();
                 this.linkUserDataAndSynchronize();
             }
@@ -508,6 +515,15 @@ export class AppComponent implements OnInit {
         }).then(listener => {
             this.shareListener = listener;
         });
+    }
+
+    private handleDataUpdates() {
+        this.dataUpdatedService.subscribe('project', (changes) => {
+            console.warn("Novo projeto entrando... vamos atualizar o menu");
+            this.setupMenu();
+        });
+
+
     }
 }
 

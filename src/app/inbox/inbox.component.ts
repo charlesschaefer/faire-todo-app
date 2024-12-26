@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -23,6 +23,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
 import { add } from 'dexie';
 import { TaskComponent } from '../task/task/task.component';
+import { DataUpdatedService } from '../services/data-updated.service';
 
 
 @Component({
@@ -51,7 +52,7 @@ import { TaskComponent } from '../task/task/task.component';
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
 })
-export class InboxComponent implements OnInit, AfterViewInit {
+export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     tasks!: TaskDto[];
     subtasksCount!: Map<string, number>;
 
@@ -62,11 +63,14 @@ export class InboxComponent implements OnInit, AfterViewInit {
 
     isAddTaskOpen = false;
     isEditTaskOpen = false;
-    @ViewChild('appTaskList') appTaskList?: TaskListComponent
+    @ViewChild('appTaskList') appTaskList?: TaskListComponent;
+
+    taskSubscription?: Subscription;
 
     constructor(
         protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
+        protected dataUpdatedService?: DataUpdatedService,
     ) {}
     
     /**
@@ -86,21 +90,41 @@ export class InboxComponent implements OnInit, AfterViewInit {
     ngOnInit() {
         this.getTasks();
 
+        this.taskSubscription = this.dataUpdatedService?.subscribe('task', (changes) => {
+            this.getTasks();
+        })
+
         this.showTaskAddOverlay$.subscribe(() => {
             this.isAddTaskOpen = true;
             this.isEditTaskOpen = false;
-        })
+        });
+
+    }
+
+    ngOnDestroy(): void {
+        this.taskSubscription?.unsubscribe();
     }
 
     onShowTaskAddOverlay(event: Event) {
         this.showTaskAddOverlay$.next(event);
     }
 
-    getTasks() {
-        this.activatedRoute.data.subscribe((inboxResolvedData) => {
-            this.tasks = inboxResolvedData['tasks'].tasks;
-            this.subtasksCount = inboxResolvedData['tasks'].subtasksCount;
-        });
+    async getTasks() {
+        const tasks = await firstValueFrom(this.taskService.getFromProject('').pipe(
+            mergeMap((tasks) => {
+                tasks = this.taskService.orderTasks(tasks as TaskDto[]);
+                return from(this.taskService.countTasksSubtasks(tasks as TaskDto[])).pipe(
+                    map(subtasksCount => {
+                        return {
+                            tasks: tasks,
+                            subtasksCount: subtasksCount
+                        };
+                    })
+                );
+            })
+        ));
+        this.tasks = tasks.tasks;
+        this.subtasksCount = tasks.subtasksCount;
     }
 
     async countSubtasks() {

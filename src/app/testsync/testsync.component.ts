@@ -21,7 +21,7 @@ let randomUUID: any;
 
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { firstValueFrom } from 'rxjs';
-import { TaskService } from '../services/task.service';
+import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';

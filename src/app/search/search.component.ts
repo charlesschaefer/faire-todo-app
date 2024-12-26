@@ -38,8 +38,9 @@ export class SearchComponent extends InboxComponent implements OnInit {
     constructor(
         protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
-        super(taskService, activatedRoute);
+        super(taskService, activatedRoute, dataUpdatedService);
     }
 
     override async ngOnInit() { 

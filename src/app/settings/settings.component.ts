@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -6,7 +6,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { ToastModule } from 'primeng/toast';
 import {
     isPermissionGranted,
@@ -25,6 +25,7 @@ let randomUUID: any;
 import { SettingsService } from './settings.service';
 import { SettingsDto } from '../dto/settings-dto';
 import { invoke } from '@tauri-apps/api/core';
+import { DataUpdatedService } from '../services/data-updated.service';
 
 @Component({
     selector: 'app-settings',
@@ -41,7 +42,7 @@ import { invoke } from '@tauri-apps/api/core';
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
     fb = inject(FormBuilder);
     settingsForm = this.fb.group({
         notifications: new FormControl(false),
@@ -49,13 +50,28 @@ export class SettingsComponent implements OnInit {
         notificationTime: new FormControl()
     });
 
+    settingsSubscription?: Subscription;
+
     constructor(
         private settingsService: SettingsService,
         private messageService: MessageService,
         private translate: TranslocoService,
+        private dataUpdatedService: DataUpdatedService,
     ) {}
 
     ngOnInit(): void {
+        this.loadSettings();
+
+        this.settingsSubscription = this.dataUpdatedService?.subscribe('settings', (changes) => {
+            this.loadSettings();
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.settingsSubscription?.unsubscribe();
+    }
+
+    loadSettings() {
         this.settingsService.get(1).then(settings => {
             this.settingsForm.patchValue({
                 notifications: settings?.notifications ? true : false,
@@ -63,7 +79,7 @@ export class SettingsComponent implements OnInit {
                 notificationTime: settings?.notificationTime || null
             });
             console.log("Settings", settings, "form", this.settingsForm.value)
-        })
+        });
     }
 
     async saveSettings() {

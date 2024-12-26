@@ -99,17 +99,18 @@ export class TaskEditComponent implements OnInit {
             this.saveTask();
         });
 
-        this.projectService.list().then(projects => {
+        this.projectService.list().then(allProjects => {
+            const projects = allProjects as ProjectDto[];
             const cloneProjects = projects.slice();
             const projectsMap = new Map<string, ProjectDto>();
 
-            if (cloneProjects[0] && cloneProjects[0].uuid != 0) {
+            if (cloneProjects[0] && cloneProjects[0].uuid != '0') {
                 cloneProjects.unshift({
-                    uuid: 0,
+                    uuid: '0',
                     name: "Inbox"
-                });
+                } as ProjectDto);
             }
-            this.projects = cloneProjects;
+            this.projects = cloneProjects as ProjectDto[];
 
             projects.forEach(project => {
                 projectsMap.set(project.uuid, project);

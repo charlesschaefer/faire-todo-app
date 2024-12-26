@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { liveQuery, Table } from "dexie";
+import { Inject, Injectable } from "@angular/core";
+import { BehaviorSubject, Observable, firstValueFrom, from } from "rxjs";
+import { EntityTable, liveQuery, Table } from "dexie";
 
 import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
@@ -18,15 +18,19 @@ export interface Updatable {
 
 
 @Injectable({ providedIn: 'root' })
-export abstract class ServiceAbstract<T extends Updatable> {
+export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBound)) > {
     private cache: BehaviorSubject<T[]> = new BehaviorSubject<T[]>([]);
     private useCache = true;
     protected abstract storeName: string;
-    protected table!: Table;
+    protected table!: Table<T, any, any>;
     protected abstract dbService: DbService;
     protected userUuid: string | null = null;
 
-    constructor(protected authService: AuthService) {
+    @Inject(DataUpdatedService) protected dataUpdatedService?: DataUpdatedService;
+
+    constructor(
+        protected authService: AuthService
+    ) {
         this.authService.authenticatedUser.subscribe((user: User | null) => {
             if (user) {
                 this.userUuid = user.id;
@@ -37,7 +41,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
 
     setTable() {
         console.log("Construindo o table do ", this.storeName)
-        this.table = this.dbService.getTable(this.storeName);
+        this.table = this.dbService.getTable(this.storeName) as EntityTable<T>;
         console.log(this.table);
     }
 
@@ -60,7 +64,14 @@ export abstract class ServiceAbstract<T extends Updatable> {
         if (!data['updated_at']) {
             data['updated_at'] = new Date();
         }
-        return from(this.table.add(data));
+        const promise = this.table.add(data);
+        promise.then(() => this.dataUpdatedService?.next([{
+            type: DatabaseChangeType.Create,
+            table: this.storeName,
+            key: 'uuid',
+            obj: data
+        } as Changes]));
+        return from(promise);
     }
 
     upsert(data: T & UserBound) {
@@ -70,7 +81,16 @@ export abstract class ServiceAbstract<T extends Updatable> {
         if (!data['updated_at']) {
             data['updated_at'] = new Date();
         }
-        return from(this.table.put(data));
+        const promise = this.table.put(data);
+
+        promise.then(result => {
+            return this.dataUpdatedService?.next([{
+                key: 'uuid',
+                table: this.storeName,
+                type: DatabaseChangeType.Create
+            } as Changes]);
+        });
+        return from(promise);
     }
 
     bulkAdd(data: (T & UserBound)[]) {
@@ -92,7 +112,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
             throw new Error("User UUID not present on the session");
         }
         return from(
-            this.table
+            (this.table as Table<T & UserBound, any, any>)
             .filter((item) => !item.user_uuid || item.user_uuid == '' || item.user_uuid !== this.userUuid)
             .modify({user_uuid: this.userUuid, updated_at: new Date()})
         );
@@ -107,7 +127,16 @@ export abstract class ServiceAbstract<T extends Updatable> {
             data['updated_at'] = today;
         }
         this.clearCache();
-        return from(this.table.update(uuid, data as object));
+        const promise = this.table.update(uuid, data as object);
+        promise.then(result => {
+            return this.dataUpdatedService?.next([{
+                type: DatabaseChangeType.Update,
+                table: this.storeName,
+                key: 'uuid',
+                obj: data
+            } as Changes])
+        });
+        return from(promise);
     }
 
     get(uuid: string | number): Promise<T> {
@@ -118,7 +147,7 @@ export abstract class ServiceAbstract<T extends Updatable> {
             key = 'id';
         }
         const where = {[key]: uuid};
-        return this.table.where(where).first();
+        return this.table.where(where).first() as Promise<T>;
     }
 
     getByField(field: string, value: any) {
@@ -161,7 +190,14 @@ export abstract class ServiceAbstract<T extends Updatable> {
     }
 
     remove(uuid: string): Observable<any> {
-        return from(this.table.delete(uuid));
+        const promise = this.table.delete(uuid);
+        promise.then(() => this.dataUpdatedService?.next([{
+            type: DatabaseChangeType.Delete,
+            table: this.storeName,
+            key: 'uuid',
+            oldObj: {uuid}
+        }]));
+        return from(promise);
     }
 
     bulkRemove(uuids: string[]) {

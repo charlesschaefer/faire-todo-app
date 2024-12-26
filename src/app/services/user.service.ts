@@ -13,7 +13,8 @@ export class UserService extends ServiceAbstract<UserDto | UserAddDto> {
 
     constructor (
         protected dbService: DbService,
-        protected override authService: AuthService
+        protected override authService: AuthService,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
         super(authService);
         this.setTable();

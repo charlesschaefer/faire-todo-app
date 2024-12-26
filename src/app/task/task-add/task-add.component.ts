@@ -105,13 +105,13 @@ export class TaskAddComponent implements OnInit {
 
         this.projectService.list().then(projects => {
             if (!projects.length) return;
-            const cloneProjects = projects.slice();
+            const cloneProjects = projects.slice() as ProjectDto[];
 
-            if (cloneProjects[0].uuid != 0) {
+            if (cloneProjects[0].uuid != '0') {
                 cloneProjects.unshift({
-                    uuid: 0,
+                    uuid: '0',
                     name: "Inbox"
-                });
+                } as ProjectDto);
             }
             this.projects = cloneProjects;
         });

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -30,6 +30,8 @@ import { TaskService } from '../task/task.service';
 import { TaskAddDto, TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
+import { Changes, DataUpdatedService } from '../services/data-updated.service';
+import { DatabaseChangeType } from 'dexie-observable/api';
 
 @Component({
     selector: 'app-project',
@@ -55,7 +57,7 @@ import { ToastModule } from 'primeng/toast';
     templateUrl: './project.component.html',
     styleUrl: './project.component.scss'
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent implements OnInit, OnDestroy {
     @ViewChild('projectAddOp') projectAddOp!: OverlayPanel;
     
     projects: ProjectDto[] = [];
@@ -73,6 +75,8 @@ export class ProjectComponent implements OnInit {
     
     projectMenuItems!: MenuItem[];
 
+    projectSubscription?: Subscription;
+
     constructor(
         private projectService: ProjectService,
         private projectAddService: ProjectService,
@@ -81,14 +85,20 @@ export class ProjectComponent implements OnInit {
         private confirmationService: ConfirmationService,
         private taskService: TaskService,
         protected router: Router,
+        protected dataUpdatedService: DataUpdatedService,
     ) { }
 
     ngOnInit() {
         this.getProjects();
+        this.projectSubscription = this.dataUpdatedService.subscribe('project', (changes) => this.getProjects());
+    }
+
+    ngOnDestroy(): void {
+        this.projectSubscription?.unsubscribe();
     }
 
     getProjects() {
-        this.projectService.list().then(projects => this.projects = projects);
+        this.projectService.list().then(projects => this.projects = projects as ProjectDto[]);
     }
 
     async confirmDeleteProject(uuid: string) {
@@ -149,7 +159,15 @@ export class ProjectComponent implements OnInit {
         this.projectService.edit(form.uuid as string, formData).subscribe({
             complete: () => {
                 this.editProjectVisible = false;
-                setTimeout(() => window.location.reload(), 2000);
+                // setTimeout(() => window.location.reload(), 2000);
+                this.dataUpdatedService.next([{
+                    key: 'uuid',
+                    type: DatabaseChangeType.Update,
+                    table: 'project',
+                    mods: formData,
+                    obj: formData,
+                    oldObj: formData
+                } as Changes]);
             },
             error: (err) => this.messageService.add({
                 summary: "Error",
@@ -180,7 +198,7 @@ export class ProjectComponent implements OnInit {
                     severity: 'success',
                     key: 'task'
                 });
-                setTimeout(() => window.location.reload(), 2000);
+                //setTimeout(() => window.location.reload(), 2000);
             },
             error: async (err: Error) => this.messageService.add({
                 summary: await firstValueFrom(this.translate.selectTranslate("Error")),

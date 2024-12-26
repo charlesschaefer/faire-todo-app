@@ -14,7 +14,8 @@ export class TaskTagService extends ServiceAbstract<TaskTagDto | TaskTagAddDto> 
     
     constructor(
         protected dbService: DbService,
-        protected override authService: AuthService
+        protected override authService: AuthService,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
         super(authService);
         this.setTable();

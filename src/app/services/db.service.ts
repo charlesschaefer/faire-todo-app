@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
 
 import { AppDb } from "../app.db";
-import { Table } from 'dexie';
+import { EntityTable, Table } from 'dexie';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DbService {
 
-    dbService:AppDb = new AppDb();
+    dbService: AppDb = new AppDb();
 
-    getTable(name: string): Table {
+    getTable(name: string) {
         const table = name as keyof AppDb;
-        return this.dbService[table] as Table<any, any, any>;
+        const entity = this.dbService[table];
+        return entity as Table<any, any, any>;
     }
 
 }

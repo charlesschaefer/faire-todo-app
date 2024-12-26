@@ -7,6 +7,7 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
+import { DataUpdatedService } from '../services/data-updated.service';
 
 @Component({
     selector: 'app-all-tasks',
@@ -24,8 +25,9 @@ export class AllTasksComponent  extends InboxComponent {
     constructor(
         protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
-        super(taskService, activatedRoute);
+        super(taskService, activatedRoute, dataUpdatedService);
     }
 
     override async getTasks() {
