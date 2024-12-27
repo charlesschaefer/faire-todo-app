@@ -41,37 +41,52 @@ footer {
     padding-left: 20px;
 }
 
-:host ::ng-deep .side-bar-menu .p-menu {
-    border: none;
-    width: 100%;
-    margin-top: 0;
+.side-bar-menu ::ng-deep {
+    .p-menu {
+        border: none;
+        width: 100%;
+        margin-top: 0;
+    }
+
+    .p-menu-list {
+        padding: 0px;
+    }
+
+    .p-menu-item {
+        height: 40px;
+    }
+
+    .p-menu-item.p-focus >.p-menu-item-content {
+        background: none;
+    }
+
+    .p-menu-separator {
+        margin: 10px 0;
+    }
+
+    .p-menu .p-menu-item-icon, 
+    .p-menu .p-menu-item:hover .p-menu-item-icon {
+        color: var(--p-primary-color);
+    }
+
+    .p-menu .project-menu-item .p-menu-item-icon, 
+    .p-menu .project-menu-item:hover .p-menu-item-icon {
+        color: var(--p-blue-700);
+    }
+
+    .p-menu .p-menu-item .p-badge {
+        background-color: var(--p-blue-800);
+    }
+
+    .p-menu .p-menu-item-link-active {
+        background-color: var(--p-primary-100);
+    }
 }
 
-:host ::ng-deep .side-bar-menu .p-menuitem {
-    height: 40px;
-}
-:host ::ng-deep .side-bar-menu .p-menuitem.p-focus >.p-menuitem-content {
-    background: none;
-}
-
-:host ::ng-deep .side-bar-menu .p-menuitem-separator {
-    margin: 10px 0;
-}
-
-:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-icon {
-    color: var(--primary-color);
-}
-
-:host ::ng-deep p-sidebar p-menu .p-menu .project-menu-item .p-menuitem-icon {
-    color: var(--blue-700);
-}
-
-:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-badge {
-    background-color: var(--blue-700);
-}
-
-:host ::ng-deep p-sidebar p-menu .p-menu .p-menuitem-link-active {
-    background-color: var(--primary-100);
+.sidebar-drawer ::ng-deep {
+    .side-bar-footer-menu {
+        width: 12.5rem;
+    }
 }
 
 @media (max-width: 600px) {
@@ -112,7 +127,7 @@ footer {
         }
 
         a {
-            color: var(--primary-color);
+            color: var(--p-primary-color);
             text-decoration: none;
 
             &:hover {
@@ -138,29 +153,29 @@ footer {
     align-items: center;
     gap: 0.5rem;
     padding: 1.5rem 1rem;
-    border-bottom: 1px solid var(--surface-border);
+    border-bottom: 1px solid var(--p-surface-border);
     margin-bottom: 1rem;
 
     .user-email {
         font-size: 0.9rem;
-        color: var(--text-color-secondary);
+        color: var(--p-text-muted-color);
         margin-bottom: 0.5rem;
     }
 
     .logout-link {
         font-size: 0.9rem;
-        color: var(--text-color-secondary);
+        color: var(--p-text-muted-color);
         text-decoration: none;
         display: flex;
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem;
-        border-radius: var(--border-radius);
+        border-radius: var(--p-border-radius);
         transition: background-color 0.2s, color 0.2s;
 
         &:hover {
-            background-color: var(--surface-hover);
-            color: var(--text-color);
+            background-color: var(--p-surface-hover);
+            color: var(--p-text-color);
         }
 
         i {
@@ -184,26 +199,5 @@ footer {
         // Further adjustments for very small screens
         font-size: 0.7rem;
         padding: 0.2rem 0.5rem;
-    }
-}
-
-.sidebar-login-banner {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem 1rem;
-    border-bottom: 1px solid var(--surface-border);
-    margin-bottom: 1rem;
-    text-align: center;
-
-    p {
-        margin: 0;
-        color: var(--text-color-secondary);
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    :host ::ng-deep .p-button {
-        width: 100%;
     }
 }

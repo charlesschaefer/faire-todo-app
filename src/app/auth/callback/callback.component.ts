@@ -22,7 +22,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
       align-items: center;
       height: 100vh;
       font-size: 1.1rem;
-      color: var(--text-color-secondary);
+      color: var(--p-text-muted-color);
     }
   `]
 })

@@ -73,7 +73,7 @@
   </ng-template>
 </p-toast>
 
-<p-sidebar [(visible)]="showSidebar" position="right" #sidebar>
+<p-drawer [(visible)]="showSidebar" position="right" #sidebar header=" " class="sidebar-drawer">
   <app-auth></app-auth>
 
   <p-menu #menu [model]="menuItems" class="side-bar-menu" (onShow)="(showSidebar=false)">
@@ -89,6 +89,6 @@
       }
       <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
     </div>
-    <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" class="side-bar-header-menu" appendTo="body" />
+    <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="sidebar" />
   </ng-template>
-</p-sidebar>
+</p-drawer>

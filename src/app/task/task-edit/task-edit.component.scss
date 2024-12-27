@@ -1,22 +1,8 @@
-
-.task-add-description {
-    min-height: 50px;
-}
+@import "../task-add/task-add.component.scss";
 
 .task-add-description textarea, .task-add-title .task-title-input {
     min-width: 280px;
     width: 100%;
-    min-height: 50px;
-    border: none;
-}
-
-.task-add-title .task-title-input {
-    outline: none;
-}
-
-.task-add-title .task-title-input:focus {
-    outline: 1px solid var(--p-focus-ring-color);;
-    border-radius: 6px;
 }
 
 :host ::ng-deep .p-inplace-display {
@@ -25,29 +11,6 @@
 
 :host ::ng-deep .p-inplace-display:hover {
     background: none;
-}
-
-.task-add-menu {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.task-add-menu p-calendar {
-    display: block;
-}
-
-.task-add-dueDate {
-    width: 170px;
-    margin: 5px;
-}
-
-.task-add-dueTime {
-    width: 110px;
-    margin: 5px;
-}
-
-.task-add-project {
-    margin: 5px;
 }
 
 .task-add-line {
@@ -59,14 +22,18 @@
 
 .task-add-button {
     padding-right: 10px;
-    color: var(--indigo-600)
+    color: var(--p-indigo-600)
 }
 
 .task-add-button i {
     font-size: 12px;
 }
 
-:host ::ng-deep .task-add-list-subtasks .p-accordion-header-text {
+:host ::ng-deep .task-add-list-subtasks .p-accordionheader {
     font-size: 13px;
     font-weight: 500;
+}
+
+:host ::ng-deep .task-add-list-subtasks .p-accordionpanel {
+    border-bottom: none;
 }

@@ -43,6 +43,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
 import { DataUpdatedService } from './services/data-updated.service';
+import { DrawerModule } from 'primeng/drawer';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -68,7 +69,8 @@ export enum NotificationType {
         FormsModule,
         MessageModule,
         AuthComponent,
-        RouterLink
+        RouterLink,
+        DrawerModule,
     ],
     providers: [
         MessageService,

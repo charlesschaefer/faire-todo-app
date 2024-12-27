@@ -6,12 +6,12 @@ li.task-item, :host ::ng-deep li.cdk-drag-preview {
     align-items: center;
     padding: 15px 0px;
     cursor: pointer;
-    color: var(--text-color);
+    color: var(--p-text-color);
     touch-action: none;
 }
 
 li.task-item:hover, li.task-item:focus {
-    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    background-color: color-mix(in srgb, var(--p-primary-color) 10%, transparent);
 }
 
 li.task-item:active, li.task-item:focus {
@@ -23,7 +23,7 @@ li.task-item:active, li.task-item:focus {
 
 .task-item-drag-placeholder {
     // background: #fafafa;
-    background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
+    background-color: color-mix(in srgb, var(--p-primary-color) 10%, transparent);
     min-height: 60px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
@@ -94,19 +94,19 @@ li.task-item:hover .task-item-menu {
 
 .task-item-description {
     font-size: 12px;
-    color: var(--text-color-secondary);
+    color: var(--p-text-muted-color);
 }
 
 .task-item-description pre {
-    font-family: var(--font-family);
+    font-family: var(--p-font-family);
     line-height: 1.3em;
     text-wrap: wrap;
 }
 
 :host ::ng-deep a.linkify-link:any-link {
-    // color: var(--lt-color-gray-700);
-    // color: color-mix(in srgb, var(--bluegray-600) 75%, #888888 10%);
-    color: color-mix(in srgb, var(--blue-600) 70%, #555555 60%);
+    // color: var(--p-lt-color-gray-700);
+    // color: color-mix(in srgb, var(--p-bluegray-600) 75%, #888888 10%);
+    color: color-mix(in srgb, var(--p-blue-600) 70%, #555555 60%);
     text-decoration: none;
     font-weight: 500;
     font-size: 12px;
@@ -126,7 +126,7 @@ li.task-item:hover .task-item-menu {
 }
 
 :host ::ng-deep a.linkify-link::before {
-    color: var(--bluegray-500);
+    color: var(--p-bluegray-500);
     font-size: 7px;
     // content: "\e9c1";
     content: "\e93c";
@@ -137,7 +137,7 @@ li.task-item:hover .task-item-menu {
 
 // :host ::ng-deep a.linkify-link::after {
 //     content: "\e93c";
-//     color: var(--blue-700);
+//     color: var(--p-blue-700);
 //     font-size: 7px;
 //     padding-right: 4px;
 //     padding-left: 2px;
@@ -158,23 +158,23 @@ li.task-item:hover .task-item-menu {
 }
 
 .task-item-attributes-project {
-    color: var(--text-color-secondary);
+    color: var(--p-text-muted-color);
 }
 
 .task-item-attributes-duedate {
-    color: var(--green-500);
+    color: var(--p-green-500);
 }
 
 .task-item-attributes-duedate:has(> .task-item-attributes-past-dueDate) {
-    color: var(--red-500);
+    color: var(--p-red-500);
 }
 
 .task-item-attributes-duedate:has(> .task-item-attributes-future-dueDate) {
-    color: var(--yellow-600);
+    color: var(--p-yellow-600);
 }
 
 .task-item-attributes-subtask {
-    color: var(--text-color-secondary);
+    color: var(--p-text-muted-color);
     display: flex;
 }
 
@@ -183,10 +183,10 @@ li.task-item:hover .task-item-menu {
     -webkit-mask: url("/assets/subtasks.svg") no-repeat center / contain;
     width: 15px;
     height: 15px;
-    background-color: var(--text-color-secondary);
+    background-color: var(--p-text-muted-color);
     margin-right: 3px
 }
 
 .task-item-attributes-recurring {
-    color: var(--text-color-secondary);
+    color: var(--p-text-muted-color);
 }

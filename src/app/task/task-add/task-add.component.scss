@@ -23,24 +23,37 @@
     flex-wrap: wrap;
 }
 
-.task-add-menu p-calendar {
+.task-add-menu p-calendar,
+.task-add-menu p-datepicker {
     display: block;
 }
 
-.task-add-dueDate {
+.task-add-dueDate ::ng-deep {
     width: 170px;
-    margin: 5px;
+    margin: 0px;
+    padding: 5px 2px;
+
+    .p-inputtext {
+        font-size: var(--p-inputtext-sm-font-size);
+    }
 }
 
-.task-add-dueTime {
+.task-add-dueTime ::ng-deep {
     width: 110px;
-    margin: 5px;
+    margin: 0px;
+    padding: 5px 2px;
+
+    .p-inputtext {
+        font-size: var(--p-inputtext-sm-font-size);
+    }
 }
 
 .task-add-project {
-    margin: 5px;
+    margin: 5px 0 5px 2px;
+    font-size: var(--p-inputtext-sm-font-size);
 }
 
 .task-add-recurring-task {
-    margin-top: 10px;
+    // margin-top: 10px;
+    font-size: var(--p-inputtext-sm-font-size);
 }

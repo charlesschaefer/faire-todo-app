@@ -3,11 +3,11 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { firstValueFrom, Subject } from 'rxjs';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TextareaModule } from 'primeng/textarea';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { PopoverModule, Popover } from 'primeng/popover';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
@@ -36,6 +36,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { UserBound } from '../../services/service.abstract';
 import { AuthService } from '../../auth/auth.service';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { Drawer, DrawerModule } from 'primeng/drawer';
+
 
 @Component({
     selector: 'app-task-add',
@@ -43,16 +46,18 @@ import { ButtonModule } from 'primeng/button';
     imports: [
         FormsModule,
         ReactiveFormsModule,
-        OverlayPanelModule,
+        PopoverModule,
         CardModule,
-        CalendarModule,
+        DatePickerModule,
         TextareaModule,
         DividerModule,
         ToastModule,
         TranslocoModule,
         DropdownModule,
         CheckboxModule,
-        ButtonModule
+        ButtonModule,
+        InputTextModule,
+        DrawerModule,
     ],
     providers: [],
     templateUrl: './task-add.component.html',
@@ -68,7 +73,7 @@ export class TaskAddComponent implements OnInit {
     @Input() prefilledTitle!: string;
 
     @Output() onAddTask = new EventEmitter<any>;
-    @ViewChild('taskAddOp') taskAddOp!: OverlayPanel;
+    @ViewChild('taskAddOp') taskAddOp!: Popover;
 
     private fb = inject(FormBuilder);
     taskForm = this.fb.group({

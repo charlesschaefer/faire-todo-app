@@ -1,5 +1,5 @@
 
-<p-overlayPanel #taskAddOp (onHide)="onClose($event)">
+<p-popover #taskAddOp (onHide)="onClose($event)">
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" #form>
     <p-card>
       <div  class="task-add flex flex-column gap-3">
@@ -14,6 +14,7 @@
             autocomplete="off"
 	          [autofocus]="true"
             (ngModelChange)="onTitleChange($event)"
+            pSize="small"
           />
         </div>
         <div class="task-add-description">
@@ -28,25 +29,33 @@
           ></textarea>
         </div>
         <div class="task-add-menu">
-          <p-calendar
+          <p-datepicker
             [showIcon]="true"
+            iconDisplay="input"
             [showButtonBar]="true"
             [showTime]="false"
             inputId="task-add-due-date"
             [placeholder]="'Due date' | transloco"
             formControlName="dueDate"
             class="task-add-dueDate"
+            dateFormat="dd/mm/yy"
+            
           />
 
-          <p-calendar
+          <p-datepicker
             [showIcon]="true"
-            icon="pi pi-clock"
+            iconDisplay="input"
             inputId="task-add-due-time"
             [timeOnly]="true"
             [placeholder]="'Time' | transloco"
             formControlName="dueTime"
             class="task-add-dueTime"
-          />
+            
+          >
+            <ng-template #inputicon let-clickCallBack="clickCallBack">
+              <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+            </ng-template>
+          </p-datepicker>
 
           @if (!this.parent) {
           <p-dropdown 
@@ -60,7 +69,7 @@
           />
           }
         </div>
-        <div class="task-add-recurring-task align-items-center flex flex-row gap-3">
+        <div class="task-add-recurring-task align-items-center flex flex-row gap-1">
           <i class="pi pi-history"></i>
           <p-dropdown 
             [options]="recurringOptions"
@@ -83,4 +92,4 @@
       </div>
     </p-card>
   </form>
-</p-overlayPanel>
+</p-popover>

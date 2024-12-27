@@ -56,8 +56,9 @@
         }
       </div>
       <div class="task-add-menu">
-        <p-calendar
+        <p-datepicker
           [showIcon]="true"
+          iconDisplay="input"
           [showButtonBar]="true"
           [showTime]="false"
           inputId="task-add-due-date"
@@ -65,17 +66,22 @@
           formControlName="dueDate"
           class="task-add-dueDate"
           (keydown.enter)="saveTask()"
+          dateFormat="dd/mm/yy"
         />
-        <p-calendar
+        <p-datepicker
           [showIcon]="true"
-          icon="pi pi-clock"
+          iconDisplay="input"
           inputId="task-add-due-time"
           [timeOnly]="true"
           [placeholder]="'Time' | transloco"
           formControlName="dueTime"
           class="task-add-dueTime"
           (keydown.enter)="saveTask()"
-        />
+        >
+          <ng-template #inputicon let-clickCallBack="clickCallBack">
+            <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+          </ng-template>
+        </p-datepicker>
 
         <p-dropdown 
           [options]="projects"

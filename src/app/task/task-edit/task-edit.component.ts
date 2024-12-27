@@ -5,7 +5,7 @@ import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { TextareaModule } from 'primeng/textarea';
 import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { DatePickerModule } from 'primeng/datepicker';
 import { DividerModule } from 'primeng/divider';
 import { firstValueFrom, Subject } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -31,7 +31,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
     imports: [
         ReactiveFormsModule,
         CardModule,
-        CalendarModule,
+        DatePickerModule,
         TextareaModule,
         DividerModule,
         TranslocoModule,
