@@ -1,6 +1,6 @@
 li.task-item, :host ::ng-deep li.cdk-drag-preview {
     list-style: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--p-content-border-color);
     display: flex;
     width: calc(100% - 10px);
     align-items: center;

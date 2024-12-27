@@ -39,7 +39,6 @@
             formControlName="dueDate"
             class="task-add-dueDate"
             dateFormat="dd/mm/yy"
-            
           />
 
           <p-datepicker
@@ -50,7 +49,6 @@
             [placeholder]="'Time' | transloco"
             formControlName="dueTime"
             class="task-add-dueTime"
-            
           >
             <ng-template #inputicon let-clickCallBack="clickCallBack">
               <i class="pi pi-clock" (click)="clickCallBack($event)"></i>

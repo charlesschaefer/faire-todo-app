@@ -90,6 +90,16 @@ export class TaskComponent extends TaskAbstractComponent {
             templates: {
                 footer: TaskEditFooterComponent
             },
+            closable: true,
+            dismissableMask: true,
+            modal: true,
+            //appendTo: "body"
+            style: {
+                'justify-content': 'space-between'
+            },
+            contentStyle: {
+                'flex-grow': '1'
+            }
         });
 
         this.dialogRef.onClose.subscribe((data: TaskDto) => {

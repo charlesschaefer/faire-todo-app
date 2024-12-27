@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+const DARK_MODE_SELECTOR = 'dark-mode';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -8,19 +10,23 @@ export class ThemeService {
     
     switchTheme(theme?: string) {
         const themeLink = window.document.getElementById('app-theme') as HTMLLinkElement;
-
+        console.log(theme, themeLink)
         if (theme) {
-            themeLink.href = `aura-${theme}.css`;
+            if (theme == 'dark') {
+                themeLink.classList.add(DARK_MODE_SELECTOR);
+            } else {
+                themeLink.classList.remove(DARK_MODE_SELECTOR)
+            }
             this.currentTheme = theme;
             return;
         }
         
         if (themeLink) {
-            if (themeLink.href.match('aura-dark.css')) {
-                themeLink.href = 'aura-light.css';
+            if (themeLink.className.match(DARK_MODE_SELECTOR)) {
+                themeLink.classList.remove(DARK_MODE_SELECTOR)
                 this.currentTheme = 'light';
             } else {
-                themeLink.href = 'aura-dark.css';
+                themeLink.classList.add(DARK_MODE_SELECTOR);
                 this.currentTheme = 'dark';
             }
         }

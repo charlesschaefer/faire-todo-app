@@ -245,6 +245,9 @@ export class AppComponent implements OnInit {
      * 
      */
     onActivate(component: any) {
+        // close the sidebar everytime we activate a new view
+        this.showSidebar = false;
+
         if (this.childComponentsData?.showAddTask) {
             if (component instanceof InboxComponent) {
                 component.sharetargetUrl = this.childComponentsData.sharetargetUrl;
@@ -272,9 +275,6 @@ export class AppComponent implements OnInit {
         this.handleUserAuthenticationState();
 
         this.handleDataUpdates();
-
-        // close the sidebar everytime the route triggers an event
-        this.router.events.subscribe(() => this.showSidebar = false);
 
         this.watchForUndoCalls();
 

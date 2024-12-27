@@ -66,7 +66,7 @@ export const AppTheme = definePreset(Aura, {
             colorScheme: {
                 light: {
                     root: {
-                        headerPadding: '0',
+                        headerPadding: '10px',
                         contentPadding: '0 18px 18px 18px'
                     }
                 }

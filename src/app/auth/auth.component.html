@@ -19,7 +19,7 @@
 
 <!-- Login Dialog -->
 <p-dialog [(visible)]="displayLoginDialog" [header]="'Save your tasks online' | transloco" [modal]="true"
-  [style]="{width: '90%', maxWidth: '400px'}" [closable]="!isLoading">
+  [style]="{width: '90%', maxWidth: '400px'}" [closable]="!isLoading" appendTo="body">
   <div class="login-dialog-content">
     <!-- Show error message if exists -->
     <p-message *ngIf="loginError" severity="error" [text]="loginError"></p-message>

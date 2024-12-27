@@ -57,3 +57,8 @@
     // margin-top: 10px;
     font-size: var(--p-inputtext-sm-font-size);
 }
+
+.task-add-datepicker-panel {
+    top: calc(50% - 357px / 2);
+    left: calc(50% - 306px / 2);
+}

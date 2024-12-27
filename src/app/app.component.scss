@@ -79,7 +79,7 @@ footer {
     }
 
     .p-menu .p-menu-item-link-active {
-        background-color: var(--p-primary-100);
+        background-color: color-mix(in oklab, var(--p-menu-item-focus-background) 100%, orange 50%);
     }
 }
 
