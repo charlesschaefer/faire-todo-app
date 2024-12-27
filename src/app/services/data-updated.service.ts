@@ -1,5 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { IDatabaseChange } from 'dexie-observable/api';
+import { map } from 'rxjs';
+import { DEBUG } from '../app.config';
 
 export type Changes = IDatabaseChange;
 
@@ -11,7 +13,9 @@ export class DataUpdatedService {
 
     private eventEmitters: {[nomeEvento: string]: EventEmitter<any>} = {};
 
-    constructor() { }
+    constructor() { 
+        console.warn("Construindo o dataupdated...");
+    }
 
 
     /**
@@ -36,7 +40,11 @@ export class DataUpdatedService {
     get(table: string) {
         if (!this.eventEmitters[table]) {
             this.eventEmitters[table] = new EventEmitter<any>();
+            DEBUG 
+                ? this.eventEmitters[table].subscribe((data) => console.log(`O eventEmitter<${table}> foi chamado e entramos no primeiro subscribe dele`)) 
+                : null;
         }
+        
         return this.eventEmitters[table];
     }
 }

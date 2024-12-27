@@ -15,7 +15,7 @@ import { providePrimeNG } from "primeng/config";
 import Aura from '@primeng/themes/aura';
 import { AppTheme } from "./app.theme";
 
-const DEBUG = isDevMode();
+export const DEBUG = isDevMode();
 
 const debugTracing = [];
 DEBUG ? debugTracing.push(withDebugTracing()) : null;

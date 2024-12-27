@@ -129,7 +129,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
                         severity: "success",
                         key: 'task'
                     });
-                    setTimeout(() => window.location.reload(), 2000);
+                    // setTimeout(() => window.location.reload(), 2000);
                 });
             },
             error: (err) => this.messageService.add({

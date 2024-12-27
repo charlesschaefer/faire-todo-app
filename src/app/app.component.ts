@@ -73,8 +73,7 @@ export enum NotificationType {
         DrawerModule,
     ],
     providers: [
-        MessageService,
-        DataUpdatedService
+        MessageService
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
@@ -525,8 +524,6 @@ export class AppComponent implements OnInit {
             console.warn("Novo projeto entrando... vamos atualizar o menu");
             this.setupMenu();
         });
-
-
     }
 }
 
