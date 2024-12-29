@@ -7,6 +7,7 @@ import { DateTime, Duration } from 'luxon';
 import { DbService } from '../services/db.service';
 import { AuthService } from '../auth/auth.service';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { DatabaseChangeType, IDatabaseChange } from 'dexie-observable/api';
 
 interface SubtaskCount {
     subtasks: number;
@@ -266,16 +267,32 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return resultDispatcher.asObservable();
     }
 
-    addTaskTree(taskTree: TaskTree) {
+    addTaskTree(taskTree: TaskTree, internal = false) {
         const {children, ...task} = {...taskTree};
         const return$ = new Subject();
 
         this.table.add(task as TaskDto).then((result) => {
             if (!children || !children.length) {
+                if (!internal) {
+                    this.dataUpdatedService.next([{
+                        key: 'uuid',
+                        table: 'task',
+                        type: DatabaseChangeType.Create,
+                        obj: task
+                    }] as IDatabaseChange[]);
+                }
                 return return$.next(result);
             }
-            children.map((child, index) => this.addTaskTree(child).subscribe(result => {
+            children.map((child, index) => this.addTaskTree(child, true).subscribe(result => {
                 if (index == children.length - 1) {
+                    if (!internal) {
+                        this.dataUpdatedService.next([{
+                            key: 'uuid',
+                            table: 'task',
+                            type: DatabaseChangeType.Create,
+                            obj: task
+                        }] as IDatabaseChange[]);
+                    }
                     return$.next(result);
                 }
             }))
