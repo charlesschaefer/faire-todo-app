@@ -155,14 +155,14 @@ export class TaskService extends ServiceAbstract<Tasks> {
         }) as unknown as Observable<TaskDto[]>;
     }
 
-    removeTask(task: TaskDto) {
+    removeTaskTree(task: TaskDto) {
         const removal$ = new Subject();
         this.remove(task.uuid).subscribe({
             complete: () => {
                 this.getTaskSubtasks(task).subscribe({
                     next: (tasks) => {
                         tasks.forEach(task => {
-                            this.removeTask(task as TaskDto).subscribe({
+                            this.removeTaskTree(task as TaskDto).subscribe({
                                 error: (err) => {
                                     removal$.error(err);
                                 }

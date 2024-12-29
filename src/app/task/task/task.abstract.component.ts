@@ -158,13 +158,16 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         });
     }
 
-    deleteTask() {
-        const undoData = Object.assign({}, this.task);
+    async deleteTask() {
+        const taskAndChild = await firstValueFrom(this.taskService.getTaskTree(this.task));
+        // gets all the task's subtasks to store as an undo queue item
+        const undoData = Object.assign({}, taskAndChild);
         const undo: UndoItem = {
             type: 'task.delete',
             data: undoData
         };
-        this.taskService.removeTask(this.task).subscribe({
+        // removes task and it's subtasks
+        this.taskService.removeTaskTree(this.task).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate(`Removed`)),
@@ -190,8 +193,9 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     undoDelete(undoData: UndoItem) {
         if (undoData.type == 'task.delete') {
-            const task = undoData.data as TaskDto;
-            this.taskService.add(task).subscribe({
+            const task = undoData.data as TaskTree;
+            // reinserts the task and it's subtasks, recursivelly
+            this.taskService.addTaskTree(task).subscribe({
                 complete: async () => {
                     this.messageService.add({
                         summary: await firstValueFrom(this.translate.selectTranslate(`Undone`)),

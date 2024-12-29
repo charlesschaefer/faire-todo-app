@@ -23,6 +23,7 @@ import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { CheckboxModule } from 'primeng/checkbox';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { SubtaskComponent } from '../subtask/subtask.component';
 
 @Component({
     selector: 'app-task-edit',
@@ -41,6 +42,7 @@ import { LinkifyPipe } from '../../pipes/linkify.pipe';
         FormsModule,
         InplaceModule,
         LinkifyPipe,
+        SubtaskComponent,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
