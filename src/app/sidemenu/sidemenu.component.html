@@ -1,0 +1,58 @@
+<!-- Sidebar toggle -->
+@if (currentUser) {
+        <p-button (click)="showSidebar = true" [link]="true">
+            <p-avatar [image]="currentUser.user_metadata['avatar_url']" shape="circle" size="normal"></p-avatar>
+        </p-button>
+} @else {
+    <p-button icon="pi pi-bars" (click)="showSidebar = true"></p-button>
+}
+<p-drawer [(visible)]="showSidebar" position="right" header=" " class="sidebar-drawer" [closable]="false" #sidebar>
+    <ng-template pTemplate="header">
+        <div class="user-profile flex flex-column">
+            @if (currentUser) {
+            <div class="flex flex-row align-items-center justify-content-center gap-5 text-sm">
+                <div>
+                    <a (click)="showSidebar = true">
+                        <p-avatar [image]="currentUser.user_metadata['avatar_url']" shape="circle" size="normal"></p-avatar>
+                    </a>
+                </div>
+                <div>
+                    <span class="user-email">{{ currentUser.email }}</span>
+                </div>
+            </div>
+            <div class="sidebar-user-profile">
+                <a href="javascript:;" class="logout-link" (click)="signOut()">
+                    <i class="pi pi-sign-out"></i>
+                    {{ 'Sign Out' | transloco }}
+                </a>
+            </div>
+            } @else {
+            <div class="sidebar-login-banner">
+                <p>{{ 'Save and access your tasks from anywhere' | transloco }}</p>
+                <p-button label="{{ 'Save tasks online' | transloco }}" (onClick)="showLoginDialog()"
+                    severity="info"></p-button>
+            </div>
+            }
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <div class="flex align-items-center gap-2"
+            [ngClass]="this.currentUser ? 'justify-content-around' : 'justify-content-end'">
+            @if (this.currentUser) {
+            <div class="flex align-items-start justify-content-start text-sm">
+                <span style="padding-right: 5px;font-weight: bold;">{{"Sync Status" | transloco}}:
+                </span>{{this.syncStatus}}
+            </div>
+            <div></div>
+            }
+            <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
+        </div>
+        <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="'body'" />
+    </ng-template>
+    <ng-template pTemplate="content" >
+        <app-auth></app-auth>
+
+        <p-menu #menu [model]="menuItems" class="side-bar-menu" (onShow)="(showSidebar=false)">
+        </p-menu>
+    </ng-template>
+</p-drawer>

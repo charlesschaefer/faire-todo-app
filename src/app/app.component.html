@@ -13,8 +13,7 @@
       }
     </div>
     <div class="p-toolbar-group-end">
-      <!-- Sidebar toggle -->
-      <p-button icon="pi pi-bars" (click)="showSidebar = true"></p-button>
+      <app-sidemenu [(showSidebar)]="showSidebar" [syncStatus]="syncStatus" [currentUser]="currentUser" />
     </div>
   </p-toolbar>
 </header>
@@ -35,14 +34,17 @@
 <!-- <p-toast position="bottom-left" /> -->
 <p-toast position="bottom-left" #toast>
   <ng-template let-message pTemplate="message">
+    <span class="p-toast-message-icon">
+      <i class="pi pi-info-circle"></i>
+    </span>
     <div class="flex flex-column align-items-start" style="flex: 1">
-      <div class="flex align-items-center gap-2">
-        <span class="font-bold text-900">
+      <div class="p-toast-summary">
+        <span class="">
           {{ message.summary }}
         </span>
       </div>
-      <div class="text-base my-3 text-900 flex flex-row gap-3">
-        <div class="h-3-rem">
+      <div class="flex flex-row justify-content-between w-full gap-3">
+        <div class="h-3-rem p-toast-detail">
           {{ message.detail }}
         </div>
         <div class="">
@@ -56,39 +58,5 @@
 
 <p-toast [key]="'task'" [position]="'top-right'" />
 
-<p-toast [key]="'auth-messages'" [position]="'top-center'">
-  <ng-template let-message pTemplate="auth-message">
-    <div class="flex flex-column align-items-start" style="flex: 1">
-      <div class="flex align-items-center gap-2">
-        <span class="font-bold text-900">
-          {{ message.summary }}
-        </span>
-      </div>
-      <div class="text-base my-3 text-900 flex flex-row gap-3">
-        <div class="h-3-rem">
-          {{ message.detail }}
-        </div>
-      </div>
-    </div>
-  </ng-template>
-</p-toast>
+<p-toast [key]="'auth-messages'" [position]="'top-center'" />
 
-<p-drawer [(visible)]="showSidebar" position="right" #sidebar header=" " class="sidebar-drawer">
-  <app-auth></app-auth>
-
-  <p-menu #menu [model]="menuItems" class="side-bar-menu" (onShow)="(showSidebar=false)">
-  </p-menu>
-
-  <ng-template pTemplate="footer">
-    <div class="flex align-items-center gap-2" [ngClass]="this.currentUser ? 'justify-content-around' : 'justify-content-end'">
-      @if (this.currentUser) {
-        <div class="flex align-items-start justify-content-start text-sm">
-          <span style="padding-right: 5px;font-weight: bold;">{{"Sync statuts" | transloco}}: </span>{{this.syncStatus}}
-        </div>
-        <div></div>
-      }
-      <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
-    </div>
-    <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="sidebar" />
-  </ng-template>
-</p-drawer>

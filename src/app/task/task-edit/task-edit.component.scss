@@ -1,4 +1,4 @@
-@import "../task-add/task-add.component.scss";
+@use "../task-add/task-add.component.scss";
 
 .task-add-description textarea, .task-add-title .task-title-input {
     min-width: 280px;

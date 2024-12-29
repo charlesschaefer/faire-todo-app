@@ -1,22 +1,3 @@
-<!-- User Profile or Login Banner -->
-<ng-container *ngIf="currentUser; else loginBanner">
-  <div class="sidebar-user-profile">
-    <p-avatar [image]="currentUser.user_metadata['avatar_url']" shape="circle" size="large"></p-avatar>
-    <span class="user-email">{{ currentUser.email }}</span>
-    <a href="javascript:;" class="logout-link" (click)="signOut()">
-      <i class="pi pi-sign-out"></i>
-      {{ 'Sign Out' | transloco }}
-    </a>
-  </div>
-</ng-container>
-
-<ng-template #loginBanner>
-  <div class="sidebar-login-banner">
-    <p>{{ 'Save and access your tasks from anywhere' | transloco }}</p>
-    <p-button label="{{ 'Save tasks online' | transloco }}" (onClick)="showLoginDialog()" severity="info"></p-button>
-  </div>
-</ng-template>
-
 <!-- Login Dialog -->
 <p-dialog [(visible)]="displayLoginDialog" [header]="'Save your tasks online' | transloco" [modal]="true"
   [style]="{width: '90%', maxWidth: '400px'}" [closable]="!isLoading" appendTo="body">

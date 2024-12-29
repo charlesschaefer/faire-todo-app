@@ -1,15 +1,14 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { delay, firstValueFrom, Subscription } from 'rxjs';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { ToastModule } from 'primeng/toast';
-import { SidebarModule } from 'primeng/sidebar';
 import {
     isPermissionGranted,
     requestPermission,
@@ -19,18 +18,14 @@ import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import { platform } from '@tauri-apps/plugin-os';
 import { invoke, PluginListener } from '@tauri-apps/api/core';
 import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
-import { AvatarModule } from 'primeng/avatar';
 import { Router } from '@angular/router';
-import { ThemeService } from './services/theme.service';
 import { UndoService } from './services/undo.service';
-import { ProjectService } from './project/project.service';
 import { TaskDto } from './dto/task-dto';
 import { TaskService } from './task/task.service';
 import { HttpClient } from '@angular/common/http';
 import { SettingsService } from './settings/settings.service';
 import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { NotificationService } from './services/notification.service';
-import { AuthComponent } from './auth/auth.component';
 import { SyncService } from './services/sync.service';
 import Dexie from 'dexie';
 import 'dexie-syncable';
@@ -42,8 +37,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
-import { DataUpdatedService } from './services/data-updated.service';
-import { DrawerModule } from 'primeng/drawer';
+import { SidemenuComponent } from "./sidemenu/sidemenu.component";
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -62,15 +56,12 @@ export enum NotificationType {
         MenuModule,
         ToastModule,
         TranslocoModule,
-        SidebarModule,
-        AvatarModule,
         DialogModule,
         CheckboxModule,
         FormsModule,
         MessageModule,
-        AuthComponent,
         RouterLink,
-        DrawerModule,
+        SidemenuComponent
     ],
     providers: [
         MessageService
@@ -81,9 +72,6 @@ export enum NotificationType {
 export class AppComponent implements OnInit {
 
     showSidebar = false;
-
-    menuItems!: MenuItem[];
-    settingsMenuItems!: MenuItem[];
 
     syncStatus = '';
     currentUser: User | null = null;
@@ -96,11 +84,9 @@ export class AppComponent implements OnInit {
     showAddTaskSubscription!: Subscription;
 
     constructor (
-        private themeService: ThemeService,
         private translate: TranslocoService,
         private undoService: UndoService,
         private messageService: MessageService,
-        private projectService: ProjectService,
         private taskService: TaskService,
         private httpClient: HttpClient,
         private settingsService: SettingsService,
@@ -108,7 +94,6 @@ export class AppComponent implements OnInit {
         private router: Router,
         private syncService: SyncService,
         public authService: AuthService,
-        private dataUpdatedService: DataUpdatedService,
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
@@ -139,104 +124,6 @@ export class AppComponent implements OnInit {
         }
     }
 
-    async setMenuItems(additionalItems: MenuItem[]) {
-        const menuItems: MenuItem[] = [{
-            label: " ",
-            items: [
-                { label: await firstValueFrom(this.translate.selectTranslate("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1]?.items?.length } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
-                { separator: true },
-                { label: await firstValueFrom(this.translate.selectTranslate(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
-            ],
-        }];
-        for (const item of additionalItems) {
-            menuItems.push(item);
-        }
-
-        this.menuItems = menuItems;
-
-        this.settingsMenuItems = [
-            {
-                label: await firstValueFrom(this.translate.selectTranslate("Settings")),
-                items: [
-                    { label: await firstValueFrom(this.translate.selectTranslate("User Settings")), routerLink: '/settings' } as MenuItem,
-                ]
-            },
-            {
-                lable: await firstValueFrom(this.translate.selectTranslate("Synchronize")),
-                items: [
-                    {
-                        label: await firstValueFrom(this.translate.selectTranslate("Synchronize other devices")),
-                        routerLink: '/sync'
-                    } as MenuItem
-                ]
-            },
-            {
-                label: await firstValueFrom(this.translate.selectTranslate("Theme")),
-                items: [
-                    { label: await firstValueFrom(this.translate.selectTranslate("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
-                ],
-            },
-            {
-                label: await firstValueFrom(this.translate.selectTranslate("Language")),
-                icon: "pi pi-flag",
-                items: [
-                    {
-                        label: await firstValueFrom(this.translate.selectTranslate("English")),
-                        command: () => this.switchLanguage('en')
-                    },
-                    {
-                        label: await firstValueFrom(this.translate.selectTranslate("Portuguese")),
-                        command: () => this.switchLanguage('pt-BR')
-                    }
-                ]
-            } as MenuItem
-        ];
-        if (this.currentUser && this.currentUser.id) {
-            this.settingsMenuItems.push({
-                label: await firstValueFrom(this.translate.selectTranslate("Synchronization")),
-                icon: "pi pi-sync",
-                items: [
-                    {
-                        label: await firstValueFrom(this.translate.selectTranslate("Repair synchronization status")),
-                        command: () => this.syncService.fixSynchronization()
-                    }
-                ]
-            })
-        }
-    }
-
-    async getProjectMenuItems(): Promise<MenuItem[]> {
-        const projects = await this.projectService.list()
-        if (!projects.length) return [];
-        const projectItems: MenuItem[] = [];
-        for (const project of projects) {
-            projectItems.push({
-                label: project.name,
-                icon: 'pi pi-hashtag',
-                routerLink: `/project/${project.uuid}/tasks`,
-                styleClass: 'project-menu-item'
-            });
-        }
-        const projectMenuItems = {
-            label: await firstValueFrom(this.translate.selectTranslate("Projects")),
-            items: projectItems,
-        };
-
-        return [
-            { separator: true },
-            projectMenuItems,
-        ];
-    }
-
-    async setupMenu() {
-        const projectItems = await this.getProjectMenuItems();
-        await this.setMenuItems(projectItems);
-    }
 
     /**
      * If we received a sharetarget intent event, we detect when the router-outlet activates a component
@@ -267,13 +154,7 @@ export class AppComponent implements OnInit {
     ngOnInit() {
         //invoke("set_frontend_complete");
 
-        this.setupMenu();
-
-        this.applyUserTheme();
-
         this.handleUserAuthenticationState();
-
-        this.handleDataUpdates();
 
         this.watchForUndoCalls();
 
@@ -282,20 +163,6 @@ export class AppComponent implements OnInit {
         });
 
         this.listenForShareEvents();
-    }
-
-    switchTheme() {
-        this.themeService.switchTheme();
-
-        const currentTheme = this.themeService.getCurrentTheme();
-        localStorage.setItem('theme', currentTheme);
-    }
-
-    switchLanguage(language: 'en' | 'pt-BR') {
-        console.log("Changing language to ", language)
-        this.translate.setActiveLang(language);
-        localStorage.setItem('language', language);
-        this.setupMenu();
     }
 
     undo() {
@@ -360,33 +227,6 @@ export class AppComponent implements OnInit {
         invoke('broadcast_network_sync_services').then(() => {
             invoke('start_http_server');
         })
-    }
-
-    async signInWithGoogle() {
-        try {
-            await this.authService.signInWithGoogle();
-        } catch (error) {
-            console.error('Error signing in:', error);
-        }
-    }
-
-    async signOut() {
-        try {
-            await this.authService.signOut();
-        } catch (error) {
-            console.error('Error signing out:', error);
-        }
-    }
-
-    private applyUserTheme() {
-        const currentTheme = this.themeService.getCurrentTheme();
-        let userTheme = localStorage.getItem('theme');
-        if (!userTheme) {
-            userTheme = currentTheme;
-        }
-        if (userTheme != currentTheme) {
-            this.themeService.switchTheme(userTheme);
-        }
     }
 
     private handleUserAuthenticationState() {
@@ -519,12 +359,6 @@ export class AppComponent implements OnInit {
         });
     }
 
-    private handleDataUpdates() {
-        this.dataUpdatedService.subscribe('project', (changes) => {
-            console.warn("Novo projeto entrando... vamos atualizar o menu");
-            this.setupMenu();
-        });
-    }
 }
 
 
