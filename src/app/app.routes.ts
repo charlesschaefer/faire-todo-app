@@ -3,25 +3,17 @@ import { AuthCallbackComponent } from './auth/callback/callback.component';
 
 import { TodayComponent } from "./today/today.component";
 import { InboxComponent } from "./inbox/inbox.component";
-import { UpcomingComponent } from "./upcoming/upcoming.component";
-import { ProjectComponent } from "./project/project.component";
-import { ProjectTasksComponent } from "./project/project-tasks/project-tasks.component";
-import { SearchComponent } from "./search/search.component";
-import { SettingsComponent } from "./settings/settings.component";
-import { AllTasksComponent } from "./all-tasks/all-tasks.component";
-import { SynchronizationComponent } from "./synchronization/synchronization.component";
-import { InboxResolver } from "./inbox/inbox.resolver";
 
 export const routes: Routes = [
-    {path: "today", component: TodayComponent},
     {path: "inbox", component: InboxComponent}, //, resolve: {tasks: InboxResolver}},
-    {path: "upcoming", component: UpcomingComponent},
-    {path: "project", component: ProjectComponent},
-    {path: "project/:id/tasks", component: ProjectTasksComponent},
-    {path: "all-tasks", component: AllTasksComponent},
-    {path: "search", component: SearchComponent},
-    {path: "settings", component: SettingsComponent},
-    {path: "sync", component: SynchronizationComponent},
+    {path: "today", component: TodayComponent},
+    {path: "upcoming", loadComponent: () => import('./upcoming/upcoming.component').then(comp => comp.UpcomingComponent)},
+    {path: "project", loadComponent: () => import('./project/project.component').then(comp => comp.ProjectComponent)},
+    {path: "project/:id/tasks", loadComponent: () => import('./project/project-tasks/project-tasks.component').then(comp => comp.ProjectTasksComponent)},
+    {path: "all-tasks", loadComponent: () => import('./all-tasks/all-tasks.component').then(comp => comp.AllTasksComponent)},
+    {path: "search", loadComponent: () => import('./search/search.component').then(comp => comp.SearchComponent)},
+    {path: "settings", loadComponent: () => import('./settings/settings.component').then(comp => comp.SettingsComponent)},
+    {path: "sync", loadComponent: () => import('./synchronization/synchronization.component').then(comp => comp.SynchronizationComponent)},
     {path: "auth/callback", component: AuthCallbackComponent},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];
