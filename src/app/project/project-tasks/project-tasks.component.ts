@@ -12,6 +12,7 @@ import { TaskService } from '../../task/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
 import { CommonModule } from '@angular/common';
+import { DataUpdatedService } from '../../services/data-updated.service';
 
 
 @Component({
@@ -36,8 +37,9 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         protected override activatedRoute: ActivatedRoute,
+        protected override dataUpdatedService: DataUpdatedService,
     ) {
-        super(taskService, activatedRoute);
+        super(taskService, activatedRoute, dataUpdatedService);
     }
 
     override async ngOnInit() {

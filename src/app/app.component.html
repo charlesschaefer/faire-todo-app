@@ -33,25 +33,27 @@
 
 <!-- <p-toast position="bottom-left" /> -->
 <p-toast position="bottom-left" #toast>
-  <ng-template let-message pTemplate="message">
-    <span class="p-toast-message-icon">
-      <i class="pi pi-info-circle"></i>
-    </span>
-    <div class="flex flex-column align-items-start" style="flex: 1">
-      <div class="p-toast-summary">
-        <span class="">
-          {{ message.summary }}
-        </span>
-      </div>
-      <div class="flex flex-row justify-content-between w-full gap-3">
-        <div class="h-3-rem p-toast-detail">
-          {{ message.detail }}
+  <ng-template let-message #headless let-closeFn="closeFn">
+    <div class="p-toast-message-content">
+      <span class="p-toast-message-icon">
+        <i class="pi pi-info-circle"></i>
+      </span>
+      <div class="p-toast-message-text w-full">
+        <div class="p-toast-summary">
+          <span class="">
+            {{ message.summary }}
+          </span>
         </div>
-        <div class="">
-          <a href="javascript:;" p-button class="text-sm w-min" severity="info" size="small" (click)="undo()"
-             >{{ 'Undo' | transloco }}</a>
+        <div class="flex flex-column gap-3 p-toast-detail">
+          <div class="h-3-rem">
+            {{ message.detail }}
+          </div>
+          <div class="text-right">
+            <p-button severity="info" size="small" (onClick)="undo($event); closeFn($event)">{{ 'Undo' | transloco }}</p-button>
+          </div>
         </div>
       </div>
+      <p-button [rounded]="true" variant="text" styleClass="p-toast-close-button" icon="pi pi-times" (onClick)="closeFn($event)" />
     </div>
   </ng-template>
 </p-toast>

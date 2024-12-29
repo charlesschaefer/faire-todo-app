@@ -13,9 +13,7 @@ export class DataUpdatedService {
 
     private eventEmitters: {[nomeEvento: string]: EventEmitter<any>} = {};
 
-    constructor() { 
-        console.warn("Construindo o dataupdated...");
-    }
+    constructor() { }
 
 
     /**
@@ -26,14 +24,12 @@ export class DataUpdatedService {
      * @see Dexie.Syncable.IDatabaseChange
      */
     next(changes: Changes[]) {
-        console.log("Chamando o DataUpdatedService.next(): ", changes)
         for (const change of changes) {
             this.get(change.table).emit(change);
         }
     }
 
     subscribe(table: string, func: (changes: any) => void) {
-        console.log("Vamos guardar um subscriber para a tabela: ", table)
         return this.get(table).subscribe(func);
     }
 

@@ -70,7 +70,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
-        protected dataUpdatedService?: DataUpdatedService,
+        protected dataUpdatedService: DataUpdatedService,
     ) {}
     
     /**
@@ -90,9 +90,9 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         this.getTasks();
 
-        this.taskSubscription = this.dataUpdatedService?.subscribe('task', (changes) => {
+        !this.taskSubscription ? this.taskSubscription = this.dataUpdatedService?.subscribe('task', (changes) => {
             this.getTasks();
-        })
+        }) : null;
 
         this.showTaskAddOverlay$.subscribe(() => {
             this.isAddTaskOpen = true;

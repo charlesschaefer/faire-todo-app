@@ -4,6 +4,8 @@ import { Subject } from 'rxjs';
 export interface UndoItem {
     data: any;
     type: string;
+    // A Subject to watch when "undoing" this item from the queue
+    watcher?: Subject<UndoItem>;
 }
 
 interface UndoQueue {
@@ -23,13 +25,18 @@ export class UndoService {
     }
 
     register(item: UndoItem) {
+        if (!item.watcher) {
+            item.watcher = new Subject<UndoItem>();
+        }
         this.undoQueue.items.push(item);
         this.undoWatch$.next(item);
-        return this.undo$;
+
+        return item.watcher ?? this.undo$;
     }
 
     undo() {
         const item = this.undoQueue.items.pop();
-        this.undo$.next(item as UndoItem);
+        const watcher = item?.watcher ?? this.undo$;
+        watcher.next(item as UndoItem);
     }
 }

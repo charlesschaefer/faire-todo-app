@@ -165,8 +165,7 @@ export class AppComponent implements OnInit {
         this.listenForShareEvents();
     }
 
-    undo() {
-        this.messageService.clear();
+    undo(event: any) {
         this.undoService.undo();
     }
 
@@ -326,7 +325,7 @@ export class AppComponent implements OnInit {
         this.undoService.watch().pipe(delay(700)).subscribe(async () => {
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
-                severity: 'info',
+                severity: 'contrast',
                 summary: await firstValueFrom(this.translate.selectTranslate('Undo')),
                     detail: await firstValueFrom(this.translate.selectTranslate('Action completed.')),
                 life: 15000
