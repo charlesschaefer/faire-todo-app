@@ -9,7 +9,9 @@ import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../task.service';
 import { ProjectService } from '../../project/project.service';
 import { ProjectDto } from '../../dto/project-dto';
-import { ToastModule } from 'primeng/toast';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 
 
 @Component({
@@ -21,6 +23,9 @@ import { ToastModule } from 'primeng/toast';
         CdkDropList,
         PanelModule,
         TranslocoModule,
+        SpeedDialModule,
+        ButtonModule,
+        RippleModule,
     ],
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.scss'
@@ -34,6 +39,11 @@ export class TaskListComponent implements OnInit {
     @Input() showAddTask = true;
 
     projects!: Map<string, ProjectDto>;
+
+    speedDialItems = [{
+        icon: 'pi pi-plus',
+        command: ($event: any) => this.showTaskAddPanel($event)
+    }];
 
     constructor(
         private taskService: TaskService,

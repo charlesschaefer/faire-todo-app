@@ -17,3 +17,16 @@
 .task-add-button i {
     font-size: 12px;
 }
+
+::ng-deep .task-list-speeddial {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    ::ng-deep .task-list-speeddial {
+        display: flex;
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+    }
+}

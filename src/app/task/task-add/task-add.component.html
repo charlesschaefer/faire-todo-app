@@ -1,4 +1,3 @@
-
 <p-popover #taskAddOp (onHide)="onClose($event)">
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" #form>
     <p-card>
@@ -19,7 +18,7 @@
         </div>
         <div class="task-add-description">
           <textarea
-	    #description
+	          #description
             pTextarea
             [placeholder]="'Description' | transloco"
             [autoResize]="true"

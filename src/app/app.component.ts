@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
-import { TranslocoService } from '@jsverse/transloco';
+import { translate, TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
 import { delay, firstValueFrom, Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -323,12 +323,12 @@ export class AppComponent implements OnInit {
 
     private watchForUndoCalls() {
         // watches for undo calls, so we exhibit a toast to the user
-        this.undoService.watch().pipe(delay(700)).subscribe(() => {
+        this.undoService.watch().pipe(delay(700)).subscribe(async () => {
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
                 severity: 'info',
-                summary: 'Undo',
-                detail: 'Action completed.',
+                summary: await firstValueFrom(this.translate.selectTranslate('Undo')),
+                    detail: await firstValueFrom(this.translate.selectTranslate('Action completed.')),
                 life: 15000
             });
         });

@@ -37,7 +37,7 @@ import { UserBound } from '../../services/service.abstract';
 import { AuthService } from '../../auth/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { Drawer, DrawerModule } from 'primeng/drawer';
+import { DrawerModule } from 'primeng/drawer';
 
 
 @Component({
