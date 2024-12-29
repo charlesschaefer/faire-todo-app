@@ -22,7 +22,6 @@ li.task-item:active, li.task-item:focus {
 }
 
 .task-item-drag-placeholder {
-    // background: #fafafa;
     background-color: color-mix(in srgb, var(--p-primary-color) 10%, transparent);
     min-height: 60px;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
@@ -104,8 +103,6 @@ li.task-item:hover .task-item-menu {
 }
 
 :host ::ng-deep a.linkify-link:any-link {
-    // color: var(--p-lt-color-gray-700);
-    // color: color-mix(in srgb, var(--p-bluegray-600) 75%, #888888 10%);
     color: color-mix(in srgb, var(--p-blue-600) 70%, #555555 60%);
     text-decoration: none;
     font-weight: 500;
@@ -128,25 +125,25 @@ li.task-item:hover .task-item-menu {
 :host ::ng-deep a.linkify-link::before {
     color: var(--p-bluegray-500);
     font-size: 7px;
-    // content: "\e9c1";
+    /* content: "\e9c1"; */
     content: "\e93c";
     padding-right: 3px;
     padding-left: 1px;
     vertical-align: -2px;
 }
 
-// :host ::ng-deep a.linkify-link::after {
+/* // :host ::ng-deep a.linkify-link::after {
 //     content: "\e93c";
 //     color: var(--p-blue-700);
 //     font-size: 7px;
 //     padding-right: 4px;
 //     padding-left: 2px;
 //     vertical-align: 4px;
-// }
+// } */
 
 .task-item-attributes {
     font-size: 12px;
-    // padding-left: 30px;
+    /* padding-left: 30px; */
     padding-left: 12px;
     display: flex;
     flex-direction: row;
