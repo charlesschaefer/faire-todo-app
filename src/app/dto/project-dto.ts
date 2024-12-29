@@ -1,4 +1,5 @@
-import { Updatable, UserBound } from "../services/service.abstract";
+import { Updatable } from "./updatable";
+import { UserBound } from "./user-bound";
 
 export interface ProjectDto extends Updatable {
     id: number;

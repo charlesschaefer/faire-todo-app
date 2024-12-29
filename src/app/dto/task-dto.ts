@@ -1,4 +1,6 @@
-import { Updatable, UserBound } from "../services/service.abstract";
+import { Injectable } from "@angular/core";
+import { Updatable } from "./updatable";
+import { UserBound } from "./user-bound";
 
 export enum RecurringType {
     DAILY = 'daily',
@@ -27,3 +29,5 @@ export interface TaskDto extends Updatable {
 }
 
 export type TaskAddDto = Omit<TaskDto, "id" > & UserBound;
+
+export type TaskTree = TaskDto & {children: TaskTree[]};

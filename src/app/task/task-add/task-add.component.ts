@@ -33,7 +33,7 @@ import { Router } from '@angular/router';
 import { ProjectService } from '../../project/project.service';
 import { ProjectDto } from '../../dto/project-dto';
 import { CheckboxModule } from 'primeng/checkbox';
-import { UserBound } from '../../services/service.abstract';
+import { UserBound } from "../../dto/user-bound";
 import { AuthService } from '../../auth/auth.service';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';

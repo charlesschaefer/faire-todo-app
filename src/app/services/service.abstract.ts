@@ -7,15 +7,8 @@ import { User } from "@supabase/supabase-js";
 import { AuthService } from "../auth/auth.service";
 import { Changes, DataUpdatedService } from "./data-updated.service";
 import { DatabaseChangeType } from "dexie-observable/api";
-
-export interface UserBound {
-    user_uuid: string;
-}
-
-export interface Updatable {
-    updated_at?: Date;
-}
-
+import { Updatable } from "../dto/updatable";
+import { UserBound } from "../dto/user-bound";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBound)) > {

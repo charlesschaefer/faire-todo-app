@@ -12,23 +12,20 @@ import { AppDb } from "./app.db";
 import { TranslocoHttpLoader } from './transloco-loader';
 import { provideTransloco } from '@jsverse/transloco';
 import { providePrimeNG } from "primeng/config";
-import Aura from '@primeng/themes/aura';
 import { AppTheme } from "./app.theme";
-
-export const DEBUG = isDevMode();
+import { DEBUG } from "./app.debug";
 
 const debugTracing = [];
 DEBUG ? debugTracing.push(withDebugTracing()) : null;
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        // importProvidersFrom(RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })),
         provideRouter(routes, 
-            ...debugTracing,
             withRouterConfig({
                 onSameUrlNavigation: 'reload',
                 urlUpdateStrategy: 'eager'
-            })
+            }),
+            ...debugTracing,
         ),
         provideHttpClient(withFetch()),
         {

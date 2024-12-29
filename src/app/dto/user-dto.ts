@@ -1,4 +1,4 @@
-import { Updatable } from "../services/service.abstract";
+import { Updatable } from "./updatable";
 
 export interface UserDto extends Updatable {
     id: number;

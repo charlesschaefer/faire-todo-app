@@ -15,7 +15,7 @@ import { ProjectService } from '../project/project.service';
 import { DbService } from './db.service';
 import { UserService } from './user.service';
 import { UserDto } from '../dto/user-dto';
-import { UserBound } from './service.abstract';
+import { UserBound } from "../dto/user-bound";
 import { ApplyRemoteChangesFunction, IPersistedContext, PollContinuation, ReactiveContinuation } from 'dexie-syncable/api';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';

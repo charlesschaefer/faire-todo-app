@@ -82,9 +82,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         date.setMinutes(0);
         date.setSeconds(0);
         date.setMilliseconds(0);
-        return liveQuery(() => {
-            return this.table.where('dueDate').equals(date).and((task: Tasks) => task.completed == 0).count();
-        });
+        return from(this.table.where('dueDate').equals(date).and((task: Tasks) => task.completed == 0).count());
     }
 
     getUpcoming() {
