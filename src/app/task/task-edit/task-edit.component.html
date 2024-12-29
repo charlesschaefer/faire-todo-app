@@ -1,4 +1,4 @@
-<p-card #pCardTaskEdit [style]="{'height': '100%', 'min-height': '370px'}">
+<p-card #pCardTaskEdit styleClass="task-edit-card">
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" id="task-edit-form" #form>
     <div  class="task-add flex flex-column gap-3">
       <div class="task-add-title">

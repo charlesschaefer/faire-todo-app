@@ -1,5 +1,10 @@
 @use "../task-add/task-add.component.scss";
 
+.task-edit-card {
+    height: fit-content;
+    min-height: 370px;
+}
+
 .task-add-description textarea, .task-add-description span, .task-add-title .task-title-input {
     min-width: 280px;
     width: 100%;
