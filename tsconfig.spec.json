@@ -2,11 +2,14 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
+    "outDir": "./out-tsc/spec",
     "types": [
-      "@angular/localize"
-    ]
+      "@angular/localize",
+      "jasmine"
+    ],
   },
   "files": ["src/main.ts"],
-  "include": ["src/**/*.d.ts"]
+  "include": [
+    "src/**/*.spec.ts"
+  ]
 }
