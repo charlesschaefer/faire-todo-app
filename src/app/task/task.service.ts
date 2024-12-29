@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from '../services/service.abstract';
-import { RecurringType, TaskAddDto, TaskDto } from '../dto/task-dto';
+import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
 import { liveQuery } from 'dexie';
-import { Observable, Subject, firstValueFrom, from, zip } from 'rxjs';
+import { Observable, Subject, first, firstValueFrom, from, map, zip } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
 import { DbService } from '../services/db.service';
 import { AuthService } from '../auth/auth.service';
@@ -14,7 +14,6 @@ interface SubtaskCount {
 }
 
 type Tasks = TaskAddDto | TaskDto;
-
 
 @Injectable({
     providedIn: 'root'
@@ -235,6 +234,55 @@ export class TaskService extends ServiceAbstract<Tasks> {
     }
 
     getTaskTree(task: TaskDto) {
+        const children: TaskTree[] = [];
+        const taskTree = {...task, children} as TaskTree;
+        const resultDispatcher = new Subject<TaskTree>();
+        from(this.table.where({
+                parent_uuid: task.uuid
+        }).toArray()).pipe(
+            map(subtasks => {
+                const afterPush = new Subject<TaskTree>();
+                if (!subtasks.length) {
+                    setTimeout(() => {
+                        afterPush.next(taskTree);
+                        afterPush.complete();
+                    }, 0);
+                    return afterPush;
+                }
+                const total = subtasks.length;
+                subtasks.reduce((prev: TaskTree, current, idx, arr) => {
+                    this.getTaskTree(current as TaskDto).subscribe(subtaskTree => {
+                        prev.children.push(subtaskTree);
+                        if (idx == total - 1) {
+                            afterPush.next(prev);
+                            afterPush.complete();
+                        }
+                    });
+                    return prev;
+                }, taskTree);
+                return afterPush;
+            })
+        ).subscribe(afterPush => afterPush.subscribe(taskAndTree => {
+            resultDispatcher.next(taskAndTree);
+            resultDispatcher.complete();
+        }));
+        return resultDispatcher.asObservable();
+    }
 
+    addTaskTree(taskTree: TaskTree) {
+        const {children, ...task} = {...taskTree};
+        const return$ = new Subject();
+
+        this.table.add(task as TaskDto).then((result) => {
+            if (!children || !children.length) {
+                return return$.next(result);
+            }
+            children.map((child, index) => this.addTaskTree(child).subscribe(result => {
+                if (index == children.length - 1) {
+                    return$.next(result);
+                }
+            }))
+        }).catch(error => return$.error(error));
+        return return$.asObservable();
     }
 }
