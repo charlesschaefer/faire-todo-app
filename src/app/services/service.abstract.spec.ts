@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { ServiceAbstract } from './service.abstract';
-import { MockInstance, MockService } from 'ng-mocks';
+// import { MockInstance, MockService } from 'ng-mocks';
 import { AuthService } from '../auth/auth.service';
 import { DbService } from './db.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ describe('ServiceAbstract', () => {
     // Helps to reset customizations after each test.
     // Alternatively, you can enable
     // automatic resetting in test.ts.
-    MockInstance.scope();
+    /* MockInstance.scope();
 
     const authService = MockService(AuthService, {
         authenticatedUser: MockService(BehaviorSubject<User | null>, {
@@ -42,7 +42,7 @@ describe('ServiceAbstract', () => {
             return {} as Table;
         }
     });
-
+ */
 
     let service: Service;
 

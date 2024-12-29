@@ -4,7 +4,7 @@ import { TagService } from './tag.service';
 import { TagDto } from '../dto/tag-dto';
 
 describe('TagService', () => {
-  let service: TagService<TagDto>;
+  let service: TagService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

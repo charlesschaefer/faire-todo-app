@@ -4,7 +4,7 @@ import { TaskTagService } from './task-tag.service';
 import { TaskTagDto } from '../dto/task-tag-dto';
 
 describe('TaskTagService', () => {
-  let service: TaskTagService<TaskTagDto>;
+  let service: TaskTagService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
