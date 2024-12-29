@@ -3,14 +3,10 @@
     min-height: 50px;
 }
 
-.task-add-description textarea, .task-add-title .task-title-input {
+.task-add-description textarea, .task-add-description span, .task-add-title .task-title-input {
     width: 280px;
     min-height: 50px;
     border: none;
-}
-
-.task-add-title .task-title-input {
-    outline: none;
 }
 
 .task-add-title .task-title-input:focus {

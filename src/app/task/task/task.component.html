@@ -40,7 +40,8 @@
           }
           <div class="task-item-attributes-project">
             @if (task.project_uuid && projects) {
-                <i class="pi pi-clipboard"></i>{{projects.get(task.project_uuid)?.name}}
+                <!-- <i class="pi pi-clipboard"></i> -->
+                <i class="pi pi-hashtag" style="color: var(--p-blue-700)"></i>{{projects.get(task.project_uuid)?.name}}
             } @else {
               <i class="pi pi-inbox"></i><span  >{{ 'Inbox' | transloco }}</span>
             }

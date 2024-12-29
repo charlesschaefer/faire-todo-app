@@ -3,16 +3,16 @@
     <div  class="task-add flex flex-column gap-3">
       <div class="task-add-title">
         @if (task.title) {
-        <p-inplace (onActivate)="onActivateField($event)">
+        <p-inplace (onActivate)="onActivateField($event)" styleClass="w-full">
           <ng-template pTemplate="display" >
-            <span [innerHTML]="task.title | linkify"></span>
+            <span [innerHTML]="task.title | linkify" class="w-full block task-title-input font-semibold px-2 p-textarea"></span>
           </ng-template>
           <ng-template pTemplate="content">
             <!-- <input class="task-title-input font-semibold px-2" pInputText type="text" name="title"
               [placeholder]="'Task title' | transloco" formControlName="title" (ngModelChange)="onTitleChange($event)" /> -->
             <textarea 
               class="task-title-input font-semibold px-2" 
-              pInputText type="text" 
+              pTextarea
               name="title"
               [placeholder]="'Task title' | transloco" 
               formControlName="title" 
@@ -22,7 +22,7 @@
           </ng-template>
         </p-inplace>
         } @else {
-          <textarea class="task-title-input font-semibold px-2" pInputText type="text" name="title"
+          <textarea class="task-title-input font-semibold px-2" pTextarea name="title"
             [placeholder]="'Task title' | transloco" formControlName="title" (ngModelChange)="onTitleChange($event)"
             (keydown.enter)="onTitleEnter($event)"></textarea>
         }
@@ -31,12 +31,12 @@
       </div>
       <div class="task-add-description">
         @if (task.description) {
-        <p-inplace (onActivate)="onActivateField($event)" >
+        <p-inplace (onActivate)="onActivateField($event)" styleClass="w-full">
           <ng-template pTemplate="display">
             @if (task.description === "") {
-              <span class="placeholder-like-inplace text-sm">{{ "Description" | transloco }}</span>
+              <span class="placeholder-like-inplace text-sm w-full block p-textarea">{{ "Description" | transloco }}</span>
             } @else {
-              <span [innerHTML]="task.description | linkify"  class="text-sm"></span>
+              <span [innerHTML]="task.description | linkify"  class="placeholder-like-inplace text-sm w-full block p-textarea"></span>
             }
           </ng-template>
           <ng-template pTemplate="content" [type]="'test'">

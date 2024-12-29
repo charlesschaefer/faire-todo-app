@@ -1,12 +1,18 @@
 @use "../task-add/task-add.component.scss";
 
-.task-add-description textarea, .task-add-title .task-title-input {
+.task-add-description textarea, .task-add-description span, .task-add-title .task-title-input {
     min-width: 280px;
     width: 100%;
 }
 
 :host ::ng-deep .p-inplace-display {
-    padding: inherit
+    padding: inherit;
+    width: inherit;
+}
+
+:host ::ng-deep .p-inplace-display .placeholder-like-inplace {
+    color: var(--p-form-field-placeholder-color);
+    border-bottom: none;
 }
 
 :host ::ng-deep .p-inplace-display:hover {
