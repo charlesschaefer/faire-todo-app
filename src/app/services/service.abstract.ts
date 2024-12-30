@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, firstValueFrom, from } from "rxjs";
-import { EntityTable, liveQuery, Table } from "dexie";
+import { BehaviorSubject, Observable, from } from "rxjs";
+import { EntityTable, Table } from "dexie";
 
 import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";

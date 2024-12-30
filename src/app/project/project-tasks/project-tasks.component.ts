@@ -7,12 +7,14 @@ import { firstValueFrom } from 'rxjs';
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskAddComponent } from '../../task/task-add/task-add.component';
 import { ProjectService } from '../project.service';
-import { ProjectAddDto, ProjectDto } from '../../dto/project-dto';
+import { ProjectDto } from '../../dto/project-dto';
 import { TaskService } from '../../task/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
 import { CommonModule } from '@angular/common';
 import { DataUpdatedService } from '../../services/data-updated.service';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 
 
 @Component({
@@ -23,6 +25,8 @@ import { DataUpdatedService } from '../../services/data-updated.service';
         TaskAddComponent,
         TranslocoModule,
         CommonModule,
+        CardModule,
+        ButtonModule,
     ],
     templateUrl: './project-tasks.component.html',
     styleUrl: './project-tasks.component.scss'
@@ -56,6 +60,8 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         const filteredTasks = tasks.filter(task => task.completed == 0);
         this.tasks = this.taskService.orderTasks(filteredTasks) as TaskDto[];
         this.countSubtasks();
+
+        this.separateDueTasks();
     }
 
 }

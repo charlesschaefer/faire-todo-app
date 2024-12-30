@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
-import { provideRouter, RouterModule, withDebugTracing, withRouterConfig, withViewTransitions } from "@angular/router";
+import { provideRouter, withDebugTracing, withRouterConfig } from "@angular/router";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { TranslocoModule } from '@jsverse/transloco';

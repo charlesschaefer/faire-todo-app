@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ServiceAbstract } from '../services/service.abstract';
 import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
-import { liveQuery } from 'dexie';
-import { Observable, Subject, first, firstValueFrom, from, map, zip } from 'rxjs';
+import { Observable, Subject, from, map, zip } from 'rxjs';
 import { DateTime, Duration } from 'luxon';
 import { DbService } from '../services/db.service';
 import { AuthService } from '../auth/auth.service';
@@ -298,5 +297,73 @@ export class TaskService extends ServiceAbstract<Tasks> {
             }))
         }).catch(error => return$.error(error));
         return return$.asObservable();
+    }
+
+    separateDueTasks(tasks: TaskDto[]) {
+        const today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        const dueTasks: TaskDto[] = [];
+        const otherTasks: TaskDto[] = [];
+
+        tasks.forEach((task, key) => {
+            if (!task.dueDate || task.dueDate > today) {
+                otherTasks.push(task);
+                return;
+            }
+            const taskTime = task.dueDate;
+            if (task.dueTime) {
+                taskTime.setHours(task.dueTime.getHours());
+                taskTime.setMinutes(task.dueTime.getMinutes());
+                taskTime.setSeconds(task.dueTime.getSeconds());
+            }
+            if (taskTime < today) {
+                dueTasks.push(task);
+                return;
+            }
+            otherTasks.push(task);
+        });
+        tasks = otherTasks;
+
+        return {
+            dueTasks,
+            otherTasks
+        };
+    }
+
+    rescheduleTasksForToday(tasks: TaskDto[]) {
+        const today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+
+        const changes: {key: string, changes: Partial<TaskDto>}[] = [];
+        const dataChanges: any = [];
+        for (const task of tasks) {
+            changes.push({
+                key: task.uuid,
+                changes: {
+                    dueDate: today
+                }
+            });
+            dataChanges.push({
+                key: 'uuid',
+                table: 'task',
+                type: DatabaseChangeType.Update,
+                changes: {
+                    dueDate: today
+                },
+                oldObj: task,
+                obj: {...task, dueDate: today}
+            });
+        }
+
+        this.table.bulkUpdate(changes).then(() => {
+            this.dataUpdatedService.next([dataChanges[0]]);
+        });
     }
 }

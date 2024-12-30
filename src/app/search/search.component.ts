@@ -11,7 +11,6 @@ import { TaskListComponent } from "../task/task-list/task-list.component";
 import { InboxComponent } from '../inbox/inbox.component';
 import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
-import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DataUpdatedService } from '../services/data-updated.service';
 
@@ -65,5 +64,6 @@ export class SearchComponent extends InboxComponent implements OnInit {
         this.tasks = tasks as TaskDto[];
         this.completedTasks = completedTasks;
         this.countSubtasks();
+
     }
 }

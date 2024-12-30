@@ -13,7 +13,7 @@ import { TaskDto } from '../dto/task-dto';
     imports: [
         TaskListComponent,
         TaskAddComponent,
-        TranslocoModule
+        TranslocoModule,
     ],
     templateUrl: './upcoming.component.html',
     styleUrl: './upcoming.component.scss'

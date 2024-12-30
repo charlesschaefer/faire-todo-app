@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -21,8 +21,6 @@ import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskService } from '../task/task.service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
-import { add } from 'dexie';
-import { TaskComponent } from '../task/task/task.component';
 import { DataUpdatedService } from '../services/data-updated.service';
 
 
@@ -48,6 +46,7 @@ import { DataUpdatedService } from '../services/data-updated.service';
         TaskListComponent,
         TaskAddComponent,
         TranslocoModule,
+        ButtonModule,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
@@ -66,6 +65,9 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('appTaskList') appTaskList?: TaskListComponent;
 
     taskSubscription?: Subscription;
+
+    hasDueTask = false;
+    dueTasks?: TaskDto[] = [];
 
     constructor(
         protected taskService: TaskService,
@@ -125,6 +127,28 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         ));
         this.tasks = tasks.tasks;
         this.subtasksCount = tasks.subtasksCount;
+
+        console.log(this.tasks);
+
+        this.separateDueTasks();
+    }
+
+    separateDueTasks() {
+        const { dueTasks, otherTasks } = { ...this.taskService.separateDueTasks(this.tasks) };
+        this.tasks = otherTasks;
+        if (dueTasks.length) {
+            this.hasDueTask = true;
+            dueTasks.sort((a, b) => !a.dueDate || !b.dueDate || a.dueDate < b.dueDate ? 1 : 0);
+            this.dueTasks = dueTasks;
+        } else {
+            this.dueTasks = [];
+            this.hasDueTask = false;
+        }
+    }
+    rescheduleDueTasksForToday(event: any) {
+        if (this.dueTasks) {
+            this.taskService.rescheduleTasksForToday(this.dueTasks);
+        }
     }
 
     async countSubtasks() {

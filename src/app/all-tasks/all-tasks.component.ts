@@ -8,6 +8,8 @@ import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-all-tasks',
@@ -15,7 +17,9 @@ import { DataUpdatedService } from '../services/data-updated.service';
     imports: [
         TaskListComponent,
         TaskAddComponent,
-        TranslocoModule
+        TranslocoModule,
+        CardModule,
+        ButtonModule,
     ],
     templateUrl: './all-tasks.component.html',
     styleUrl: './all-tasks.component.scss'
@@ -35,5 +39,7 @@ export class AllTasksComponent  extends InboxComponent {
         
         this.tasks = this.taskService.orderTasks(tasks) as TaskDto[];
         this.countSubtasks();
+
+        this.separateDueTasks();
     }
 }

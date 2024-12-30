@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { InboxComponent } from '../inbox/inbox.component';
 import { DateTime } from 'luxon';
 import { TranslocoModule } from '@jsverse/transloco';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'app-today',
@@ -13,6 +15,8 @@ import { TranslocoModule } from '@jsverse/transloco';
         TaskListComponent,
         TaskAddComponent,
         TranslocoModule,
+        CardModule,
+        ButtonModule,
     ],
     templateUrl: './today.component.html',
     styleUrl: './today.component.scss'
@@ -27,5 +31,7 @@ export class TodayComponent extends InboxComponent implements OnInit {
         const tasks = await firstValueFrom(this.taskService.getForToday());
         this.tasks = this.taskService.orderTasks(tasks);
         this.countSubtasks();
+
+        this.separateDueTasks();
     }
 }
