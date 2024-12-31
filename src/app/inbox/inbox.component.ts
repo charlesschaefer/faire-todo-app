@@ -22,6 +22,7 @@ import { TaskService } from '../task/task.service';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { SubtitlePipe } from '../pipes/subtitle.pipe';
 
 
 @Component({
@@ -47,11 +48,16 @@ import { DataUpdatedService } from '../services/data-updated.service';
         TaskAddComponent,
         TranslocoModule,
         ButtonModule,
+        SubtitlePipe
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
 })
 export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
+    pageTitle = 'Inbox';
+    pageSubtitle = '';
+    subtitleModifier = '';
+
     tasks!: TaskDto[];
     subtasksCount!: Map<string, number>;
 

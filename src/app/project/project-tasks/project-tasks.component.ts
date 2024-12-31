@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { DataUpdatedService } from '../../services/data-updated.service';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { SubtitlePipe } from '../../pipes/subtitle.pipe';
 
 
 @Component({
@@ -27,13 +28,17 @@ import { ButtonModule } from 'primeng/button';
         CommonModule,
         CardModule,
         ButtonModule,
+        SubtitlePipe
     ],
-    templateUrl: './project-tasks.component.html',
-    styleUrl: './project-tasks.component.scss'
+    templateUrl: '../../inbox/inbox.component.html',
+    styleUrl: '../../inbox/inbox.component.scss'
 })
 export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
     project!: ProjectDto;
+    
+    override pageTitle = 'Project:';
+    override pageSubtitle = this.project?.name;
 
     constructor(
         private projectService: ProjectService,
@@ -51,6 +56,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
         const projectId = this.route.snapshot.paramMap.get("id") as string;
         this.project = await this.projectService.get(projectId) as ProjectDto;
+        this.pageSubtitle = this.project.name;
         super.ngOnInit();
     }
 

@@ -10,6 +10,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { DataUpdatedService } from '../services/data-updated.service';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { SubtitlePipe } from '../pipes/subtitle.pipe';
 
 @Component({
     selector: 'app-all-tasks',
@@ -20,12 +21,15 @@ import { ButtonModule } from 'primeng/button';
         TranslocoModule,
         CardModule,
         ButtonModule,
+        SubtitlePipe
     ],
-    templateUrl: './all-tasks.component.html',
-    styleUrl: './all-tasks.component.scss'
+    templateUrl: '../inbox/inbox.component.html',
+    styleUrl: '../inbox/inbox.component.scss'
 })
 export class AllTasksComponent  extends InboxComponent {
     
+    override pageTitle = 'All Tasks';
+
     constructor(
         protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
