@@ -1,29 +1,28 @@
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { TextareaModule } from 'primeng/textarea';
-import { DropdownModule } from 'primeng/dropdown';
-import { DatePickerModule } from 'primeng/datepicker';
-import { DividerModule } from 'primeng/divider';
-import { firstValueFrom, Subject } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { AccordionModule } from 'primeng/accordion';
 import { MessageService } from 'primeng/api';
 import { CardModule } from 'primeng/card';
-import { AccordionModule } from 'primeng/accordion';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DividerModule } from 'primeng/divider';
+import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InplaceModule } from 'primeng/inplace';
+import { SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
+import { firstValueFrom, Subject } from 'rxjs';
+import { ProjectDto } from '../../dto/project-dto';
+import { RecurringType, TaskDto } from '../../dto/task-dto';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { ProjectService } from '../../project/project.service';
+import { SubtaskComponent } from '../subtask/subtask.component';
+import { TaskAddComponent } from '../task-add/task-add.component';
+import { TaskService } from '../task.service';
+
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
 nlp.plugin(dates);
-
-import { TaskAddComponent } from '../task-add/task-add.component';
-import { ProjectService } from '../../project/project.service';
-import { TaskService } from '../task.service';
-import { ProjectDto } from '../../dto/project-dto';
-import { RecurringType, TaskDto } from '../../dto/task-dto';
-import { CheckboxModule } from 'primeng/checkbox';
-import { LinkifyPipe } from '../../pipes/linkify.pipe';
-import { SubtaskComponent } from '../subtask/subtask.component';
 
 @Component({
     selector: 'app-task-edit',
@@ -35,7 +34,7 @@ import { SubtaskComponent } from '../subtask/subtask.component';
         TextareaModule,
         DividerModule,
         TranslocoModule,
-        DropdownModule,
+        SelectModule,
         TaskAddComponent,
         AccordionModule,
         CheckboxModule,
@@ -236,14 +235,12 @@ export class TaskEditComponent implements OnInit {
         const parent = event.target.parentNode.parentNode;
         setTimeout(() => {
             parent.querySelector("input, textarea").focus();
-        }, 500)
+        }, 500);
 
     }
 
     onTitleEnter(event: any) {
         event.preventDefault();
-        event.target.dispatchEvent(new KeyboardEvent('keydown', {
-            key: "Tab"
-        }))
+        this.saveTask();
     }
 }

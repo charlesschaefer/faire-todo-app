@@ -50,12 +50,12 @@
             class="task-add-dueTime"
           >
             <ng-template #inputicon let-clickCallBack="clickCallBack">
-              <i class="pi pi-clock" (click)="clickCallBack($event)"></i>
+              <i class="pi pi-clock" (click)="clickCallBack($event)" (keypress)="clickCallBack($event)" aria-hidden="true"></i>
             </ng-template>
           </p-datepicker>
 
           @if (!this.parent) {
-          <p-dropdown 
+          <p-select 
             [options]="projects"
             optionLabel="name"
             optionValue="uuid"
@@ -68,7 +68,7 @@
         </div>
         <div class="task-add-recurring-task align-items-center flex flex-row gap-1">
           <i class="pi pi-history"></i>
-          <p-dropdown 
+          <p-select 
             [options]="recurringOptions"
             formControlName="recurring"
             name="recurring"

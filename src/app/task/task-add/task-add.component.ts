@@ -1,43 +1,33 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstValueFrom, Subject } from 'rxjs';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { DatePickerModule } from 'primeng/datepicker';
-import { CardModule } from 'primeng/card';
-import { DividerModule } from 'primeng/divider';
-import { TextareaModule } from 'primeng/textarea';
-import { PopoverModule, Popover } from 'primeng/popover';
+import { Router } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DatePickerModule } from 'primeng/datepicker';
+import { DividerModule } from 'primeng/divider';
+import { DrawerModule } from 'primeng/drawer';
+import { InputTextModule } from 'primeng/inputtext';
+import { Popover, PopoverModule } from 'primeng/popover';
+import { SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
 import { ToastModule } from 'primeng/toast';
-import { DropdownModule } from 'primeng/dropdown';
+import { firstValueFrom, Subject } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
+import { ProjectDto } from '../../dto/project-dto';
+import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
+import { UserBound } from "../../dto/user-bound";
+import { ProjectService } from '../../project/project.service';
+import { TaskService } from '../task.service';
 
 import { v4 } from 'uuid';
-
-let randomUUID: any;
-// if (!crypto.randomUUID) {
-    randomUUID = v4;
-// } else {
-//     randomUUID = crypto.randomUUID;
-// }
+const randomUUID = v4;
 
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
-
 nlp.plugin(dates);
-
-
-import { TaskService } from '../task.service';
-import { RecurringType, TaskAddDto, TaskDto } from '../../dto/task-dto';
-import { Router } from '@angular/router';
-import { ProjectService } from '../../project/project.service';
-import { ProjectDto } from '../../dto/project-dto';
-import { CheckboxModule } from 'primeng/checkbox';
-import { UserBound } from "../../dto/user-bound";
-import { AuthService } from '../../auth/auth.service';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { DrawerModule } from 'primeng/drawer';
 
 
 @Component({
@@ -53,7 +43,7 @@ import { DrawerModule } from 'primeng/drawer';
         DividerModule,
         ToastModule,
         TranslocoModule,
-        DropdownModule,
+        SelectModule,
         CheckboxModule,
         ButtonModule,
         InputTextModule,
@@ -238,8 +228,8 @@ export class TaskAddComponent implements OnInit {
 
     onTitleChange(event: any) {
         const doc = nlp<DatesMethods>(event);
-        let dates;
-        if (dates = doc.dates().get()) {
+        const dates = doc.dates().get();
+        if (dates) {
             const dateView = dates[0] as {start:string};
             if (dateView?.start) {
                 const date = new Date(dateView.start);
