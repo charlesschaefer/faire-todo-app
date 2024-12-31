@@ -23,6 +23,7 @@ import { TranslocoModule } from '@jsverse/transloco';
 import { ActivatedRoute } from '@angular/router';
 import { DataUpdatedService } from '../services/data-updated.service';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
+import { DateTime } from 'luxon';
 
 
 @Component({
@@ -144,7 +145,32 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tasks = otherTasks;
         if (dueTasks.length) {
             this.hasDueTask = true;
-            dueTasks.sort((a, b) => !a.dueDate || !b.dueDate || a.dueDate < b.dueDate ? 1 : 0);
+            dueTasks.sort((a, b) => {
+                if (!a.dueDate || !b.dueDate) {
+                    return 1;
+                }
+                // if none have time, sort by date
+                if (!b.dueTime && !a.dueTime) {
+                    if (a.dueDate <= b.dueDate) {
+                        return 1;
+                    }
+                    return -1;
+                }
+
+                // bellow we use the end time of the day only when
+                // the task has date but not time.
+                const aTime = DateTime.fromJSDate(a.dueDate).plus({
+                    hour: a.dueTime?.getHours() ?? 23,
+                    minute: a.dueTime?.getMinutes() ?? 59
+                });
+                const bTime = DateTime.fromJSDate(b.dueDate).plus({
+                    hour: b.dueTime?.getHours() ?? 23,
+                    minute: b.dueTime?.getMinutes() ?? 59
+                });
+
+                if (aTime < bTime) return 1;
+                return -1;
+            });
             this.dueTasks = dueTasks;
         } else {
             this.dueTasks = [];
