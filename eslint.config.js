@@ -21,19 +21,6 @@ module.exports = tseslint.config(
       "unused-imports": unusedImports
     },
     rules: {
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-unused-expressions": "off",
-      "@angular-eslint/no-output-on-prefix": "warn",
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "warn",
-        {
-          // plugins: {
-          //   "unused-imports": unusedImports,
-          // },
-        },
-      ],
       "@angular-eslint/directive-selector": [
         "error",
         {
@@ -50,25 +37,30 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
-      // "@typescript-eslint/no-unused-vars": [
-      //   "error",
-      //   {
-      //     "vars": "all",
-      //     "args": "after-used",
-      //     "ignoreRestSiblings": false,
-      //     "no-unused-vars": "off",
-      //     "unused-imports/no-unused-imports": "error",
-      //     "unused-imports/no-unused-vars": [
-      //       "warn",
-      //       {
-      //         "vars": "all",
-      //         "varsIgnorePattern": "^_",
-      //         "args": "after-used",
-      //         "argsIgnorePattern": "^_"
-      //       }
-      //     ]
-      //   }
-      // ]
+      "@angular-eslint/no-output-on-prefix": "warn",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-expressions": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false,
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_"
+        }
+      ],
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "warn",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false,
+          "varsIgnorePattern": "^_",
+          "argsIgnorePattern": "^_"
+        }
+      ],
     },
   },
   {
@@ -77,6 +69,8 @@ module.exports = tseslint.config(
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
     ],
-    rules: {},
+    rules: {
+      "@angular-eslint/template/no-autofocus": "warn",
+    },
   }
 );
