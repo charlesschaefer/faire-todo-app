@@ -1,1 +1,4 @@
 
+::ng-deep .p-card:has(.due-task-list) {
+    transform: scale(90%, 90%);
+}
