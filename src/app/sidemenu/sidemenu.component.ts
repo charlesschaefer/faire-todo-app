@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, input, OnInit, Output, ViewChild } from '@angular/core';
-import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { provideTranslocoScope, TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MenuItem } from 'primeng/api';
 import { ThemeService } from '../services/theme.service';
 import { ProjectService } from '../project/project.service';
@@ -17,6 +17,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { PrimeNG } from 'primeng/config';
 
 
 @Component({
@@ -32,6 +33,7 @@ import { ButtonModule } from 'primeng/button';
         CommonModule,
         ButtonModule
     ],
+    providers: [provideTranslocoScope('primeng')],
     templateUrl: './sidemenu.component.html',
     styleUrl: './sidemenu.component.scss'
 })
@@ -52,6 +54,7 @@ export class SidemenuComponent implements OnInit {
     constructor(
         private themeService: ThemeService,
         private translate: TranslocoService,
+        private primeNGConfig: PrimeNG,
         private projectService: ProjectService,
         private router: Router,
         public authService: AuthService,
@@ -73,6 +76,8 @@ export class SidemenuComponent implements OnInit {
         this.applyUserTheme();
 
         this.handleDataUpdates();
+
+        this.updatePrimeNGTranslations();
     }
 
     showLoginDialog() {
@@ -132,7 +137,7 @@ export class SidemenuComponent implements OnInit {
                     },
                     {
                         label: await firstValueFrom(this.translate.selectTranslate("Portuguese")),
-                        command: () => this.switchLanguage('pt-BR')
+                        command: () => this.switchLanguage('pt-br')
                     }
                 ]
             } as MenuItem
@@ -186,11 +191,20 @@ export class SidemenuComponent implements OnInit {
         localStorage.setItem('theme', currentTheme);
     }
 
-    switchLanguage(language: 'en' | 'pt-BR') {
+    switchLanguage(language: 'en' | 'pt-br') {
         console.log("Changing language to ", language)
         this.translate.setActiveLang(language);
         localStorage.setItem('language', language);
         this.setupMenu();
+
+        this.updatePrimeNGTranslations();
+    }
+
+    updatePrimeNGTranslations() {
+        const lang = this.translate.getActiveLang();
+        this.translate.selectTranslateObject(lang, {}, 'primeng/' + lang).subscribe(primeNGTranslations => {
+            this.primeNGConfig.setTranslation(primeNGTranslations)
+        });
     }
 
 

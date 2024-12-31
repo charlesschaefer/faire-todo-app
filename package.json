@@ -10,6 +10,7 @@
     "bump-version": "node scripts/version-bumper.js",
     "generate-env": "node scripts/generate-environment.js",
     "i18n:extract": "transloco-keys-manager extract",
+    "i18n:primeng": "cp node_modules/primelocale/en.json node_modules/primelocale/pt-br.json src/assets/i18n/primeng/",
     "i18n:find": "transloco-keys-manager find",
     "lint": "ng lint"
   },
@@ -44,6 +45,7 @@
     "luxon": "^3.4.4",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
+    "primelocale": "^1.2.2",
     "primeng": "^19.0.1",
     "rxjs": "~7.8.0",
     "sanitize-html": "^2.13.1",

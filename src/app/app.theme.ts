@@ -1,4 +1,3 @@
-import { size } from '@jsverse/transloco';
 import { definePreset } from '@primeng/themes';
 import Aura from '@primeng/themes/aura';
 
