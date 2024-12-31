@@ -4,7 +4,7 @@
         <div class="flex flex-row gap-3 align-content-center due-task-list">
             <strong class="flex align-items-center gap-1" [style]="{color: 'var(--p-red-700)'}">
                 {{'Due tasks' | transloco }}</strong>
-            <p-button variant="text" severity="info" (onClick)="rescheduleDueTasksForToday($event)">{{'Reschedule for today' | transloco }}</p-button>
+            <p-button variant="text" severity="info" (onClick)="rescheduleDueTasksForToday($event)">{{'Reschedule due tasks for today' | transloco }}</p-button>
         </div>
         <app-task-list [tasks]="dueTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" #dueTaskList [showAddTask]="false" />
     </p-card>

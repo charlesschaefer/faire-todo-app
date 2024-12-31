@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
-import { firstValueFrom, map, Observable, Subject } from 'rxjs';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 
@@ -91,31 +91,22 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     checkTaskIsDue() {
         if (!this.task.dueDate) {
-            this.due = false;
             return;
         }
-        
-        let dueDate = DateTime.fromJSDate(this.task.dueDate);
-        const today = DateTime.fromJSDate(this.today);
 
-        if (dueDate.diff(today).as('days') > 0) {
-            this.future = true;
-        }
-
-        if (dueDate.diff(today).as('seconds') < 0 ) {
+        if (this.taskService.isTaskDue(this.task)) {
             this.due = true;
             return;
         }
-        if (this.task.dueTime) {
-            dueDate = dueDate.set({
-                hour: this.task.dueTime.getHours(),
-                minute: this.task.dueTime.getMinutes()
-            });
-            if (dueDate.diffNow().as('seconds') < 0) {
-                this.due = true;
-                return;
-            }
+        
+        const dueDate = DateTime.fromJSDate(this.task.dueDate);
+        const today = DateTime.fromJSDate(this.today);
+        if (dueDate.diff(today).as('days') >= 1) {
+            this.future = true;
+            return;
         }
+
+        this.future = false;
         this.due = false;
     }
 

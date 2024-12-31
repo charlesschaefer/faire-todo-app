@@ -33,10 +33,10 @@
       <div class="task-item-row-second">
         <div class="task-item-attributes gap-3">
           @if (subtasksCount) {
-          <div class="task-item-attributes-subtask">
-            <div class="subtask-icon"></div>
-            <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
-          </div>
+            <div class="task-item-attributes-subtask">
+              <div class="subtask-icon"></div>
+              <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
+            </div>
           }
           <div class="task-item-attributes-project">
             @if (task.project_uuid && projects) {
@@ -47,24 +47,24 @@
             }
           </div>
           @if (task.dueDate) {
-          <div class="task-item-attributes-duedate">
-            @if (due) {
-              <div class="task-item-attributes-past-dueDate"></div>
-            } 
-            @if (future) {
-              <div class="task-item-attributes-future-dueDate"></div>
-            }
-            <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
-            @if (task.dueTime) {
-            <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
-            }
-          </div>
+            <div class="task-item-attributes-duedate">
+              @if (due) {
+                <div class="task-item-attributes-past-dueDate"></div>
+              } 
+              @if (future) {
+                <div class="task-item-attributes-future-dueDate"></div>
+              }
+              <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
+              @if (task.dueTime) {
+                <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
+              }
+            </div>
           }
 
           @if (task.recurring) {
-          <div class="task-item-attributes-recurring">
-            <i class="pi pi-history"></i> {{task.recurring}}
-          </div>
+            <div class="task-item-attributes-recurring">
+              <i class="pi pi-history"></i> {{task.recurring}}
+            </div>
           }
           
         </div>

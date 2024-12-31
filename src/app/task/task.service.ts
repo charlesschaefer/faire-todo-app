@@ -310,21 +310,11 @@ export class TaskService extends ServiceAbstract<Tasks> {
         const otherTasks: TaskDto[] = [];
 
         tasks.forEach((task, key) => {
-            if (!task.dueDate || task.dueDate > today) {
-                otherTasks.push(task);
-                return;
-            }
-            const taskTime = task.dueDate;
-            if (task.dueTime) {
-                taskTime.setHours(task.dueTime.getHours());
-                taskTime.setMinutes(task.dueTime.getMinutes());
-                taskTime.setSeconds(task.dueTime.getSeconds());
-            }
-            if (taskTime < today) {
+            if (this.isTaskDue(task)) {
                 dueTasks.push(task);
-                return;
+            } else {
+                otherTasks.push(task);
             }
-            otherTasks.push(task);
         });
         tasks = otherTasks;
 
@@ -332,6 +322,27 @@ export class TaskService extends ServiceAbstract<Tasks> {
             dueTasks,
             otherTasks
         };
+    }
+
+    isTaskDue(task: TaskDto) {
+        const now = new Date();
+        // we can do that because dueDate is always at midnight
+        if (!task.dueDate || task.dueDate > now) {
+            return false;
+        }
+
+        const taskTime = new Date(task.dueDate);
+        if (task.dueTime) {
+            taskTime.setHours(task.dueTime.getHours());
+            taskTime.setMinutes(task.dueTime.getMinutes());
+            taskTime.setSeconds(task.dueTime.getSeconds());
+            if (taskTime <= now) {
+                return true;
+            }
+        } else if (taskTime < DateTime.now().startOf('day').toJSDate()) {
+            return true;
+        }
+        return false;
     }
 
     rescheduleTasksForToday(tasks: TaskDto[]) {
