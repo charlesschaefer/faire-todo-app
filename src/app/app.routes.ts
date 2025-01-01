@@ -15,5 +15,6 @@ export const routes: Routes = [
     {path: "settings", loadComponent: () => import('./settings/settings.component').then(comp => comp.SettingsComponent)},
     {path: "sync", loadComponent: () => import('./synchronization/synchronization.component').then(comp => comp.SynchronizationComponent)},
     {path: "auth/callback", component: AuthCallbackComponent},
+    {path: "license", loadComponent: () => import('./license/license.component').then(comp => comp.LicenseComponent)},
     {path: '', redirectTo: 'today', pathMatch: 'full'},
 ];

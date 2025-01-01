@@ -38,6 +38,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageModule } from 'primeng/message';
 import { User } from '@supabase/supabase-js';
 import { SidemenuComponent } from "./sidemenu/sidemenu.component";
+import { VersionComponent } from './version/version.component';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -61,7 +62,8 @@ export enum NotificationType {
         FormsModule,
         MessageModule,
         RouterLink,
-        SidemenuComponent
+        SidemenuComponent,
+        VersionComponent,
     ],
     providers: [
         MessageService
