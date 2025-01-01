@@ -100,6 +100,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getTasks();
 
         void (!this.taskSubscription ? this.taskSubscription = this.dataUpdatedService?.subscribe('task', (_changes) => {
+            console.log("Mexeu no task, atualizando inbox")
             this.getTasks();
         }) : null);
 
@@ -119,10 +120,11 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async getTasks() {
-        const tasks = await firstValueFrom(this.taskService.getFromProject('').pipe(
+        // const tasks = await firstValueFrom(this.taskService.getFromProject('').pipe(
+        const tasks = await firstValueFrom(this.taskService.getProjectTasks('').pipe(
             mergeMap((tasks) => {
                 tasks = this.taskService.orderTasks(tasks as TaskDto[]);
-                return from(this.taskService.countTasksSubtasks(tasks as TaskDto[])).pipe(
+                return from(this.taskService.countAllTasksSubtasks(tasks as TaskDto[])).pipe(
                     map(subtasksCount => {
                         return {
                             tasks: tasks,
@@ -135,9 +137,8 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tasks = tasks.tasks;
         this.subtasksCount = tasks.subtasksCount;
 
-        console.log(this.tasks);
-
         this.separateDueTasks();
+
     }
 
     separateDueTasks() {
@@ -185,7 +186,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     async countSubtasks() {
         if (this.tasks) {
-            this.subtasksCount = await this.taskService.countTasksSubtasks(this.tasks);
+            this.subtasksCount = await this.taskService.countAllTasksSubtasks(this.tasks);
         }
     }
 
