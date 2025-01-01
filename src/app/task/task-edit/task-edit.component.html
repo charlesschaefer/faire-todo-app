@@ -112,7 +112,7 @@
           <p-accordionTab [header]="subtasksTitle()" [selected]="true">
             <div>
             @for (task of subTasks; track task.uuid) {
-              <app-subtask [task]="task" [projects]="projectsMap" />
+              <app-subtask [task]="task" [projects]="projectsMap" (onEditTask)="onSubtaskEdited($event)" />
             }
             </div>
           </p-accordionTab>

@@ -21,6 +21,7 @@ import { inject } from '@angular/core';
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     @Input() task!: TaskDto;
     @Input() projects!: Map<string, ProjectDto>;
+    @Input() subtasksCount?: number;
 
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix
     @Output() onTaskRemoved = new EventEmitter<string>();
@@ -41,7 +42,6 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     taskMenuItems!: MenuItem[];
 
     subtasks!: TaskDto[];
-    subtasksCount!: number;
     subtasksCompletedCount!: number;
 
     isMobile!: boolean;
@@ -83,7 +83,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     countSubtasks() {
-        this.taskService.countTaskSubtasks(this.task).subscribe(subtasksCount => {
+        this.taskService.countSubtasksByCompletion(this.task).subscribe(subtasksCount => {
             this.subtasksCount = subtasksCount.subtasks;
             this.subtasksCompletedCount = subtasksCount.completed;
         });
