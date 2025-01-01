@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccordionModule } from 'primeng/accordion';
@@ -11,7 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InplaceModule } from 'primeng/inplace';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
-import { firstValueFrom, Subject } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
@@ -22,6 +22,7 @@ import { TaskService } from '../task.service';
 
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
+import { DataUpdatedService } from '../../services/data-updated.service';
 nlp.plugin(dates);
 
 @Component({
@@ -46,7 +47,7 @@ nlp.plugin(dates);
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
 })
-export class TaskEditComponent implements OnInit {
+export class TaskEditComponent implements OnInit, OnDestroy {
     task!: TaskDto;
     subTasks!: TaskDto[];
 
@@ -66,6 +67,8 @@ export class TaskEditComponent implements OnInit {
     isRecurring = false;
     recurringOptions!: any[];
 
+    dataUpdatedSubscription?: Subscription;
+
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
         private taskService: TaskService,
@@ -73,6 +76,7 @@ export class TaskEditComponent implements OnInit {
         private dynamicDialogRef: DynamicDialogRef,
         private translate: TranslocoService,
         private projectService: ProjectService,
+        private dataUpdatedService: DataUpdatedService,
     ) {
 
     }
@@ -116,13 +120,11 @@ export class TaskEditComponent implements OnInit {
             this.projectsMap = projectsMap;
         });
 
-        this.taskService.getTaskSubtasks(this.task).subscribe(subtasks => {
-            this.subTasks = subtasks;
-        });
+        this.getSubtaskList();
 
-        this.taskService.countTaskSubtasks(this.task).subscribe(countSubtasks => {
-            this.subtasksCount = countSubtasks.subtasks;
-            this.subtasksCompletedCount = countSubtasks.completed;
+        this.dataUpdatedSubscription = this.dataUpdatedService.subscribe('task', () => {
+            console.log("Mexeu no task, atualizando subtasks")
+            this.getSubtaskList();
         });
 
         const notRecurringLabel = await firstValueFrom(this.translate.selectTranslate('Not recurring'));
@@ -134,6 +136,17 @@ export class TaskEditComponent implements OnInit {
             RecurringType.MONTHLY,
             RecurringType.YEARLY
         ];
+    }
+
+    getSubtaskList() {
+        this.taskService.getTaskSubtasks(this.task).subscribe(subtasks => {
+            this.subTasks = subtasks;
+        });
+
+        this.taskService.countSubtasksByCompletion(this.task).subscribe(countSubtasks => {
+            this.subtasksCount = countSubtasks.subtasks;
+            this.subtasksCompletedCount = countSubtasks.completed;
+        });
     }
 
     async saveTask() {
@@ -196,6 +209,10 @@ export class TaskEditComponent implements OnInit {
         });
     }
 
+    onSubtaskEdited(_event: Event) {
+        this.dynamicDialogConfig.data.onSaveEditTask$.next();
+    }
+
     showTaskAddPanel(event: Event) {
         console.log("ShowTaskAddPanel called")
         //this.showTaskAdd.emit(event);
@@ -242,5 +259,11 @@ export class TaskEditComponent implements OnInit {
     onTitleEnter(event: any) {
         event.preventDefault();
         this.saveTask();
+    }
+
+    ngOnDestroy(): void {
+        if (this.dataUpdatedSubscription) {
+            this.dataUpdatedSubscription.unsubscribe();
+        }
     }
 }

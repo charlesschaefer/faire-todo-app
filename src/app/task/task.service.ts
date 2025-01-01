@@ -100,7 +100,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return tasks;
     }
 
-    async countTasksSubtasks(tasks: TaskDto[]) {
+    async countAllTasksSubtasks(tasks: TaskDto[]) {
         const countMap = new Map<string, number>();
         for (const task of tasks) {
             const count = await this.countByField('parent_uuid', task.uuid);
@@ -118,7 +118,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         ) as Observable<TaskDto[]>;
     }
 
-    countTaskSubtasks(task: TaskDto): Observable<SubtaskCount> {
+    countSubtasksByCompletion(task: TaskDto): Observable<SubtaskCount> {
         const countSubtasks$ = new Subject<SubtaskCount>();
         
         zip(
@@ -162,7 +162,15 @@ export class TaskService extends ServiceAbstract<Tasks> {
                             this.removeTaskTree(task as TaskDto).subscribe({
                                 error: (err) => {
                                     removal$.error(err);
-                                }
+                                },
+                                next: () => this.dataUpdatedService.next([{
+                                    type: DatabaseChangeType.Update,
+                                    key: 'uuid',
+                                    table: 'task',
+                                    mods: task,
+                                    obj: task,
+                                    oldObj: task
+                                }])
                             });
                         });
                         removal$.complete();
@@ -225,6 +233,15 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 } else {
                     success$.complete();
                 }
+
+                this.dataUpdatedService.next([{
+                    type: DatabaseChangeType.Update,
+                    key: 'uuid',
+                    table: 'task',
+                    mods: task,
+                    obj: task,
+                    oldObj: task
+                }]);
             }
         });
         return success$;

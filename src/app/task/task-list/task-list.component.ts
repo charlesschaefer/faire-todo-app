@@ -34,6 +34,8 @@ export class TaskListComponent implements OnInit {
     @Input() tasks!: TaskDto[];
     @Input() completedTasks!: TaskDto[];
 
+    @Input() subtasksCount?: Map<string, number>;
+
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() taskEditEvent = new EventEmitter();
     @Input() showAddTask = true;
