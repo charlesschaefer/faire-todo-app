@@ -1,3 +1,4 @@
+<!-- eslint-disable @angular-eslint/template/no-autofocus -->
 <p-popover #taskAddOp (onHide)="onClose($event)">
   <form [formGroup]="taskForm" novalidate (ngSubmit)="saveTask()" #form>
     <p-card>
