@@ -192,7 +192,16 @@ export class SidemenuComponent implements OnInit {
     }
 
     switchLanguage(language: 'en' | 'pt-br') {
-        console.log("Changing language to ", language)
+        
+        const availableLangs: any[] = this.translate.getAvailableLangs();
+        
+        if (!language || !availableLangs.includes(language)) {
+            console.warn(`Language ${language} unavailable. Using 'en' as fallback.`);
+            language = 'en';
+        }
+        
+        console.log("Changing language to ", language);
+
         this.translate.setActiveLang(language);
         localStorage.setItem('language', language);
         this.setupMenu();
@@ -237,7 +246,7 @@ export class SidemenuComponent implements OnInit {
 
 
     private handleDataUpdates() {
-        this.dataUpdatedService.subscribe('project', (changes) => {
+        this.dataUpdatedService.subscribe('project', (_changes) => {
             console.warn("Novo projeto entrando... vamos atualizar o menu");
             this.setupMenu();
         });
