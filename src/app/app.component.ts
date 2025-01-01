@@ -100,7 +100,9 @@ export class AppComponent implements OnInit {
         console.warn("AppComponent::Constructor()")
 
         let userLanguage = localStorage.getItem('language');
-        if (!userLanguage) {
+        const availableLangs:any[] = this.translate.getAvailableLangs();
+
+        if (!userLanguage || !availableLangs.includes(userLanguage)) {
             userLanguage = 'en';
         }
         this.translate.setActiveLang(userLanguage);
@@ -165,7 +167,7 @@ export class AppComponent implements OnInit {
         this.listenForShareEvents();
     }
 
-    undo(event: any) {
+    undo(_event: any) {
         this.undoService.undo();
     }
 
