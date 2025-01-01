@@ -99,9 +99,9 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit() {
         this.getTasks();
 
-        !this.taskSubscription ? this.taskSubscription = this.dataUpdatedService?.subscribe('task', (changes) => {
+        void (!this.taskSubscription ? this.taskSubscription = this.dataUpdatedService?.subscribe('task', (_changes) => {
             this.getTasks();
-        }) : null;
+        }) : null);
 
         this.showTaskAddOverlay$.subscribe(() => {
             this.isAddTaskOpen = true;
@@ -177,7 +177,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
             this.hasDueTask = false;
         }
     }
-    rescheduleDueTasksForToday(event: any) {
+    rescheduleDueTasksForToday(_event: any) {
         if (this.dueTasks) {
             this.taskService.rescheduleTasksForToday(this.dueTasks);
         }
@@ -191,6 +191,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onAddTask() {
         this.getTasks();
+        console.log("Será que fomos?")
 
         this.sharetargetUrl = '';
         this.isAddTaskOpen  = false;
@@ -205,7 +206,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isEditTaskOpen = false;
     }
 
-    onShowOverlayChange(event: any) {
+    onShowOverlayChange(_event: any) {
         this.sharetargetUrl = '';
 
         this.isAddTaskOpen = false;
@@ -213,7 +214,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:keydown.shift.n', ['$event'])
-    shortcutNewTask(event: KeyboardEvent) {
+    shortcutNewTask(_event: KeyboardEvent) {
         const active = document.activeElement;
         // won't activate if the focused element is not the body
         if (!(active instanceof HTMLBodyElement)) {

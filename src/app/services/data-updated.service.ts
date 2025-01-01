@@ -10,9 +10,7 @@ export type Changes = IDatabaseChange;
 })
 export class DataUpdatedService {
 
-    private eventEmitters: {[nomeEvento: string]: EventEmitter<any>} = {};
-
-    constructor() { }
+    private eventEmitters: Record<string, EventEmitter<any>> = {};
 
 
     /**
@@ -35,9 +33,9 @@ export class DataUpdatedService {
     get(table: string) {
         if (!this.eventEmitters[table]) {
             this.eventEmitters[table] = new EventEmitter<any>();
-            DEBUG 
-                ? this.eventEmitters[table].subscribe((data) => console.log(`O eventEmitter<${table}> foi chamado e entramos no primeiro subscribe dele`)) 
-                : null;
+            void (DEBUG
+                ? this.eventEmitters[table].subscribe(() => console.log(`O eventEmitter<${table}> foi chamado e entramos no primeiro subscribe dele`)) 
+                : null);
         }
         
         return this.eventEmitters[table];

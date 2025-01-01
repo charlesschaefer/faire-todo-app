@@ -3,7 +3,6 @@ import { TaskService } from './task.service';
 import { ActivatedRoute } from '@angular/router';
 
 import { TaskDto, TaskTree } from '../dto/task-dto';
-import { of } from 'rxjs';
 import { Collection, PromiseExtended, Table, WhereClause } from 'dexie';
 import { DbService } from '../services/db.service';
 import { AuthService } from '../auth/auth.service';
@@ -48,19 +47,17 @@ describe('TaskService', () => {
         updated_at: new Date(),
     };
 
-    let fakeTaskTable1: Pick<Table<any, any, any>, 'add'>;
-    fakeTaskTable1 = {
-        add: (data: any, key?: any) => {
+    const fakeTaskTable1: Pick<Table<any, any, any>, 'add'> = {
+        add: (_data: any, _key?: any) => {
             console.log("Chamou o table.add() mockado...")
-            return (new Promise((resolve, reject) => {
+            return (new Promise((resolve, _reject) => {
                 console.log("Estamos resolvendo a promise do table.add() mockado")
                 return resolve('');
             })) as PromiseExtended;
         }
     };
-    let fakeTaskTable2: Pick<Table<any, any, any>, 'where'>;
-    fakeTaskTable2 = {
-        where (criteria: any) {
+    const fakeTaskTable2: Pick<Table<any, any, any>, 'where'> = {
+        where (_criteria: any) {
             return {} as unknown as WhereClause<any, any, any> & Collection<any, any, any>;
         },
     };
@@ -88,7 +85,7 @@ describe('TaskService', () => {
 
         service.addTaskTree(mockTaskTree).subscribe({
             next: () => {
-                let { children, ...task1 } = { ...mockTaskTree };
+                const { children, ...task1 } = { ...mockTaskTree };
                 expect(fakeTaskTable1.add).toHaveBeenCalledWith(task1);
 
                 expect(fakeTaskTable1.add).toHaveBeenCalledWith(children[0]);
@@ -120,16 +117,16 @@ describe('TaskService', () => {
         service = TestBed.inject(TaskService);
 
         let firstCall = true;
-        let calls = 0;
+        let _calls = 0;
         spyOn(fakeDbService.getTable(''), 'where').and.returnValue({
             toArray: () => {
-                calls++;
+                _calls++;
                 let returnTask = undefined;
                 if (firstCall) {
                     firstCall = false;
                     returnTask = mockSubtask;
                 }
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve, _reject) => {
                     return resolve(returnTask ? [returnTask] : []);
                 });
             }} as Collection<any, any, any>

@@ -3,9 +3,7 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { v4 } from 'uuid';
 
-let randomUUID: any;
-// if (!crypto.randomUUID) {
-    randomUUID = v4;
+const randomUUID: any = v4;
 // } else {
 //     randomUUID = crypto.randomUUID;
 // }

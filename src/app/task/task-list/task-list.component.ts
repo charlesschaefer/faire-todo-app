@@ -35,7 +35,7 @@ export class TaskListComponent implements OnInit {
     @Input() completedTasks!: TaskDto[];
 
     @Output() showTaskAdd = new EventEmitter<Event>();
-    @Output() onEditTask = new EventEmitter();
+    @Output() taskEditEvent = new EventEmitter();
     @Input() showAddTask = true;
 
     projects!: Map<string, ProjectDto>;
@@ -84,6 +84,6 @@ export class TaskListComponent implements OnInit {
 
     onTaskEdit() {
         console.log("TaskList.onTaskEdit emitted");
-        this.onEditTask.emit();
+        this.taskEditEvent.emit();
     }
 }

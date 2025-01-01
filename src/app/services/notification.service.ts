@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { SettingsDto } from '../dto/settings-dto';
 import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
-import { listen } from '@tauri-apps/api/event';
+import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { TaskService } from '../task/task.service';
-import { TaskDto } from '../dto/task-dto';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -12,8 +11,8 @@ import { firstValueFrom } from 'rxjs';
 })
 export class NotificationService {
 
-    private unlistenDue: Function | undefined;
-    private unlistenToday: Function | undefined;
+    private unlistenDue: UnlistenFn | undefined;
+    private unlistenToday: UnlistenFn | undefined;
 
     constructor (
         private translate: TranslocoService,
@@ -39,13 +38,13 @@ export class NotificationService {
                 ];
 
                 if (!this.unlistenToday) {
-                    this.unlistenToday = await listen('get-today-tasks', (event) => {
+                    this.unlistenToday = await listen('get-today-tasks', (_event) => {
                         this.checkTodayTasks();
                     });
                 }
             }
             if (!this.unlistenDue) {
-                this.unlistenDue = await listen('get-due-tasks', (event) => {
+                this.unlistenDue = await listen('get-due-tasks', (_event) => {
                     this.checkDuedTasks();
                 });
             }

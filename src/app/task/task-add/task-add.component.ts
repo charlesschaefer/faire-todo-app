@@ -62,7 +62,7 @@ export class TaskAddComponent implements OnInit {
     @Input() parent!: TaskDto;
     @Input() prefilledTitle!: string;
 
-    @Output() onAddTask = new EventEmitter<any>;
+    @Output() taskAddedEvent = new EventEmitter<any>;
     @ViewChild('taskAddOp') taskAddOp!: Popover;
 
     private fb = inject(FormBuilder);
@@ -197,7 +197,7 @@ export class TaskAddComponent implements OnInit {
                     key: 'task'
                 });
                 this.taskAddOp.hide();
-                this.onAddTask.emit();
+                this.taskAddedEvent.emit();
                 this.clearForm();
             },
             error: async (err: Error) => {

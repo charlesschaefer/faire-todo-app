@@ -100,7 +100,7 @@ export class BackupService {
             jsonBackup = JSON.parse(decryptedBackup.toString(enc.Utf8)) as BackupData;
         } catch (error) {
             console.log("Error trying to decrypt or convert json: ", error);
-            const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
+            // const decryptedBackup = AES.decrypt(encryptedData, decryptKey);
             // alert(decryptedBackup.toString(enc.Utf8));
             backupResponse$.error(error);
             return backupResponse$;

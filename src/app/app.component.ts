@@ -163,7 +163,7 @@ export class AppComponent implements OnInit {
         this.watchForUndoCalls();
 
         this.settingsService.get(1).then(async (settings: SettingsDto | SettingsAddDto) => {
-            TAURI_BACKEND && this.notificationService.setup(settings as SettingsDto);
+            void (TAURI_BACKEND && this.notificationService.setup(settings as SettingsDto));
         });
 
         this.listenForShareEvents();

@@ -15,9 +15,7 @@ import {
 
 import { v4 } from 'uuid';
 
-let randomUUID: any;
-// if (!crypto.randomUUID) {
-    randomUUID = v4;
+const randomUUID: any = v4;
 // } else {
 //     randomUUID = crypto.randomUUID;
 // }
@@ -64,7 +62,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.loadSettings();
 
-        this.settingsSubscription = this.dataUpdatedService?.subscribe('settings', (changes) => {
+        this.settingsSubscription = this.dataUpdatedService?.subscribe('settings', () => {
             this.loadSettings();
         });
     }
@@ -112,7 +110,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                     this.userInitiatedNotification();
                 }
             },
-            error: async (err) => {
+            error: async () => {
                 this.messageService.add({
                     summary: await firstValueFrom(this.translate.selectTranslate("Error")),
                     detail: await firstValueFrom(this.translate.selectTranslate("Error saving settings")),

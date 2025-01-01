@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 })
 export class DateShortenerPipe implements PipeTransform {
 
-  transform(value: Date, ...args: unknown[]): string | null {
+  transform(value: Date, ..._args: unknown[]): string | null {
     const now = new Date;
     now.setHours(0);
     now.setMinutes(0);

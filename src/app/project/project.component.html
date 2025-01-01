@@ -4,7 +4,7 @@
   <ul class="project-items">
     @for (project of projects; track project.uuid) {
       <li class="project-item">
-        <div class="project-item-name text-sm" (click)="router.navigate([buildUrl(project.uuid)])">
+        <div class="project-item-name text-sm" (click)="router.navigate([buildUrl(project.uuid)])" (keypress)="router.navigate([buildUrl(project.uuid)])" aria-hidden="true">
           {{project.name}}
         </div>
         <div class="project-item-menu">
@@ -14,7 +14,7 @@
       </li>
     }
   </ul>
-  <div class="project-add-line" (click)="showProjectAddPanel($event)">
+  <div class="project-add-line" (click)="showProjectAddPanel($event)" (keypress)="showProjectAddPanel($event)" aria-hidden="true">
     <div class="project-add-button">
       <i class="pi pi-plus"></i>
     </div>

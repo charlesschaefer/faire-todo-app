@@ -135,4 +135,4 @@
   </form>
 </p-card>
 
-<app-task-add [(showOverlay$)]="showTaskAddOverlay$" [parent]="task" (onAddTask)="onAddTask()" />
+<app-task-add [(showOverlay$)]="showTaskAddOverlay$" [parent]="task" (taskAddedEvent)="onAddTask()" />

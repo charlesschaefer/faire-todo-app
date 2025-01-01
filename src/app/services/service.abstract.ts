@@ -76,7 +76,7 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
         }
         const promise = this.table.put(data);
 
-        promise.then(result => {
+        promise.then(_result => {
             return this.dataUpdatedService?.next([{
                 key: 'uuid',
                 table: this.storeName,
@@ -121,7 +121,7 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
         }
         this.clearCache();
         const promise = this.table.update(uuid, data as object);
-        promise.then(result => {
+        promise.then(_result => {
             return this.dataUpdatedService?.next([{
                 type: DatabaseChangeType.Update,
                 table: this.storeName,

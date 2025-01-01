@@ -247,7 +247,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     return afterPush;
                 }
                 const total = subtasks.length;
-                subtasks.reduce((prev: TaskTree, current, idx, arr) => {
+                subtasks.reduce((prev: TaskTree, current, idx) => {
                     this.getTaskTree(current as TaskDto).subscribe(subtaskTree => {
                         prev.children.push(subtaskTree);
                         if (idx == total - 1) {
@@ -309,7 +309,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         const dueTasks: TaskDto[] = [];
         const otherTasks: TaskDto[] = [];
 
-        tasks.forEach((task, key) => {
+        tasks.forEach(task => {
             if (this.isTaskDue(task)) {
                 dueTasks.push(task);
             } else {

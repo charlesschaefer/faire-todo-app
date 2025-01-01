@@ -6,10 +6,10 @@
                 {{'Due tasks' | transloco }}</strong>
             <p-button variant="text" severity="info" (onClick)="rescheduleDueTasksForToday($event)">{{'Reschedule due tasks for today' | transloco }}</p-button>
         </div>
-        <app-task-list [tasks]="dueTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" #dueTaskList [showAddTask]="false" />
+        <app-task-list [tasks]="dueTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" #dueTaskList [showAddTask]="false" />
     </p-card>
 }
-<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (onEditTask)="onEditTask()" #appTaskList />
+<app-task-list [tasks]="tasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" #appTaskList />
 
 <!-- Task add overlay panel -->
-<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (onAddTask)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" />
+<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (taskAddedEvent)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" />

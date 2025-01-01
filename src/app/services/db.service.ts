@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { AppDb } from "../app.db";
-import { EntityTable, Table } from 'dexie';
+import { Table } from 'dexie';
 
 @Injectable({
     providedIn: 'root'
