@@ -1,10 +1,8 @@
-import { TestBed } from '@angular/core/testing';
 
 import { ProjectService } from './project.service';
-import { ProjectDto } from '../dto/project-dto';
 
 describe('ProjectService', () => {
-  let service: ProjectService;
+  let _service: ProjectService;
 
   beforeEach(() => {
     // TestBed.configureTestingModule({});

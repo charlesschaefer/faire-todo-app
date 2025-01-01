@@ -12,7 +12,7 @@
             @if (currentUser) {
             <div class="flex flex-row align-items-center justify-content-center gap-5 text-sm">
                 <div>
-                    <a (click)="showSidebar = true">
+                    <a (click)="showSidebar = true" (keypress)="showSidebar = true" aria-hidden="true">
                         <p-avatar [image]="currentUser.user_metadata['avatar_url']" shape="circle" size="normal"></p-avatar>
                     </a>
                 </div>

@@ -16,7 +16,7 @@ import { AppTheme } from "./app.theme";
 import { DEBUG } from "./app.debug";
 
 const debugTracing = [];
-DEBUG ? debugTracing.push(withDebugTracing()) : null;
+void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
 
 export const appConfig: ApplicationConfig = {
     providers: [

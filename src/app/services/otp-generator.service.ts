@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class OtpGeneratorService {
-    
-    constructor() { }
-    
+        
     generateOTP() {
         const start = 65;
         const end = 90;

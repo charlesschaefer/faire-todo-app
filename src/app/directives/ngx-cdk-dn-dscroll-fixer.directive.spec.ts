@@ -1,4 +1,3 @@
-import { NgxCdkDnDScrollFixerDirective } from './ngx-cdk-dn-dscroll-fixer.directive';
 
 describe('NgxCdkDnDScrollFixerDirective', () => {
   it('should create an instance', () => {

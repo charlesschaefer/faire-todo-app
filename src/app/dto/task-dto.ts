@@ -1,4 +1,3 @@
-import { Injectable } from "@angular/core";
 import { Updatable } from "./updatable";
 import { UserBound } from "./user-bound";
 

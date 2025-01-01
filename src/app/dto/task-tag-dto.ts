@@ -1,6 +1,5 @@
 import { Updatable } from "./updatable";
 import { UserBound } from "./user-bound";
-import { TaskDto } from "./task-dto";
 
 export interface TaskTagDto extends Updatable {
     id: number;

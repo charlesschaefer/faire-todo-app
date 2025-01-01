@@ -5,7 +5,7 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { BehaviorSubject, firstValueFrom, forkJoin, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
 import { AppDb, TableKeys } from '../app.db';
 import { TaskService } from '../task/task.service';
 import { TagService } from './tag.service';
@@ -17,7 +17,6 @@ import { UserService } from './user.service';
 import { UserDto } from '../dto/user-dto';
 import { UserBound } from "../dto/user-bound";
 import { ApplyRemoteChangesFunction, IPersistedContext, PollContinuation, ReactiveContinuation } from 'dexie-syncable/api';
-import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TranslocoService } from '@jsverse/transloco';
 import { DataUpdatedService } from './data-updated.service';
@@ -27,7 +26,7 @@ import { IDatabaseChange } from 'dexie-observable/api';
 const SYNC_INTERVAL = 60000;
 
 // Then use it like this:
-const Syncable = (Dexie as unknown as { Syncable: any }).Syncable;
+// const Syncable = (Dexie as unknown as { Syncable: any }).Syncable;
 
 @Injectable({
     providedIn: 'root',
@@ -250,7 +249,7 @@ export class SyncService {
                         }
                     }
 
-                    let change: any = {
+                    const change: any = {
                         table,
                         key: item.uuid,
                         obj: item,
@@ -283,7 +282,7 @@ export class SyncService {
      * @param withParent If false, will only process tasks without parent (i.e. parent_uuid empty)
      * @returns `syncChange()` result
      */
-    async _synchronizeTasks(changes: any[], withParent: boolean = false) {
+    async _synchronizeTasks(changes: any[], withParent = false) {
         let result: any;
         for (const change of changes) {
             if (change.table !== 'task') {
@@ -400,7 +399,7 @@ export class SyncService {
 
         return (this.db as AppDb).syncable.connect("supabase", environment.supabaseUrl).then(() => {
             this.syncConnection = 1;
-            return this.db.syncable.on('statusChanged', (newStatus, url) => {
+            return this.db.syncable.on('statusChanged', (newStatus, _url) => {
                 console.log("Sync Status changed: " + Dexie.Syncable.StatusTexts[newStatus]);
                 this.syncState.next(newStatus);
             });

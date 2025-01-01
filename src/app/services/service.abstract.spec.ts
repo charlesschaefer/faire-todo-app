@@ -3,14 +3,11 @@ import { ServiceAbstract } from './service.abstract';
 // import { MockInstance, MockService } from 'ng-mocks';
 import { AuthService } from '../auth/auth.service';
 import { DbService } from './db.service';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { User } from '@supabase/supabase-js';
-import { Dexie, Table } from 'dexie';
 
 class MockDto {}
 
 class Service extends ServiceAbstract<MockDto> {
-    protected override storeName: string = 'mock';
+    protected override storeName = 'mock';
     public override userUuid!: string | null;
     constructor(
         protected override authService: AuthService,

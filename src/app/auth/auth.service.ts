@@ -4,7 +4,6 @@ import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { open } from '@tauri-apps/plugin-shell';
-import { HttpUrlEncodingCodec } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -98,7 +97,7 @@ export class AuthService {
     }
 
     const encoder = new URLSearchParams(fragment);
-    let  [access_token, refresh_token] = [ encoder.get('access_token') || '', encoder.get('refresh_token') || '' ];
+    const  [access_token, refresh_token] = [ encoder.get('access_token') || '', encoder.get('refresh_token') || '' ];
     const {data: { session }, error } = await this.supabase.auth.setSession({ access_token, refresh_token });;
 
     // const { data: { session }, error } = await this.supabase.auth.getSession();

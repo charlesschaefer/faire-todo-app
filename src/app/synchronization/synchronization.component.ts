@@ -113,7 +113,7 @@ export class SynchronizationComponent {
         });
     }
 
-    // eslint-disable-next-line unused-imports/no-unused-vars
+     
     async sendEncryptedOTP(_event: Event) {
         this.showProgressBar = true;
         console.log("Sending encripted data. OTP: ", this.otpForm.value.otp);
