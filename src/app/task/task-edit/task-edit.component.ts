@@ -219,8 +219,9 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         this.showTaskAddOverlay$.next(event);
     }
 
-    onAddTask() {
+    onSubtaskAdded() {
         console.log("Chamou TaskEdit.onAddTask(), agora tem que recarregar as subtarefas");
+        this.dynamicDialogConfig.data.onSaveEditTask$.next();
     }
 
     subtasksTitle() {
