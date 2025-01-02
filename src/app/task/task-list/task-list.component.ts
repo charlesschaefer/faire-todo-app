@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { DataViewModule } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
 import { TranslocoModule } from '@jsverse/transloco';
 
@@ -18,7 +17,6 @@ import { RippleModule } from 'primeng/ripple';
     selector: 'app-task-list',
     standalone: true,
     imports: [
-        DataViewModule,
         TaskComponent,
         CdkDropList,
         PanelModule,

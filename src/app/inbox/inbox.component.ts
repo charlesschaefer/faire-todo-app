@@ -3,7 +3,6 @@ import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
-import { DataViewModule } from 'primeng/dataview';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -30,7 +29,6 @@ import { DateTime } from 'luxon';
     selector: 'app-inbox',
     standalone: true,
     imports: [
-        DataViewModule,
         CommonModule,
         ButtonModule,
         RadioButtonModule,

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import packageJson from '../../../package.json';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-version',
     standalone: true,
     imports: [ButtonModule, RouterLink],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './version.component.html',
     styles: `
         a, button { text-decoration: none; font-size: 0.8em} 
@@ -14,5 +15,10 @@ import { RouterLink } from '@angular/router';
     `
 })
 export class VersionComponent {
-    version: string = packageJson.version;
+    version = '';
+
+    constructor() {
+        this.version = packageJson.version
+    }
+
 }
