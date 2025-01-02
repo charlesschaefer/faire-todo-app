@@ -13,7 +13,9 @@
             formControlName="title"
             autocomplete="off"
 	          [autofocus]="true"
-            (ngModelChange)="onTitleChange($event)"
+            [appChangeDateTimeFromText]="currentLanguage"
+            [dateComponent]="taskForm.get('dueDate')"
+            [timeComponent]="taskForm.get('dueTime')"
             pSize="small"
           />
         </div>

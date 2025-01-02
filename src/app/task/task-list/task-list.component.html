@@ -1,5 +1,3 @@
-<!-- <p-dataView #dv [value]="tasks"  rows="2">
-  <ng-template pTemplate="list" let-tasks> -->
     <div class="tasks-container">
       @if (tasks?.length) {
       <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
@@ -29,7 +27,4 @@
       </div>
     }
     </div>
-  <!-- </ng-template>
-</p-dataView> -->
-<!-- <p-speeddial [model]="speedDialItems" direction="up-left" type="quarter-circle" class="task-list-speeddial" /> -->
 <p-button icon="pi pi-plus" [rounded]="true" (onClick)="showTaskAddPanel($event)" styleClass="task-list-speeddial" pRipple />

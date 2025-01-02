@@ -23,6 +23,7 @@ import { TaskService } from '../task.service';
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
 import { DataUpdatedService } from '../../services/data-updated.service';
+import { ChangeDateTimeFromTextDirective } from '../../directives/change-date-time-from-text.directive';
 nlp.plugin(dates);
 
 @Component({
@@ -43,6 +44,7 @@ nlp.plugin(dates);
         InplaceModule,
         LinkifyPipe,
         SubtaskComponent,
+        ChangeDateTimeFromTextDirective,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -69,6 +71,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
 
     dataUpdatedSubscription?: Subscription;
 
+    currentLanguage = this.translate.getActiveLang();
+
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
         private taskService: TaskService,
@@ -77,9 +81,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         private translate: TranslocoService,
         private projectService: ProjectService,
         private dataUpdatedService: DataUpdatedService,
-    ) {
-
-    }
+    ) { }
 
     async ngOnInit() {
         this.task = this.dynamicDialogConfig.data.task;
@@ -231,8 +233,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
 
     onTitleChange(event: any) {
         const doc = nlp<DatesMethods>(event);
-        let dates;
-        if ((dates = doc.dates().get())) {
+        const dates = doc.dates().get();
+        if (dates) {
             const dateView = dates[0] as {start:string};
             if (dateView?.start) {
                 const date = new Date(dateView.start);
