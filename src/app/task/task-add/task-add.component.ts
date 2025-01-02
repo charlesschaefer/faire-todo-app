@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -23,11 +23,8 @@ import { ProjectService } from '../../project/project.service';
 import { TaskService } from '../task.service';
 
 import { v4 } from 'uuid';
+import { ChangeDateTimeFromTextDirective } from '../../directives/change-date-time-from-text.directive';
 const randomUUID = v4;
-
-import nlp from 'compromise';
-import dates, { DatesMethods } from 'compromise-dates';
-nlp.plugin(dates);
 
 
 @Component({
@@ -48,8 +45,10 @@ nlp.plugin(dates);
         ButtonModule,
         InputTextModule,
         DrawerModule,
+        ChangeDateTimeFromTextDirective,
     ],
     providers: [],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './task-add.component.html',
     styleUrl: './task-add.component.scss'
 })
@@ -84,6 +83,8 @@ export class TaskAddComponent implements OnInit {
     recurringOptions!: any[];
     // authService: any;
 
+    currentLanguage = this.translate.getActiveLang();
+
     constructor(
         private taskAddService: TaskService,
         private messageService: MessageService,
@@ -91,7 +92,7 @@ export class TaskAddComponent implements OnInit {
         private translate: TranslocoService,
         private projectService: ProjectService,
         private authService: AuthService,
-    ) {}
+    ) { }
 
     ngOnInit() {
         // subscribes to the parent Subject to exhibit the overlay component
@@ -224,25 +225,5 @@ export class TaskAddComponent implements OnInit {
             recurring: this.recurringOptions[0]
         });
         return true;
-    }
-
-    onTitleChange(event: any) {
-        const doc = nlp<DatesMethods>(event);
-        const dates = doc.dates().get();
-        if (dates) {
-            const dateView = dates[0] as {start:string};
-            if (dateView?.start) {
-                const date = new Date(dateView.start);
-                this.taskForm.patchValue({
-                    dueDate: date
-                });
-
-                if (date.getHours() != 0) {
-                    this.taskForm.patchValue({
-                        dueTime: date
-                    })
-                }
-            }
-        }
     }
 }

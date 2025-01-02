@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { provideTranslocoScope, TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { MenuItem } from 'primeng/api';
 import { ThemeService } from '../services/theme.service';
@@ -34,6 +34,7 @@ import { PrimeNG } from 'primeng/config';
         ButtonModule
     ],
     providers: [provideTranslocoScope('primeng')],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './sidemenu.component.html',
     styleUrl: './sidemenu.component.scss'
 })
