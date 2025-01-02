@@ -70,6 +70,9 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.onSaveEditTask$.subscribe(() => {
             this.onEditTask.emit();
+            this.checkTaskIsDue();
+
+            this.countSubtasks();
         });
         if (this.task.completed) {
             this.completed = true;
