@@ -102,8 +102,8 @@ export class SynchronizationComponent {
         invoke('search_network_sync_services').then(async (ipv4) => {
             console.log("Encountered the app in the machine with ip ", ipv4);
             this.messageService.add({
-                summary: await firstValueFrom(this.translate.selectTranslate("Device found")),
-                detail: await firstValueFrom(this.translate.selectTranslate("Your device was discovered with the IP: ")) + ipv4,
+                summary: this.translate.translate("Device found"),
+                detail: this.translate.translate("Your device was discovered with the IP: ") + ipv4,
                 severity: "success",
                 key: "sync"
             });

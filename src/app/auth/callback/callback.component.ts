@@ -51,8 +51,8 @@ export class AuthCallbackComponent implements OnInit {
                 // Show success message
                 this.messageService.add({
                     severity: 'info',
-                    summary: await firstValueFrom(this.translate.selectTranslate('Authentication Successful')),
-                    detail: await firstValueFrom(this.translate.selectTranslate('You can now save your tasks online')),
+                    summary: this.translate.translate('Authentication Successful'),
+                    detail: this.translate.translate('You can now save your tasks online'),
                     life: 5000,
                     key: 'auth-messages'
                 });
@@ -67,10 +67,10 @@ export class AuthCallbackComponent implements OnInit {
             // Show error message
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.selectTranslate('Authentication Failed')),
+                summary: this.translate.translate('Authentication Failed'),
                 detail: error instanceof Error
                     ? error.message
-                    : await firstValueFrom(this.translate.selectTranslate('An unexpected error occurred during authentication')),
+                    : this.translate.translate('An unexpected error occurred during authentication'),
                 life: 8000
             });
         }

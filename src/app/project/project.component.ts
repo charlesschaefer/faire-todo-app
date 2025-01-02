@@ -101,8 +101,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
     async confirmDeleteProject(uuid: string) {
         this.confirmationService.confirm({
-            header: await firstValueFrom(this.translate.selectTranslate(`Are you sure?`)),
-            message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this project? All of it's tasks will be removed too!`)),
+            header: this.translate.translate(`Are you sure?`),
+            message: this.translate.translate(`Are you sure you want to delete this project? All of it's tasks will be removed too!`),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -191,16 +191,16 @@ export class ProjectComponent implements OnInit, OnDestroy {
         this.projectAddService.add(projectData).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate("Saved successfully")),
-                    detail: await firstValueFrom(this.translate.selectTranslate("Project saved successfully")),
+                    summary: this.translate.translate("Saved successfully"),
+                    detail: this.translate.translate("Project saved successfully"),
                     severity: 'success',
                     key: 'task'
                 });
                 //setTimeout(() => window.location.reload(), 2000);
             },
             error: async (err: Error) => this.messageService.add({
-                summary: await firstValueFrom(this.translate.selectTranslate("Error")),
-                detail: await firstValueFrom(this.translate.selectTranslate("Couldn't save the Project.")) + err,
+                summary: this.translate.translate("Error"),
+                detail: this.translate.translate("Couldn't save the Project.") + err,
                 severity: 'error',
                 key: 'task'
             }),

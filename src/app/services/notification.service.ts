@@ -26,8 +26,8 @@ export class NotificationService {
             time_to_notify_today_tasks: [0, 0],
             send_notifications: !!settings?.notifications,
             send_today_notifications: false,
-            notification_title: await firstValueFrom(this.translate.selectTranslate('Task duing')),
-            notification_body: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is duing now.`, {title: "{title}"}))
+            notification_title: this.translate.translate('Task duing'),
+            notification_body: this.translate.translate(`The task "{{title}}" is duing now.`, {title: "{title}"})
         }
         if (settings?.notifications) {
             if (settings.todayNotifications && settings.notificationTime) {

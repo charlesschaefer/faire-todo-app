@@ -130,8 +130,8 @@ export class SyncService {
                 this.messageService.add({
                     key: 'auth-messages',
                     severity: 'info',
-                    summary: await firstValueFrom(this.translate.selectTranslate('New data arrived')),
-                    detail: await firstValueFrom(this.translate.selectTranslate('We updated your data with fresh data from the server.')),
+                    summary: this.translate.translate('New data arrived'),
+                    detail: this.translate.translate('We updated your data with fresh data from the server.'),
                     life: 5000,
                 });
             }
