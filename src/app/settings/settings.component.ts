@@ -102,8 +102,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
         savedData$.subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate("Success")),
-                    detail: await firstValueFrom(this.translate.selectTranslate("Settings saved successfully")),
+                    summary: this.translate.translate("Success"),
+                    detail: this.translate.translate("Settings saved successfully"),
                     severity: 'success'
                 });
                 if (settingsData.notifications) {
@@ -112,8 +112,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
             },
             error: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate("Error")),
-                    detail: await firstValueFrom(this.translate.selectTranslate("Error saving settings")),
+                    summary: this.translate.translate("Error"),
+                    detail: this.translate.translate("Error saving settings"),
                     severity: 'error'
                 });
             }
@@ -158,8 +158,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
-            const title = await firstValueFrom(this.translate.selectTranslate('Notifications enabled'));
-            const largeBody = await firstValueFrom(this.translate.selectTranslate(`Now you'll receive our notifications.`));
+            const title = this.translate.translate('Notifications enabled');
+            const largeBody = this.translate.translate(`Now you'll receive our notifications.`);
             // sendNotification({
             //     title: title,
             //     largeBody: largeBody,

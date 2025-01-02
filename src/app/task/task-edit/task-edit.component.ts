@@ -129,7 +129,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             this.getSubtaskList();
         });
 
-        const notRecurringLabel = await firstValueFrom(this.translate.selectTranslate('Not recurring'));
+        const notRecurringLabel = this.translate.translate('Not recurring');
         this.recurringOptions = [
             notRecurringLabel,
             RecurringType.DAILY,
@@ -164,8 +164,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         if (recurring && !dueDate) {
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.selectTranslate('Unable to save')),
-                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!")),
+                summary: this.translate.translate('Unable to save'),
+                detail: this.translate.translate("Can't save a recurring task without a due date!"),
                 key: 'task'
             });
             return;
@@ -191,8 +191,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         this.taskService.edit(this.task.uuid, saveData).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),
-                    detail: await firstValueFrom(this.translate.selectTranslate(`The task was saved successfully`)),
+                    summary: this.translate.translate(`Saved successfully`),
+                    detail: this.translate.translate(`The task was saved successfully`),
                     severity: "success",
                     key: 'task'
                 });
@@ -202,8 +202,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             },
             error: async (err) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
-                    detail: await firstValueFrom(this.translate.selectTranslate(`Couldn't save the task.`)) + err,
+                    summary: this.translate.translate(`Error`),
+                    detail: this.translate.translate(`Couldn't save the task.`) + err,
                     severity: "error",
                     key: 'task'
                 });

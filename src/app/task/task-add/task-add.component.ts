@@ -164,8 +164,8 @@ export class TaskAddComponent implements OnInit {
         if (recurring && !dueDate) {
             this.messageService.add({
                 severity: 'error',
-                summary: await firstValueFrom(this.translate.selectTranslate('Unable to save')),
-                detail: await firstValueFrom(this.translate.selectTranslate("Can't save a recurring task without a due date!")),
+                summary: this.translate.translate('Unable to save'),
+                detail: this.translate.translate("Can't save a recurring task without a due date!"),
                 key: 'task'
             });
             return;
@@ -192,8 +192,8 @@ export class TaskAddComponent implements OnInit {
         this.taskAddService.add(saveData as TaskAddDto & UserBound).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Saved successfully`)),
-                    detail: await firstValueFrom(this.translate.selectTranslate(`The task was saved successfully`)),
+                    summary: this.translate.translate(`Saved successfully`),
+                    detail: this.translate.translate(`The task was saved successfully`),
                     severity: "success",
                     key: 'task'
                 });
@@ -203,8 +203,8 @@ export class TaskAddComponent implements OnInit {
             },
             error: async (err: Error) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
-                    detail: await firstValueFrom(this.translate.selectTranslate(`Couldn't save the task.`)) + err,
+                    summary: this.translate.translate(`Error`),
+                    detail: this.translate.translate(`Couldn't save the task.`) + err,
                     severity: "error",
                     key: 'task'
                 });

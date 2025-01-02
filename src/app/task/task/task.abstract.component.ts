@@ -116,17 +116,17 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     async setTaskMenuItems() {
         this.taskMenuItems = [
             {
-                label: await firstValueFrom(this.translate.selectTranslate(`Options`)),
+                label: this.translate.translate(`Options`),
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate(`Delete`)),
+                        label: this.translate.translate(`Delete`),
                         icon: 'pi pi-trash',
                         command: () => {
                             this.confirmDeleteTask();
                         }
                     } as MenuItem,
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate(`Edit`)),
+                        label: this.translate.translate(`Edit`),
                         icon: 'pi pi-pencil',
                         command: () => {
                             this.showTaskEditDialog(this.task);
@@ -141,8 +141,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
     async confirmDeleteTask() {
         this.confirmationService.confirm({
-            header: await firstValueFrom(this.translate.selectTranslate(`Are you sure?`)),
-            message: await firstValueFrom(this.translate.selectTranslate(`Are you sure you want to delete this task? All subtasks will also be deleted!`)),
+            header: this.translate.translate(`Are you sure?`),
+            message: this.translate.translate(`Are you sure you want to delete this task? All subtasks will also be deleted!`),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
@@ -164,8 +164,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         this.taskService.removeTaskTree(this.task).subscribe({
             complete: async () => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Removed`)),
-                    detail: await firstValueFrom(this.translate.selectTranslate(`Task removed successfully`)),
+                    summary: this.translate.translate(`Removed`),
+                    detail: this.translate.translate(`Task removed successfully`),
                     severity: "success",
                     key: 'task'
                 });
@@ -176,8 +176,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             }, 
             error: async (err) => {
                 this.messageService.add({
-                    summary: await firstValueFrom(this.translate.selectTranslate(`Error`)) + err,
-                    detail: await firstValueFrom(this.translate.selectTranslate(`Error removing task.`)) + err,
+                    summary: this.translate.translate(`Error`) + err,
+                    detail: this.translate.translate(`Error removing task.`) + err,
                     severity: "error",
                     key: 'task'
                 })
@@ -192,8 +192,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             this.taskService.addTaskTree(task).subscribe({
                 complete: async () => {
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translate.selectTranslate(`Undone`)),
-                        detail: await firstValueFrom(this.translate.selectTranslate(`Your delete action was undone successfully.`)),
+                        summary: this.translate.translate(`Undone`),
+                        detail: this.translate.translate(`Your delete action was undone successfully.`),
                         severity: "success",
                         key: "task"
                     });
@@ -201,8 +201,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 }, 
                 error: async (err) => {
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translate.selectTranslate(`Error`)) + err,
-                        detail: await firstValueFrom(this.translate.selectTranslate(`Error trying to recover task.`)) + err,
+                        summary: this.translate.translate(`Error`) + err,
+                        detail: this.translate.translate(`Error trying to recover task.`) + err,
                         severity: "error",
                         key: "task"
                     });
@@ -221,15 +221,15 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         };
         task.completed = this.completed ? 1 : 0;
         const successMsg = async () => this.messageService.add({
-            summary: await firstValueFrom(this.translate.selectTranslate(`Marked as complete`)),
-            detail: await firstValueFrom(this.translate.selectTranslate(`Task marked as complete`)),
+            summary: this.translate.translate(`Marked as complete`),
+            detail: this.translate.translate(`Task marked as complete`),
             severity: 'success',
             key: 'task',
         });
 
         const errorMsg = async (err: any) => this.messageService.add({
-            summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
-            detail: await firstValueFrom(this.translate.selectTranslate(`Error marking task as complete.`)) + err,
+            summary: this.translate.translate(`Error`),
+            detail: this.translate.translate(`Error marking task as complete.`) + err,
             severity: 'error',
             key: 'task'
         });
@@ -238,8 +238,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 complete: async () => {
                     // await successMsg();
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translate.selectTranslate(`Marked as complete`)),
-                        detail: await firstValueFrom(this.translate.selectTranslate(`Task marked as complete`)),
+                        summary: this.translate.translate(`Marked as complete`),
+                        detail: this.translate.translate(`Task marked as complete`),
                         severity: 'success',
                         key: 'task',
                     })
@@ -279,8 +279,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 complete: async () => {
                     console.log("undoMarkAsComplete().complete")
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translate.selectTranslate(`Undone`)),
-                        detail: await firstValueFrom(this.translate.selectTranslate(`Task got back to it's initial state`)),
+                        summary: this.translate.translate(`Undone`),
+                        detail: this.translate.translate(`Task got back to it's initial state`),
                         severity: 'success',
                         key: "task"
                     });
@@ -290,8 +290,8 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 error: async (err) => {
                     console.log("undoMarkAsComplete().error")
                     this.messageService.add({
-                        summary: await firstValueFrom(this.translate.selectTranslate(`Error`)),
-                        detail: await firstValueFrom(this.translate.selectTranslate(`Error trying to undo marking task as complete.`)) + err,
+                        summary: this.translate.translate(`Error`),
+                        detail: this.translate.translate(`Error trying to undo marking task as complete.`) + err,
                         severity: 'error',
                         key: "task"
                     });

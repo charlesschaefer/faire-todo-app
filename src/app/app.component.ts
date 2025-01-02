@@ -186,8 +186,8 @@ export class AppComponent implements OnInit {
         // Once permission has been granted we can send the notification
         if (permissionGranted) {
             sendNotification({
-                title: await firstValueFrom(this.translate.selectTranslate('Task duing')),
-                largeBody: await firstValueFrom(this.translate.selectTranslate(`The task "{{title}}" is dueing now.`, { title: task.title }))
+                title: this.translate.translate('Task duing'),
+                largeBody: this.translate.translate(`The task "{{title}}" is dueing now.`, { title: task.title })
             });
         }
     }
@@ -206,8 +206,8 @@ export class AppComponent implements OnInit {
         if (permissionGranted) {
             const duingToday = await firstValueFrom(this.taskService.countForToday());
             sendNotification({
-                title: await firstValueFrom(this.translate.selectTranslate('Tasks duing today')),
-                largeBody: await firstValueFrom(this.translate.selectTranslate(`You have {{total}} tasks duing today.`, { total: duingToday }))
+                title: this.translate.translate('Tasks duing today'),
+                largeBody: this.translate.translate(`You have {{total}} tasks duing today.`, { total: duingToday })
             });
         }
     }
@@ -241,8 +241,8 @@ export class AppComponent implements OnInit {
                 return this.syncService.disconnect().catch(console.error).then(async () => {
                    this.messageService.add({
                        severity: 'info',
-                       summary: await firstValueFrom(this.translate.selectTranslate("Signed off")),
-                       detail: await firstValueFrom(this.translate.selectTranslate("You were signed off. Now your tasks will be saved only locally.")),
+                       summary: this.translate.translate("Signed off"),
+                       detail: this.translate.translate("You were signed off. Now your tasks will be saved only locally."),
                        key: 'auth-messages'
                    }) 
                 });
@@ -264,8 +264,8 @@ export class AppComponent implements OnInit {
             
             this.messageService.add({
                 severity: 'info',
-                detail: await firstValueFrom(this.translate.selectTranslate("We will start synchronizing your data with our servers now")),
-                summary: await firstValueFrom(this.translate.selectTranslate("Starting synchronization")),
+                detail: this.translate.translate("We will start synchronizing your data with our servers now"),
+                summary: this.translate.translate("Starting synchronization"),
                 key: 'auth-messages'
             });
 
@@ -281,8 +281,8 @@ export class AppComponent implements OnInit {
             } catch (error) {
                 this.messageService.add({
                     severity: 'warning',
-                    detail: await firstValueFrom(this.translate.selectTranslate("We couldn't stabilsh a connection with our synchronization servers. We're going to try again.")),
-                    summary: await firstValueFrom(this.translate.selectTranslate("Failed to synchronize with server.")),
+                    detail: this.translate.translate("We couldn't stabilsh a connection with our synchronization servers. We're going to try again."),
+                    summary: this.translate.translate("Failed to synchronize with server."),
                     key: 'auth-messages'
                 });
                 
@@ -302,8 +302,8 @@ export class AppComponent implements OnInit {
             next: async changed => {
                 this.messageService.add({
                     severity: 'success',
-                    detail: await firstValueFrom(this.translate.selectTranslate("Your data was successfully linked to your Google User.")),
-                    summary: await firstValueFrom(this.translate.selectTranslate("Linking your data to your Google User")),
+                    detail: this.translate.translate("Your data was successfully linked to your Google User."),
+                    summary: this.translate.translate("Linking your data to your Google User"),
                     key: 'auth-messages'
                 });
 
@@ -330,8 +330,8 @@ export class AppComponent implements OnInit {
             // exhibits the toast with a link to the undo() method
             this.messageService.add({
                 severity: 'contrast',
-                summary: await firstValueFrom(this.translate.selectTranslate('Undo')),
-                    detail: await firstValueFrom(this.translate.selectTranslate('Action completed.')),
+                summary: this.translate.translate('Undo'),
+                    detail: this.translate.translate('Action completed.'),
                 life: 15000
             });
         });

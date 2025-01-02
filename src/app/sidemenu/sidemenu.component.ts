@@ -90,14 +90,14 @@ export class SidemenuComponent implements OnInit {
         const menuItems: MenuItem[] = [{
             label: " ",
             items: [
-                { label: await firstValueFrom(this.translate.selectTranslate("Inbox")), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Today`)), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Upcoming`)), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Projects`)), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1]?.items?.length } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`All Tasks`)), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
-                { label: await firstValueFrom(this.translate.selectTranslate(`Search`)), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
+                { label: this.translate.translate("Inbox"), icon: 'pi pi-inbox', routerLink: '/inbox' } as MenuItem,
+                { label: this.translate.translate(`Today`), icon: 'pi pi-calendar', routerLink: '/today' } as MenuItem,
+                { label: this.translate.translate(`Upcoming`), icon: 'pi pi-clock', routerLink: '/upcoming' } as MenuItem,
+                { label: this.translate.translate(`Projects`), icon: 'pi pi-clipboard', routerLink: '/project', badge: additionalItems[1]?.items?.length } as MenuItem,
+                { label: this.translate.translate(`All Tasks`), icon: 'pi pi-asterisk', routerLink: '/all-tasks' } as MenuItem,
+                { label: this.translate.translate(`Search`), icon: 'pi pi-search', routerLink: '/search' } as MenuItem,
                 { separator: true },
-                { label: await firstValueFrom(this.translate.selectTranslate(`Close App`)), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
+                { label: this.translate.translate(`Close App`), icon: 'pi pi-times', command: () => invoke("close_app") } as MenuItem,
             ],
         }];
         for (const item of additionalItems) {
@@ -108,36 +108,36 @@ export class SidemenuComponent implements OnInit {
 
         this.settingsMenuItems = [
             {
-                label: await firstValueFrom(this.translate.selectTranslate("Settings")),
+                label: this.translate.translate("Settings"),
                 items: [
-                    { label: await firstValueFrom(this.translate.selectTranslate("User Settings")), routerLink: '/settings' } as MenuItem,
+                    { label: this.translate.translate("User Settings"), routerLink: '/settings' } as MenuItem,
                 ]
             },
             {
-                label: await firstValueFrom(this.translate.selectTranslate("Synchronize")),
+                label: this.translate.translate("Synchronize"),
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate("Synchronize other devices")),
+                        label: this.translate.translate("Synchronize other devices"),
                         routerLink: '/sync'
                     } as MenuItem
                 ]
             },
             {
-                label: await firstValueFrom(this.translate.selectTranslate("Theme")),
+                label: this.translate.translate("Theme"),
                 items: [
-                    { label: await firstValueFrom(this.translate.selectTranslate("Change Theme")), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
+                    { label: this.translate.translate("Change Theme"), command: () => this.switchTheme(), icon: "pi pi-moon" } as MenuItem,
                 ],
             },
             {
-                label: await firstValueFrom(this.translate.selectTranslate("Language")),
+                label: this.translate.translate("Language"),
                 icon: "pi pi-flag",
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate("English")),
+                        label: this.translate.translate("English"),
                         command: () => this.switchLanguage('en')
                     },
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate("Portuguese")),
+                        label: this.translate.translate("Portuguese"),
                         command: () => this.switchLanguage('pt-br')
                     }
                 ]
@@ -145,11 +145,11 @@ export class SidemenuComponent implements OnInit {
         ];
         if (this.currentUser && this.currentUser.id) {
             this.settingsMenuItems.push({
-                label: await firstValueFrom(this.translate.selectTranslate("Synchronization")),
+                label: this.translate.translate("Synchronization"),
                 icon: "pi pi-sync",
                 items: [
                     {
-                        label: await firstValueFrom(this.translate.selectTranslate("Repair synchronization status")),
+                        label: this.translate.translate("Repair synchronization status"),
                         command: () => this.syncService.fixSynchronization()
                     }
                 ]
@@ -170,7 +170,7 @@ export class SidemenuComponent implements OnInit {
             });
         }
         const projectMenuItems = {
-            label: await firstValueFrom(this.translate.selectTranslate("Projects")),
+            label: this.translate.translate("Projects"),
             items: projectItems,
         };
 
