@@ -1,6 +1,6 @@
-import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, linkedSignal, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslocoModule } from '@jsverse/transloco';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
 
 
@@ -36,7 +36,7 @@ import { SubtitlePipe } from '../../pipes/subtitle.pipe';
 export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
     projectId = signal<string>(this.route.snapshot.paramMap.get("id") || '');
-    override project: WritableSignal<ProjectDto> = signal({name: ''} as ProjectDto);
+    override project: WritableSignal<ProjectDto> = linkedSignal(() =>  ({name: this.translate.translate('Inbox'), uuid: this.projectId()} as ProjectDto));
     projectName = computed(() => this.project().name || '');
     override pageTitle = 'Project:';
     override pageSubtitle = this.projectName();
@@ -48,6 +48,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         private router: Router,
         protected override activatedRoute: ActivatedRoute,
         protected override dataUpdatedService: DataUpdatedService,
+        protected translate: TranslocoService,
     ) {
         super(taskService, activatedRoute, dataUpdatedService);
     }

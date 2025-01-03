@@ -2,3 +2,16 @@
 ::ng-deep .p-card:has(.due-task-list) {
     transform: scale(90%, 90%);
 }
+
+::ng-deep .task-list-speeddial {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    ::ng-deep .task-list-speeddial {
+        display: flex;
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+    }
+}

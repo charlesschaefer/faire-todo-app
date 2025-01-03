@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -56,7 +56,7 @@ export class TaskAddComponent implements OnInit {
     @Input()  showOverlay$!: Subject<Event>;
     @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
 
-    @Input() project?: ProjectDto;
+    project = input<ProjectDto>();
     @Input() parent!: TaskDto;
     @Input() prefilledTitle!: string;
 
@@ -70,7 +70,7 @@ export class TaskAddComponent implements OnInit {
         dueDate: [null] as [null | Date],
         dueTime: [null] as [null | Date],
         //project: [this.project?.id || null],
-        project_uuid: [this.project?.uuid || ''],
+        project_uuid: [this.project()?.uuid || ''],
         // parent: [this.parent || null],
         parent_uuid: [this.parent || null],
         recurring: [null]
@@ -114,8 +114,8 @@ export class TaskAddComponent implements OnInit {
             this.projects = cloneProjects;
         });
 
-        if (this.project) {
-            this.taskForm.patchValue({project_uuid: this.project.uuid});
+        if (this.project()) {
+            this.taskForm.patchValue({project_uuid: this.project()?.uuid});
         }
 
         let notRecurringLabel;
@@ -218,7 +218,7 @@ export class TaskAddComponent implements OnInit {
             dueDate: null,
             dueTime: null,
             //project: this.parent?.project || this.project?.id,
-            project_uuid: this.parent?.project_uuid || this.project?.uuid || '',
+            project_uuid: this.parent?.project_uuid || this.project()?.uuid || '',
             // parent: this.parent || null,
             parent_uuid: this.parent || '',
             recurring: this.recurringOptions[0]

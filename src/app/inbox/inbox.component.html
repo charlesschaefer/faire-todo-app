@@ -12,4 +12,9 @@
 <app-task-list [tasks]="tasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount" #appTaskList />
 
 <!-- Task add overlay panel -->
-<app-task-add [(showOverlay$)]="showTaskAddOverlay$" (taskAddedEvent)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" />
+@if (project !== undefined) {
+  <app-task-add [(showOverlay$)]="showTaskAddOverlay$" (taskAddedEvent)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" [project]="project()" />
+} @else {
+  <app-task-add [(showOverlay$)]="showTaskAddOverlay$" (taskAddedEvent)="onAddTask()" [prefilledTitle]="sharetargetUrl" (showOverlay$Change)="onShowOverlayChange($event)" />
+}
+<p-button icon="pi pi-plus" [rounded]="true" (onClick)="onShowTaskAddOverlay($event)" styleClass="task-list-speeddial" pRipple />

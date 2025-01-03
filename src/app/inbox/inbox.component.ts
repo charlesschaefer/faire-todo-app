@@ -191,7 +191,6 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     onAddTask() {
         this.getTasks();
-        console.log("Será que fomos?")
 
         this.sharetargetUrl = '';
         this.isAddTaskOpen  = false;
@@ -224,7 +223,6 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.isAddTaskOpen || this.isEditTaskOpen) {
             return;
         }
-        console.log(this.appTaskList);
 
         const clickEvent = new MouseEvent('click')
         const target = document.querySelector(".task-add-button");
@@ -232,6 +230,5 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.onShowTaskAddOverlay(clickEvent);
 
-        console.log("Entrou", document.activeElement)
     }
 }
