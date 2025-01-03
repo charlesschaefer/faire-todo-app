@@ -4,7 +4,6 @@ import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { TaskService } from '../task/task.service';
-import { firstValueFrom } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'

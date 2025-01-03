@@ -1,79 +1,82 @@
+
+@let Task = taskData();
+
 <li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" appNgxCdkDnDScrollFixer tabindex="0">
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
-    <div class="task-item-handle"><i class="pi pi-equals"></i></div>
-    <div class="task-item-mark-complete">
-      <p-checkbox
-        #rbutton
-        name="mark-task-complete-{{task.uuid}}" 
-        [value]="task.uuid"
-        inputId="mark-task-complete-{{task.uuid}}" 
-        [(ngModel)]="completed"
-        (onChange)="markTaskAsCompleted()"
-        [binary]="true"
-      />
-      
-    </div>
-    <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
-    <div class="task-item-row" (click)="showTaskEditDialog(task)" (keypress)="showTaskEditDialog(task)" #taskRow>
-      <div class="task-item-row-first">
-        <div class="task-item-content">
-          <div class="task-item-title text-sm">
-            @if (task.completed) {
-              <div class="task-item-title-completed" [innerHTML]="task.title | linkify"></div>
-            } @else {
-              <div [innerHTML]="task.title | linkify"></div>
-            }
-          </div>
-          <div class="task-item-description">
-            <pre [innerHTML]="task.description | linkify"></pre>
-          </div>
+  <div class="task-item-handle"><i class="pi pi-equals"></i></div>
+  <div class="task-item-mark-complete">
+    <p-checkbox
+      #rbutton
+      name="mark-task-complete-{{Task?.uuid}}" 
+      [value]="Task?.uuid"
+      inputId="mark-task-complete-{{Task?.uuid}}" 
+      [(ngModel)]="completed"
+      (onChange)="markTaskAsCompleted()"
+      [binary]="true"
+    />
+    
+  </div>
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+  <div class="task-item-row" (click)="showTaskEditDialog(Task)" (keypress)="showTaskEditDialog(Task)" #taskRow>
+    <div class="task-item-row-first">
+      <div class="task-item-content">
+        <div class="task-item-title text-sm">
+          @if (Task?.completed) {
+            <div class="task-item-title-completed" [innerHTML]="Task?.title | linkify"></div>
+          } @else {
+            <div [innerHTML]="Task?.title | linkify"></div>
+          }
+        </div>
+        <div class="task-item-description">
+          <pre [innerHTML]="Task?.description | linkify"></pre>
         </div>
       </div>
-      <div class="task-item-row-second">
-        <div class="task-item-attributes gap-3">
-          @if (subtasksCount) {
-            <div class="task-item-attributes-subtask">
-              <div class="subtask-icon"></div>
-              <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
-            </div>
+    </div>
+    <div class="task-item-row-second">
+      <div class="task-item-attributes gap-3">
+        @if (subtasksCount) {
+          <div class="task-item-attributes-subtask">
+            <div class="subtask-icon"></div>
+            <span class="subtask-counter">{{subtasksCompletedCount + "/" + subtasksCount}}</span>
+          </div>
+        }
+        <div class="task-item-attributes-project">
+          @if (Task.project_uuid && projects()) {
+              <!-- <i class="pi pi-clipboard"></i> -->
+              <i class="pi pi-hashtag" style="color: var(--p-blue-700)"></i>{{projects().get(Task.project_uuid)?.name}}
+          } @else {
+            <i class="pi pi-inbox"></i><span  >{{ 'Inbox' | transloco }}</span>
           }
-          <div class="task-item-attributes-project">
-            @if (task.project_uuid && projects) {
-                <!-- <i class="pi pi-clipboard"></i> -->
-                <i class="pi pi-hashtag" style="color: var(--p-blue-700)"></i>{{projects.get(task.project_uuid)?.name}}
-            } @else {
-              <i class="pi pi-inbox"></i><span  >{{ 'Inbox' | transloco }}</span>
+        </div>
+        @if (Task.dueDate) {
+          <div class="task-item-attributes-duedate">
+            @if (due) {
+              <div class="task-item-attributes-past-dueDate"></div>
+            } 
+            @if (future) {
+              <div class="task-item-attributes-future-dueDate"></div>
+            }
+            <i class="pi pi-calendar"></i>{{Task.dueDate | dateShortener }}
+            @if (Task.dueTime) {
+              <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(Task.dueTime).toFormat("HH:mm")}}
             }
           </div>
-          @if (task.dueDate) {
-            <div class="task-item-attributes-duedate">
-              @if (due) {
-                <div class="task-item-attributes-past-dueDate"></div>
-              } 
-              @if (future) {
-                <div class="task-item-attributes-future-dueDate"></div>
-              }
-              <i class="pi pi-calendar"></i>{{task.dueDate | dateShortener }}
-              @if (task.dueTime) {
-                <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(task.dueTime).toFormat("HH:mm")}}
-              }
-            </div>
-          }
+        }
 
-          @if (task.recurring) {
-            <div class="task-item-attributes-recurring">
-              <i class="pi pi-history"></i> {{task.recurring}}
-            </div>
-          }
-          
-        </div>
+        @if (Task.recurring) {
+          <div class="task-item-attributes-recurring">
+            <i class="pi pi-history"></i> {{Task.recurring}}
+          </div>
+        }
+        
       </div>
     </div>
-    <div class="task-item-menu">
-      <p-menu #menu [model]="taskMenuItems" [popup]="true" appendTo="body" />
-      <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
-    </div>
+  </div>
+  <div class="task-item-menu">
+    <p-menu #menu [model]="taskMenuItems" [popup]="true" appendTo="body" />
+    <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
+  </div>
 </li>
 <p-confirmDialog />
 

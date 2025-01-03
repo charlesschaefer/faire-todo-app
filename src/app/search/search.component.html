@@ -16,6 +16,6 @@
   </div>
 </div>
 
-@if (tasks?.length || completedTasks?.length) {
-  <app-task-list [tasks]="tasks" [completedTasks]="completedTasks" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [showAddTask]="false" />
+@if (tasks().length || completedTasks().length) {
+  <app-task-list [tasks]="tasks()" [completedTasks]="completedTasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [showAddTask]="false" />
 }

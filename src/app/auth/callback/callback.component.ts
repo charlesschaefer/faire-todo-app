@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../auth.service';
-import { firstValueFrom } from 'rxjs';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 
 @Component({

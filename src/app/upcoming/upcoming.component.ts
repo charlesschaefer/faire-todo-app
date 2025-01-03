@@ -31,7 +31,7 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
         const tasks = await firstValueFrom(this.taskService.getUpcoming());
     
         // now filter only tasks not completed
-        this.tasks = this.taskService.orderTasks(tasks) as TaskDto[];
+        this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
         this.countSubtasks();
     }
 }

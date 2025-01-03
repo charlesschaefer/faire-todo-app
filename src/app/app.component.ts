@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoService } from '@jsverse/transloco';
@@ -76,7 +76,8 @@ export class AppComponent implements OnInit {
     showSidebar = false;
 
     syncStatus = '';
-    currentUser: User | null = null;
+    _currentUser = signal < User | null>(null);
+    currentUser = computed<User | null>(() => this._currentUser());
     
     shareListener!: PluginListener;
     childComponentsData!: {
@@ -232,35 +233,35 @@ export class AppComponent implements OnInit {
         })
     }
 
-    private handleUserAuthenticationState() {
+    private async handleUserAuthenticationState() {
         this.authService.user.subscribe(async user => {
-            if (this.currentUser && !user) {
-                this.currentUser = null;
+            if (this._currentUser && !user) {
+                this._currentUser.set(null);
                 
                 console.log("User signed out... disconnecting synchronization")                
                 return this.syncService.disconnect().catch(console.error).then(async () => {
-                   this.messageService.add({
-                       severity: 'info',
-                       summary: this.translate.translate("Signed off"),
-                       detail: this.translate.translate("You were signed off. Now your tasks will be saved only locally."),
-                       key: 'auth-messages'
-                   }) 
+                    this.messageService.add({
+                        severity: 'info',
+                        summary: this.translate.translate("Signed off"),
+                        detail: this.translate.translate("You were signed off. Now your tasks will be saved only locally."),
+                        key: 'auth-messages'
+                    }) 
                 });
             }
 
-            if (!user && !this.currentUser) {
+            if (!user && !this._currentUser) {
                 console.error("Unknown user authentication state...")
                 return;
             }
 
-            if (this.currentUser && user) {
+            if (this._currentUser() && user) {
                 console.log("authService.user.next() sent the same user again... we won't call the sync service")
                 return;
             }
 
             console.log("User signed in... connecting synchronization")
 
-            this.currentUser = user;
+            this._currentUser.set(user);
             
             this.messageService.add({
                 severity: 'info',

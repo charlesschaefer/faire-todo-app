@@ -23,7 +23,7 @@ const randomUUID: any = v4;
 import { ProjectService } from './project.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
 import { Router } from '@angular/router';

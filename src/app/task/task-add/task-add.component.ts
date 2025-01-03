@@ -56,8 +56,7 @@ export class TaskAddComponent implements OnInit {
     @Input()  showOverlay$!: Subject<Event>;
     @Output() showOverlay$Change = new EventEmitter<Subject<Event>>();
 
-
-    @Input() project!: ProjectDto;
+    @Input() project?: ProjectDto;
     @Input() parent!: TaskDto;
     @Input() prefilledTitle!: string;
 
@@ -71,7 +70,7 @@ export class TaskAddComponent implements OnInit {
         dueDate: [null] as [null | Date],
         dueTime: [null] as [null | Date],
         //project: [this.project?.id || null],
-        project_uuid: [this.project?.uuid || null],
+        project_uuid: [this.project?.uuid || ''],
         // parent: [this.parent || null],
         parent_uuid: [this.parent || null],
         recurring: [null]
@@ -103,13 +102,13 @@ export class TaskAddComponent implements OnInit {
         });
 
         this.projectService.list().then(projects => {
-            if (!projects.length) return;
+            // if (!projects.length) return;
             const cloneProjects = projects.slice() as ProjectDto[];
 
-            if (cloneProjects[0].uuid != '0') {
+            if (!cloneProjects.length || cloneProjects[0].uuid != '') {
                 cloneProjects.unshift({
-                    uuid: '0',
-                    name: "Inbox"
+                    uuid: '',
+                    name: this.translate.translate("Inbox")
                 } as ProjectDto);
             }
             this.projects = cloneProjects;

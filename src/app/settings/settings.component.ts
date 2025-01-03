@@ -6,7 +6,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
 import { MessageService } from 'primeng/api';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { ToastModule } from 'primeng/toast';
 import {
     isPermissionGranted,

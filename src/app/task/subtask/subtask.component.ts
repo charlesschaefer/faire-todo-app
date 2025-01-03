@@ -17,7 +17,7 @@ import { TaskDto } from '../../dto/task-dto';
 import { TaskService } from '../task.service';
 import { UndoService } from '../../services/undo.service';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
-import { Subject, firstValueFrom } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskAbstractComponent } from '../task/task.abstract.component';
@@ -93,7 +93,7 @@ export class SubtaskComponent extends TaskAbstractComponent {
 
         this.dialogRef.onClose.subscribe((data: TaskDto) => {
             if (data != undefined && data.title != undefined) {
-                this.task = data as TaskDto;
+                this._changedTask = data as TaskDto;
                 this.checkTaskIsDue();
             }
         });

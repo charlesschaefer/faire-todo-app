@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
@@ -35,10 +35,11 @@ import { SubtitlePipe } from '../../pipes/subtitle.pipe';
 })
 export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
-    project!: ProjectDto;
-    
+    projectId = signal<string>(this.route.snapshot.paramMap.get("id") || '');
+    override project: WritableSignal<ProjectDto> = signal({name: ''} as ProjectDto);
+    projectName = computed(() => this.project().name || '');
     override pageTitle = 'Project:';
-    override pageSubtitle = this.project?.name;
+    override pageSubtitle = this.projectName();
 
     constructor(
         private projectService: ProjectService,
@@ -54,17 +55,20 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
     override async ngOnInit() {
         this.router.routeReuseStrategy.shouldReuseRoute = () => false;
 
-        const projectId = this.route.snapshot.paramMap.get("id") as string;
-        this.project = await this.projectService.get(projectId) as ProjectDto;
-        this.pageSubtitle = this.project.name;
+        this.projectId.set(this.route.snapshot.paramMap.get("id") as string);
+
+        const project = await this.projectService.get(this.projectId()) as ProjectDto;
+        this.project.set(project);
+        
+        this.pageSubtitle = this.projectName();
         super.ngOnInit();
     }
 
     override async getTasks() {
-        const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project.uuid));
+        const tasks = await firstValueFrom(this.taskService.getProjectTasks(this.project()?.uuid));
         // now filter only tasks not completed
         const filteredTasks = tasks.filter(task => task.completed == 0);
-        this.tasks = this.taskService.orderTasks(filteredTasks) as TaskDto[];
+        this.tasks.set(this.taskService.orderTasks(filteredTasks) as TaskDto[]);
         this.countSubtasks();
 
         this.separateDueTasks();

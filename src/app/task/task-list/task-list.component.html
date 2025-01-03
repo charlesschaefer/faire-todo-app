@@ -2,7 +2,7 @@
       @if (tasks?.length) {
       <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
         @for (task of tasks; track task.uuid) {
-          <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount?.get(task.uuid)" />
+          <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
         }
       </ul>
       }
@@ -10,7 +10,7 @@
         <p-panel [toggleable]="true" [header]="'Completed tasks' | transloco" [collapsed]="true">
           <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
             @for (task of completedTasks; track task.uuid) {
-              <app-task [task]="task" [projects]="projects" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount?.get(task.uuid)" />
+              <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
             }
           </ul>
         </p-panel>

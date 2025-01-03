@@ -39,14 +39,7 @@ export class AuthComponent {
   constructor(
     private authService: AuthService,
   ) {
-    this.authService.user.subscribe({
-      next: user => {
-            this.currentUser = user;
-      },
-      error: error => {
-        console.error('Error fetching user:', error);
-      }
-    });
+      this.authService.user.subscribe(user => this.currentUser = user);
   }
 
   showLoginDialog() {

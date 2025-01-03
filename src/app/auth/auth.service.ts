@@ -1,18 +1,20 @@
-import { Inject, Injectable, isDevMode } from '@angular/core';
+import { Inject, Injectable, isDevMode, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { firstValueFrom, Observable, Subject } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { open } from '@tauri-apps/plugin-shell';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private supabase: SupabaseClient;
-  private userSubject: Subject<User | null>;
-  public user: Observable<User | null>;
-  private _currentUser?: User | null;
+  public readonly _user = signal<User | null>(null);
+  private _currentUser = this._user.asReadonly();
+
+  public readonly user = toObservable(this._user);
 
   constructor(
     private router: Router,
@@ -34,28 +36,24 @@ export class AuthService {
       }
     );
 
-    // Initialize user state
-    this.userSubject = new Subject<User | null>();
-    this.user = this.userSubject.asObservable();
-
     // Check active sessions
     this.supabase.auth.getSession().then(({ data: { session } }) => {
-      this._currentUser = session?.user;
-      this.userSubject.next(session?.user ?? null);
+    //   this._currentUser = session?.user;
+      this._user.set(session?.user ?? null);
     });
 
     // Listen for auth changes
     this.supabase.auth.onAuthStateChange((event, session) => {
       console.log("AuthService.onAuthStateChange", event, session);
       if (event == 'SIGNED_IN' || event == 'SIGNED_OUT') {
-        this._currentUser = session?.user;
-        this.userSubject.next(session?.user ?? null);
+        // this._currentUser = session?.user;
+        this._user.set(session?.user ?? null);
       }
     });
   }
 
-  get authenticatedUser(): Subject<User | null> {
-    return this.userSubject;
+  get authenticatedUser(): User | null {
+    return this._user();
   }
 
   get client() {
@@ -63,7 +61,7 @@ export class AuthService {
   }
 
   get currentUser(): User | null {
-    return this._currentUser || null;
+    return this._currentUser();
   }
 
   async signInWithGoogle() {
