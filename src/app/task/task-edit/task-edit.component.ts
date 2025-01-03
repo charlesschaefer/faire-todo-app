@@ -20,11 +20,9 @@ import { SubtaskComponent } from '../subtask/subtask.component';
 import { TaskAddComponent } from '../task-add/task-add.component';
 import { TaskService } from '../task.service';
 
-import nlp from 'compromise';
-import dates, { DatesMethods } from 'compromise-dates';
 import { DataUpdatedService } from '../../services/data-updated.service';
 import { ChangeDateTimeFromTextDirective } from '../../directives/change-date-time-from-text.directive';
-nlp.plugin(dates);
+
 
 @Component({
     selector: 'app-task-edit',
@@ -229,26 +227,6 @@ export class TaskEditComponent implements OnInit, OnDestroy {
     subtasksTitle() {
         const title = this.translate.translate("Subtasks");
         return title + ` (${this.subtasksCompletedCount}/${this.subtasksCount})`;
-    }
-
-    onTitleChange(event: any) {
-        const doc = nlp<DatesMethods>(event);
-        const dates = doc.dates().get();
-        if (dates) {
-            const dateView = dates[0] as {start:string};
-            if (dateView?.start) {
-                const date = new Date(dateView.start);
-                this.taskForm.patchValue({
-                    dueDate: date
-                });
-
-                if (date.getHours() != 0) {
-                    this.taskForm.patchValue({
-                        dueTime: date
-                    })
-                }
-            }
-        }
     }
 
     onActivateField(event: any) {

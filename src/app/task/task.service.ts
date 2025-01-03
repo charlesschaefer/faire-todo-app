@@ -188,7 +188,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
     markTaskComplete(task: TaskDto) {
         const success$ = new Subject();
         task.completed = 1;
-        from(this.table.update(task.uuid, task)).subscribe({
+        from(this.edit(task.uuid, task)).subscribe({
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
@@ -369,13 +369,16 @@ export class TaskService extends ServiceAbstract<Tasks> {
         today.setSeconds(0);
         today.setMilliseconds(0);
 
+        const now = new Date();
+
         const changes: {key: string, changes: Partial<TaskDto>}[] = [];
         const dataChanges: any = [];
         for (const task of tasks) {
             changes.push({
                 key: task.uuid,
                 changes: {
-                    dueDate: today
+                    dueDate: today,
+                    updated_at: now
                 }
             });
             dataChanges.push({
@@ -383,7 +386,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 table: 'task',
                 type: DatabaseChangeType.Update,
                 changes: {
-                    dueDate: today
+                    dueDate: today,
+                    updated_at: now
                 },
                 oldObj: task,
                 obj: {...task, dueDate: today}
