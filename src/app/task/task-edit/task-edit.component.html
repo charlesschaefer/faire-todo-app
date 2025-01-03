@@ -112,7 +112,7 @@
           id="recurring"
         />
       </div>
-      @if (subTasks?.length) {
+      @if (subTasks && subTasks.length) {
       <div class="task-add-list-subtasks">
         <p-accordion>
           <p-accordionTab [header]="subtasksTitle()" [selected]="true">
