@@ -24,7 +24,7 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
     constructor(
         protected authService: AuthService
     ) {
-        this.authService.authenticatedUser.subscribe((user: User | null) => {
+        this.authService.user.subscribe((user: User | null) => {
             if (user) {
                 this.userUuid = user.id;
             }

@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { TranslocoService } from '@jsverse/transloco';
 import { TranslocoModule } from '@jsverse/transloco';
-import { firstValueFrom, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -24,6 +24,7 @@ import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { TaskAbstractComponent } from './task.abstract.component';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
+import { DataUpdatedService } from '../../services/data-updated.service';
 
 
 @Component({
@@ -61,6 +62,7 @@ export class TaskComponent extends TaskAbstractComponent {
         protected override confirmationService: ConfirmationService,
         protected override translate: TranslocoService,
         protected override undoService: UndoService,
+        protected dataUpdatedService: DataUpdatedService,
     ) {
         super(
             dialogService,
@@ -104,7 +106,15 @@ export class TaskComponent extends TaskAbstractComponent {
 
         this.dialogRef.onClose.subscribe((data: TaskDto) => {
             if (data != undefined && data.title != undefined) {
-                this.task = data as TaskDto;
+                // this.dataUpdatedService.next([{
+                //     table: 'task',
+                //     key: 'uuid',
+                //     type: DatabaseChangeType.Update,
+                //     obj: data,
+                //     mods: data,
+                //     oldObj: data
+                // }]);
+                this._changedTask = data as TaskDto;
                 this.checkTaskIsDue();
             }
         });

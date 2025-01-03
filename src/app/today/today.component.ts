@@ -34,7 +34,7 @@ export class TodayComponent extends InboxComponent implements OnInit {
 
     override async getTasks() {
         const tasks = await firstValueFrom(this.taskService.getForToday());
-        this.tasks = this.taskService.orderTasks(tasks);
+        this.tasks.set(this.taskService.orderTasks(tasks));
         this.countSubtasks();
 
         this.separateDueTasks();

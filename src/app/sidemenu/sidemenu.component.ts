@@ -6,7 +6,6 @@ import { ProjectService } from '../project/project.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { DataUpdatedService } from '../services/data-updated.service';
-import { firstValueFrom } from 'rxjs';
 import { User } from '@supabase/supabase-js';
 import { SyncService } from '../services/sync.service';
 import { invoke } from '@tauri-apps/api/core';
@@ -143,7 +142,7 @@ export class SidemenuComponent implements OnInit {
                 ]
             } as MenuItem
         ];
-        if (this.currentUser && this.currentUser.id) {
+        if (this.currentUser && this.currentUser?.id) {
             this.settingsMenuItems.push({
                 label: this.translate.translate("Synchronization"),
                 icon: "pi pi-sync",

@@ -11,7 +11,7 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { InplaceModule } from 'primeng/inplace';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
@@ -108,10 +108,10 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             const cloneProjects = projects.slice();
             const projectsMap = new Map<string, ProjectDto>();
 
-            if (cloneProjects[0] && cloneProjects[0].uuid != '0') {
+            if (!cloneProjects.length || (cloneProjects[0] && cloneProjects[0].uuid != '')) {
                 cloneProjects.unshift({
-                    uuid: '0',
-                    name: "Inbox"
+                    uuid: '',
+                    name: this.translate.translate("Inbox")
                 } as ProjectDto);
             }
             this.projects = cloneProjects as ProjectDto[];

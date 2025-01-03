@@ -5,7 +5,7 @@ import 'dexie-syncable';
 import 'dexie-observable';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
 import { AppDb, TableKeys } from '../app.db';
 import { TaskService } from '../task/task.service';
 import { TagService } from './tag.service';

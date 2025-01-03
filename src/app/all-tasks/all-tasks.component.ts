@@ -41,7 +41,7 @@ export class AllTasksComponent  extends InboxComponent {
     override async getTasks() {
         const tasks = await firstValueFrom(this.taskService.getAllTasks());
         
-        this.tasks = this.taskService.orderTasks(tasks) as TaskDto[];
+        this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
         this.countSubtasks();
 
         this.separateDueTasks();

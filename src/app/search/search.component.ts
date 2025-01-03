@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -32,7 +32,7 @@ import { DataUpdatedService } from '../services/data-updated.service';
 export class SearchComponent extends InboxComponent implements OnInit {
     searchValue!: string;
 
-    completedTasks!: TaskDto[];
+    completedTasks = signal<TaskDto[]>([]);
 
     constructor(
         protected override taskService: TaskService,
@@ -61,8 +61,8 @@ export class SearchComponent extends InboxComponent implements OnInit {
                 break;
             }
         }
-        this.tasks = tasks as TaskDto[];
-        this.completedTasks = completedTasks;
+        this.tasks.set(tasks as TaskDto[]);
+        this.completedTasks.set(completedTasks);
         this.countSubtasks();
 
     }

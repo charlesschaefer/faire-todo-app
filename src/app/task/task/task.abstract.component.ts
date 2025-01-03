@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, computed, ElementRef, EventEmitter, input, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
 import { firstValueFrom, Observable, Subject } from 'rxjs';
@@ -19,8 +19,18 @@ import { inject } from '@angular/core';
     templateUrl: './task.abstract.component.html',
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
-    @Input() task!: TaskDto;
-    @Input() projects!: Map<string, ProjectDto>;
+    task = input.required<TaskDto>();
+    _changedTask?: TaskDto;
+    taskData = computed(() => {
+        if (this._changedTask) {
+            const task = this._changedTask;
+            this._changedTask = undefined;
+            return task;
+        }
+        return this.task();
+    });
+
+    projects = input.required<Map<string, ProjectDto>>();
     @Input() subtasksCount?: number;
 
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix
@@ -74,7 +84,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
             this.countSubtasks();
         });
-        if (this.task.completed) {
+        if (this.task().completed) {
             this.completed = true;
         }
 
@@ -86,23 +96,24 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     countSubtasks() {
-        this.taskService.countSubtasksByCompletion(this.task).subscribe(subtasksCount => {
+        this.taskService.countSubtasksByCompletion(this.task()).subscribe(subtasksCount => {
             this.subtasksCount = subtasksCount.subtasks;
             this.subtasksCompletedCount = subtasksCount.completed;
         });
     }
 
     checkTaskIsDue() {
-        if (!this.task.dueDate) {
+        const task = this.task();
+        if (!task.dueDate) {
             return;
         }
 
-        if (this.taskService.isTaskDue(this.task)) {
+        if (this.taskService.isTaskDue(task)) {
             this.due = true;
             return;
         }
         
-        const dueDate = DateTime.fromJSDate(this.task.dueDate);
+        const dueDate = DateTime.fromJSDate(task.dueDate);
         const today = DateTime.fromJSDate(this.today);
         if (dueDate.diff(today).as('days') >= 1) {
             this.future = true;
@@ -129,7 +140,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                         label: this.translate.translate(`Edit`),
                         icon: 'pi pi-pencil',
                         command: () => {
-                            this.showTaskEditDialog(this.task);
+                            this.showTaskEditDialog(this.task());
                         },
                     } as MenuItem
                 ]
@@ -153,7 +164,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     async deleteTask() {
-        const taskAndChild = await firstValueFrom(this.taskService.getTaskTree(this.task));
+        const taskAndChild = await firstValueFrom(this.taskService.getTaskTree(this.task()));
         // gets all the task's subtasks to store as an undo queue item
         const undoData = Object.assign({}, taskAndChild);
         const undo: UndoItem = {
@@ -161,7 +172,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             data: undoData
         };
         // removes task and it's subtasks
-        this.taskService.removeTaskTree(this.task).subscribe({
+        this.taskService.removeTaskTree(this.task()).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: this.translate.translate(`Removed`),
@@ -169,7 +180,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                     severity: "success",
                     key: 'task'
                 });
-                this.onTaskRemoved.emit(this.task.uuid);
+                this.onTaskRemoved.emit(this.task().uuid);
                 this.undoService.register(undo).subscribe(data => {
                     this.undoDelete(data);
                 });
@@ -213,7 +224,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     }
 
     markTaskAsCompleted() {
-        const task = this.task;
+        const task = this.task();
         const undoData = Object.assign({}, task);
         const undo: UndoItem = {
             type: 'task.markComplete',

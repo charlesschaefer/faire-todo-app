@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, computed, HostListener, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
@@ -23,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DataUpdatedService } from '../services/data-updated.service';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
 import { DateTime } from 'luxon';
+import { ProjectDto } from '../dto/project-dto';
 
 
 @Component({
@@ -57,7 +58,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     pageSubtitle = '';
     subtitleModifier = '';
 
-    tasks!: TaskDto[];
+    tasks = signal< TaskDto[]>([]) ;
     subtasksCount!: Map<string, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
@@ -71,8 +72,10 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     taskSubscription?: Subscription;
 
-    hasDueTask = false;
-    dueTasks?: TaskDto[] = [];
+    hasDueTask = computed(() => this.dueTasks().length > 0);
+    dueTasks = signal<TaskDto[]>([]);
+
+    project?: WritableSignal<ProjectDto | undefined>;
 
     constructor(
         protected taskService: TaskService,
@@ -132,7 +135,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
                 );
             })
         ));
-        this.tasks = tasks.tasks;
+        this.tasks.set(tasks.tasks);
         this.subtasksCount = tasks.subtasksCount;
 
         this.separateDueTasks();
@@ -140,10 +143,9 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     separateDueTasks() {
-        const { dueTasks, otherTasks } = { ...this.taskService.separateDueTasks(this.tasks) };
-        this.tasks = otherTasks;
+        const { dueTasks, otherTasks } = { ...this.taskService.separateDueTasks(this.tasks()) };
+        this.tasks.set(otherTasks);
         if (dueTasks.length) {
-            this.hasDueTask = true;
             dueTasks.sort((a, b) => {
                 if (!a.dueDate || !b.dueDate) {
                     return 1;
@@ -170,21 +172,20 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (aTime < bTime) return 1;
                 return -1;
             });
-            this.dueTasks = dueTasks;
+            this.dueTasks.set(dueTasks);
         } else {
-            this.dueTasks = [];
-            this.hasDueTask = false;
+            this.dueTasks.set([]);
         }
     }
     rescheduleDueTasksForToday(_event: any) {
         if (this.dueTasks) {
-            this.taskService.rescheduleTasksForToday(this.dueTasks);
+            this.taskService.rescheduleTasksForToday(this.dueTasks());
         }
     }
 
     async countSubtasks() {
-        if (this.tasks) {
-            this.subtasksCount = await this.taskService.countAllTasksSubtasks(this.tasks);
+        if (this.tasks()) {
+            this.subtasksCount = await this.taskService.countAllTasksSubtasks(this.tasks());
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { PanelModule } from 'primeng/panel';
 import { TranslocoModule } from '@jsverse/transloco';
@@ -29,16 +29,30 @@ import { RippleModule } from 'primeng/ripple';
     styleUrl: './task-list.component.scss'
 })
 export class TaskListComponent implements OnInit {
-    @Input() tasks!: TaskDto[];
-    @Input() completedTasks!: TaskDto[];
+    _inputTasks = signal<TaskDto[]>([]);
+    @Input() set tasks(tasks) {
+        this._inputTasks.set(tasks);
+    }
+    get tasks() {
+        return this._inputTasks();
+    }
 
-    @Input() subtasksCount?: Map<string, number>;
+    _inputCompletedTasks = signal<TaskDto[]>([]);
+    @Input() set completedTasks(tasks) {
+        this._inputCompletedTasks.set(tasks);
+    }
+
+    get completedTasks() {
+        return this._inputCompletedTasks();
+    }
+
+    subtasksCount = input<Map<string, number>>();
 
     @Output() showTaskAdd = new EventEmitter<Event>();
     @Output() taskEditEvent = new EventEmitter();
     @Input() showAddTask = true;
 
-    projects!: Map<string, ProjectDto>;
+    projects = signal<Map<string, ProjectDto>>(new Map<string, ProjectDto>());
 
     speedDialItems = [{
         icon: 'pi pi-plus',
@@ -48,13 +62,13 @@ export class TaskListComponent implements OnInit {
     constructor(
         private taskService: TaskService,
         private projectService: ProjectService,
-    ) {}
+    ) { }
 
     ngOnInit(): void {
         this.projectService.list().then((projects) => {
             const indexedProjects = new Map<string, ProjectDto>();
             projects.forEach(project => indexedProjects.set(project.uuid, project as ProjectDto));
-            this.projects = indexedProjects;
+            this.projects.set(indexedProjects);
         });
     }
 
@@ -69,17 +83,19 @@ export class TaskListComponent implements OnInit {
                 newTasks.push(task);
             }
         });
-        this.tasks = newTasks;
+        this._inputTasks?.set(newTasks);
     }
 
     onTaskOrder(event: CdkDragDrop<TaskDto[]>) {
-        moveItemInArray(this.tasks, event.previousIndex, event.currentIndex);
-        this.tasks.forEach((task, index) => {
+        const tasks = this.tasks;
+        moveItemInArray(tasks, event.previousIndex, event.currentIndex);
+        tasks.forEach((task, index) => {
             task.order = index;
             this.taskService.edit(task.uuid, task).subscribe({
                 error: err => console.error(err)
             });
         });
+        this._inputTasks?.set(tasks);
     }
 
     onTaskEdit() {
