@@ -199,28 +199,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     
                     const newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
-                    switch (task.recurring) {
-                        case RecurringType.DAILY:
-                            date = date.plus(Duration.fromObject({day: 1}));
-                            break;
-                        case RecurringType.WEEKLY:
-                            date = date.plus(Duration.fromObject({week: 1}));
-                            break;
-                        case RecurringType.MONTHLY: 
-                            date = date.plus(Duration.fromObject({month: 1}));
-                            break;
-                        case RecurringType.YEARLY:
-                            date = date.plus(Duration.fromObject({year: 1}));
-                            break;
-                        case RecurringType.WEEKDAY:
-                            if (date.weekday < 5) {
-                                date = date.plus(Duration.fromObject({day: 1}));
-                            } else {
-                                date = date.plus(Duration.fromObject({days: 3}));
-                            }
-                            break;
-                    }
-                   
+                    date = this.newDateForRecurringTask(task, date);
+
                     newTask.dueDate = date.toJSDate();
                     from(this.table.add(newTask)).subscribe({
                         complete: () => {
@@ -245,6 +225,34 @@ export class TaskService extends ServiceAbstract<Tasks> {
             }
         });
         return success$;
+    }
+
+    private newDateForRecurringTask(task: TaskDto, date: DateTime) {
+        // Checks if the date is before today
+        while (date.startOf('day') < DateTime.now().startOf('day')) {
+            switch (task.recurring) {
+                case RecurringType.DAILY:
+                    date = date.plus(Duration.fromObject({ day: 1 }));
+                    break;
+                case RecurringType.WEEKLY:
+                    date = date.plus(Duration.fromObject({ week: 1 }));
+                    break;
+                case RecurringType.MONTHLY:
+                    date = date.plus(Duration.fromObject({ month: 1 }));
+                    break;
+                case RecurringType.YEARLY:
+                    date = date.plus(Duration.fromObject({ year: 1 }));
+                    break;
+                case RecurringType.WEEKDAY:
+                    if (date.weekday < 5) {
+                        date = date.plus(Duration.fromObject({ day: 1 }));
+                    } else {
+                        date = date.plus(Duration.fromObject({ days: 3 }));
+                    }
+                    break;
+            }
+        }
+        return date;
     }
 
     getTaskTree(task: TaskDto) {
