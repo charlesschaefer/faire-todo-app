@@ -2,7 +2,7 @@
 
 [package]
 name        = "faire-todo-app"
-version = "0.0.30"
+version = "0.0.31"
 description = "Faire Todo App"
 authors     = ["Charles Schaefer"]
 edition     = "2021"

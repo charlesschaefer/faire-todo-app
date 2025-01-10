@@ -229,7 +229,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
     private newDateForRecurringTask(task: TaskDto, date: DateTime) {
         // Checks if the date is before today
-        while (date.startOf('day') < DateTime.now().startOf('day')) {
+        do {
             switch (task.recurring) {
                 case RecurringType.DAILY:
                     date = date.plus(Duration.fromObject({ day: 1 }));
@@ -251,7 +251,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     }
                     break;
             }
-        }
+        } while (date.startOf('day') < DateTime.now().startOf('day'));
         return date;
     }
 
