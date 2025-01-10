@@ -17,6 +17,7 @@
             [dateComponent]="taskForm.get('dueDate')"
             [timeComponent]="taskForm.get('dueTime')"
             pSize="small"
+            (keydown.control.enter)="saveTask()"
           />
         </div>
         <div class="task-add-description">
@@ -28,6 +29,7 @@
             rows="1"
             class="text-sm"
             formControlName="description"
+            (keydown.control.enter)="saveTask()"
           ></textarea>
         </div>
         <div class="task-add-menu">
@@ -41,6 +43,7 @@
             formControlName="dueDate"
             class="task-add-dueDate"
             dateFormat="dd/mm/yy"
+            (keydown.enter)="saveTask()"
           />
 
           <p-datepicker
@@ -51,6 +54,7 @@
             [placeholder]="'Time' | transloco"
             formControlName="dueTime"
             class="task-add-dueTime"
+            (keydown.enter)="saveTask()"
           >
             <ng-template #inputicon let-clickCallBack="clickCallBack">
               <i class="pi pi-clock" (click)="clickCallBack($event)" (keypress)="clickCallBack($event)" aria-hidden="true"></i>

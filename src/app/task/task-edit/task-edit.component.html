@@ -42,7 +42,7 @@
             @if (task.description === "") {
               <span class="placeholder-like-inplace text-sm w-full block p-textarea">{{ "Description" | transloco }}</span>
             } @else {
-              <span [innerHTML]="task.description | linkify"  class="placeholder-like-inplace text-sm w-full block p-textarea"></span>
+              <span [innerHTML]="task.description | linkify:{nl2br: true}"  class="placeholder-like-inplace text-sm w-full block p-textarea"></span>
             }
           </ng-template>
           <ng-template pTemplate="content" [type]="'test'">
@@ -53,6 +53,7 @@
               rows="1"
               class="text-sm"
               formControlName="description"
+              (keydown.control.enter)="saveTask()"
             ></textarea>
           </ng-template>
         </p-inplace>

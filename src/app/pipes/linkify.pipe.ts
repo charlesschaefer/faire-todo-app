@@ -5,6 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export interface LinkifyOptions {
   defaultProtocol?: 'http' | 'https';
+  nl2br?: boolean
 }
 
 
@@ -34,10 +35,14 @@ export class LinkifyPipe implements PipeTransform {
       allowedTags: ['']
     });
 
-    const linkified = linkifyHtml(
+    let linkified = linkifyHtml(
       sanitized as string,
       options
     );
+
+    if (options.nl2br) {
+        linkified = linkified.replaceAll("\n", "<br />");
+    }
 
     return this.sanitizer.bypassSecurityTrustHtml(linkified);
   }
