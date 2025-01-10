@@ -295,6 +295,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
         const {children, ...task} = {...taskTree};
         const return$ = new Subject();
 
+        task['updated_at'] = new Date();
+
         this.table.add(task as TaskDto).then((result) => {
             if (!children || !children.length) {
                 if (!internal) {

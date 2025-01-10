@@ -54,9 +54,9 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
         if (this.userUuid) {
             data["user_uuid"] = this.userUuid;
         }
-        if (!data['updated_at']) {
+        // if (!data['updated_at']) {
             data['updated_at'] = new Date();
-        }
+        // }
         const promise = this.table.add(data);
         promise.then(() => this.dataUpdatedService?.next([{
             type: DatabaseChangeType.Create,
@@ -71,9 +71,9 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
         if (this.userUuid) {
             data['user_uuid'] = this.userUuid;
         }
-        if (!data['updated_at']) {
+        // if (!data['updated_at']) {
             data['updated_at'] = new Date();
-        }
+        // }
         const promise = this.table.put(data);
 
         promise.then(_result => {
@@ -90,9 +90,9 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
         if (this.userUuid) {
             data = data.map((item) => {
                 const user = {user_uuid: this.userUuid} as UserBound;
-                if (!item['updated_at']) {
+                // if (!item['updated_at']) {
                     item['updated_at'] = new Date();
-                }
+                // }
                 return { ...item, ...user };
             });
         }
@@ -116,9 +116,9 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
             data["user_uuid"] = this.userUuid;
         }
         const today = new Date();
-        if (!data['updated_at'] || !(data['updated_at'] instanceof Date) || data['updated_at'] < today) {
+        // if (!data['updated_at'] || !(data['updated_at'] instanceof Date) || data['updated_at'] < today) {
             data['updated_at'] = today;
-        }
+        // }
         this.clearCache();
         const promise = this.table.update(uuid, data as object);
         promise.then(_result => {

@@ -1,6 +1,6 @@
 {
   "name": "faire-todo-app",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -40,9 +40,11 @@
     "dexie": "^4.0.10",
     "dexie-observable": "^4.0.1-beta.13",
     "dexie-syncable": "^4.0.1-beta.13",
+    "hammerjs": "^2.0.8",
     "linkify-html": "^4.2.0",
     "linkifyjs": "^4.2.0",
     "luxon": "^3.4.4",
+    "ngx-swipe-menu": "^0.0.2",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",
     "primelocale": "^1.2.2",
