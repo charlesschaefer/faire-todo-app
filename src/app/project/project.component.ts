@@ -1,35 +1,29 @@
 import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PanelModule } from 'primeng/panel';
-import { MenuModule } from 'primeng/menu';
+import { Router } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { DatabaseChangeType } from 'dexie-observable/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-
+import { DividerModule } from 'primeng/divider';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
+import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
 import { v4 } from 'uuid';
 
-const randomUUID: any = v4;
-// } else {
-//     randomUUID = crypto.randomUUID;
-//     randomUUID();
-// }
-
-import { ProjectService } from './project.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
-import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
-import { Router } from '@angular/router';
-import { ToastModule } from 'primeng/toast';
 import { Changes, DataUpdatedService } from '../services/data-updated.service';
-import { DatabaseChangeType } from 'dexie-observable/api';
+import { TaskService } from '../task/task.service';
+import { ProjectService } from './project.service';
+
+const randomUUID: any = v4;
 
 @Component({
     selector: 'app-project',

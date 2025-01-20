@@ -1,8 +1,8 @@
 import { Directive, HostListener, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-
 import nlp from 'compromise';
 import dates, { DatesMethods } from 'compromise-dates';
+
 nlp.plugin(dates);
 
 @Directive({

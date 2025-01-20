@@ -1,30 +1,29 @@
+import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { Subject } from 'rxjs';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { CheckboxModule } from 'primeng/checkbox';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ContextMenuModule } from 'primeng/contextmenu';
 import { DialogService } from 'primeng/dynamicdialog';
 import { MenuModule } from 'primeng/menu';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
-import { ContextMenuModule } from 'primeng/contextmenu';
 import { TreeModule } from 'primeng/tree';
+import { Subject } from 'rxjs';
 
-import { TaskDto } from '../../dto/task-dto';
-import { TaskEditComponent } from '../task-edit/task-edit.component';
-import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
-import { TaskService } from '../task.service';
-import { UndoService } from '../../services/undo.service';
-import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
-import { TaskAbstractComponent } from './task.abstract.component';
-import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
+import { TaskDto } from '../../dto/task-dto';
+import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { DataUpdatedService } from '../../services/data-updated.service';
+import { UndoService } from '../../services/undo.service';
+import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
+import { TaskService } from '../task.service';
+import { TaskAbstractComponent } from './task.abstract.component';
 
 
 @Component({

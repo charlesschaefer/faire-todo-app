@@ -1,8 +1,8 @@
 import { Routes } from "@angular/router";
-import { AuthCallbackComponent } from './auth/callback/callback.component';
 
-import { TodayComponent } from "./today/today.component";
+import { AuthCallbackComponent } from './auth/callback/callback.component';
 import { InboxComponent } from "./inbox/inbox.component";
+import { TodayComponent } from "./today/today.component";
 
 export const routes: Routes = [
     {path: "inbox", component: InboxComponent}, //, resolve: {tasks: InboxResolver}},

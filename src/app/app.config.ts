@@ -1,19 +1,18 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
-import { provideRouter, withDebugTracing, withRouterConfig } from "@angular/router";
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { TranslocoModule } from '@jsverse/transloco';
+import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideRouter, withDebugTracing, withRouterConfig } from "@angular/router";
+import { TranslocoModule, provideTransloco } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
-
-import { routes } from "./app.routes";
-import { environment } from '../environments/environment';
-import { SyncService } from './services/sync.service';
-import { AppDb } from "./app.db";
-import { TranslocoHttpLoader } from './transloco-loader';
-import { provideTransloco } from '@jsverse/transloco';
 import { providePrimeNG } from "primeng/config";
-import { AppTheme } from "./app.theme";
+ 
+import { environment } from '../environments/environment';
+import { AppDb } from "./app.db";
 import { DEBUG } from "./app.debug";
+import { routes } from "./app.routes";
+import { AppTheme } from "./app.theme";
+import { SyncService } from './services/sync.service';
+import { TranslocoHttpLoader } from './transloco-loader';
 
 const debugTracing = [];
 void (DEBUG ? debugTracing.push(withDebugTracing()) : null);

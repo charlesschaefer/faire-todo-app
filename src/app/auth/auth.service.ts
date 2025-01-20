@@ -1,10 +1,11 @@
 import { Inject, Injectable, isDevMode, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { firstValueFrom } from 'rxjs';
-import { environment } from '../../environments/environment';
 import { open } from '@tauri-apps/plugin-shell';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
+
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

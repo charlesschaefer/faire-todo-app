@@ -1,16 +1,15 @@
-import { Component, computed, ElementRef, EventEmitter, input, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, computed, ElementRef, EventEmitter, inject, input, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslocoService } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
-import { firstValueFrom, Observable, Subject } from 'rxjs';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 
 
-import { TaskDto, TaskTree } from '../../dto/task-dto';
-import { TaskService } from '../task.service';
 import { ProjectDto } from '../../dto/project-dto';
+import { TaskDto, TaskTree } from '../../dto/task-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
-import { inject } from '@angular/core';
+import { TaskService } from '../task.service';
 
 
 @Component({

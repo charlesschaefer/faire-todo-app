@@ -1,43 +1,42 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { delay, firstValueFrom, Subscription } from 'rxjs';
-import { MessageService } from 'primeng/api';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ButtonModule } from 'primeng/button';
-import { MenuModule } from 'primeng/menu';
-import { ToastModule } from 'primeng/toast';
+import { HttpClient } from '@angular/common/http';
+import { Component, computed, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { User } from '@supabase/supabase-js';
+import { invoke, PluginListener } from '@tauri-apps/api/core';
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import {
     isPermissionGranted,
     requestPermission,
     sendNotification,
 } from '@tauri-apps/plugin-notification';
-import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 import { platform } from '@tauri-apps/plugin-os';
-import { invoke, PluginListener } from '@tauri-apps/api/core';
-import { listenForShareEvents, type ShareEvent } from 'tauri-plugin-sharetarget-api';
-import { Router } from '@angular/router';
-import { UndoService } from './services/undo.service';
-import { TaskDto } from './dto/task-dto';
-import { TaskService } from './task/task.service';
-import { HttpClient } from '@angular/common/http';
-import { SettingsService } from './settings/settings.service';
+import { Dexie } from 'dexie';
+import 'dexie-observable';
+import 'dexie-syncable';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { MenuModule } from 'primeng/menu';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { delay, firstValueFrom, Subscription } from 'rxjs';
+import { type ShareEvent, listenForShareEvents } from 'tauri-plugin-sharetarget-api';
+
+import { AuthService } from './auth/auth.service';
 import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
+import { TaskDto } from './dto/task-dto';
+import { InboxComponent } from './inbox/inbox.component';
 import { NotificationService } from './services/notification.service';
 import { SyncService } from './services/sync.service';
-import Dexie from 'dexie';
-import 'dexie-syncable';
-import 'dexie-observable';
-import { AuthService } from './auth/auth.service';
-import { InboxComponent } from './inbox/inbox.component';
-import { DialogModule } from 'primeng/dialog';
-import { CheckboxModule } from 'primeng/checkbox';
-import { FormsModule } from '@angular/forms';
-import { MessageModule } from 'primeng/message';
-import { User } from '@supabase/supabase-js';
+import { UndoService } from './services/undo.service';
+import { SettingsService } from './settings/settings.service';
 import { SidemenuComponent } from "./sidemenu/sidemenu.component";
+import { TaskService } from './task/task.service';
 import { VersionComponent } from './version/version.component';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';

@@ -12,16 +12,17 @@ import { InplaceModule } from 'primeng/inplace';
 import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { Subject, Subscription } from 'rxjs';
+
+import { ChangeDateTimeFromTextDirective } from '../../directives/change-date-time-from-text.directive';
 import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { ProjectService } from '../../project/project.service';
+import { DataUpdatedService } from '../../services/data-updated.service';
+// eslint-disable-next-line import/no-cycle
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { TaskAddComponent } from '../task-add/task-add.component';
 import { TaskService } from '../task.service';
-
-import { DataUpdatedService } from '../../services/data-updated.service';
-import { ChangeDateTimeFromTextDirective } from '../../directives/change-date-time-from-text.directive';
 
 
 @Component({

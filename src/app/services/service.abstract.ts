@@ -1,14 +1,14 @@
 import { Inject, Injectable } from "@angular/core";
-import { BehaviorSubject, Observable, from } from "rxjs";
-import { EntityTable, Table } from "dexie";
-
-import { DbService } from "./db.service";
 import { User } from "@supabase/supabase-js";
-import { AuthService } from "../auth/auth.service";
-import { Changes, DataUpdatedService } from "./data-updated.service";
+import { EntityTable, Table } from "dexie";
 import { DatabaseChangeType } from "dexie-observable/api";
+import { BehaviorSubject, Observable, from } from "rxjs";
+
+import { AuthService } from "../auth/auth.service";
 import { Updatable } from "../dto/updatable";
 import { UserBound } from "../dto/user-bound";
+import { Changes, DataUpdatedService } from "./data-updated.service";
+import { DbService } from "./db.service";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBound)) > {

@@ -1,19 +1,19 @@
 import { Dexie, Table } from 'dexie';
-import 'dexie-syncable';
 import 'dexie-observable';
+import 'dexie-syncable';
 import { v4 } from 'uuid';
-
-const randomUUID: any = v4;
 // } else {
 //     randomUUID = crypto.randomUUID;
 // }
 
-import { TagDto } from './dto/tag-dto';
 import { ProjectDto } from './dto/project-dto';
+import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
+import { TagDto } from './dto/tag-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskTagDto } from './dto/task-tag-dto';
-import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { UserDto } from './dto/user-dto';
+
+const randomUUID: any = v4;
 
 Dexie.debug = true
 

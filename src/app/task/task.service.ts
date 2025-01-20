@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { ServiceAbstract } from '../services/service.abstract';
-import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
-import { Observable, Subject, from, map, zip } from 'rxjs';
-import { DateTime, Duration } from 'luxon';
-import { DbService } from '../services/db.service';
-import { AuthService } from '../auth/auth.service';
-import { DataUpdatedService } from '../services/data-updated.service';
 import { DatabaseChangeType, IDatabaseChange } from 'dexie-observable/api';
+import { DateTime, Duration } from 'luxon';
+import { Observable, Subject, from, map, zip } from 'rxjs';
+
+import { AuthService } from '../auth/auth.service';
+import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
+import { DataUpdatedService } from '../services/data-updated.service';
+import { DbService } from '../services/db.service';
+import { ServiceAbstract } from '../services/service.abstract';
 
 interface SubtaskCount {
     subtasks: number;
@@ -111,16 +112,16 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
     getTaskSubtasks(task: TaskDto) {
         return from(this.table
-                .where('parent_uuid')
-                .equals(task.uuid)
-                .and((task) => task.completed == 0)
-                .toArray()
+            .where('parent_uuid')
+            .equals(task.uuid)
+            .and((task) => task.completed == 0)
+            .toArray()
         ) as Observable<TaskDto[]>;
     }
 
     countSubtasksByCompletion(task: TaskDto): Observable<SubtaskCount> {
         const countSubtasks$ = new Subject<SubtaskCount>();
-        
+
         zip(
             from(this.table.where({
                 parent_uuid: task.uuid
@@ -134,21 +135,21 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 subtasks, completed
             });
         });
-        return countSubtasks$;        
+        return countSubtasks$;
     }
 
     getProjectTasks(projectUuid: string) {
         return from(this.table.where({
-                project_uuid: projectUuid || '',
-                completed: 0
-            }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray()
+            project_uuid: projectUuid || '',
+            completed: 0
+        }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray()
         ) as Observable<TaskDto[]>;
     }
 
     getAllTasks() {
         return from(this.table.where({
-                completed: 0
-            }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray()
+            completed: 0
+        }).and((task) => task.parent_uuid === null || task.parent_uuid === '' || !task.parent_uuid).toArray()
         ) as Observable<TaskDto[]>;
     }
 
@@ -192,11 +193,11 @@ export class TaskService extends ServiceAbstract<Tasks> {
             complete: () => {
                 // checks if the task is recurring and creates a new task
                 if (task.recurring) {
-                    const aTask:Partial<TaskDto> = task;
+                    const aTask: Partial<TaskDto> = task;
                     // removes id to enable creating a new task
                     aTask.uuid = undefined;
                     aTask.completed = 0;
-                    
+
                     const newTask = aTask as TaskAddDto;
                     let date = DateTime.fromJSDate(newTask.dueDate as Date);
                     date = this.newDateForRecurringTask(task, date);
@@ -257,10 +258,10 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
     getTaskTree(task: TaskDto) {
         const children: TaskTree[] = [];
-        const taskTree = {...task, children} as TaskTree;
+        const taskTree = { ...task, children } as TaskTree;
         const resultDispatcher = new Subject<TaskTree>();
         from(this.table.where({
-                parent_uuid: task.uuid
+            parent_uuid: task.uuid
         }).toArray()).pipe(
             map(subtasks => {
                 const afterPush = new Subject<TaskTree>();
@@ -292,7 +293,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
     }
 
     addTaskTree(taskTree: TaskTree, internal = false) {
-        const {children, ...task} = {...taskTree};
+        const { children, ...task } = { ...taskTree };
         const return$ = new Subject();
 
         task['updated_at'] = new Date();
@@ -381,7 +382,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
         const now = new Date();
 
-        const changes: {key: string, changes: Partial<TaskDto>}[] = [];
+        const changes: { key: string, changes: Partial<TaskDto> }[] = [];
         const dataChanges: any = [];
         for (const task of tasks) {
             changes.push({
@@ -400,7 +401,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     updated_at: now
                 },
                 oldObj: task,
-                obj: {...task, dueDate: today}
+                obj: { ...task, dueDate: today }
             });
         }
 

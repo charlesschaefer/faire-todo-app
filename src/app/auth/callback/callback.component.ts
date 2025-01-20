@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { AuthService } from '../auth.service';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { MessageService } from 'primeng/api';
+
+import { AuthService } from '../auth.service';
 
 @Component({
     selector: 'app-auth-callback',

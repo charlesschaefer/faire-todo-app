@@ -1,18 +1,17 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
+import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { TranslocoModule } from '@jsverse/transloco';
-import { FormsModule } from '@angular/forms';
 
-
-import { TaskListComponent } from "../task/task-list/task-list.component";
-import { InboxComponent } from '../inbox/inbox.component';
-import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
-import { ActivatedRoute } from '@angular/router';
+import { InboxComponent } from '../inbox/inbox.component';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { TaskListComponent } from "../task/task-list/task-list.component";
+import { TaskService } from '../task/task.service';
 
 @Component({
     selector: 'app-search',

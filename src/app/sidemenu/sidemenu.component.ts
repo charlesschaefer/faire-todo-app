@@ -1,22 +1,23 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { provideTranslocoScope, TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { MenuItem } from 'primeng/api';
-import { ThemeService } from '../services/theme.service';
-import { ProjectService } from '../project/project.service';
-import { Router } from '@angular/router';
-import { AuthService } from '../auth/auth.service';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { User } from '@supabase/supabase-js';
-import { SyncService } from '../services/sync.service';
-import { invoke } from '@tauri-apps/api/core';
-import { SidebarModule } from 'primeng/sidebar';
-import { AuthComponent } from '../auth/auth.component';
-import { DrawerModule } from 'primeng/drawer';
-import { AvatarModule } from 'primeng/avatar';
-import { MenuModule } from 'primeng/menu';
 import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { provideTranslocoScope, TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { User } from '@supabase/supabase-js';
+import { invoke } from '@tauri-apps/api/core';
+import { MenuItem } from 'primeng/api';
+import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { PrimeNG } from 'primeng/config';
+import { DrawerModule } from 'primeng/drawer';
+import { MenuModule } from 'primeng/menu';
+import { SidebarModule } from 'primeng/sidebar';
+
+import { AuthComponent } from '../auth/auth.component';
+import { AuthService } from '../auth/auth.service';
+import { ProjectService } from '../project/project.service';
+import { DataUpdatedService } from '../services/data-updated.service';
+import { SyncService } from '../services/sync.service';
+import { ThemeService } from '../services/theme.service';
 
 
 @Component({

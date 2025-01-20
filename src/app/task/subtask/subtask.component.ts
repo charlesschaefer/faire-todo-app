@@ -1,28 +1,28 @@
-import { MenuModule } from 'primeng/menu';
-import { ToastModule } from 'primeng/toast';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { Component } from '@angular/core';
-import { CheckboxModule } from 'primeng/checkbox';
-import { DialogService } from 'primeng/dynamicdialog';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { ContextMenuModule } from 'primeng/contextmenu';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { CdkDrag, CdkDragPlaceholder } from '@angular/cdk/drag-drop';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-
-import { TaskDto } from '../../dto/task-dto';
-import { TaskService } from '../task.service';
-import { UndoService } from '../../services/undo.service';
-import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { DialogService } from 'primeng/dynamicdialog';
+import { MenuModule } from 'primeng/menu';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ToastModule } from 'primeng/toast';
 import { Subject } from 'rxjs';
+
+import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
+import { TaskDto } from '../../dto/task-dto';
+import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
+import { LinkifyPipe } from '../../pipes/linkify.pipe';
+import { UndoService } from '../../services/undo.service';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
+import { TaskService } from '../task.service';
+// eslint-disable-next-line import/no-cycle
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskAbstractComponent } from '../task/task.abstract.component';
-import { LinkifyPipe } from '../../pipes/linkify.pipe';
-import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 
 
 @Component({

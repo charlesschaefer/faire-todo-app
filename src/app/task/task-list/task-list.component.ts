@@ -1,16 +1,16 @@
-import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { PanelModule } from 'primeng/panel';
+import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
-
-import { TaskComponent } from '../task/task.component';
-import { TaskDto } from '../../dto/task-dto';
-import { TaskService } from '../task.service';
-import { ProjectService } from '../../project/project.service';
-import { ProjectDto } from '../../dto/project-dto';
-import { SpeedDialModule } from 'primeng/speeddial';
 import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 import { RippleModule } from 'primeng/ripple';
+import { SpeedDialModule } from 'primeng/speeddial';
+
+import { ProjectDto } from '../../dto/project-dto';
+import { TaskDto } from '../../dto/task-dto';
+import { ProjectService } from '../../project/project.service';
+import { TaskService } from '../task.service';
+import { TaskComponent } from '../task/task.component';
 
 
 @Component({

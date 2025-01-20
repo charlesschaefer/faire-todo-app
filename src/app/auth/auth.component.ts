@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TranslocoModule } from '@jsverse/transloco';
+import { User } from '@supabase/supabase-js';
+import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { AvatarModule } from 'primeng/avatar';
-import { User } from '@supabase/supabase-js';
 
 import { AuthService } from './auth.service';
-import { TranslocoModule } from '@jsverse/transloco';
 
 @Component({
   selector: 'app-auth',

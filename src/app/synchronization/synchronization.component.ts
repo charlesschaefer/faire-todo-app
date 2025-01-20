@@ -1,25 +1,23 @@
-import { Component } from '@angular/core';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { invoke } from '@tauri-apps/api/core';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputOtpModule } from 'primeng/inputotp';
-import { ToastModule } from 'primeng/toast';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { AES } from 'crypto-js';
 import { HttpClient } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
-import { firstValueFrom } from 'rxjs';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
-
-import { OtpGeneratorService } from '../services/otp-generator.service';
-import { BackupService } from '../services/backup.service';
+import { Component } from '@angular/core';
+import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { invoke } from '@tauri-apps/api/core';
 import { fetch } from '@tauri-apps/plugin-http';
+import { AES } from 'crypto-js';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputOtpModule } from 'primeng/inputotp';
+import { InputTextModule } from 'primeng/inputtext';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+import { firstValueFrom } from 'rxjs';
+
+import { BackupService } from '../services/backup.service';
+import { OtpGeneratorService } from '../services/otp-generator.service';
 
 
 @Component({

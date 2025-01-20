@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { SettingsDto } from '../dto/settings-dto';
 import { TranslocoService } from '@jsverse/transloco';
 import { invoke } from '@tauri-apps/api/core';
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
+
+import { SettingsDto } from '../dto/settings-dto';
 import { TaskService } from '../task/task.service';
 
 @Injectable({

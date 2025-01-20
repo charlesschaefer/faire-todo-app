@@ -1,30 +1,26 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslocoService } from '@jsverse/transloco';
-import { TranslocoModule } from '@jsverse/transloco';
-import { CalendarModule } from 'primeng/calendar';
-import { CardModule } from 'primeng/card';
-import { CheckboxModule } from 'primeng/checkbox';
-import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
-import { ToastModule } from 'primeng/toast';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { invoke } from '@tauri-apps/api/core';
 import {
     isPermissionGranted,
     requestPermission,
-  } from '@tauri-apps/plugin-notification';
-
+} from '@tauri-apps/plugin-notification';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ToastModule } from 'primeng/toast';
+import { Subscription } from 'rxjs';
 import { v4 } from 'uuid';
 
-const randomUUID: any = v4;
-// } else {
-//     randomUUID = crypto.randomUUID;
-// }
 
-import { SettingsService } from './settings.service';
 import { SettingsDto } from '../dto/settings-dto';
-import { invoke } from '@tauri-apps/api/core';
 import { DataUpdatedService } from '../services/data-updated.service';
-import { ButtonModule } from 'primeng/button';
+import { SettingsService } from './settings.service';
+
+const randomUUID: any = v4;
 
 @Component({
     selector: 'app-settings',

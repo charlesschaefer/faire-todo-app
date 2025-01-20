@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import packageJson from '../../../package.json';
-import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+
+// eslint-disable-next-line import/extensions
+import packageJson from '../../../package.json';
 
 @Component({
     selector: 'app-version',

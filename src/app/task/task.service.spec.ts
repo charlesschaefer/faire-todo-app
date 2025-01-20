@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { TaskService } from './task.service';
 import { ActivatedRoute } from '@angular/router';
-
-import { TaskDto, TaskTree } from '../dto/task-dto';
 import { Collection, PromiseExtended, Table, WhereClause } from 'dexie';
-import { DbService } from '../services/db.service';
-import { AuthService } from '../auth/auth.service';
+
 import { DEBUG } from '../app.debug';
+import { AuthService } from '../auth/auth.service';
+import { TaskDto, TaskTree } from '../dto/task-dto';
+import { DbService } from '../services/db.service';
+import { TaskService } from './task.service';
 
 describe('TaskService', () => {
     let service: TaskService;

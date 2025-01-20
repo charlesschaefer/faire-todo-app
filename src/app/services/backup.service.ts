@@ -1,17 +1,17 @@
-import { AES, enc } from 'crypto-js';
-
 import { Injectable } from '@angular/core';
-import { TaskService } from '../task/task.service';
-import { ProjectService } from '../project/project.service';
-import { SettingsService } from '../settings/settings.service';
-import { TagService } from './tag.service';
-import { TaskTagService } from './task-tag.service';
-import { TaskDto } from '../dto/task-dto';
+import { AES, enc } from 'crypto-js';
+import { forkJoin, Subject } from 'rxjs';
+
 import { ProjectDto } from '../dto/project-dto';
 import { SettingsDto } from '../dto/settings-dto';
 import { TagDto } from '../dto/tag-dto';
+import { TaskDto } from '../dto/task-dto';
 import { TaskTagDto } from '../dto/task-tag-dto';
-import { forkJoin, Subject } from 'rxjs';
+import { ProjectService } from '../project/project.service';
+import { SettingsService } from '../settings/settings.service';
+import { TaskService } from '../task/task.service';
+import { TagService } from './tag.service';
+import { TaskTagService } from './task-tag.service';
 
 interface BackupData {
     task: TaskDto[];

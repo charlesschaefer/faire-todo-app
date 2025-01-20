@@ -1,26 +1,27 @@
 import { Inject, Injectable } from '@angular/core';
+import { TranslocoService } from '@jsverse/transloco';
 import { SupabaseClient, User } from '@supabase/supabase-js';
-import Dexie from 'dexie';
-import 'dexie-syncable';
+import { Dexie } from 'dexie';
 import 'dexie-observable';
-import { environment } from '../../environments/environment';
-import { AuthService } from '../auth/auth.service';
-import { BehaviorSubject, forkJoin } from 'rxjs';
-import { AppDb, TableKeys } from '../app.db';
-import { TaskService } from '../task/task.service';
-import { TagService } from './tag.service';
-import { TaskTagService } from './task-tag.service';
-import { SettingsService } from '../settings/settings.service';
-import { ProjectService } from '../project/project.service';
-import { DbService } from './db.service';
-import { UserService } from './user.service';
-import { UserDto } from '../dto/user-dto';
-import { UserBound } from "../dto/user-bound";
+import { IDatabaseChange } from 'dexie-observable/api';
+import 'dexie-syncable';
 import { ApplyRemoteChangesFunction, IPersistedContext, PollContinuation, ReactiveContinuation } from 'dexie-syncable/api';
 import { MessageService } from 'primeng/api';
-import { TranslocoService } from '@jsverse/transloco';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+
+import { environment } from '../../environments/environment';
+import { AppDb, TableKeys } from '../app.db';
+import { AuthService } from '../auth/auth.service';
+import { UserBound } from "../dto/user-bound";
+import { UserDto } from '../dto/user-dto';
+import { ProjectService } from '../project/project.service';
+import { SettingsService } from '../settings/settings.service';
+import { TaskService } from '../task/task.service';
 import { DataUpdatedService } from './data-updated.service';
-import { IDatabaseChange } from 'dexie-observable/api';
+import { DbService } from './db.service';
+import { TagService } from './tag.service';
+import { TaskTagService } from './task-tag.service';
+import { UserService } from './user.service';
 
 
 const SYNC_INTERVAL = 60000;

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ServiceAbstract } from '../services/service.abstract';
-import { DbService } from '../services/db.service';
-import { AuthService } from '../auth/auth.service';
 import { from, map, mergeMap, of, zip } from 'rxjs';
+
+import { AuthService } from '../auth/auth.service';
 import { SettingsAddDto, SettingsDto } from '../dto/settings-dto';
 import { DataUpdatedService } from '../services/data-updated.service';
+import { DbService } from '../services/db.service';
+import { ServiceAbstract } from '../services/service.abstract';
 
 @Injectable({
     providedIn: 'root'

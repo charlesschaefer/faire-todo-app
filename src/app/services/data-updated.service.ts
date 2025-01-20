@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { IDatabaseChange } from 'dexie-observable/api';
+
 import { DEBUG } from "../app.debug";
 
 export type Changes = IDatabaseChange;
