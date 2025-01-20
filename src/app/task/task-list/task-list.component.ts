@@ -2,6 +2,7 @@ import { CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-dro
 import { Component, EventEmitter, input, Input, OnInit, Output, signal } from '@angular/core';
 import { TranslocoModule } from '@jsverse/transloco';
 import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { RippleModule } from 'primeng/ripple';
 import { SpeedDialModule } from 'primeng/speeddial';
@@ -24,6 +25,7 @@ import { TaskComponent } from '../task/task.component';
         SpeedDialModule,
         ButtonModule,
         RippleModule,
+        DividerModule
     ],
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.scss'
@@ -77,7 +79,7 @@ export class TaskListComponent implements OnInit {
     }
 
     onTaskRemoved(uuid: string) {
-        const newTasks:TaskDto[] = [];
+        const newTasks: TaskDto[] = [];
         this.tasks.forEach(task => {
             if (task.uuid != uuid) {
                 newTasks.push(task);

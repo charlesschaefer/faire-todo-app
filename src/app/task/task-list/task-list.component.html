@@ -1,30 +1,32 @@
-    <div class="tasks-container">
-      @if (tasks?.length) {
-      <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
-        @for (task of tasks; track task.uuid) {
-          <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
-        }
-      </ul>
-      }
-      @if (completedTasks?.length) {
-        <p-panel [toggleable]="true" [header]="'Completed tasks' | transloco" [collapsed]="true">
-          <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
-            @for (task of completedTasks; track task.uuid) {
-              <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
-            }
-          </ul>
-        </p-panel>
-      }
-      @if (showAddTask) {
-      <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
-      <div class="task-add-line" (click)="showTaskAddPanel($event)" (keypress)="showTaskAddPanel($event)">
-        <div class="task-add-button">
-          <i class="pi pi-plus"></i>
-        </div>
-        <div class="task-add-title">
-          <span  >{{ 'Add task' | transloco }}</span>
-        </div>
-      </div>
+<div class="tasks-container">
+  @if (tasks?.length) {
+  <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
+    @for (task of tasks; track task.uuid) {
+    <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)" (onEditTask)="onTaskEdit()"
+      [subtasksCount]="subtasksCount()?.get(task.uuid)" />
     }
+  </ul>
+  }
+  @if (completedTasks?.length) {
+  <p-panel [toggleable]="true" [header]="'Completed tasks' | transloco" [collapsed]="true">
+    <ul class="tasks-list" cdkDropList (cdkDropListDropped)="onTaskOrder($event)">
+      @for (task of completedTasks; track task.uuid) {
+      <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)"
+        (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
+      }
+    </ul>
+  </p-panel>
+  }
+  @if (showAddTask) {
+  <p-divider [autofocus]="true" />
+  <!-- eslint-disable-next-line @angular-eslint/template/interactive-supports-focus -->
+  <div class="task-add-line" (click)="showTaskAddPanel($event)" (keypress)="showTaskAddPanel($event)">
+    <div class="task-add-button">
+      <i class="pi pi-plus"></i>
     </div>
-
+    <div class="task-add-title">
+      <span>{{ 'Add task' | transloco }}</span>
+    </div>
+  </div>
+  }
+</div>
