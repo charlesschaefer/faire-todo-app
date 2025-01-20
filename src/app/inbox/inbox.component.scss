@@ -1,6 +1,12 @@
 
-::ng-deep .p-card:has(.due-task-list) {
-    transform: scale(90%, 90%);
+/*::ng-deep .p-card:has(.due-task-list) {*/
+::ng-deep .p-accordion:has(.due-task-list) {
+    .p-accordioncontent, .p-accordionheader {
+        transform: scale(90%, 90%);
+    }
+    .p-accordionpanel {
+        border: none;
+    }
 }
 
 ::ng-deep .task-list-speeddial {

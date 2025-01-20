@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskListComponent } from '../task/task-list/task-list.component';
-import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { firstValueFrom } from 'rxjs';
-import { InboxComponent } from '../inbox/inbox.component';
 import { DateTime } from 'luxon';
 import { TranslocoModule } from '@jsverse/transloco';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
+import { AccordionModule } from 'primeng/accordion';
+
+
+import { InboxComponent } from '../inbox/inbox.component';
+import { TaskListComponent } from '../task/task-list/task-list.component';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
 
 @Component({
@@ -18,7 +21,8 @@ import { SubtitlePipe } from '../pipes/subtitle.pipe';
         TranslocoModule,
         CardModule,
         ButtonModule,
-        SubtitlePipe
+        SubtitlePipe,
+        AccordionModule
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'

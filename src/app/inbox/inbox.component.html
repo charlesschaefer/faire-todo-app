@@ -1,12 +1,21 @@
 <h2   class="page-title">{{ pageTitle | transloco }} <span [innerHTML]="pageSubtitle | subtitle:subtitleModifier "></span></h2>
 @if (hasDueTask() && dueTasks()) {
     <p-card>
-        <div class="flex flex-row gap-3 align-content-center due-task-list">
-            <strong class="flex align-items-center gap-1" [style]="{color: 'var(--p-red-700)'}">
-                {{'Due tasks' | transloco }}</strong>
-            <p-button variant="text" severity="info" (onClick)="rescheduleDueTasksForToday($event)">{{'Reschedule due tasks for today' | transloco }}</p-button>
-        </div>
-        <app-task-list [tasks]="dueTasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount" #dueTaskList [showAddTask]="false" />
+        <p-accordion value="0" class="due-task-list-accordion">
+            <p-accordion-panel value="0">
+                <p-accordion-header>
+                    <div class="flex flex-row gap-3 align-content-center due-task-list">
+                        <strong class="flex align-items-center gap-1" [style]="{color: 'var(--p-red-700)'}">
+                            {{'Due tasks' | transloco }}</strong>
+                        <p-button variant="text" severity="info" (onClick)="rescheduleDueTasksForToday($event)">{{'Reschedule due tasks for today' | transloco }}</p-button>
+                    </div>
+                </p-accordion-header>
+                <p-accordion-content>
+                    
+                    <app-task-list [tasks]="dueTasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount" #dueTaskList [showAddTask]="false" />
+                </p-accordion-content>
+            </p-accordion-panel>
+        </p-accordion>
     </p-card>
 }
 <app-task-list [tasks]="tasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount" #appTaskList />

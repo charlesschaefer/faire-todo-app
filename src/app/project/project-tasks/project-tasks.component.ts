@@ -2,7 +2,10 @@ import { Component, computed, linkedSignal, OnInit, signal, WritableSignal } fro
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { firstValueFrom } from 'rxjs';
-
+import { CommonModule } from '@angular/common';
+import { CardModule } from 'primeng/card';
+import { ButtonModule } from 'primeng/button';
+import { AccordionModule } from 'primeng/accordion';
 
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskAddComponent } from '../../task/task-add/task-add.component';
@@ -11,10 +14,7 @@ import { ProjectDto } from '../../dto/project-dto';
 import { TaskService } from '../../task/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
-import { CommonModule } from '@angular/common';
 import { DataUpdatedService } from '../../services/data-updated.service';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
 import { SubtitlePipe } from '../../pipes/subtitle.pipe';
 
 
@@ -28,7 +28,8 @@ import { SubtitlePipe } from '../../pipes/subtitle.pipe';
         CommonModule,
         CardModule,
         ButtonModule,
-        SubtitlePipe
+        SubtitlePipe,
+        AccordionModule
     ],
     templateUrl: '../../inbox/inbox.component.html',
     styleUrl: '../../inbox/inbox.component.scss'

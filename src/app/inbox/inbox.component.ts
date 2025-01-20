@@ -1,29 +1,30 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, computed, HostListener, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { TranslocoModule } from '@jsverse/transloco';
+import { DateTime } from 'luxon';
+import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CalendarModule } from 'primeng/calendar';
+import { CardModule } from 'primeng/card';
+import { ChipModule } from 'primeng/chip';
+import { DividerModule } from 'primeng/divider';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
-import { ChipModule } from 'primeng/chip';
-import { CardModule } from 'primeng/card';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
-import { DividerModule } from 'primeng/divider';
-import { CalendarModule } from 'primeng/calendar';
+import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 
-import { TaskListComponent } from "../task/task-list/task-list.component";
-import { TaskDto } from '../dto/task-dto';
-import { TaskAddComponent } from '../task/task-add/task-add.component';
-import { TaskService } from '../task/task.service';
-import { TranslocoModule } from '@jsverse/transloco';
-import { ActivatedRoute } from '@angular/router';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { SubtitlePipe } from '../pipes/subtitle.pipe';
-import { DateTime } from 'luxon';
 import { ProjectDto } from '../dto/project-dto';
+import { TaskDto } from '../dto/task-dto';
+import { SubtitlePipe } from '../pipes/subtitle.pipe';
+import { DataUpdatedService } from '../services/data-updated.service';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
+import { TaskListComponent } from "../task/task-list/task-list.component";
+import { TaskService } from '../task/task.service';
 
 
 @Component({
@@ -48,7 +49,8 @@ import { ProjectDto } from '../dto/project-dto';
         TaskAddComponent,
         TranslocoModule,
         ButtonModule,
-        SubtitlePipe
+        SubtitlePipe,
+        AccordionModule
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
