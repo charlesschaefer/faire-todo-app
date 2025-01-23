@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { TranslocoModule } from '@jsverse/transloco';
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { firstValueFrom } from 'rxjs';
 
-import { TaskListComponent } from '../task/task-list/task-list.component';
-import { TaskAddComponent } from '../task/task-add/task-add.component';
-import { InboxComponent } from '../inbox/inbox.component';
 import { TaskDto } from '../dto/task-dto';
+import { InboxComponent } from '../inbox/inbox.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
+import { TaskListComponent } from '../task/task-list/task-list.component';
 
 @Component({
     selector: 'app-upcoming',
@@ -21,7 +21,7 @@ import { SubtitlePipe } from '../pipes/subtitle.pipe';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        AccordionModule
+        PanelModule
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'
@@ -31,7 +31,7 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
 
     override async getTasks() {
         const tasks = await firstValueFrom(this.taskService.getUpcoming());
-    
+
         // now filter only tasks not completed
         this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
         this.countSubtasks();

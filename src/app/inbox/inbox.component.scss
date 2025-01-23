@@ -1,22 +1,36 @@
 /*::ng-deep .p-card:has(.due-task-list) {*/
-::ng-deep .p-accordion:has(.due-task-list) {
 
-    .p-accordioncontent,
-    .p-accordionheader {
-        transform: scale(90%, 90%);
-    }
+.due-task-list-accordion {
+    padding: 3px;
+}
 
-    .p-accordionheader {
+::ng-deep .p-panel:has(.due-task-list) {
+
+    border: none;
+    // transform: scale(90%, 90%);
+    font-size: 0.9em;
+    padding: 20px;
+
+    .p-panel-header {
         width: 100%;
         align-self: end;
+        padding: 18px;
+        border-start-start-radius: 6px;
+        border-start-end-radius: 6px;
+
+        &:hover {
+            background-color: var(--p-menu-item-focus-background);
+            cursor: pointer;
+        }
+
+        .due-task-list .p-button {
+            transform: scale(0.95);
+        }
     }
 
-    .p-accordionpanel:not(.p-disabled)>.p-accordionheader:hover {
-        background-color: var(--p-menu-item-focus-background)
-    }
-
-    .p-accordionpanel {
-        border: none;
+    .p-panel-content {
+        transform: scale(0.9);
+        padding: 0;
     }
 }
 

@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { DateTime } from 'luxon';
 import { TranslocoModule } from '@jsverse/transloco';
-import { CardModule } from 'primeng/card';
+import { DateTime } from 'luxon';
 import { ButtonModule } from 'primeng/button';
-import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { firstValueFrom } from 'rxjs';
 
 
 import { InboxComponent } from '../inbox/inbox.component';
-import { TaskListComponent } from '../task/task-list/task-list.component';
-import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
+import { TaskListComponent } from '../task/task-list/task-list.component';
 
 @Component({
     selector: 'app-today',
@@ -22,7 +22,7 @@ import { SubtitlePipe } from '../pipes/subtitle.pipe';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        AccordionModule
+        PanelModule
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'
