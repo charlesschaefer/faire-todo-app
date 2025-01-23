@@ -1,21 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, linkedSignal, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
-import { firstValueFrom } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { firstValueFrom } from 'rxjs';
 
-import { TaskListComponent } from '../../task/task-list/task-list.component';
-import { TaskAddComponent } from '../../task/task-add/task-add.component';
-import { ProjectService } from '../project.service';
 import { ProjectDto } from '../../dto/project-dto';
-import { TaskService } from '../../task/task.service';
 import { TaskDto } from '../../dto/task-dto';
 import { InboxComponent } from '../../inbox/inbox.component';
-import { DataUpdatedService } from '../../services/data-updated.service';
 import { SubtitlePipe } from '../../pipes/subtitle.pipe';
+import { DataUpdatedService } from '../../services/data-updated.service';
+import { TaskAddComponent } from '../../task/task-add/task-add.component';
+import { TaskListComponent } from '../../task/task-list/task-list.component';
+import { TaskService } from '../../task/task.service';
+import { ProjectService } from '../project.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ import { SubtitlePipe } from '../../pipes/subtitle.pipe';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        AccordionModule
+        PanelModule
     ],
     templateUrl: '../../inbox/inbox.component.html',
     styleUrl: '../../inbox/inbox.component.scss'
@@ -37,7 +37,7 @@ import { SubtitlePipe } from '../../pipes/subtitle.pipe';
 export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
     projectId = signal<string>(this.route.snapshot.paramMap.get("id") || '');
-    override project: WritableSignal<ProjectDto> = linkedSignal(() =>  ({name: this.translate.translate('Inbox'), uuid: this.projectId()} as ProjectDto));
+    override project: WritableSignal<ProjectDto> = linkedSignal(() => ({ name: this.translate.translate('Inbox'), uuid: this.projectId() } as ProjectDto));
     projectName = computed(() => this.project().name || '');
     override pageTitle = 'Project:';
     override pageSubtitle = this.projectName();
@@ -61,7 +61,7 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
 
         const project = await this.projectService.get(this.projectId()) as ProjectDto;
         this.project.set(project);
-        
+
         this.pageSubtitle = this.projectName();
         super.ngOnInit();
     }

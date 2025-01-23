@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
 import { DateTime } from 'luxon';
-import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
@@ -14,6 +13,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
@@ -50,7 +50,7 @@ import { TaskService } from '../task/task.service';
         TranslocoModule,
         ButtonModule,
         SubtitlePipe,
-        AccordionModule
+        PanelModule
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
@@ -60,7 +60,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     pageSubtitle = '';
     subtitleModifier = '';
 
-    tasks = signal< TaskDto[]>([]) ;
+    tasks = signal<TaskDto[]>([]);
     subtasksCount!: Map<string, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
@@ -83,8 +83,8 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
         protected dataUpdatedService: DataUpdatedService,
-    ) {}
-    
+    ) { }
+
     /**
      * This method is called after the view has been initialized.
      * It is used to show the task add overlay if the sharetargetUrl is present.
@@ -179,12 +179,13 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dueTasks.set([]);
         }
     }
-    rescheduleDueTasksForToday(_event: any) {
+    rescheduleDueTasksForToday(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
         if (this.dueTasks) {
             this.taskService.rescheduleTasksForToday(this.dueTasks());
         }
     }
-
     async countSubtasks() {
         if (this.tasks()) {
             this.subtasksCount = await this.taskService.countAllTasksSubtasks(this.tasks());
@@ -195,10 +196,10 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getTasks();
 
         this.sharetargetUrl = '';
-        this.isAddTaskOpen  = false;
+        this.isAddTaskOpen = false;
         this.isEditTaskOpen = false;
     }
-    
+
     onEditTask() {
         console.log("called Inbox.onEditTask()");
         this.getTasks();

@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { TranslocoModule } from '@jsverse/transloco';
-import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { AccordionModule } from 'primeng/accordion';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
+import { firstValueFrom } from 'rxjs';
 
-import { InboxComponent } from '../inbox/inbox.component';
-import { TaskService } from '../task/task.service';
 import { TaskDto } from '../dto/task-dto';
-import { TaskListComponent } from '../task/task-list/task-list.component';
-import { TaskAddComponent } from '../task/task-add/task-add.component';
-import { DataUpdatedService } from '../services/data-updated.service';
+import { InboxComponent } from '../inbox/inbox.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
+import { DataUpdatedService } from '../services/data-updated.service';
+import { TaskAddComponent } from '../task/task-add/task-add.component';
+import { TaskListComponent } from '../task/task-list/task-list.component';
+import { TaskService } from '../task/task.service';
 
 @Component({
     selector: 'app-all-tasks',
@@ -24,13 +24,13 @@ import { SubtitlePipe } from '../pipes/subtitle.pipe';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        AccordionModule
+        PanelModule
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'
 })
-export class AllTasksComponent  extends InboxComponent {
-    
+export class AllTasksComponent extends InboxComponent {
+
     override pageTitle = 'All Tasks';
 
     constructor(
@@ -43,7 +43,7 @@ export class AllTasksComponent  extends InboxComponent {
 
     override async getTasks() {
         const tasks = await firstValueFrom(this.taskService.getAllTasks());
-        
+
         this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
         this.countSubtasks();
 
