@@ -1,6 +1,6 @@
 {
   "productName": "Faire Todo App",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "identifier": "com.fairetodoapp",
   "build": {
     "beforeDevCommand": "npm run start -- --host localhost --public-host localhost",

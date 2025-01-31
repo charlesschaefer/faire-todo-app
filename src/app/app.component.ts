@@ -75,9 +75,9 @@ export class AppComponent implements OnInit {
     showSidebar = false;
 
     syncStatus = '';
-    _currentUser = signal < User | null>(null);
+    _currentUser = signal<User | null>(null);
     currentUser = computed<User | null>(() => this._currentUser());
-    
+
     shareListener!: PluginListener;
     childComponentsData!: {
         showAddTask: boolean,
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
     };
     showAddTaskSubscription!: Subscription;
 
-    constructor (
+    constructor(
         private translate: TranslocoService,
         private undoService: UndoService,
         private messageService: MessageService,
@@ -102,7 +102,7 @@ export class AppComponent implements OnInit {
         console.warn("AppComponent::Constructor()")
 
         let userLanguage = localStorage.getItem('language');
-        const availableLangs:any[] = this.translate.getAvailableLangs();
+        const availableLangs: any[] = this.translate.getAvailableLangs();
 
         if (!userLanguage || !availableLangs.includes(userLanguage)) {
             userLanguage = 'en';
@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
                     setTimeout(() => {
                         if ((index = urls[0].indexOf('#')) !== -1) {
                             const fragment = urls[0].slice(index + 1);
-                            this.router.navigate(['/auth/callback'], {fragment: fragment})
+                            this.router.navigate(['/auth/callback'], { fragment: fragment })
                             return;
                         }
                     }, 2000);
@@ -234,21 +234,21 @@ export class AppComponent implements OnInit {
 
     private async handleUserAuthenticationState() {
         this.authService.user.subscribe(async user => {
-            if (this._currentUser && !user) {
+            if (this._currentUser() && !user) {
                 this._currentUser.set(null);
-                
-                console.log("User signed out... disconnecting synchronization")                
+
+                console.log("User signed out... disconnecting synchronization")
                 return this.syncService.disconnect().catch(console.error).then(async () => {
                     this.messageService.add({
                         severity: 'info',
                         summary: this.translate.translate("Signed off"),
                         detail: this.translate.translate("You were signed off. Now your tasks will be saved only locally."),
                         key: 'auth-messages'
-                    }) 
+                    })
                 });
             }
 
-            if (!user && !this._currentUser) {
+            if (!user && !this._currentUser()) {
                 console.error("Unknown user authentication state...")
                 return;
             }
@@ -261,7 +261,7 @@ export class AppComponent implements OnInit {
             console.log("User signed in... connecting synchronization")
 
             this._currentUser.set(user);
-            
+
             this.messageService.add({
                 severity: 'info',
                 detail: this.translate.translate("We will start synchronizing your data with our servers now"),
@@ -269,7 +269,7 @@ export class AppComponent implements OnInit {
                 key: 'auth-messages'
             });
 
-            
+
             // start watching for changes on the synchronization status
             this.syncService.syncStatus.subscribe((status) => {
                 this.syncStatus = Dexie.Syncable.StatusTexts[status];
@@ -285,7 +285,7 @@ export class AppComponent implements OnInit {
                     summary: this.translate.translate("Failed to synchronize with server."),
                     key: 'auth-messages'
                 });
-                
+
                 console.log("Error starting synchronization: ", error);
                 console.log("Trying to connect synchronization again")
                 await this.syncService.disconnect();
@@ -300,12 +300,16 @@ export class AppComponent implements OnInit {
         // before starting the sincronization
         this.syncService.updateRowsUserUuid().subscribe({
             next: async changed => {
-                this.messageService.add({
-                    severity: 'success',
-                    detail: this.translate.translate("Your data was successfully linked to your Google User."),
-                    summary: this.translate.translate("Linking your data to your Google User"),
-                    key: 'auth-messages'
-                });
+                const { userUpserted, ...changedItems } = { ...changed };
+
+                if (Object.values(changedItems).filter(count => count > 0).length > 0) {
+                    this.messageService.add({
+                        severity: 'success',
+                        detail: this.translate.translate("Your data was successfully linked to your Google User."),
+                        summary: this.translate.translate("Linking your data to your Google User"),
+                        key: 'auth-messages'
+                    });
+                }
 
                 console.log("======> Changed itens: ");
                 console.info("taskChanged: ", changed.taskChanged);
@@ -331,7 +335,7 @@ export class AppComponent implements OnInit {
             this.messageService.add({
                 severity: 'contrast',
                 summary: this.translate.translate('Undo'),
-                    detail: this.translate.translate('Action completed.'),
+                detail: this.translate.translate('Action completed.'),
                 life: 15000
             });
         });

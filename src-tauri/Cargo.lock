@@ -1069,7 +1069,7 @@ dependencies = [
 
 [[package]]
 name = "faire-todo-app"
-version = "0.0.33"
+version = "0.0.34"
 dependencies = [
  "bytes",
  "chrono",
