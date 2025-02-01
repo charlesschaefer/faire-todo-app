@@ -108,7 +108,10 @@ jobs:
                 key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
                 
             - name: generate environment files
-              run: SUPABASE_URL="${{ secrets.SUPABASE_URL }}" SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" npm run generate-env
+              run: npm run generate-env
+              env: 
+                SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
             - name: Build app bundle
               run: npm run tauri android build 

@@ -61,8 +61,10 @@ jobs:
         #  npm install --save-dev @rollup/rollup-darwin-arm64 @rollup/rollup-darwin-x64 @rollup/rollup-win32-x64-msvc @rollup/rollup-win32-ia32-msvc 
 
       - name: generate environment files
-        run: SUPABASE_URL="${{ secrets.SUPABASE_URL }}" SUPABASE_KEY="${{ secrets.SUPABASE_KEY }}" npm run generate-env
-          
+        run: npm run generate-env
+        env: 
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
       - uses: tauri-apps/tauri-action@v0
         env:
