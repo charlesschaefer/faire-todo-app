@@ -77,12 +77,12 @@ export class AuthService {
     });
 
     if (error) throw error;
-    if (isDevMode()) {
-      window.location.assign(data.url);
-    } else {
+    // if (isDevMode()) {
+    //   window.location.assign(data.url);
+    // } else {
       // opens the auth url in a new browser session 
       await open(data.url);
-    }
+    //}
 
     return data;
   }

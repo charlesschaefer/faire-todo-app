@@ -112,6 +112,7 @@ export class AppComponent implements OnInit {
         // conditionally registering the deep-link handler for android, because it is broken on  linux
         if (TAURI_BACKEND) { // && platform() == 'android') {
             onOpenUrl((urls) => {
+                console.log("Urls: ", urls)
                 if (urls) {
                     let index;
                     this.router.navigate(["/auth"])
