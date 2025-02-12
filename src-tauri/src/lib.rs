@@ -1,4 +1,6 @@
 use std::sync::Mutex;
+use tauri::Manager;
+use tauri_plugin_deep_link::DeepLinkExt;
 
 #[cfg(desktop)]
 mod desktop;
@@ -15,6 +17,12 @@ pub fn run() {
     //mdns::broadcast_service();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            // ...
+            let _ = app.get_webview_window("main")
+                       .expect("no main window")
+                       .set_focus();
+        }))
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_shell::init())
@@ -22,9 +30,12 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_sharetarget::init())
         .manage(Mutex::new(data::AppData::default()))
-        .setup(|_app| {
+        .setup(|app| {
             #[cfg(desktop)]
-            desktop::setup_system_tray_icon(_app);
+            desktop::setup_system_tray_icon(app);
+
+            #[cfg(all(desktop, dev))]
+            app.deep_link().register("fairetodoapp")?;
 
             Ok(())
         })

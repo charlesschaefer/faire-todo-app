@@ -8,12 +8,32 @@
 <body>
     <h1>We're redirecting you back to the app...</h1>
     <script type="text/javascript">
-        // This script logs a message to the console
+        function isMobile() {
+            const toMatch = [
+                /Android/i,
+                /webOS/i,
+                /iPhone/i,
+                /iPad/i,
+                /iPod/i,
+                /BlackBerry/i,
+                /Windows Phone/i
+            ];
+
+            return toMatch.some((toMatchItem) => {
+                return navigator.userAgent.match(toMatchItem);
+            });
+        }
+
         const hash = window.location.hash;
-        const url = 'http://tauri.localhost/auth/callback/' + hash;
+        let url;
+        if (isMobile()) {
+            url = 'http://tauri.localhost/auth/callback/' + hash;
+        } else {
+            url = 'fairetodoapp://localhost/auth/callback/' + hash;
+        }
+        
         document.body.innerHTML += `<a href="${url}">Faire Todo App</a>`;
         window.location = url;
-        // console.log(hash);
     </script>
 </body>
 </html>

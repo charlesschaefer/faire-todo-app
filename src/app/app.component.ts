@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
         this.translate.setActiveLang(userLanguage);
 
         // conditionally registering the deep-link handler for android, because it is broken on  linux
-        if (TAURI_BACKEND && platform() == 'android') {
+        if (TAURI_BACKEND) { // && platform() == 'android') {
             onOpenUrl((urls) => {
                 if (urls) {
                     let index;
@@ -342,7 +342,7 @@ export class AppComponent implements OnInit {
     }
 
     private listenForShareEvents() {
-        if (!TAURI_BACKEND) return;
+        if (!TAURI_BACKEND || platform() !== "android") return;
         listenForShareEvents((intent: ShareEvent) => {
             if (intent.uri) {
                 const uri = parseIntentUri(intent.uri);
