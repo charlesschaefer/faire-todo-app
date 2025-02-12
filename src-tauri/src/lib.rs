@@ -26,7 +26,7 @@ pub fn run() {
                        .set_focus();
         }));
     
-    builder = builder.plugin(tauri_plugin_os::init())
+    builder.plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_http::init())
