@@ -1,8 +1,15 @@
 # Faire Todo App
 
-Faire is an offline-first OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser. You can synchronize the tasks between your devices using P2P-like "synchronization" (you move all the tasks from one device to other, overwriting the receiver data - they need to be on the same network to work). Alternativelly you can sign in using Google OAuth, and the data will be synchronized between signed in devices using Supabase's servers.
+Faire is an offline-first OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser. 
+Besides being offline-first, it offers two ways to syncrhonize your tasks between your devices, one offline, using only your local network, and the other online, using your Google Account (Google OAuth authentication) to store your tasks in a server and synchronize them between your logged in devices.
 
-Faire is the infinitive verb in french equivalent to "to do".
+When using the offline (local network only) synchronization, you can connect two devices on the same network and, after they discover each other, you can send the data from one to another.
+
+Alternativelly you can sign in using Google OAuth. Thus, your tasks' data will be synchronized between signed in devices using Supabase's servers.
+
+## What does Faire means?
+
+Faire is the french infinitive verb equivalent to "to do".
 
 # Features
 
@@ -17,14 +24,15 @@ Faire is the infinitive verb in french equivalent to "to do".
 - [x] View all tasks
 - [x] Allow undoing when deleting a task or marking it as complete.
 - [x] Manual task ordering, for prioritization
-- [ ] Tags for tasks
 - [x] Notifications of tasks reaching their due time (Windows and Linux only)
 - [x] Subtasks
-- [x] Recurring tasks
+- [x] Recurring tasks (daily, weekly, monthly, yearly and week days)
 - [x] Synchronization of data between devices connected in the same network
-- [x] Fill the due date and due time based on dates typed in the task title (i.e.: "Do this today" sets the due date for today automatically).
+- [x] Fill the due date and due time based on dates typed in the task title (i.e.: "Do this today" sets the due date for today automatically). Both English and Brazilian Portuguese.
 - [x] Google OAuth sign in option
 - [x] Devices synchronization using Supabase's servers for signed in users
+- [x] Update due tasks' date for "today"
+- [ ] Tags for tasks
 - [ ] A calendar view of the tasks
 - [ ] A time tracker to track each task
 
@@ -81,8 +89,9 @@ npm run tauri android dev
 In order to be able to make OAuth authentication to work on Android Devices, we needed to implement two Tauri plugins in the project:
 - [shell](https://v2.tauri.app/plugin/shell/): Allows us to open an URL outside the app (opens in the user's default browser)
 - [deep-linking](https://v2.tauri.app/plugin/deep-linking/): Allows us to associate the App as the one that will be used to open some kind of URLs.
+- [single-instance](https://v2.tauri.app/plugin/single-instance/) (only desktop): Helps to avoid opening new app instances when the user clicks a deep-link outside of the app.
 
-By using shell plugin, we can ask the Android system to open supabase's authentication URL in a new browser window, allowing the user to reuse their current Google's session, instead of needing to login inside the App's webview. Our supabase authentication server was configured to redirect the user to an external URL (in this case, https://charlesschaefer.net/faire-todo-app/* prefixed URLs). 
+By using shell plugin, we can ask the Android system to open supabase's authentication URL in a new browser window, allowing the user to reuse their current Google session, instead of having to log in within the App's webview. Our supabase authentication server was configured to redirect the user to an external URL (in this case, https://charlesschaefer.net/faire-todo-app/* prefixed URLs). 
 
 Then, when the authentication is finished, Google redirects the user to something like **$URL/redirect.html#auth_token=....&refresh_token=....**. As Faire is registered as the app that opens this prefixed URLs, the user is automatically redirected to the app, that will receive the URL (including the needed tokens). We can then finish the signin process.
 
@@ -91,8 +100,26 @@ Check the file `src/app/services/auth.service.ts` (methods `signInWithGoogle` an
 
 # Download
 
+## Linux
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/faire-todo-app)
 
+Download the best bundle for your distro from our [latest release](https://github.com/charlesschaefer/faire-todo-app/releases).
+
+## Windows
+
+Download the `.exe` or `.msi` installers from our [latest release](https://github.com/charlesschaefer/faire-todo-app/releases).
+
+## MacOS
+
+Download the `.dmg` file from our [latest release](https://github.com/charlesschaefer/faire-todo-app/releases).
+
+## Android
+
+[Faire Todo App](https://play.google.com/store/apps/details?id=com.fairetodoapp) at Google Play Store.
+
+
+
+# Developing 
 
 ## Recommended IDE Setup
 
