@@ -1,4 +1,9 @@
-# Faire Todo App
+<p align="center">
+<a href="https://github.com/charlesschaefer/faire-todo-app/">
+  <img src="https://raw.githubusercontent.com/charlesschaefer/faire-todo-app/refs/heads/main/src/assets/logo.svg" alt="Faire Logo" width="170">
+</a>
+</p>
+<h1 align="center"><b>Faire Todo App</b></h1>
 
 Faire is an offline-first OpenSource multiplatform todo app, created with Tauri and Angular. It stores the data using the IndexedDb of your platform's embeded web browser. 
 Besides being offline-first, it offers two ways to syncrhonize your tasks between your devices, one offline, using only your local network, and the other online, using your Google Account (Google OAuth authentication) to store your tasks in a server and synchronize them between your logged in devices.
