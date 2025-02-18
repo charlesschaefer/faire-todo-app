@@ -5,6 +5,10 @@ import { provideRouter, withDebugTracing, withRouterConfig } from "@angular/rout
 import { TranslocoModule, provideTransloco } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from "primeng/config";
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
+import { provideSwipeMenu } from 'ngx-swipe-menu';
+import 'hammerjs';
+
  
 import { environment } from '../environments/environment';
 import { AppDb } from "./app.db";
@@ -13,6 +17,7 @@ import { routes } from "./app.routes";
 import { AppTheme } from "./app.theme";
 import { SyncService } from './services/sync.service';
 import { TranslocoHttpLoader } from './transloco-loader';
+import { ɵBrowserAnimationBuilder } from '@angular/animations';
 
 const debugTracing = [];
 void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
@@ -62,6 +67,9 @@ export const appConfig: ApplicationConfig = {
             },
             loader: TranslocoHttpLoader
         }),
+        importProvidersFrom(BrowserModule),
+        importProvidersFrom(HammerModule),
+        provideSwipeMenu(),
         provideAnimationsAsync(),
         providePrimeNG({
             ripple: true,

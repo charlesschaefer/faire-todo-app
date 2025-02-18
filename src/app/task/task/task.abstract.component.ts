@@ -58,6 +58,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     subtasksCompletedCount!: number;
 
     isMobile!: boolean;
+    isTouch!: boolean;
 
     nativeElement: ElementRef = inject(ElementRef);
     clickEventObserver!: Observable<Event>;
@@ -96,6 +97,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         this.countSubtasks();
 
         this.isMobile = isMobile();
+        this.isTouch = window.matchMedia('(pointer: coarse)').matches;
     }
 
     countSubtasks() {
@@ -313,6 +315,11 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 }
             });
         }
+    }
+
+    onSwipeLeft() {
+        console.log("Swipe Left")
+        this.confirmDeleteTask();
     }
 
     ngOnDestroy(): void {

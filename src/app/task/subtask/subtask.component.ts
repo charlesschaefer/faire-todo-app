@@ -12,6 +12,7 @@ import { MenuModule } from 'primeng/menu';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { Subject } from 'rxjs';
+import { NgxSwipeMenuComponent } from 'ngx-swipe-menu';
 
 import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 import { TaskDto } from '../../dto/task-dto';
@@ -44,7 +45,8 @@ import { CommonModule } from '@angular/common';
         DateShortenerPipe,
         TranslocoModule,
         LinkifyPipe,
-        NgxCdkDnDScrollFixerDirective
+        NgxCdkDnDScrollFixerDirective,
+        NgxSwipeMenuComponent,
     ],
     providers: [
         MessageService,

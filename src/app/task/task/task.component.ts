@@ -24,7 +24,7 @@ import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskService } from '../task.service';
 import { TaskAbstractComponent } from './task.abstract.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
 
 
 @Component({
@@ -47,6 +47,7 @@ import { CommonModule } from '@angular/common';
         LinkifyPipe,
         NgxCdkDnDScrollFixerDirective,
         CommonModule,
+        NgTemplateOutlet
     ],
     providers: [
         DialogService,
@@ -120,4 +121,6 @@ export class TaskComponent extends TaskAbstractComponent {
             }
         });
     }
+
+    
 }

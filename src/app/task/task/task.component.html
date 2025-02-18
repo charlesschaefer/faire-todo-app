@@ -1,5 +1,6 @@
 @let Task = taskData();
 
+<ng-template #taskItem>
 <li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" appNgxCdkDnDScrollFixer tabindex="0">
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
@@ -80,5 +81,21 @@
     <p-button icon="pi pi-ellipsis-v" label="" class="task-item-menu-button" severity="secondary" (onClick)="menu.toggle($event)" />
   </div>
 </li>
+</ng-template>
+
+@if (isTouch) {
+  <ngx-swipe-menu 
+    [enableSwipeLeft]="true"
+    [minSwipeDistance]="50"
+    [showSwipeLeftActions]="false"
+    swipeLeftActionLabel="Delete"
+    swipeLeftActionIcon="pi pi-trash"
+    (swipeLeftDefaultAction)="onSwipeLeft()"
+  >
+    <ng-container *ngTemplateOutlet="taskItem"></ng-container>
+  </ngx-swipe-menu>
+} @else {
+  <ng-container *ngTemplateOutlet="taskItem"></ng-container>
+}
 <p-confirmDialog />
 
