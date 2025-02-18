@@ -1,3 +1,7 @@
+li.task-item {
+    background-color: white;
+}
+
 li.task-item,
 :host ::ng-deep li.cdk-drag-preview {
     list-style: none;
@@ -197,4 +201,28 @@ li.task-item:hover .task-item-menu {
 
 .task-item-attributes-recurring {
     color: var(--p-text-muted-color);
+}
+
+
+:host ::ng-deep div.ngx-swipe-menu {
+    height: auto;
+    position: inherit;
+    box-shadow: none;
+
+    .ngx-swipe-menu-content {
+        background-color: initial;
+        position: inherit;
+    }
+
+    .ng-swipe-left-actions-container {
+        border: 1px solid red;
+        top: inherit;
+        position: absolute;
+        height: calc(100% - 10px);
+    }
+
+    .ng-swipe-right-actions-container {
+        position: inherit;
+    }
+
 }

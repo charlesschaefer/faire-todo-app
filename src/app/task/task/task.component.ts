@@ -13,6 +13,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { ToastModule } from 'primeng/toast';
 import { TreeModule } from 'primeng/tree';
 import { Subject } from 'rxjs';
+import { NgxSwipeMenuComponent } from 'ngx-swipe-menu';
 
 import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscroll-fixer.directive';
 import { TaskDto } from '../../dto/task-dto';
@@ -24,6 +25,7 @@ import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskService } from '../task.service';
 import { TaskAbstractComponent } from './task.abstract.component';
+import { NgTemplateOutlet } from '@angular/common';
 
 
 @Component({
@@ -45,6 +47,8 @@ import { TaskAbstractComponent } from './task.abstract.component';
         TranslocoModule,
         LinkifyPipe,
         NgxCdkDnDScrollFixerDirective,
+        NgxSwipeMenuComponent,
+        NgTemplateOutlet
     ],
     providers: [
         DialogService,
@@ -118,4 +122,6 @@ export class TaskComponent extends TaskAbstractComponent {
             }
         });
     }
+
+    
 }
