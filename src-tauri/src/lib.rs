@@ -21,8 +21,6 @@ pub fn run() {
     #[cfg(desktop)]
     {
         use tauri_plugin_autostart::MacosLauncher;
-        use tauri_plugin_autostart::ManagerExt;
-
         builder = builder
             .plugin(tauri_plugin_autostart::init(
                 MacosLauncher::LaunchAgent,
@@ -66,6 +64,7 @@ pub fn run() {
             notification::add_notification,
             notification::start_notification_daemon,
             notification::set_time_to_notify_today_tasks,
+            notification::set_autostart,
             close_app,
         ])
         .run(tauri::generate_context!())
