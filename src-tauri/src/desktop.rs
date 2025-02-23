@@ -68,7 +68,8 @@ pub fn setup_system_tray_icon(app: &mut App) {
 }
 
 #[cfg(desktop)]
-pub fn setup_autostart(app: tauri::AppHandle, enable: bool) {
+pub fn setup_autostart(app: &tauri::AppHandle, enable: bool) {
+    use tauri_plugin_autostart::ManagerExt;
     let autostart_manager = app.autolaunch();
 
     if enable {

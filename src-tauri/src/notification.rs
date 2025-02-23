@@ -73,7 +73,7 @@ pub fn start_notification_daemon(
 
     #[cfg(desktop)]
     {
-        desktop::setup_autostart(&app, &app_data.settings.autostart);
+        crate::desktop::setup_autostart(&app, app_data.settings.autostart);
     }
 
     if !app_data.settings.send_notifications {
@@ -197,4 +197,18 @@ pub fn start_notification_daemon(
             ));
         }
     }));
+}
+
+#[tauri::command]
+pub fn set_autostart(
+    app_handle: tauri::AppHandle, 
+    state: tauri::State<'_, Mutex<data::AppData>>,
+    autostart: Option<bool>) {
+    #[cfg(desktop)]
+    { 
+        let mut app_data = state.lock().unwrap();
+        app_data.settings.autostart = autostart.unwrap_or(false);
+        crate::desktop::setup_autostart(&app_handle, app_data.settings.autostart);
+    }
+
 }
