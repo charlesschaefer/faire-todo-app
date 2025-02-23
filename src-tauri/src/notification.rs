@@ -71,6 +71,11 @@ pub fn start_notification_daemon(
     app_data.settings = settings;
     let create_thread = true;
 
+    #[cfg(desktop)]
+    {
+        desktop::setup_autostart(&app, &app_data.settings.autostart);
+    }
+
     if !app_data.settings.send_notifications {
         println!("Not sending notifications");
         drop(app_data);

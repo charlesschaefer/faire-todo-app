@@ -10,6 +10,7 @@ import { ProjectDto } from '../../dto/project-dto';
 import { TaskDto, TaskTree } from '../../dto/task-dto';
 import { UndoItem, UndoService } from '../../services/undo.service';
 import { TaskService } from '../task.service';
+import { isMobile } from '../../../utils/functions';
 
 
 @Component({
@@ -91,7 +92,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
 
         this.countSubtasks();
 
-        this.isMobile = Boolean(navigator.userAgent.toLowerCase().match(/(android|iphone|android|iemobile|ipad)/i));
+        this.isMobile = isMobile();
     }
 
     countSubtasks() {

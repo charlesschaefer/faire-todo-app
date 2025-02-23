@@ -39,7 +39,8 @@ export class SettingsService extends ServiceAbstract<SettingsDto | SettingsAddDt
                         notifications: 0,
                         notificationTime: null,
                         todayNotifications: 0,
-                        updated_at: new Date()
+                        updated_at: new Date(),
+                        autostart: 0
                     }).pipe(map(() => 1));
                 }
                 const currentSettings = allSettings[0];

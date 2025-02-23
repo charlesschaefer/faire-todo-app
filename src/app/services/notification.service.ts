@@ -27,7 +27,8 @@ export class NotificationService {
             send_notifications: !!settings?.notifications,
             send_today_notifications: false,
             notification_title: this.translate.translate('Task duing'),
-            notification_body: this.translate.translate(`The task "{{title}}" is duing now.`, {title: "{title}"})
+            notification_body: this.translate.translate(`The task "{{title}}" is duing now.`, {title: "{title}"}),
+            autostart: !!settings?.autostart,
         }
         if (settings?.notifications) {
             if (settings.todayNotifications && settings.notificationTime) {

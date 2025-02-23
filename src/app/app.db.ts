@@ -247,6 +247,10 @@ export class AppDb extends Dexie {
             task: '$$uuid, [project_uuid+completed], [parent_uuid+completed], project_uuid, parent_uuid, completed, id, title, description, dueDate, dueTime, project, order, parent, recurring, user_uuid, updated_at',
         });
 
+        this.version(20).stores({
+            settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at, autostart',
+        });
+
         this.on('populate', () => this.populate());
     }
 

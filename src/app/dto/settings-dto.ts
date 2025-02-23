@@ -9,6 +9,7 @@ export interface SettingsDto extends Updatable {
     todayNotifications: number;
     notificationTime: Date | null;
     updated_at?: Date;
+    autostart?: number;
 }
 
 export type SettingsAddDto = Omit<SettingsDto, 'id'> & UserBound;

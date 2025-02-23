@@ -19,6 +19,7 @@ import { v4 } from 'uuid';
 import { SettingsDto } from '../dto/settings-dto';
 import { DataUpdatedService } from '../services/data-updated.service';
 import { SettingsService } from './settings.service';
+import { isMobile } from '../../utils/functions';
 
 const randomUUID: any = v4;
 
@@ -43,8 +44,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     settingsForm = this.fb.group({
         notifications: new FormControl(false),
         todayNotifications: new FormControl(false),
-        notificationTime: new FormControl()
+        notificationTime: new FormControl(),
+        autostart: new FormControl(false)
     });
+
+    isMobile: boolean = isMobile();
 
     settingsSubscription?: Subscription;
 
@@ -72,9 +76,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
             this.settingsForm.patchValue({
                 notifications: settings?.notifications ? true : false,
                 todayNotifications: settings?.todayNotifications ? true : false,
-                notificationTime: settings?.notificationTime || null
+                notificationTime: settings?.notificationTime || null,
+                autostart: settings?.autostart ? true : false
             });
-            console.log("Settings", settings, "form", this.settingsForm.value)
+            //console.log("Settings", settings, "form", this.settingsForm.value)
         });
     }
 
@@ -86,7 +91,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
             todayNotifications: Number(form.todayNotifications),
             notificationTime: form.notificationTime as unknown as Date,
             uuid: randomUUID(),
-            user_uuid: ''
+            user_uuid: '',
+            autostart: Number(form.autostart),
         };
         const settings = await this.settingsService.get(1);
         let savedData$;
@@ -104,6 +110,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 });
                 if (settingsData.notifications) {
                     this.userInitiatedNotification();
+                }
+
+                if (settingsData.autostart) {
+                    invoke('set_autostart', {enabled: true});
+                } else {
+                    invoke('set_autostart', {enabled: false});
                 }
             },
             error: async () => {
