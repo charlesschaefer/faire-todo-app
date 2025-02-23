@@ -113,11 +113,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 }
 
                 if (settingsData.autostart) {
-                    console.log("Autostart enabled");
-                    invoke('set_autostart', {autostart: true});
+                    invoke('set_autostart', {enabled: true});
                 } else {
-                    console.log("Autostart false");
-                    invoke('set_autostart', {autostart: false});
+                    invoke('set_autostart', {enabled: false});
                 }
             },
             error: async () => {
