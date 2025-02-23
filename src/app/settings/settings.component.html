@@ -45,6 +45,21 @@
           />
         </label>
       </div>
+
+      @if (isMobile === false) {
+      <div class="field">
+        <label for="autostart">
+          <p-checkbox 
+            name="autostart"
+            [binary]="true"
+            inputId="autostart"
+            formControlName="autostart"
+            class="settings-item-checkbox"
+          />
+          <span  >{{ 'Start app with your computer?' | transloco }}</span>
+        </label>
+      </div>
+      }
       <p-button [label]="'Save' | transloco" type="submit" />
     </form>
   </p-card>

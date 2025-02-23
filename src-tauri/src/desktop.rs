@@ -66,3 +66,16 @@ pub fn setup_system_tray_icon(app: &mut App) {
         })
         .build(app);
 }
+
+#[cfg(desktop)]
+pub fn setup_autostart(app: tauri::AppHandle, enable: bool) {
+    let autostart_manager = app.autolaunch();
+
+    if enable {
+        let _ = autostart_manager.enable();
+        println!("Autostart enabled");
+    } else {
+        let _ = autostart_manager.disable();
+        println!("Autostart disabled");
+    }
+}

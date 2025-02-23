@@ -17,20 +17,26 @@ pub fn run() {
     //mdns::broadcast_service();
 
     let mut builder = tauri::Builder::default();
-    
+
     #[cfg(desktop)]
     {
-        builder = builder.plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            // ...
-            let webview = app.get_webview_window("main")
-                       .expect("no main window");
-            webview.set_focus().expect("Can't focus the main window");
-            
-        }));
+        use tauri_plugin_autostart::MacosLauncher;
+        use tauri_plugin_autostart::ManagerExt;
 
+        builder = builder
+            .plugin(tauri_plugin_autostart::init(
+                MacosLauncher::LaunchAgent,
+                Some(vec![]),
+            ))
+            .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+                // ...
+                let webview = app.get_webview_window("main").expect("no main window");
+                webview.set_focus().expect("Can't focus the main window");
+            }));
     }
-    
-    builder.plugin(tauri_plugin_os::init())
+
+    builder
+        .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
@@ -42,7 +48,7 @@ pub fn run() {
             {
                 desktop::setup_system_tray_icon(app);
             }
-            
+
             #[cfg(all(desktop, dev))]
             app.deep_link().register("fairetodoapp")?;
 
@@ -71,17 +77,18 @@ fn handle_deep_links(app: &AppHandle) {
     app.deep_link().on_open_url(move |event| {
         let url = &event.urls()[0];
         if url.path() != "/auth/callback/" {
-            return 
+            return;
         }
         if let Some(fragment) = url.fragment() {
-            let mut webview = app2.get_webview_window("main")
-                .expect("no main window");
+            let mut webview = app2.get_webview_window("main").expect("no main window");
 
             let mut base_url = webview.url().expect("Coudln't get the URL");
             base_url.set_path(url.path());
             base_url.set_fragment(Some(fragment));
 
-            webview.navigate(base_url).expect("Couldn't navigate to the new URL");
+            webview
+                .navigate(base_url)
+                .expect("Couldn't navigate to the new URL");
         }
     });
 }
@@ -90,4 +97,3 @@ fn handle_deep_links(app: &AppHandle) {
 fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
 }
-

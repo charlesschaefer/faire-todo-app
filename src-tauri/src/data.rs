@@ -23,6 +23,7 @@ pub struct Settings {
     pub send_today_notifications: bool,
     pub notification_title: String,
     pub notification_body: String,
+    pub autostart: bool,
 }
 
 #[derive(Default)]
