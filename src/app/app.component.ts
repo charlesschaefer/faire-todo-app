@@ -339,6 +339,14 @@ export class AppComponent implements OnInit {
         });
     }
 
+    test_showSidebar() {
+        this.showSidebar = true;
+
+        console.log("showSidebar: ", this.showSidebar);
+
+        return true;
+    }
+
     private watchForUndoCalls() {
         // watches for undo calls, so we exhibit a toast to the user
         this.undoService.watch().pipe(delay(700)).subscribe(async () => {

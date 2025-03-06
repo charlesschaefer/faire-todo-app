@@ -13,7 +13,7 @@
       }
     </div>
     <div class="p-toolbar-group-end">
-      <app-sidemenu [(showSidebar)]="showSidebar" [syncStatus]="syncStatus" [currentUser]="currentUser()" />
+      <app-sidemenu [(showSidebar)]="showSidebar" [syncStatus]="syncStatus" [currentUser]="currentUser()" #sideMenu />
     </div>
   </p-toolbar>
 </header>
@@ -23,6 +23,9 @@
     <router-outlet 
       (activate)="onActivate($event)"
     />
+  </div>
+  <div class="menu-swipe-opener" (swipeleft)="test_showSidebar()">
+    
   </div>
 </section>
 
