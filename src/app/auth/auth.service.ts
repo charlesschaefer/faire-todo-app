@@ -1,4 +1,4 @@
-import { Inject, Injectable, isDevMode, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';

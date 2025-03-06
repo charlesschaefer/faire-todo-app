@@ -175,6 +175,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             title: form.title as unknown as string,
             description: form.description || null,
             dueDate: form.dueDate || null,
+            originalDueDate: this.task.originalDueDate || null,
             dueTime: form.dueTime || null,
             project: 0,
             completed: 0,

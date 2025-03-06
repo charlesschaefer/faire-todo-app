@@ -31,6 +31,33 @@ export class TaskService extends ServiceAbstract<Tasks> {
         this.setTable();
     }
 
+    private fillOriginalDueDate(data: Tasks) {
+        if (!data.dueDate) {
+            data.originalDueDate = null;
+        } else if (!data.originalDueDate) {
+            data.originalDueDate = data.dueDate;
+        }
+        return data;
+    }
+
+    override add(data: Tasks): Observable<any> {
+        data = this.fillOriginalDueDate(data);
+        return super.add(data);
+    }
+    override upsert(data: Tasks) {
+        data = this.fillOriginalDueDate(data);
+        return super.upsert(data);
+    }
+
+    override bulkAdd(data: Tasks[]) {
+        data = data.map((task) => this.fillOriginalDueDate(task));
+        return super.bulkAdd(data);
+    }
+
+    override edit(uuid: string, data: Tasks) {
+        data = this.fillOriginalDueDate(data);
+        return super.edit(uuid, data);
+    }
     listParentTasks() {
         return from(
             this.table.where({
@@ -199,7 +226,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     aTask.completed = 0;
 
                     const newTask = aTask as TaskAddDto;
-                    let date = DateTime.fromJSDate(newTask.dueDate as Date);
+                    //let date = DateTime.fromJSDate(newTask.dueDate as Date);
+                    let date = DateTime.fromJSDate((newTask.originalDueDate ?? newTask.dueDate) as Date); // Use originalDueDate if available
                     date = this.newDateForRecurringTask(task, date);
 
                     newTask.dueDate = date.toJSDate();
@@ -212,6 +240,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                         }
                     })
                 } else {
+                    task.originalDueDate = null; // Clear originalDueDate if not recurring
                     success$.complete();
                 }
 
@@ -410,3 +439,4 @@ export class TaskService extends ServiceAbstract<Tasks> {
         });
     }
 }
+

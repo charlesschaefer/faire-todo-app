@@ -251,6 +251,18 @@ export class AppDb extends Dexie {
             settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at, autostart',
         });
 
+        // @TODO: check if this version should be 20 or 21
+        this.version(21).stores({
+            task: '$$uuid, [project_uuid+completed], [parent_uuid+completed], project_uuid, parent_uuid, completed, id, title, description, dueDate, dueTime, project, order, parent, recurring, user_uuid, updated_at, originalDueDate',
+        }).upgrade(async transaction => {
+            (await transaction.table('task').toArray()).map((item) => {
+                if (item.dueDate) {
+                    item.originalDueDate = item.dueDate;
+                }
+                transaction.table('task').update(item.uuid, item);
+            });
+        });
+
         this.on('populate', () => this.populate());
     }
 

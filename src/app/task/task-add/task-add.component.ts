@@ -177,6 +177,7 @@ export class TaskAddComponent implements OnInit {
             title: form.title as unknown as string,
             description: form.description || null,
             dueDate: dueDate || null,
+            originalDueDate: dueDate || null,
             dueTime: form.dueTime || null,
             project: this.parent?.project || 0,
             project_uuid: this.parent?.project_uuid || form.project_uuid || '',
