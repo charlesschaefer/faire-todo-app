@@ -59,7 +59,7 @@
             @if (future) {
               <div class="task-item-attributes-future-dueDate"></div>
             }
-            <i class="pi pi-calendar"></i>{{Task.dueDate | dateShortener }}
+            <i class="pi pi-calendar"></i>{{Task.dueDate | dateShortener:translate.getActiveLang() }}
             @if (Task.dueTime) {
               <i class="pi pi-clock"></i>{{ dateTimeHandler.fromJSDate(Task.dueTime).toFormat("HH:mm")}}
             }
