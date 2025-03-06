@@ -1,12 +1,12 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, Injectable, isDevMode } from "@angular/core";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter, withDebugTracing, withRouterConfig } from "@angular/router";
 import { TranslocoModule, provideTransloco } from '@jsverse/transloco';
 import { MessageService } from 'primeng/api';
 import { providePrimeNG } from "primeng/config";
-import { BrowserModule, HammerModule } from '@angular/platform-browser';
-import { provideSwipeMenu } from 'ngx-swipe-menu';
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig, BrowserModule, HammerModule } from '@angular/platform-browser';
+import { provideSwipeMenu, SwipeMenuConfig } from 'ngx-swipe-menu';
 import 'hammerjs';
 
  
@@ -17,10 +17,32 @@ import { routes } from "./app.routes";
 import { AppTheme } from "./app.theme";
 import { SyncService } from './services/sync.service';
 import { TranslocoHttpLoader } from './transloco-loader';
-import { ɵBrowserAnimationBuilder } from '@angular/animations';
 
 const debugTracing = [];
 void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
+
+class SwipeOverride extends SwipeMenuConfig {
+    override overrides = {
+        "swipe": {enabled: true},
+        "pan": {enabled: true},
+        "pinch": {enabled: true},
+        "rotate": {enabled: true}
+    }
+
+    constructor() {
+        super();
+        console.log('SwipeOverride', );
+    }
+}
+
+const swipeProvider = provideSwipeMenu();
+const swipeMenuProvidersFixed = {
+    provide: swipeProvider.provide,
+    useFactory: () => {
+        const swipe = new SwipeOverride();
+        swipe.overrides.swipe.enabled = true;
+    }
+}
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -69,7 +91,7 @@ export const appConfig: ApplicationConfig = {
         }),
         importProvidersFrom(BrowserModule),
         importProvidersFrom(HammerModule),
-        provideSwipeMenu(),
+        swipeMenuProvidersFixed,
         provideAnimationsAsync(),
         providePrimeNG({
             ripple: true,
