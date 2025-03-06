@@ -30,9 +30,8 @@ export class DateShortenerPipe implements PipeTransform {
         const diff = dtNow.diff(dtValue).as('days');
 
         if (diff < -1 || diff > 1) {
-            dtValue.setLocale(locale);
             //return dtValue.toFormat("dd/MM");
-            return dtValue.toLocaleString(DateTime.DATE_SHORT);
+            return dtValue.setLocale(locale).toLocaleString(DateTime.DATE_SHORT);
         }
         return dtValue.toRelativeCalendar();
     }
