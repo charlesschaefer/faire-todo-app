@@ -37,6 +37,8 @@ Faire is the french infinitive verb equivalent to "to do".
 - [x] Google OAuth sign in option
 - [x] Devices synchronization using Supabase's servers for signed in users
 - [x] Update due tasks' date for "today"
+- [ ] Swipe to complete/delete
+- [ ] Add color to each project and some mark of the project tasks
 - [ ] Tags for tasks
 - [ ] A calendar view of the tasks
 - [ ] A time tracker to track each task
