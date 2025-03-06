@@ -17,7 +17,6 @@ import { routes } from "./app.routes";
 import { AppTheme } from "./app.theme";
 import { SyncService } from './services/sync.service';
 import { TranslocoHttpLoader } from './transloco-loader';
-import { ɵBrowserAnimationBuilder } from '@angular/animations';
 
 const debugTracing = [];
 void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
