@@ -2,9 +2,6 @@ import { Dexie, Table } from 'dexie';
 import 'dexie-observable';
 import 'dexie-syncable';
 import { v4 } from 'uuid';
-// } else {
-//     randomUUID = crypto.randomUUID;
-// }
 
 import { ProjectDto } from './dto/project-dto';
 import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
@@ -23,17 +20,19 @@ function runTaskSerial(fn: CallableFunction, results: any) {
 }
 
 export type TableKeys = 'task' | 'project' | 'tag' | 'task_tag' | 'settings' | 'user';
+export type DeletableTable<Table> = Table & { deleted?: number, deletedAt?: Date };
 
 export class AppDb extends Dexie {
-    task!: Table<TaskDto, number>;
-    project!: Table<ProjectDto, number>;
-    tag!: Table<TagDto, number>;
-    task_tag!: Table<TaskTagDto, number>;
-    settings!: Table<SettingsAddDto, number>;
-    user!: Table<UserDto, number>;
+    task!: Table<DeletableTable<TaskDto>, number>;
+    project!: Table<DeletableTable<ProjectDto>, number>;
+    tag!: Table<DeletableTable<TagDto>, number>;
+    task_tag!: Table<DeletableTable<TaskTagDto>, number>;
+    settings!: Table<DeletableTable<SettingsAddDto>, number>;
+    user!: Table<DeletableTable<UserDto>, number>;
 
     constructor() {
         super('faire_todo_app');
+        
         this.version(6).stores({
             task: '++id, title, description, dueDate, dueTime, project, completed, order',
             project: '++id, name',
@@ -263,6 +262,14 @@ export class AppDb extends Dexie {
             });
         });
 
+        this.version(22).stores({
+            task: '$$uuid, [project_uuid+completed], [parent_uuid+completed], project_uuid, parent_uuid, completed, id, title, description, dueDate, dueTime, project, order, parent, recurring, user_uuid, updated_at, originalDueDate, deleted, deletedAt',
+            project: '$$uuid, id, name, user_uuid, updated_at, deleted, deletedAt',
+            tag: '$$uuid, id, name, user_uuid, updated_at, deleted, deletedAt',
+            settings: '$$uuid, id, notifications, todayNotifications, notificationTime, user_uuid, updated_at, autostart, deleted, deletedAt',
+            user: '$$uuid, id, email, name, created_at, avatar_url, updated_at, deleted, deletedAt'
+        });
+
         this.on('populate', () => this.populate());
     }
 
@@ -271,14 +278,31 @@ export class AppDb extends Dexie {
             notifications: 1,
             todayNotifications: 0,
             notificationTime: null,
-            // uuid: randomUUID(),
-            // user_uuid: randomUUID()
         } as SettingsAddDto);
     }
 
-    getTable(table: TableKeys) {
+    getTable(table: TableKeys): Table<DeletableTable<any>, number> {
         return this[table];
     }
-}
 
-//export const db = new AppDb();
+    async softDelete(table: TableKeys, id: number) {
+        const record = await this[table].get(id);
+        if (record) {
+            record.deleted = 1;
+            record.deletedAt = new Date();
+            await this.getTable(table).update(id, record);
+        }
+        this.getTable(table).delete
+    }
+
+    async getNonDeletedRecords(table: TableKeys) {
+        return this[table].where('deleted').notEqual(1).toArray();
+    }
+
+    async updateNonDeletedRecord(table: TableKeys, id: number, changes: Partial<any>) {
+        const record = await this[table].get(id);
+        if (record && record.deleted !== 1) {
+            await this.getTable(table).update(id, changes);
+        }
+    }
+}
