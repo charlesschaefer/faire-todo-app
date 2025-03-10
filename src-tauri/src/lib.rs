@@ -30,7 +30,8 @@ pub fn run() {
                 // ...
                 let webview = app.get_webview_window("main").expect("no main window");
                 webview.set_focus().expect("Can't focus the main window");
-            }));
+            }))
+            .plugin(tauri_plugin_updater::Builder::new().build());
     }
 
     builder
