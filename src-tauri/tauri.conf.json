@@ -30,16 +30,17 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
   },
   "plugins": {
-    "deep-link": {
-      "mobile": [
-        { "host": "charlesschaefer.net", "pathPrefix": ["/faire-todo-app"] },
-        { "host": "tauri.localhost" }
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEYzMDNFOUE4REQ5NjBBQTIKUldTaUNwYmRxT2tEODlQc2NXcXJkT0lpeWt2NjJlVEpnaFh1cXFLQU51YTVLQjFxbVlWRUJvWEoK",
+      "endpoints": [
+        "https://github.com/charlesschaefer/faire-todo-app/releases/latest/download/latest.json"
       ],
-      "desktop": {
-        "schemes": ["tauri", "fairetodoapp"]
+      "windows": {
+        "installMode": "passive"
       }
     }
   }
