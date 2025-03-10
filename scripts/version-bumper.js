@@ -3,9 +3,9 @@
 const shell = require('shelljs');
 
 const DIR = require.main.path;
-const SNAPCRAFT_PATTERN = /^version: '(\d+\.\d+\.\d+)'$/;
-const CARGO_PATTERN = /^version\s+= "(\d+\.\d+\.\d+)"$/;
-const TAURI_PATTERN = /^  "version": "(\d+\.\d+\.\d+)",$/;
+const SNAPCRAFT_PATTERN = /^version: '(\d+\.\d+\.\d+)'/;
+const CARGO_PATTERN = /^version\s+= "(\d+\.\d+\.\d+)"/;
+const TAURI_PATTERN = /^  "version": "(\d+\.\d+\.\d+)",/;
 
 const FILES = [
     {
