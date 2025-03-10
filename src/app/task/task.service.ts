@@ -228,7 +228,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     const newTask = aTask as TaskAddDto;
                     //let date = DateTime.fromJSDate(newTask.dueDate as Date);
                     let date = DateTime.fromJSDate((newTask.originalDueDate ?? newTask.dueDate) as Date); // Use originalDueDate if available
-                    date = this.newDateForRecurringTask(task, date);
+                    date = this.newDateForRecurringTask(task, date, DateTime.fromJSDate(newTask.dueDate as Date));
 
                     newTask.dueDate = date.toJSDate();
                     from(this.table.add(newTask)).subscribe({
@@ -257,7 +257,9 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return success$;
     }
 
-    private newDateForRecurringTask(task: TaskDto, date: DateTime) {
+    private newDateForRecurringTask(task: TaskDto, date: DateTime, lastDueDate: DateTime) {
+        const startOfToday = DateTime.now().startOf('day');
+        const startOfDueDate = lastDueDate.startOf('day');
         // Checks if the date is before today
         do {
             switch (task.recurring) {
@@ -281,7 +283,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     }
                     break;
             }
-        } while (date.startOf('day') < DateTime.now().startOf('day'));
+        } while (date.startOf('day') < startOfToday || date.startOf('day') <= startOfDueDate);
         return date;
     }
 
