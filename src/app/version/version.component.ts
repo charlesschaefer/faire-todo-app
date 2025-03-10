@@ -13,10 +13,11 @@ import { TranslocoService } from '@jsverse/transloco';
     selector: 'app-version',
     standalone: true,
     imports: [
-        ButtonModule, 
+        ButtonModule,
         RouterLink,
         ConfirmDialogModule,
     ],
+    providers: [ConfirmationService, MessageService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './version.component.html',
     styles: `
@@ -49,7 +50,7 @@ export class VersionComponent implements OnInit {
                     this.downloadAndInstall(update);
                 }
             })
-        });        
+        });
     }
 
     async checkNewVersions(): Promise<Update | void> {
@@ -68,16 +69,16 @@ export class VersionComponent implements OnInit {
 
         await update.downloadAndInstall((event) => {
             switch (event.event) {
-                case 'Started': 
+                case 'Started':
                     contentLength = event.data.contentLength as number;
                     console.log(`started downloading ${event.data.contentLength} bytes`);
                     break;
-                
+
                 case 'Progress':
                     downloaded += event.data.chunkLength;
                     console.log(`downloaded ${downloaded} from ${contentLength}`);
                     break;
-                
+
                 case 'Finished':
                     console.log('finished downloading');
                     break;
@@ -85,7 +86,11 @@ export class VersionComponent implements OnInit {
         });
 
         console.log('Update installed');
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Update installed' });
+        this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Success', 
+            detail: 'Update installed! Restart the app to take effect.'
+        });
     }
 
 }
