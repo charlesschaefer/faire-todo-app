@@ -3,11 +3,13 @@ import { RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { check, Update } from '@tauri-apps/plugin-updater';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoService } from '@jsverse/transloco';
 
 // eslint-disable-next-line import/extensions
 import packageJson from '../../../package.json';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { TranslocoService } from '@jsverse/transloco';
+import { isMobile } from '../../utils/functions';
+
 
 @Component({
     selector: 'app-version',
@@ -37,6 +39,10 @@ export class VersionComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if (isMobile()) {
+            return;
+        }
+
         this.checkNewVersions().then((update) => {
             if (!update)
                 return;
