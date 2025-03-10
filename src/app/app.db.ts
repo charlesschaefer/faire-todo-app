@@ -262,6 +262,17 @@ export class AppDb extends Dexie {
                 transaction.table('task').update(item.uuid, item);
             });
         });
+        
+        this.version(22).stores({
+            task: '$$uuid, [project_uuid+completed], [parent_uuid+completed], project_uuid, parent_uuid, completed, id, title, description, dueDate, dueTime, project, order, parent, recurring, user_uuid, updated_at, originalDueDate',
+        }).upgrade(async transaction => {
+            (await transaction.table('task').toArray()).map((item) => {
+                if (item.dueDate) {
+                    item.originalDueDate = new Date(item.originalDueDate);
+                }
+                transaction.table('task').update(item.uuid, item);
+            });
+        });
 
         this.on('populate', () => this.populate());
     }
