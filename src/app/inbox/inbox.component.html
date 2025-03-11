@@ -1,11 +1,12 @@
-<h2 class="page-title">{{ pageTitle | transloco }} <span [innerHTML]="pageSubtitle | subtitle:subtitleModifier "></span></h2>
+<h2 class="page-title">{{ pageTitle | transloco }} <span [innerHTML]="pageSubtitle | subtitle:subtitleModifier " [style]="{'color': 'var(--p-surface-300)'}"></span></h2>
 @if (hasDueTask() && dueTasks()) {
-<p-panel class="due-task-list-accordion p-card" [toggleable]="true" toggler="header">
+<p-panel class="due-task-list-accordion p-card" [toggleable]="true" toggler="header" [collapsed]="true">
   <ng-template #header>
-    <div class="flex flex-row gap-3 align-content-center due-task-list">
-      <strong class="flex align-items-center gap-1" [style]="{color: 'var(--p-red-700)'}">
-        {{ dueTasks().length }} {{'Due tasks' | transloco }}</strong>
-      <p-button (onClick)="rescheduleDueTasksForToday($event)" size="small">
+    <div class="flex flex-row gap-3 align-content-center align-items-center justify-content-between w-full due-task-list">
+      <strong class="flex align-items-center gap-1">
+        <p-badge [value]="dueTasks().length" severity="danger" size="xlarge" class="due-tasks-badge" />
+        {{'Due tasks' | transloco }}</strong>
+      <p-button (onClick)="rescheduleDueTasksForToday($event)" >
         {{'Reschedule for today' | transloco }}
       </p-button>
     </div>
