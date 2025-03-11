@@ -13,6 +13,8 @@ import { DataUpdatedService } from '../services/data-updated.service';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskService } from '../task/task.service';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
     selector: 'app-all-tasks',
@@ -24,7 +26,9 @@ import { TaskService } from '../task/task.service';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        PanelModule
+        PanelModule,
+        BadgeModule,
+        OverlayBadgeModule,
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'

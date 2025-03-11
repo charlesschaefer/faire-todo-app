@@ -10,6 +10,8 @@ import { InboxComponent } from '../inbox/inbox.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskListComponent } from '../task/task-list/task-list.component';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 
 @Component({
     selector: 'app-upcoming',
@@ -21,7 +23,9 @@ import { TaskListComponent } from '../task/task-list/task-list.component';
         CardModule,
         ButtonModule,
         SubtitlePipe,
-        PanelModule
+        PanelModule,
+        BadgeModule,
+        OverlayBadgeModule,
     ],
     templateUrl: '../inbox/inbox.component.html',
     styleUrl: '../inbox/inbox.component.scss'

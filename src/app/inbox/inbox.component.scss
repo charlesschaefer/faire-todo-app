@@ -2,11 +2,13 @@
 
 .due-task-list-accordion {
     padding: 3px;
+    border: none;
+    box-shadow: none;
 }
 
 ::ng-deep .p-panel:has(.due-task-list) {
 
-    border: none;
+    // border: none;
     // transform: scale(90%, 90%);
     font-size: 0.9em;
     padding: 20px;
@@ -36,6 +38,16 @@
 
 ::ng-deep .task-list-speeddial {
     display: none;
+}
+
+::ng-deep p-badge.due-tasks-badge {
+    background-color: #FEE2E2;
+    color: #E23636;
+    border-radius: 22px;
+    width: 9vw;
+    height: 9vw;
+    align-items: center;
+    margin-right: 12px;
 }
 
 @media (max-width: 600px) {

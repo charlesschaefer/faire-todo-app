@@ -16,6 +16,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { PanelModule } from 'primeng/panel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TextareaModule } from 'primeng/textarea';
+import { BadgeModule } from 'primeng/badge';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
 
 import { ProjectDto } from '../dto/project-dto';
@@ -50,7 +52,9 @@ import { TaskService } from '../task/task.service';
         TranslocoModule,
         ButtonModule,
         SubtitlePipe,
-        PanelModule
+        PanelModule,
+        BadgeModule,
+        OverlayBadgeModule,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
