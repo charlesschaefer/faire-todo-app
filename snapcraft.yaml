@@ -63,6 +63,8 @@ parts:
     build-snaps:
       - node/20/stable
       - rustup/latest/stable
+    build-environment:
+      - TAURI_SIGNING_PRIVATE_KEY: "./tauri-private.key"
     build-packages:
       - libwebkit2gtk-4.1-dev
       - build-essential
@@ -85,7 +87,7 @@ parts:
       rustup default stable
       npm clean-install --include prod --include dev --include peer
       npm install --save-dev @tauri-apps/cli @tauri-apps/api rollup
-      npm run tauri build -- --bundles deb
+      npm run tauri build -- --bundles deb --config src-tauri/snapcraft-tauri.conf.json
       dpkg -x src-tauri/target/release/bundle/deb/*.deb $SNAPCRAFT_PART_INSTALL/
       if [ -d $SNAPCRAFT_PART_INSTALL/usr/share/icons/hicolor/32x32/apps ]; then
         sed -i -e "s|Icon=faire-todo-app|Icon=/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png|g" $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop
