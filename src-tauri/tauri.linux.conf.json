@@ -1,0 +1,9 @@
+{
+  "bundle": {
+    "linux": {
+      "deb": {
+        "desktopTemplate": "./faire-todo-app.desktop.template"
+      }
+    }
+  }
+}
