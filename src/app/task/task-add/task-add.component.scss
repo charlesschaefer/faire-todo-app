@@ -49,9 +49,19 @@
     font-size: var(--p-inputtext-sm-font-size);
 }
 
-.task-add-recurring-task {
+::ng-deep .task-add-recurring-task {
     // margin-top: 10px;
     font-size: var(--p-inputtext-sm-font-size);
+
+    .p-select-label {
+        padding-right: 1px;
+        width: 90%;
+    }
+
+    .p-select-dropdown {
+        flex-shrink: 5;
+        padding-right: 4px;
+    }
 }
 
 .task-add-datepicker-panel {

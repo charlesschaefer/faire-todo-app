@@ -74,7 +74,6 @@
           }
         </div>
         <div class="task-add-recurring-task align-items-center flex flex-row gap-1">
-          <i class="pi pi-history"></i>
           <p-select 
             [options]="recurringOptions"
             formControlName="recurring"
@@ -82,7 +81,14 @@
             class="task-add-recurring"
             inputId="recurring"
             id="recurring"
-          />
+          >
+            <ng-template #selectedItem let-selectedOption>
+              <i class="pi pi-history" style="font-size: calc(var(--p-icon-size) - 30%);"></i>
+              <span style="margin-left: 5px;">
+                {{ selectedOption }}
+              </span>
+            </ng-template>
+          </p-select>
         </div>
         <p-divider />
         <div class="task-add-buttons flex flex-row justify-content-end gap-1">
