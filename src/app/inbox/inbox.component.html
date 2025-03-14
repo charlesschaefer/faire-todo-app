@@ -16,8 +16,14 @@
 </p-panel>
 
 }
-<app-task-list [tasks]="tasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount"
-               #appTaskList />
+<app-task-list 
+  [tasks]="tasks()" 
+  (showTaskAdd)="onShowTaskAddOverlay($event)" 
+  (taskEditEvent)="onEditTask()" 
+  [subtasksCount]="subtasksCount"
+  [attachmentsCount]="attachmentsCount"
+  #appTaskList 
+/>
 
 <!-- Task add overlay panel -->
 @if (project !== undefined) {
