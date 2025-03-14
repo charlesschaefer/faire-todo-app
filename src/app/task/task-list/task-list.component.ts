@@ -54,6 +54,8 @@ export class TaskListComponent implements OnInit {
     @Output() taskEditEvent = new EventEmitter();
     @Input() showAddTask = true;
 
+    @Input() attachmentsCount!: Map<string, number>;
+
     projects = signal<Map<string, ProjectDto>>(new Map<string, ProjectDto>());
 
     speedDialItems = [{

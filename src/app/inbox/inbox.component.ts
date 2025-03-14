@@ -66,6 +66,7 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     tasks = signal<TaskDto[]>([]);
     subtasksCount!: Map<string, number>;
+    attachmentsCount!: Map<string, number>;
 
     showTaskAddOverlay$ = new Subject<Event>();
 
@@ -127,7 +128,6 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     async getTasks() {
-        // const tasks = await firstValueFrom(this.taskService.getFromProject('').pipe(
         const tasks = await firstValueFrom(this.taskService.getProjectTasks('').pipe(
             mergeMap((tasks) => {
                 tasks = this.taskService.orderTasks(tasks as TaskDto[]);
@@ -143,6 +143,11 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
         ));
         this.tasks.set(tasks.tasks);
         this.subtasksCount = tasks.subtasksCount;
+
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
 
         this.separateDueTasks();
 

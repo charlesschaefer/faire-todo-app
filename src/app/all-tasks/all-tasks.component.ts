@@ -49,6 +49,12 @@ export class AllTasksComponent extends InboxComponent {
         const tasks = await firstValueFrom(this.taskService.getAllTasks());
 
         this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
+
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
+
         this.countSubtasks();
 
         this.separateDueTasks();

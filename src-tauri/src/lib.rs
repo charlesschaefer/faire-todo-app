@@ -1,6 +1,10 @@
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
+use std::fs;
+use std::io::Read;
+use base64::{engine::general_purpose, Engine};
+use tauri::command;
 
 #[cfg(desktop)]
 mod desktop;
@@ -16,7 +20,7 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
-    let mut builder = tauri::Builder::default();
+    let mut builder = tauri::Builder::default().plugin(tauri_plugin_dialog::init());
 
     #[cfg(desktop)]
     {
@@ -56,6 +60,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            encode_file_to_base64, // Register the new command here
             mdns::search_network_sync_services,
             mdns::broadcast_network_sync_services,
             http::start_http_server,
@@ -96,4 +101,17 @@ fn handle_deep_links(app: &AppHandle) {
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
+}
+
+#[tauri::command]
+fn encode_file_to_base64(file_path: String) -> Result<String, String> {
+    // Read the file
+    let mut file = fs::File::open(file_path).map_err(|e| e.to_string())?;
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).map_err(|e| e.to_string())?;
+
+    // Encode the file to Base64
+    let base64_data = general_purpose::STANDARD.encode(&buffer);
+
+    Ok(base64_data)
 }

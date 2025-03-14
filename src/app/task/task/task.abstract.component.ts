@@ -19,6 +19,7 @@ import { isMobile } from '../../../utils/functions';
     templateUrl: './task.abstract.component.html',
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
+    
     task = input.required<TaskDto>();
     _changedTask?: TaskDto;
     taskData = computed(() => {
@@ -29,8 +30,10 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         }
         return this.task();
     });
-
+    
     projects = input.required<Map<string, ProjectDto>>();
+    
+    @Input() attachmentCount?: number;
     @Input() subtasksCount?: number;
 
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix

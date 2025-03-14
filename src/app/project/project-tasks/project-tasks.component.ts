@@ -75,6 +75,12 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         // now filter only tasks not completed
         const filteredTasks = tasks.filter(task => task.completed == 0);
         this.tasks.set(this.taskService.orderTasks(filteredTasks) as TaskDto[]);
+
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
+
         this.countSubtasks();
 
         this.separateDueTasks();
