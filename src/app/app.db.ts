@@ -12,6 +12,7 @@ import { TagDto } from './dto/tag-dto';
 import { TaskDto } from './dto/task-dto';
 import { TaskTagDto } from './dto/task-tag-dto';
 import { UserDto } from './dto/user-dto';
+import { TaskAttachmentDto, AttachmentType } from './dto/task-attachment-dto';
 
 const randomUUID: any = v4;
 
@@ -22,7 +23,7 @@ function runTaskSerial(fn: CallableFunction, results: any) {
     return fn(results);
 }
 
-export type TableKeys = 'task' | 'project' | 'tag' | 'task_tag' | 'settings' | 'user';
+export type TableKeys = 'task' | 'project' | 'tag' | 'task_tag' | 'settings' | 'user' | 'task_attachment';
 
 export class AppDb extends Dexie {
     task!: Table<TaskDto, number>;
@@ -31,6 +32,7 @@ export class AppDb extends Dexie {
     task_tag!: Table<TaskTagDto, number>;
     settings!: Table<SettingsAddDto, number>;
     user!: Table<UserDto, number>;
+    task_attachment!: Table<TaskAttachmentDto, number>;
 
     constructor() {
         super('faire_todo_app');
@@ -272,6 +274,10 @@ export class AppDb extends Dexie {
                 }
                 transaction.table('task').update(item.uuid, item);
             });
+        });
+
+        this.version(23).stores({
+            task_attachment: '$$uuid, task_uuid, user_uuid, blob, updated_at',
         });
 
         this.on('populate', () => this.populate());

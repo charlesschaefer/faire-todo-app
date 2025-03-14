@@ -38,6 +38,12 @@ export class UpcomingComponent extends InboxComponent implements OnInit {
 
         // now filter only tasks not completed
         this.tasks.set(this.taskService.orderTasks(tasks) as TaskDto[]);
+        
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
+        
         this.countSubtasks();
     }
 }

@@ -126,6 +126,11 @@
         </p-accordion>
       </div>
       }
+      <ul>
+        <li *ngFor="let attachment of attachments">
+          <a (click)="openAttachment(attachment)">{{ attachment.name }}</a>
+        </li>
+      </ul>
       <p-divider [autofocus]="true" />
       <div class="task-add-subtask">
         <!--eslint-disable-next-line @angular-eslint/template/interactive-supports-focus-->

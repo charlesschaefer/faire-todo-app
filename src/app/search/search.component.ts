@@ -61,6 +61,12 @@ export class SearchComponent extends InboxComponent implements OnInit {
             }
         }
         this.tasks.set(tasks as TaskDto[]);
+
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
+
         this.completedTasks.set(completedTasks);
         this.countSubtasks();
 

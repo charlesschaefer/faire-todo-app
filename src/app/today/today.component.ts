@@ -45,6 +45,11 @@ export class TodayComponent extends InboxComponent implements OnInit {
         this.tasks.set(this.taskService.orderTasks(tasks));
         this.countSubtasks();
 
+        // Count attachments for tasks
+        this.taskService.countAttachmentsForTasks(this.tasks()).subscribe((counts) => {
+            this.attachmentsCount = counts;
+        });
+
         this.separateDueTasks();
     }
 }

@@ -8,6 +8,7 @@ import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
 import { DataUpdatedService } from '../services/data-updated.service';
 import { DbService } from '../services/db.service';
 import { ServiceAbstract } from '../services/service.abstract';
+import { TaskAttachmentDto } from '../dto/task-attachment-dto';
 
 interface SubtaskCount {
     subtasks: number;
@@ -439,6 +440,31 @@ export class TaskService extends ServiceAbstract<Tasks> {
         this.table.bulkUpdate(changes).then(() => {
             this.dataUpdatedService.next([dataChanges[0]]);
         });
+    }
+
+    countAttachmentsForTasks(tasks: TaskDto[]): Observable<Map<string, number>> {
+        const attachmentCounts$ = new Observable<Map<string, number>>((observer) => {
+            const attachmentCounts = new Map<string, number>();
+
+            const taskUuids = tasks.map((task) => task.uuid);
+
+            this.dbService.getTable("task_attachment")
+                .where('task_uuid')
+                .anyOf(taskUuids)
+                .toArray()
+                .then((attachments: TaskAttachmentDto[]) => {
+                    attachments.forEach((attachment) => {
+                        const count = attachmentCounts.get(attachment.task_uuid) || 0;
+                        attachmentCounts.set(attachment.task_uuid, count + 1);
+                    });
+
+                    observer.next(attachmentCounts);
+                    observer.complete();
+                })
+                .catch((error) => observer.error(error));
+        });
+
+        return attachmentCounts$;
     }
 }
 

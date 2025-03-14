@@ -23,7 +23,9 @@ import { DataUpdatedService } from '../../services/data-updated.service';
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { TaskAddComponent } from '../task-add/task-add.component';
 import { TaskService } from '../task.service';
-
+import { open } from '@tauri-apps/plugin-shell';
+import { TaskAttachmentService } from '../../services/task-attachment.service';
+import { TaskAttachmentDto } from '../../dto/task-attachment-dto';
 
 @Component({
     selector: 'app-task-edit',
@@ -71,6 +73,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
     dataUpdatedSubscription?: Subscription;
 
     currentLanguage = this.translate.getActiveLang();
+    attachments!: TaskAttachmentDto[];
 
     constructor(
         private dynamicDialogConfig: DynamicDialogConfig,
@@ -80,6 +83,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         private translate: TranslocoService,
         private projectService: ProjectService,
         private dataUpdatedService: DataUpdatedService,
+        private taskAttachmentService: TaskAttachmentService,
     ) { }
 
     async ngOnInit() {
@@ -248,5 +252,38 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         if (this.dataUpdatedSubscription) {
             this.dataUpdatedSubscription.unsubscribe();
         }
+    }
+
+    openAttachment(attachment: { name: string; blob: string }) {
+        const link = document.createElement('a');
+        link.href = attachment.blob;
+        link.download = attachment.name;
+        link.click();
+    }
+
+    getAttachments() {
+        this.taskAttachmentService.list().then((attachments: TaskAttachmentDto[]) => {
+            this.attachments = attachments.filter((attachment) => attachment.task_uuid === this.task.uuid);
+        });
+    }
+
+    removeAttachment(uuid: string) {
+        this.taskAttachmentService.remove(uuid).subscribe({
+            complete: () => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Attachment removed',
+                    detail: 'The attachment was successfully removed.',
+                });
+                this.getAttachments(); // Refresh the list of attachments
+            },
+            error: (err) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error',
+                    detail: `Failed to remove attachment: ${err}`,
+                });
+            },
+        });
     }
 }
