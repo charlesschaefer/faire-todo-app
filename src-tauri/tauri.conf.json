@@ -34,6 +34,15 @@
     "createUpdaterArtifacts": true
   },
   "plugins": {
+    "deep-link": {
+      "mobile": [
+        { "host": "charlesschaefer.net", "pathPrefix": ["/faire-todo-app"] },
+        { "host": "tauri.localhost" }
+      ],
+      "desktop": {
+        "schemes": ["tauri", "fairetodoapp"]
+      }
+    },
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEYzMDNFOUE4REQ5NjBBQTIKUldTaUNwYmRxT2tEODlQc2NXcXJkT0lpeWt2NjJlVEpnaFh1cXFLQU51YTVLQjFxbVlWRUJvWEoK",
       "endpoints": [

@@ -109,7 +109,6 @@ export class AppComponent implements OnInit {
         }
         this.translate.setActiveLang(userLanguage);
 
-        // conditionally registering the deep-link handler for android, because it is broken on  linux
         if (TAURI_BACKEND) { // && platform() == 'android') {
             onOpenUrl((urls) => {
                 console.log("Urls: ", urls)
@@ -138,6 +137,16 @@ export class AppComponent implements OnInit {
     onActivate(component: any) {
         // close the sidebar everytime we activate a new view
         this.showSidebar = false;
+
+        const url = this.router.url;
+        let index: number;
+        if ((index = url.indexOf('#afterAuth')) !== -1 && component instanceof InboxComponent) {
+            // if we just arrived from an authentication, the tasks table will be filled after we alrady rendered the component
+            // so we wait for 2 seconds and ask the component to load the tasks from the table again.
+            setTimeout(() => {
+                component.getTasks()
+            }, 2000);
+        }
 
         if (this.childComponentsData?.showAddTask) {
             if (component instanceof InboxComponent) {
