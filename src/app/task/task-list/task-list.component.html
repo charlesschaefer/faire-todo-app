@@ -13,6 +13,14 @@
       @for (task of completedTasks; track task.uuid) {
       <app-task [task]="task" [projects]="projects()" (onTaskRemoved)="onTaskRemoved($event)"
         (onEditTask)="onTaskEdit()" [subtasksCount]="subtasksCount()?.get(task.uuid)" />
+      <li *ngFor="let task of tasks">
+        <div class="task-item">
+          <div class="task-title">{{ task.title }}</div>
+          <div class="task-attachments" *ngIf="attachmentsCount?.get(task.uuid)">
+            <i class="pi pi-paperclip"></i> {{ attachmentsCount.get(task.uuid) }}
+          </div>
+        </div>
+      </li>
       }
     </ul>
   </p-panel>

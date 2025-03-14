@@ -6,6 +6,10 @@ use std::io::Read;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
+use std::fs;
+use std::io::Read;
+use base64::{engine::general_purpose, Engine};
+use tauri::command;
 
 #[cfg(desktop)]
 mod desktop;

@@ -93,6 +93,8 @@ export class TaskAddComponent implements OnInit {
 
     currentLanguage = this.translate.getActiveLang();
 
+    attachments: { name: string; blob: string }[] = [];
+
     constructor(
         private taskAddService: TaskService,
         private messageService: MessageService,
@@ -239,5 +241,27 @@ export class TaskAddComponent implements OnInit {
             recurring: this.recurringOptions[0]
         });
         return true;
+    }
+
+    async addAttachment() {
+        const base64Data = await this.filePickerService.pickFile();
+        if (base64Data) {
+            const attachment = {
+                uuid: randomUUID(),
+                name: 'Attachment', // You can customize this based on your needs
+                blob: base64Data,
+            };
+            this.attachments.push(attachment);
+        } else {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'No File Selected',
+                detail: 'Please select a file to attach.',
+            });
+        }
+    }
+
+    removeAttachment(index: number) {
+        this.attachments.splice(index, 1);
     }
 }
