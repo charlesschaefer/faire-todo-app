@@ -45,7 +45,7 @@ export class AuthCallbackComponent implements OnInit {
             this.activatedRoute.fragment.subscribe(async (fragment: string | null) => {
                 if (!fragment) {
                     // Redirect to home
-                    await this.router.navigate(['/']);
+                    await this.router.navigate(['/'], {fragment: 'afterAuth'});
                     return;
                 }
                 // Show success message
