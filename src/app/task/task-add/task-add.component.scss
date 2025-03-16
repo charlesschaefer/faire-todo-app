@@ -68,3 +68,42 @@
     top: calc(50% - 357px / 2);
     left: calc(50% - 306px / 2);
 }
+
+::ng-deep .task-add-attachments {
+    p-button.add-attachment-button {
+        border: 1px dashed var(--p-gray-300);
+        color: var(--p-gray-600);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+
+        &:hover, &:hover button {
+            background-color: var(--p-gray-200);
+            color: var(--p-gray-600);
+        }
+
+        &:hover button {
+            border: none;
+        }
+
+        button {
+            color: var(--p-gray-600);
+            background-color: white;
+            width: 100%;
+            padding: 10px;
+            border: none;
+        }
+    }
+
+    .attachment-image-icon {
+        width: 5vw;
+        color: var(--p-blue-500)
+    }
+
+    .attachment-item-row {
+        border: 1px dashed var(--p-gray-300);
+        border-radius: 10px;
+    }
+}
