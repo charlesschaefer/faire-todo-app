@@ -1,10 +1,9 @@
-use std::sync::Mutex;
+use std::{path::Path, sync::Mutex};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
 use std::fs;
 use std::io::Read;
 use base64::{engine::general_purpose, Engine};
-use tauri::command;
 
 #[cfg(desktop)]
 mod desktop;
@@ -104,14 +103,21 @@ fn close_app(app_handle: tauri::AppHandle) {
 }
 
 #[tauri::command]
-fn encode_file_to_base64(file_path: String) -> Result<String, String> {
+fn encode_file_to_base64(file_path: String) -> Result<data::FileData, String> {
     // Read the file
-    let mut file = fs::File::open(file_path).map_err(|e| e.to_string())?;
+    let mut file = fs::File::open(file_path.clone()).map_err(|e| e.to_string())?;
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).map_err(|e| e.to_string())?;
+
+    let fname = Path::new(file_path.as_str()).file_name().unwrap().to_str().unwrap();
 
     // Encode the file to Base64
     let base64_data = general_purpose::STANDARD.encode(&buffer);
 
-    Ok(base64_data)
+    let ret = data::FileData {
+        name: fname.to_string(),
+        blob: base64_data
+    };
+
+    Ok(ret)
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, input, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -27,7 +27,8 @@ import { TaskService } from '../task.service';
 import { encodeFileToBase64 } from '../../utils/file-utils';
 import { TaskAttachmentService } from '../../services/task-attachment.service';
 import { FilePickerService } from '../../services/file-picker.service';
-import { TaskAttachmentAddDto } from '../../dto/task-attachment-dto';
+import { TaskAttachmentAddDto, TaskAttachmentDto } from '../../dto/task-attachment-dto';
+import { TaskAttachmentComponent } from '../../task-attachment/task-attachment.component';
 
 const randomUUID = v4;
 
@@ -51,6 +52,7 @@ const randomUUID = v4;
         InputTextModule,
         DrawerModule,
         ChangeDateTimeFromTextDirective,
+        TaskAttachmentComponent,
     ],
     providers: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -87,9 +89,9 @@ export class TaskAddComponent implements OnInit {
     recurringOptions!: any[];
     // authService: any;
 
-    currentLanguage = this.translate.getActiveLang();
+    attachments = signal<Partial<TaskAttachmentDto>[]>([]);
 
-    attachments: { name: string; blob: string }[] = [];
+    currentLanguage = this.translate.getActiveLang();
 
     constructor(
         private taskAddService: TaskService,
@@ -236,25 +238,7 @@ export class TaskAddComponent implements OnInit {
         return true;
     }
 
-    async addAttachment() {
-        const base64Data = await this.filePickerService.pickFile();
-        if (base64Data) {
-            const attachment = {
-                uuid: randomUUID(),
-                name: 'Attachment', // You can customize this based on your needs
-                blob: base64Data,
-            };
-            this.attachments.push(attachment);
-        } else {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'No File Selected',
-                detail: 'Please select a file to attach.',
-            });
-        }
-    }
-
-    removeAttachment(index: number) {
-        this.attachments.splice(index, 1);
+    fuiEu() {
+        console.log(this.attachments());
     }
 }
