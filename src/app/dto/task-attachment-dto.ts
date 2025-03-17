@@ -13,6 +13,7 @@ export interface TaskAttachmentDto extends Updatable {
     task_uuid: string;
     updated_at?: Date;
     blob: string;
+    name: string;
 }
 
 export type TaskAttachmentAddDto = Omit<TaskAttachmentDto, "id" > & UserBound;

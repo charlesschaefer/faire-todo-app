@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Default, Deserialize, Debug)]
 pub struct Task {
@@ -32,4 +32,10 @@ pub struct AppData {
     pub tasks_duing_today: TasksDuingToday,
     pub settings: Settings,
     pub thread_handle: Option<std::thread::JoinHandle<()>>,
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct FileData {
+    pub name: String,
+    pub blob: String
 }
