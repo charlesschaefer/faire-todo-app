@@ -22,6 +22,7 @@ import { DbService } from './db.service';
 import { TagService } from './tag.service';
 import { TaskTagService } from './task-tag.service';
 import { UserService } from './user.service';
+import { TaskAttachmentService } from './task-attachment.service';
 
 
 const SYNC_INTERVAL = 60000;
@@ -50,6 +51,7 @@ export class SyncService {
         private messageService: MessageService,
         private translate: TranslocoService,
         private dataUpdatedService: DataUpdatedService,
+        private taskAttachmentService: TaskAttachmentService,
         @Inject('AppDb') private db: AppDb
     ) {
         this.supabase = this.authService.client;
@@ -106,7 +108,7 @@ export class SyncService {
                 return;
             }
 
-            const tables: TableKeys[] = ['settings', 'project', 'tag', 'task', 'task_tag'];
+            const tables: TableKeys[] = ['settings', 'project', 'tag', 'task', 'task_tag', 'task_attachment'];
 
             // Process local changes
             if (changes.length > 0) {
@@ -355,6 +357,7 @@ export class SyncService {
                 taskTagChanged: 0,
                 settingsChanged: 0,
                 projectChanged: 0,
+                taskAttachmentChanged: 0,
 
             };
             return (new BehaviorSubject<typeof changes>(changes)).asObservable();
@@ -379,6 +382,7 @@ export class SyncService {
             taskTagChanged: this.taskTagService.updateUserUUID(),
             settingsChanged: this.settingsService.updateUserUUID(),
             projectChanged: this.projectService.updateUserUUID(),
+            taskAttachmentChanged: this.taskAttachmentService.updateUserUUID(),
         });
         result.subscribe(() => this.rowsUpdated = true);
         return result;
