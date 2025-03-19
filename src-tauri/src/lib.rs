@@ -1,10 +1,12 @@
-use std::{path::Path, sync::Mutex};
+use base64::{engine::general_purpose, Engine};
 use data::FileType;
-use tauri::{AppHandle, Manager};
-use tauri_plugin_deep_link::DeepLinkExt;
+use tauri_plugin_fs::FilePath;
 use std::fs;
 use std::io::Read;
-use base64::{engine::general_purpose, Engine};
+use std::path::PathBuf;
+use std::{path::Path, sync::Mutex};
+use tauri::{AppHandle, Manager};
+use tauri_plugin_deep_link::DeepLinkExt;
 
 #[cfg(desktop)]
 mod desktop;
@@ -98,6 +100,7 @@ fn handle_deep_links(app: &AppHandle) {
         }
     });
 }
+
 
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
