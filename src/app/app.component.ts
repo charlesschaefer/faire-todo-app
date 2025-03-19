@@ -327,6 +327,7 @@ export class AppComponent implements OnInit {
                 console.info("taskTagChanged: ", changed.taskTagChanged);
                 console.info("settingsChanged: ", changed.settingsChanged);
                 console.info("projectChanged: ", changed.projectChanged);
+                console.info("taskAttachmentChanged: ", changed.taskAttachmentChanged);
 
                 await this.syncService.connect().catch(console.error);
             },
