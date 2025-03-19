@@ -53,4 +53,8 @@ export class TaskAttachmentComponent {
         }
         this.attachmentsChange.emit(this.attachments);
     }
+
+    openImage(blob: string | undefined) {
+        // ..
+    }
 }
