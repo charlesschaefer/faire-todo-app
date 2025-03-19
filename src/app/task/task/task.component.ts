@@ -48,6 +48,7 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common';
         NgxCdkDnDScrollFixerDirective,
         CommonModule,
         NgTemplateOutlet
+        CommonModule,
     ],
     providers: [
         DialogService,
