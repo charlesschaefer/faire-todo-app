@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Button, ButtonModule } from 'primeng/button';
 
-import { FilePickerService } from '../services/file-picker.service';
-import { TaskAttachmentDto } from '../dto/task-attachment-dto';
-import { TaskAttachmentService } from '../services/task-attachment.service';
+import { FilePickerService } from '../../services/file-picker.service';
+import { TaskAttachmentDto } from '../../dto/task-attachment-dto';
+import { TaskAttachmentService } from '../../services/task-attachment.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
