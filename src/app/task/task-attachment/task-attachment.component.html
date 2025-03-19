@@ -17,7 +17,11 @@
           </svg>
         </div>
         <div class="w-full">
-          <p class="text-sm font-medium text-gray-900">{{ attachment.name }}</p>
+          <p class="text-sm font-medium text-gray-900">
+            <a href="javascript:;" [download]="attachment.name" (click)="openImage(attachment.blob)">
+              {{ attachment.name }}
+            </a>
+          </p>
           <!-- <p class="text-xs text-gray-500" >152.0 KB</p> -->
         </div>
         <div class="flex-shrink-1 align-content-center">
