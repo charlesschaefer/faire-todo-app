@@ -12,6 +12,7 @@ import { TaskDto } from '../../dto/task-dto';
 import { ProjectService } from '../../project/project.service';
 import { TaskService } from '../task.service';
 import { TaskComponent } from '../task/task.component';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { TaskComponent } from '../task/task.component';
     standalone: true,
     imports: [
         TaskComponent,
+        CommonModule,
         CdkDropList,
         PanelModule,
         TranslocoModule,

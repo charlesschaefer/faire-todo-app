@@ -1,4 +1,5 @@
 use std::{path::Path, sync::Mutex};
+use data::FileType;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
 use std::fs;
@@ -59,7 +60,8 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            encode_file_to_base64, // Register the new command here
+            encode_file_to_base64,
+            decode_base64_to_binary,
             mdns::search_network_sync_services,
             mdns::broadcast_network_sync_services,
             http::start_http_server,
@@ -113,11 +115,27 @@ fn encode_file_to_base64(file_path: String) -> Result<data::FileData, String> {
 
     // Encode the file to Base64
     let base64_data = general_purpose::STANDARD.encode(&buffer);
+    let extension = fname.split(".").last().unwrap();
+    let file_type = match extension.to_lowercase().clone().as_str() {
+        "png" => FileType::PNG,
+        "jpg" => FileType::JPG,
+        "jpeg" => FileType::JPG,
+        "pdf" => FileType::PDF,
+        _ => FileType::PNG
+    };
 
     let ret = data::FileData {
         name: fname.to_string(),
-        blob: base64_data
+        blob: base64_data,
+        file_type
     };
 
     Ok(ret)
+}
+
+#[tauri::command]
+fn decode_base64_to_binary(blob: String) -> Result<Vec<u8>, String> {
+    let data = general_purpose::STANDARD.decode(blob);
+
+    Ok(data.unwrap())
 }

@@ -2,9 +2,15 @@ import { Updatable } from "./updatable";
 import { UserBound } from "./user-bound";
 
 export enum AttachmentType {
-    PNG,
-    JPG,
-    PDF
+    PNG = 'PNG',
+    JPG = 'JPG',
+    PDF = 'PDF'
+}
+
+export enum AttachmentMimeType {
+    PNG = 'image/png',
+    JPG = 'image/jpeg',
+    PDF = 'application/pdf'
 }
 
 export interface TaskAttachmentDto extends Updatable {
@@ -14,6 +20,7 @@ export interface TaskAttachmentDto extends Updatable {
     updated_at?: Date;
     blob: string;
     name: string;
+    file_type?: AttachmentType;
 }
 
 export type TaskAttachmentAddDto = Omit<TaskAttachmentDto, "id" > & UserBound;

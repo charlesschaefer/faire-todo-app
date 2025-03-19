@@ -18,7 +18,7 @@
         </div>
         <div class="w-full">
           <p class="text-sm font-medium text-gray-900">
-            <a href="javascript:;" [download]="attachment.name" (click)="openImage(attachment.blob)">
+            <a href="javascript:;" [download]="attachment.name" (click)="openImage(attachment.blob, attachment?.file_type);">
               {{ attachment.name }}
             </a>
           </p>
@@ -33,3 +33,11 @@
     
   </div>
 </div>
+
+<p-dialog #popoverImg [closable]="true" [closeOnEscape]="true" [keepInViewport]="true" [modal]="true" [(visible)]="popoverImgVisible" minX="200" (onHide)="popover_img = popover_pdf = ''">
+  @if (popover_img) {
+    <img src="{{ popover_img }}" [style]="{'max-width': '80vw'}" />
+  } @else if (popover_pdf) {
+    <a [href]="popover_pdf" target="_blank">{{'Open file' | transloco }}</a>
+  }
+</p-dialog>

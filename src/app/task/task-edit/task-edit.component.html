@@ -125,7 +125,7 @@
           <p-accordionTab [header]="subtasksTitle()" [selected]="true">
             <div>
             @for (task of subTasks; track task.uuid) {
-              <app-subtask [task]="task" [projects]="projectsMap" (onEditTask)="onSubtaskEdited($event)" />
+              <app-subtask [task]="task" [projects]="projectsMap" (onEditTask)="onSubtaskEdited($event)" [attachmentCount]="attachmentsCount?.get(task.uuid)" />
             }
             </div>
           </p-accordionTab>

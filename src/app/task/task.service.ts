@@ -9,6 +9,7 @@ import { DataUpdatedService } from '../services/data-updated.service';
 import { DbService } from '../services/db.service';
 import { ServiceAbstract } from '../services/service.abstract';
 import { TaskAttachmentDto } from '../dto/task-attachment-dto';
+import { TaskAttachmentService } from '../services/task-attachment.service';
 
 interface SubtaskCount {
     subtasks: number;
@@ -27,6 +28,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
         protected dbService: DbService,
         protected override authService: AuthService,
         protected override dataUpdatedService: DataUpdatedService,
+        protected taskAttachmentService: TaskAttachmentService,
     ) {
         super(authService);
         this.setTable();
@@ -223,6 +225,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 if (task.recurring) {
                     const aTask: Partial<TaskDto> = task;
                     // removes id to enable creating a new task
+                    const old_uuid = aTask.uuid;
                     aTask.uuid = undefined;
                     aTask.completed = 0;
 
@@ -235,6 +238,14 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     from(this.table.add(newTask)).subscribe({
                         complete: () => {
                             success$.complete();
+                        },
+                        next: (newTaskUuid) => {
+                            this.taskAttachmentService.getByField('task_uuid', old_uuid).then(attachments => {
+                                attachments.forEach(attachment => {
+                                    const {task_uuid, ...attachment_data} = {...attachment};
+                                    this.taskAttachmentService.edit(attachment.uuid, {...attachment_data, task_uuid: newTaskUuid});
+                                })
+                            })
                         },
                         error: (err) => {
                             success$.error(err);
