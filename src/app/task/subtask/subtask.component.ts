@@ -23,6 +23,7 @@ import { TaskService } from '../task.service';
 // eslint-disable-next-line import/no-cycle
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { TaskAbstractComponent } from '../task/task.abstract.component';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
@@ -31,6 +32,7 @@ import { TaskAbstractComponent } from '../task/task.abstract.component';
     imports: [
         RadioButtonModule,
         FormsModule,
+        CommonModule,
         ButtonModule,
         MenuModule,
         ConfirmDialogModule,

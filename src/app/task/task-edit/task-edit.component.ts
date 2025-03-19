@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccordionModule } from 'primeng/accordion';
@@ -55,6 +55,7 @@ import { TaskAttachmentComponent } from '../task-attachment/task-attachment.comp
 export class TaskEditComponent implements OnInit, OnDestroy {
     task!: TaskDto;
     subTasks!: TaskDto[];
+    attachmentsCount!: Map<string, number>;
 
     @Output() showTaskAdd = new EventEmitter<Event>();
 
@@ -149,6 +150,11 @@ export class TaskEditComponent implements OnInit, OnDestroy {
     getSubtaskList() {
         this.taskService.getTaskSubtasks(this.task).subscribe(subtasks => {
             this.subTasks = subtasks;
+            
+            // Count attachments for tasks
+            subtasks && this.taskService.countAttachmentsForTasks(this.subTasks).subscribe((counts) => {
+                this.attachmentsCount = counts;
+            });
         });
 
         this.taskService.countSubtasksByCompletion(this.task).subscribe(countSubtasks => {

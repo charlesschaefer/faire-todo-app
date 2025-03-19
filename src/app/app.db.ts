@@ -284,6 +284,10 @@ export class AppDb extends Dexie {
             task_attachment: '$$uuid, task_uuid, user_uuid, blob, updated_at, name',
         });
 
+        this.version(25).stores({
+            task_attachment: '$$uuid, task_uuid, user_uuid, blob, updated_at, name, file_type',
+        });
+
         this.on('populate', () => this.populate());
     }
 

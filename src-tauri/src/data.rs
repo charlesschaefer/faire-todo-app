@@ -35,7 +35,15 @@ pub struct AppData {
 }
 
 #[derive(Deserialize, Serialize)]
+pub enum FileType {
+    PNG,
+    JPG,
+    PDF
+}
+
+#[derive(Deserialize, Serialize)]
 pub struct FileData {
     pub name: String,
-    pub blob: String
+    pub blob: String,
+    pub file_type: FileType,
 }
