@@ -26,6 +26,7 @@ import { TaskService } from '../task.service';
 import { open } from '@tauri-apps/plugin-shell';
 import { TaskAttachmentService } from '../../services/task-attachment.service';
 import { TaskAttachmentDto } from '../../dto/task-attachment-dto';
+import { TaskAttachmentComponent } from '../task-attachment/task-attachment.component';
 
 @Component({
     selector: 'app-task-edit',
@@ -46,6 +47,7 @@ import { TaskAttachmentDto } from '../../dto/task-attachment-dto';
         LinkifyPipe,
         SubtaskComponent,
         ChangeDateTimeFromTextDirective,
+        TaskAttachmentComponent,
     ],
     templateUrl: './task-edit.component.html',
     styleUrl: './task-edit.component.scss'
@@ -126,6 +128,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         });
 
         this.getSubtaskList();
+        this.getAttachments();
 
         this.dataUpdatedSubscription = this.dataUpdatedService.subscribe('task', () => {
             console.log("Mexeu no task, atualizando subtasks")
@@ -194,6 +197,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
 
         this.taskService.edit(this.task.uuid, saveData).subscribe({
             complete: async () => {
+                this.taskAttachmentService.saveTaskAttachments(this.task, this.attachments);
+
                 this.messageService.add({
                     summary: this.translate.translate(`Saved successfully`),
                     detail: this.translate.translate(`The task was saved successfully`),
@@ -254,36 +259,10 @@ export class TaskEditComponent implements OnInit, OnDestroy {
         }
     }
 
-    openAttachment(attachment: { name: string; blob: string }) {
-        const link = document.createElement('a');
-        link.href = attachment.blob;
-        link.download = attachment.name;
-        link.click();
-    }
-
     getAttachments() {
-        this.taskAttachmentService.list().then((attachments: TaskAttachmentDto[]) => {
+        this.taskAttachmentService.getByField('task_uuid', this.task.uuid).then((attachments: TaskAttachmentDto[]) => {
+            console.log("Attachments da task: ", attachments);
             this.attachments = attachments.filter((attachment) => attachment.task_uuid === this.task.uuid);
-        });
-    }
-
-    removeAttachment(uuid: string) {
-        this.taskAttachmentService.remove(uuid).subscribe({
-            complete: () => {
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Attachment removed',
-                    detail: 'The attachment was successfully removed.',
-                });
-                this.getAttachments(); // Refresh the list of attachments
-            },
-            error: (err) => {
-                this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: `Failed to remove attachment: ${err}`,
-                });
-            },
         });
     }
 }

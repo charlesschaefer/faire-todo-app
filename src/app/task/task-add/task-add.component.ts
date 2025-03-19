@@ -28,7 +28,7 @@ import { encodeFileToBase64 } from '../../utils/file-utils';
 import { TaskAttachmentService } from '../../services/task-attachment.service';
 import { FilePickerService } from '../../services/file-picker.service';
 import { TaskAttachmentAddDto, TaskAttachmentDto } from '../../dto/task-attachment-dto';
-import { TaskAttachmentComponent } from '../../task-attachment/task-attachment.component';
+import { TaskAttachmentComponent } from '../task-attachment/task-attachment.component';
 
 const randomUUID = v4;
 
@@ -201,6 +201,9 @@ export class TaskAddComponent implements OnInit {
         };
 
         this.taskAddService.add(saveData as TaskAddDto & UserBound).subscribe({
+            next: (task_uuid) => {
+                this.taskAttachmentService.saveTaskAttachments({...saveData, uuid: task_uuid} as TaskDto, this.attachments());
+            },
             complete: async () => {
                 this.messageService.add({
                     summary: this.translate.translate(`Saved successfully`),
@@ -236,9 +239,5 @@ export class TaskAddComponent implements OnInit {
             recurring: this.recurringOptions[0]
         });
         return true;
-    }
-
-    fuiEu() {
-        console.log(this.attachments());
     }
 }

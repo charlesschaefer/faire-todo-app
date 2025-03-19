@@ -46,29 +46,10 @@
 
         <p-divider />
 
-        <p-button (onClick)="fuiEu()">Foi eu?</p-button>
-
         <app-task-attachment 
           [(attachments)]="attachments"
         />
 
-        Attachments:  {{ attachments().length }}
-
-        <!-- <div class="attachments flex flex-column align-items-center">
-          <h4>Attachments</h4>
-          <ul>
-            @let index = 0;
-            @let i = 0;
-            @for (attachment of attachments;track attachment) {
-            <li>
-              {{ attachment.name }}
-              <button (click)="removeAttachment(i)">Remove</button>
-            </li>
-            @let i = index + 1;
-            }
-          </ul>
-          <p-button (click)="addAttachment()" [severity]="'secondary'">Add Attachment</p-button>
-        </div> -->
         <p-divider />
         <div class="task-add-buttons flex flex-row justify-content-end gap-1">
           <div>

@@ -6,6 +6,7 @@ import { ServiceAbstract } from './service.abstract';
 import { DbService } from './db.service';
 import { AuthService } from '../auth/auth.service';
 import { DataUpdatedService } from './data-updated.service';
+import { TaskDto } from '../dto/task-dto';
 
 @Injectable({
     providedIn: 'root',
@@ -22,4 +23,16 @@ export class TaskAttachmentService extends ServiceAbstract<TaskAttachmentDto | T
         this.setTable();
     }
     
+    async saveTaskAttachments(task: TaskDto, attachments: Partial<TaskAttachmentDto>[]) {
+        attachments.forEach(async (attachment) => {
+            attachment.updated_at = new Date();
+            if (attachment?.uuid) {
+                const ok = await this.edit(attachment.uuid, attachment as TaskAttachmentDto);
+            } else {
+                attachment.task_uuid = task.uuid;
+                attachment.user_uuid = task.user_uuid;
+                const ok = await this.upsert(attachment as TaskAttachmentAddDto);
+            }
+        });
+    }
 }
