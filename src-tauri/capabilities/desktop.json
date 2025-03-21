@@ -11,6 +11,7 @@
   "permissions": [
     "autostart:default",
     "updater:default",
-    "shell:default"
+    "shell:default",
+    "fs:default"
   ]
 }
