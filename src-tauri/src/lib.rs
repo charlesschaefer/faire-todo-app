@@ -1,9 +1,8 @@
 use base64::{engine::general_purpose, Engine};
 use data::FileType;
-use tauri_plugin_fs::FilePath;
-use std::fs;
+use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_fs::{FsExt, OpenOptions};
 use std::io::Read;
-use std::path::PathBuf;
 use std::{path::Path, sync::Mutex};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
@@ -22,7 +21,9 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
-    let mut builder = tauri::Builder::default().plugin(tauri_plugin_dialog::init());
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init());
 
     #[cfg(desktop)]
     {
@@ -108,13 +109,26 @@ fn close_app(app_handle: tauri::AppHandle) {
 }
 
 #[tauri::command]
-fn encode_file_to_base64(file_path: String) -> Result<data::FileData, String> {
+fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData, String> {
+
+    // Opens a dialog to the user choose a file
+    let file_path = app_handle.dialog().file().blocking_pick_file().unwrap();
+    
     // Read the file
-    let mut file = fs::File::open(file_path.clone()).map_err(|e| e.to_string())?;
+    let mut open_options = OpenOptions::default();
+    open_options.read(true);
+    let mut file = app_handle.fs().open(file_path.clone(),  open_options).unwrap();
+ 
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).map_err(|e| e.to_string())?;
 
-    let fname = Path::new(file_path.as_str()).file_name().unwrap().to_str().unwrap();
+    // Gets the file name
+    let fpath_str = file_path.clone().to_string();
+    let fname = Path::new(fpath_str.as_str())
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap();
 
     // Encode the file to Base64
     let base64_data = general_purpose::STANDARD.encode(&buffer);
@@ -124,13 +138,13 @@ fn encode_file_to_base64(file_path: String) -> Result<data::FileData, String> {
         "jpg" => FileType::JPG,
         "jpeg" => FileType::JPG,
         "pdf" => FileType::PDF,
-        _ => FileType::PNG
+        _ => FileType::PNG,
     };
 
     let ret = data::FileData {
         name: fname.to_string(),
         blob: base64_data,
-        file_type
+        file_type,
     };
 
     Ok(ret)

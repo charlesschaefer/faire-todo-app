@@ -21,6 +21,7 @@
     "deep-link:default",
     "os:default",
     "shell:default",
-    "dialog:default"
+    "dialog:default",
+    "fs:default"
   ]
 }
