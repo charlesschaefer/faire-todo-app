@@ -29,18 +29,17 @@
 
           @if (!this.parent) {
           <p-select [options]="projects" optionLabel="name" optionValue="uuid" formControlName="project_uuid"
-            name="project_uuid" [placeholder]="'Project' | transloco" class="task-add-project" />
+            name="project_uuid" [placeholder]="'Project' | transloco" class="task-add-project" dropdownIcon="pi pi-hashtag" />
           }
-        </div>
-        <div class="task-add-recurring-task align-items-center flex flex-row gap-1">
+
           <p-select [options]="recurringOptions" formControlName="recurring" name="recurring" class="task-add-recurring"
-            inputId="recurring" id="recurring">
-            <ng-template #selectedItem let-selectedOption>
+            inputId="recurring" id="recurring" dropdownIcon="pi pi-history">
+            <!-- <ng-template #selectedItem let-selectedOption>
               <i class="pi pi-history" style="font-size: calc(var(--p-icon-size) - 30%);"></i>
               <span style="margin-left: 5px;">
                 {{ selectedOption }}
               </span>
-            </ng-template>
+            </ng-template> -->
           </p-select>
         </div>
 
