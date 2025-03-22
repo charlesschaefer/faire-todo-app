@@ -17,6 +17,8 @@
 .task-add-menu {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
+    column-gap: 2px;
 }
 
 .task-add-menu p-calendar,
@@ -25,40 +27,46 @@
 }
 
 .task-add-dueDate ::ng-deep {
-    width: 170px;
+    max-width: 10em;
     margin: 0px;
     padding: 5px 2px;
+    font-size: var(--p-inputtext-sm-font-size);
 
     .p-inputtext {
         font-size: var(--p-inputtext-sm-font-size);
+        padding: 10px 30px 8px 12px;
+    }
+
+    .p-datepicker-input-icon-container {
+        top: calc(50% - 0px);
     }
 }
 
 .task-add-dueTime ::ng-deep {
-    width: 110px;
+    max-width: 7em;
     margin: 0px;
     padding: 5px 2px;
-
+    font-size: var(--p-inputtext-sm-font-size);
     .p-inputtext {
         font-size: var(--p-inputtext-sm-font-size);
+        padding: 10px 30px 8px 12px;
+    }
+
+    .p-datepicker-input-icon-container {
+        top: calc(50% - 0px);
     }
 }
 
-.task-add-project {
+::ng-deep .task-add-project, ::ng-deep .task-add-recurring {
     margin: 5px 0 5px 2px;
     font-size: var(--p-inputtext-sm-font-size);
-}
 
-::ng-deep .task-add-recurring-task {
-    // margin-top: 10px;
-    font-size: var(--p-inputtext-sm-font-size);
-
-    .p-select-label {
+    ::ng-deep .p-select-label {
         padding-right: 1px;
         width: 90%;
     }
 
-    .p-select-dropdown {
+    ::ng-deep .p-select-dropdown {
         flex-shrink: 5;
         padding-right: 4px;
     }

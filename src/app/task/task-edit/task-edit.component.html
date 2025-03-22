@@ -100,10 +100,8 @@
           name="project_uuid"
           [placeholder]="'Project' | transloco" 
           class="task-add-project"
+          dropdownIcon="pi pi-hashtag"
         />
-      </div>
-      <div class="task-add-recurring-task align-items-center flex flex-row gap-3">
-        <i class="pi pi-history"></i>
         <p-select 
           [options]="recurringOptions"
           formControlName="recurring"
@@ -111,8 +109,10 @@
           class="task-add-recurring"
           inputId="recurring"
           id="recurring"
+          dropdownIcon="pi pi-history"
         />
       </div>
+        
       <p-divider />
 
       <app-task-attachment 
