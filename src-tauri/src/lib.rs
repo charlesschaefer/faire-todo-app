@@ -3,7 +3,7 @@ use data::FileType;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::{FsExt, OpenOptions};
 use std::io::Read;
-use std::{path::Path, sync::Mutex};
+use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
 
@@ -124,11 +124,12 @@ fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData,
 
     // Gets the file name
     let fpath_str = file_path.clone().to_string();
-    let fname = Path::new(fpath_str.as_str())
-        .file_name()
-        .unwrap()
-        .to_str()
-        .unwrap();
+    let fname = app_handle.path().file_name(&fpath_str.as_str()).unwrap();
+    // let fname = Path::new(fpath_str.as_str())
+    //     .file_name()
+    //     .unwrap()
+    //     .to_str()
+    //     .unwrap();
 
     // Encode the file to Base64
     let base64_data = general_purpose::STANDARD.encode(&buffer);
@@ -142,7 +143,7 @@ fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData,
     };
 
     let ret = data::FileData {
-        name: fname.to_string(),
+        name: fname,
         blob: base64_data,
         file_type,
     };
