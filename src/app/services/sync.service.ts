@@ -24,6 +24,12 @@ import { TaskTagService } from './task-tag.service';
 import { UserService } from './user.service';
 import { TaskAttachmentService } from './task-attachment.service';
 
+export enum ChangeType {
+    CREATE = 1,
+    UPDATE = 2,
+    DELETE = 3,
+}
+
 
 const SYNC_INTERVAL = 60000;
 
@@ -160,7 +166,7 @@ export class SyncService {
     async applyLocalChanges(tables: string[], changes: any) {
         for (let key = 0; key < changes.length; key++) {
             const change = changes[key];
-            if (change.table == 'user' && change.type == 1 /* create */) {
+            if (change.table == 'user' && change.type == ChangeType.CREATE /* create */) {
                 console.log("SyncService.sync() -> CREATE", change);
                 if (change.obj['user_uuid']) {
                     delete change.obj['user_uuid'];
@@ -180,7 +186,7 @@ export class SyncService {
             }
         }
         for (const change of changes) {
-            if (change.type == 1 || change.type == 2) {
+            if (change.type == ChangeType.CREATE || change.type == ChangeType.UPDATE) {
                 for (const key in change.obj) {
                     // nullifies empty fields to avoid foreign key errors
                     if (change.obj[key] === '') {
@@ -258,7 +264,7 @@ export class SyncService {
                         obj: item,
                     };
 
-                    change['type'] = 1; // CREATE
+                    change['type'] = ChangeType.CREATE.valueOf(); // CREATE
                     remoteChanges.push(change);
                     const updateDate = new Date(item.updated_at);
                     if (updateDate > newRevision) {
@@ -327,7 +333,7 @@ export class SyncService {
 
     async syncChange(change: any) {
         switch (change.type) {
-            case 1: // CREATE
+            case ChangeType.CREATE: // CREATE
                 console.log("SyncService.sync() -> CREATE", change);
                 return await this.supabase.from(change.table).upsert(change.obj);
                 break;
@@ -337,7 +343,7 @@ export class SyncService {
                     .update(change.mods)
                     .eq('uuid', change.key);
                 break;
-            case 3: // DELETE
+            case ChangeType.DELETE: // DELETE
                 console.log("SyncService.sync() -> DELETE", change);
                 return await this.supabase.from(change.table)
                     .delete()
