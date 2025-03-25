@@ -332,12 +332,23 @@ export class SyncService {
     }
 
     async syncChange(change: any) {
+        // changes the updated_at field, so we avoid the race condition that happens when the 
+        // user updates the item in other app instance right after the sync process has started
+        if (change?.obj['updated_at']) {
+            change.obj['updated_at'] = new Date();
+        } else if (change?.mods['updated_at']) {
+            change.mods['updated_at'] = new Date();
+        }
+
         switch (change.type) {
             case ChangeType.CREATE: // CREATE
                 console.log("SyncService.sync() -> CREATE", change);
+                if (change.obj['updated_at']) {
+                    change.obj['updated_at'] = new Date();
+                }
                 return await this.supabase.from(change.table).upsert(change.obj);
                 break;
-            case 2: // UPDATE
+            case ChangeType.UPDATE: // UPDATE
                 console.log("SyncService.sync() -> UPDATE", change);
                 return await this.supabase.from(change.table)
                     .update(change.mods)
