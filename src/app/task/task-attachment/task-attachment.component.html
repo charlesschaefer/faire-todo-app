@@ -1,9 +1,11 @@
 <div class="task-add-attachments">
-  <h3 class="text-sm font-medium text-gray-700 mb-2">Anexos</h3>
+  <h3 class="text-sm font-medium text-gray-700 mb-2">
+    {{ "Attachments" | transloco }}
+  </h3>
   <input type="file" class="hidden" multiple="" accept="image/*,.pdf">
   <p-button class="add-attachment-button w-full" (onClick)="addAttachment()">
     <i class="pi pi-paperclip"></i>
-    Adicionar imagens ou PDFs
+    {{ "Add images or PDFs" | transloco }}
   </p-button>
   <div class="mt-3 gap-2 flex flex-column align-items-center" >
     @for (attachment of attachments;track attachment) {
