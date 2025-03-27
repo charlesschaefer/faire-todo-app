@@ -111,8 +111,12 @@ fn close_app(app_handle: tauri::AppHandle) {
 #[tauri::command]
 fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData, String> {
 
+    let file_path_opt = app_handle.dialog().file().blocking_pick_file();
     // Opens a dialog to the user choose a file
-    let file_path = app_handle.dialog().file().blocking_pick_file().unwrap();
+    if file_path_opt.is_none() {
+        return Err("No file selected".to_string());
+    }
+    let file_path = file_path_opt.unwrap();
     
     // Read the file
     let mut open_options = OpenOptions::default();
