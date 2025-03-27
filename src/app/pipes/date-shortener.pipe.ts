@@ -25,13 +25,13 @@ export class DateShortenerPipe implements PipeTransform {
         }
 
         const dtNow = DateTime.fromJSDate(now);
-        const dtValue = DateTime.fromJSDate(value);
+        const dtValue = DateTime.fromJSDate(value).setLocale(locale);
 
         const diff = dtNow.diff(dtValue).as('days');
 
         if (diff < -1 || diff > 1) {
             //return dtValue.toFormat("dd/MM");
-            return dtValue.setLocale(locale).toLocaleString(DateTime.DATE_SHORT);
+            return dtValue.toLocaleString(DateTime.DATE_SHORT);
         }
         return dtValue.toRelativeCalendar();
     }
