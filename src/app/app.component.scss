@@ -26,11 +26,13 @@ p-toolbar {
     display: flex;
     justify-content: center;
     min-height: calc(100% - 61px);
+    background-color: var(--p-gray-50);
 }
 
 .content {
     max-width: 900px;
     width: 100%;
+    padding: 0 16px;
 }
 
 footer {
