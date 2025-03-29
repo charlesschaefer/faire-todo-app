@@ -7,7 +7,7 @@ li.task-item,
     list-style: none;
     border-bottom: 1px solid var(--p-content-border-color);
     display: flex;
-    width: calc(100% - 10px);
+    // width: calc(100% - 10px);
     align-items: center;
     padding: 15px 0px;
     cursor: pointer;
@@ -18,13 +18,14 @@ li.task-item,
 ::ng-deep ul app-task:last-of-type,
 ::ng-deep div app-subtask:last-of-type {
     li.task-item {
-        border-bottom: none;
+        // border-bottom: none;
     }
 }
 
 li.task-item:hover,
 li.task-item:focus {
-    background-color: color-mix(in srgb, var(--p-primary-color) 10%, transparent);
+    //background-color: color-mix(in srgb, var(--p-primary-color) 10%, transparent);
+    background-color: var(--p-gray-50);
 }
 
 li.task-item:active,
