@@ -1,5 +1,5 @@
 <header class="header">
-  <p-toolbar>
+  <p-toolbar (swipeleft)="showSidebarOnSwipe()">
     <div class="p-toolbar-group-start">
       <!-- <h2 class="title">{{ title }}</h2> -->
       <a routerLink="/">
@@ -24,7 +24,7 @@
       (activate)="onActivate($event)"
     />
   </div>
-  <div class="menu-swipe-opener" (swipeleft)="test_showSidebar()">
+  <div class="menu-swipe-opener" (swipeleft)="showSidebarOnSwipe()">
     
   </div>
 </section>

@@ -339,7 +339,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    test_showSidebar() {
+    showSidebarOnSwipe() {
         this.showSidebar = true;
 
         console.log("showSidebar: ", this.showSidebar);
