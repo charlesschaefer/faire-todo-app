@@ -82,8 +82,7 @@
   </div>
 </li>
 </ng-template>
-
-@if (isTouch) {
+<!-- @if (isTouch) {
   <ngx-swipe-menu 
     [enableSwipeLeft]="true"
     [minSwipeDistance]="50"
@@ -94,8 +93,8 @@
   >
     <ng-container *ngTemplateOutlet="taskItem"></ng-container>
   </ngx-swipe-menu>
-} @else {
+} @else { -->
   <ng-container *ngTemplateOutlet="taskItem"></ng-container>
-}
+<!-- } -->
 <p-confirmDialog />
 

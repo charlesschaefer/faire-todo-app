@@ -49,7 +49,6 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common';
         CommonModule,
         NgTemplateOutlet
         CommonModule,
-        NgxSwipeMenuComponent,
         NgTemplateOutlet
     ],
     providers: [

@@ -9,7 +9,6 @@ import { HAMMER_GESTURE_CONFIG, HammerGestureConfig, BrowserModule, HammerModule
 import { provideSwipeMenu, SwipeMenuConfig } from 'ngx-swipe-menu';
 import 'hammerjs';
 
- 
 import { environment } from '../environments/environment';
 import { AppDb } from "./app.db";
 import { DEBUG } from "./app.debug";
@@ -23,10 +22,10 @@ void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
 
 class SwipeOverride extends SwipeMenuConfig {
     override overrides = {
-        "swipe": {enabled: true},
-        "pan": {enabled: true},
-        "pinch": {enabled: true},
-        "rotate": {enabled: true}
+        "swipe": { enabled: true },
+        "pan": { enabled: true },
+        "pinch": { enabled: true },
+        "rotate": { enabled: true }
     }
 
     constructor() {
@@ -41,6 +40,7 @@ const swipeMenuProvidersFixed = {
     useFactory: () => {
         const swipe = new SwipeOverride();
         swipe.overrides.swipe.enabled = true;
+        return swipe;
     }
 }
 
@@ -73,7 +73,6 @@ export const appConfig: ApplicationConfig = {
         MessageService,
         SyncService,
         importProvidersFrom(TranslocoModule), 
-        // provideHttpClient(), 
         provideTransloco({
             config: { 
                 availableLangs: ['en', 'pt-br'],
