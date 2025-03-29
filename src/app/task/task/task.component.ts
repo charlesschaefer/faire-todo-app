@@ -47,7 +47,7 @@ import { CommonModule, NgTemplateOutlet } from '@angular/common';
         LinkifyPipe,
         NgxCdkDnDScrollFixerDirective,
         CommonModule,
-        NgTemplateOutlet
+        NgTemplateOutlet,
         CommonModule,
         NgTemplateOutlet
     ],
