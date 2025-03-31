@@ -6,16 +6,20 @@ ul.project-items {
     padding-inline-start: 20px;
 }
 
-.project-add-line {
+::ng-deep .project-add-line {
     display: flex;
     color: #999;
-    padding-left: 20px;
+    padding: 16px 28px;
     cursor: pointer;
+    
+    &:hover {
+        background-color: var(--p-gray-50);
+    }
 }
 
 .project-add-button {
     padding-right: 10px;
-    color: var(--p-indigo-600)
+    color: var(--p-indigo-600);
 }
 
 .project-add-button i {
@@ -31,10 +35,11 @@ li.project-item {
     padding: 15px 0px;
     cursor: pointer;
     color: var(--p-text-color);
+    line-height: 40px;
 }
 
 li.project-item:hover {
-    background-color: #fafafa;
+    background-color: var(--p-gray-50);
 }
 
 .project-item-menu {
