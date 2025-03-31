@@ -69,6 +69,10 @@
     ::ng-deep .p-select-dropdown {
         flex-shrink: 5;
         padding-right: 4px;
+
+        .p-select-dropdown-icon {
+            color: var(--p-primary-color);
+        }
     }
 }
 
