@@ -3,7 +3,7 @@
   "version": "0.0.50",
   "identifier": "com.fairetodoapp",
   "build": {
-    "beforeDevCommand": "npm run start -- --host localhost --public-host localhost",
+    "beforeDevCommand": "npm run start -- --host localhost",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist/faire-todo-app/browser"

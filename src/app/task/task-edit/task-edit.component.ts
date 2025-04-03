@@ -55,7 +55,7 @@ import { TaskAttachmentComponent } from '../task-attachment/task-attachment.comp
 export class TaskEditComponent implements OnInit, OnDestroy {
     task!: TaskDto;
     subTasks!: TaskDto[];
-    attachmentsCount!: Map<string, number>;
+    attachmentsCount?: Map<string, number>;
 
     @Output() showTaskAdd = new EventEmitter<Event>();
 
