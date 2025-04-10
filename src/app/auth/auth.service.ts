@@ -2,7 +2,7 @@ import { Inject, Injectable, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
-import { open } from '@tauri-apps/plugin-shell';
+import { openUrl } from '@tauri-apps/plugin-opener';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -81,7 +81,7 @@ export class AuthService {
     //   window.location.assign(data.url);
     // } else {
       // opens the auth url in a new browser session 
-      await open(data.url);
+      await openUrl(data.url);
     //}
 
     return data;
