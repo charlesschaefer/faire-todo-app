@@ -1,11 +1,11 @@
 use base64::{engine::general_purpose, Engine};
 use data::FileType;
-use tauri_plugin_dialog::DialogExt;
-use tauri_plugin_fs::{FsExt, OpenOptions};
 use std::io::Read;
 use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
+use tauri_plugin_dialog::DialogExt;
+use tauri_plugin_fs::{FsExt, OpenOptions};
 
 #[cfg(desktop)]
 mod desktop;
@@ -22,6 +22,7 @@ pub fn run() {
     //mdns::broadcast_service();
 
     let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init());
 
@@ -102,7 +103,6 @@ fn handle_deep_links(app: &AppHandle) {
     });
 }
 
-
 #[tauri::command]
 fn close_app(app_handle: tauri::AppHandle) {
     app_handle.exit(0);
@@ -110,19 +110,21 @@ fn close_app(app_handle: tauri::AppHandle) {
 
 #[tauri::command]
 fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData, String> {
-
     let file_path_opt = app_handle.dialog().file().blocking_pick_file();
     // Opens a dialog to the user choose a file
     if file_path_opt.is_none() {
         return Err("No file selected".to_string());
     }
     let file_path = file_path_opt.unwrap();
-    
+
     // Read the file
     let mut open_options = OpenOptions::default();
     open_options.read(true);
-    let mut file = app_handle.fs().open(file_path.clone(),  open_options).unwrap();
- 
+    let mut file = app_handle
+        .fs()
+        .open(file_path.clone(), open_options)
+        .unwrap();
+
     let mut buffer = Vec::new();
     file.read_to_end(&mut buffer).map_err(|e| e.to_string())?;
 
