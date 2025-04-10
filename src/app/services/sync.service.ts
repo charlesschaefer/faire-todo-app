@@ -334,6 +334,13 @@ export class SyncService {
     async syncChange(change: any) {
         // changes the updated_at field, so we avoid the race condition that happens when the 
         // user updates the item in other app instance right after the sync process has started
+        if (change?.obj['updated_at'] === undefined) {
+            change.obj['updated_at'] = null;
+        }
+        if (change?.mods['updated_at'] === undefined) {
+            change.mods['updated_at'] = null;
+        }
+
         if (change?.obj['updated_at']) {
             change.obj['updated_at'] = new Date();
         } else if (change?.mods['updated_at']) {
