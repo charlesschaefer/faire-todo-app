@@ -3,9 +3,9 @@
   "version": "0.0.50",
   "identifier": "com.fairetodoapp",
   "build": {
-    "beforeDevCommand": "npm run start -- --host localhost --public-host localhost",
+    "beforeDevCommand": "npm run apply-supabase-url && npm run start -- --host localhost --public-host localhost",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "npm run build",
+    "beforeBuildCommand": "npm run apply-supabase-url && npm run build",
     "frontendDist": "../dist/faire-todo-app/browser"
   },
   "app": {
