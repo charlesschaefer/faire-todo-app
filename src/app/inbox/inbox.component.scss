@@ -6,6 +6,7 @@
     box-shadow: 0px 1px 10px rgba(255, 231, 231, 0.12),
                 0px 4px 5px rgba(255, 231, 231, 0.14),
                 0px 2px 4px -1px rgba(255, 231, 231, 0.2) !important;
+    border-radius: unset;
 
     ::ng-deep .p-panel {
         border: none;
