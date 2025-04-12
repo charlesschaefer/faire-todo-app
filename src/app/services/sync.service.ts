@@ -128,14 +128,13 @@ export class SyncService {
             onChangesAccepted();
 
             // Fetch remote changes
-
             const lastUpdate = new Date(baseRevision);
             const newRevision: Date = new Date();
             const remoteChanges: any[] = await this.fetchRemoteChanges(tables, lastUpdate, newRevision, user);
 
             if (remoteChanges.length > 0) {
-                // await applyRemoteChanges(remoteChanges, Date.now());
-                await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false)
+                await applyRemoteChanges(remoteChanges, newRevision.getTime(), false, false);
+
                 this.messageService.add({
                     key: 'auth-messages',
                     severity: 'info',
@@ -145,11 +144,9 @@ export class SyncService {
                 });
             }
 
-            // onSuccess({ again: 6000 }); // Sync again in 1 minute
             onSuccess({ again: SYNC_INTERVAL }); // Sync again in 1 minute
-            if (context.first !== undefined && context.first === false && remoteChanges.length) {
-                this.dataUpdatedService.next(remoteChanges);
-            }
+            
+            /// This is the way to keep connected in a WS instead of polling the api
             // onSuccess({
             //     react: (changes, baseRevision, partial, onChangesAccepted) => {
             //         console.log("Changes: ", changes);
@@ -158,6 +155,11 @@ export class SyncService {
             //         this.disconnect();
             //     }
             // })
+
+            // Notify data update subscribers about the changes, everytime one or more changes are made
+            if (remoteChanges.length) {
+                this.dataUpdatedService.next(remoteChanges);
+            }
         } catch (error) {
             onError(error);
         }
