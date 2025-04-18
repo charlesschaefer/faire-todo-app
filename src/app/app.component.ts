@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, computed, HostListener, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
@@ -38,6 +38,8 @@ import { SettingsService } from './settings/settings.service';
 import { SidemenuComponent } from "./sidemenu/sidemenu.component";
 import { TaskService } from './task/task.service';
 import { VersionComponent } from './version/version.component';
+import { KeyboardShortcutsComponent } from './keyboard-shortcuts/keyboard-shortcuts.component';
+import { KeyboardShortcutService, Shortcut } from './services/keyboard-shortcut.service';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -63,6 +65,7 @@ export enum NotificationType {
         RouterLink,
         SidemenuComponent,
         VersionComponent,
+        KeyboardShortcutsComponent,
     ],
     providers: [
         MessageService
@@ -73,6 +76,7 @@ export enum NotificationType {
 export class AppComponent implements OnInit {
 
     showSidebar = false;
+    showShortcuts = false;
 
     syncStatus = '';
     _currentUser = signal<User | null>(null);
@@ -96,6 +100,7 @@ export class AppComponent implements OnInit {
         private router: Router,
         private syncService: SyncService,
         public authService: AuthService,
+        private keyboardShortcutService: KeyboardShortcutService,
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');
@@ -177,6 +182,8 @@ export class AppComponent implements OnInit {
         });
 
         this.listenForShareEvents();
+
+        this.handleShortcutsKey();
     }
 
     undo(_event: any) {
@@ -383,6 +390,83 @@ export class AppComponent implements OnInit {
         }).then(listener => {
             this.shareListener = listener;
         });
+    }
+
+    handleShortcutsKey() {
+        const shortcuts: Shortcut[] = [
+            {
+                key: 'Shift+?',
+                handler: () => {
+                    this.showShortcuts = true;
+                },
+                description: this.translate.translate('Show Shortcuts')
+            },
+            {
+                key: 'I',
+                handler: () => {
+                    this.router.navigate(['/inbox']);
+                },
+                description: this.translate.translate('Go to Inbox')
+            },
+            {
+                key: 'T',
+                handler: () => {
+                    this.router.navigate(['/today']);
+                },
+                description: this.translate.translate('Go to Today')
+            },
+            {
+                key: 'U',
+                handler: () => {
+                    this.router.navigate(['/upcoming']);
+                },
+                description: this.translate.translate('Go to Upcoming')
+            },
+            {
+                key: 'P',
+                handler: () => {
+                    this.router.navigate(['/project']);
+                },
+                description: this.translate.translate('Go to Projects')
+            },
+            {
+                key: 'A',
+                handler: () => {
+                    this.router.navigate(['/all-tasks']);
+                },
+                description: this.translate.translate('Go to All Tasks')
+            },
+            {
+                key: '/',
+                handler: () => {
+                    this.router.navigate(['/search']);
+                },
+                description: this.translate.translate('Go to Search')
+            }
+
+        ];
+        // Register the shortcuts
+        this.keyboardShortcutService.setShortcuts(shortcuts);
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    setupShortcut(event: KeyboardEvent) {
+        this.keyboardShortcutService.handleKeydown(event);
+    }
+
+    isInputFocused(): boolean {
+        const active = document.activeElement;
+        if (!active) return false;
+        const tag = active.tagName.toLowerCase();
+        return (
+            tag === 'input' ||
+            tag === 'textarea' ||
+            (active as HTMLElement).isContentEditable
+        );
+    }
+
+    closeShortcuts() {
+        this.showShortcuts = false;
     }
 
 }
