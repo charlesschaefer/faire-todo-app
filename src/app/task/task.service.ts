@@ -230,8 +230,17 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     aTask.completed = 0;
 
                     const newTask = aTask as TaskAddDto;
-                    //let date = DateTime.fromJSDate(newTask.dueDate as Date);
+                    // try to parse the date from a JS Date object
                     let date = DateTime.fromJSDate((newTask.originalDueDate ?? newTask.dueDate) as Date); // Use originalDueDate if available
+                    // if it fails, try to parse it from a string
+                    if (date.invalidReason) {
+                        // format: 2025-03-24T03:00:00
+                        date = DateTime.fromFormat(newTask.originalDueDate as unknown as string, 'yyyy-MM-dd\'T\'HH:mm:ss');
+                        // if it fails, use the dueDate as a fallback
+                        if (date.invalidReason) {
+                            date = DateTime.fromJSDate(newTask.dueDate as Date);
+                        }
+                    }
                     date = this.newDateForRecurringTask(task, date, DateTime.fromJSDate(newTask.dueDate as Date));
 
                     newTask.dueDate = date.toJSDate();
