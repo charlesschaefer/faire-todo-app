@@ -12,6 +12,7 @@
     "autostart:default",
     "updater:default",
     "shell:default",
-    "fs:default"
+    "fs:default",
+    "notification:default"
   ]
 }
