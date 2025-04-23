@@ -29,12 +29,16 @@ pub fn run() {
     #[cfg(desktop)]
     {
         use tauri_plugin_autostart::MacosLauncher;
+        if !cfg!(dev) {
+            builder = builder
+                .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+                    // ...
+                    let webview = app.get_webview_window("main").expect("no main window");
+                    webview.set_focus().expect("Can't focus the main window");
+                }));
+        }
+
         builder = builder
-            .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-                // ...
-                let webview = app.get_webview_window("main").expect("no main window");
-                webview.set_focus().expect("Can't focus the main window");
-            }))
             .plugin(tauri_plugin_autostart::init(
                 MacosLauncher::LaunchAgent,
                 Some(vec![]),
