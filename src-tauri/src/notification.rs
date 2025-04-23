@@ -203,11 +203,11 @@ pub fn start_notification_daemon(
 pub fn set_autostart(
     app_handle: tauri::AppHandle, 
     state: tauri::State<'_, Mutex<data::AppData>>,
-    autostart: Option<bool>) {
+    enable: Option<bool>) {
     #[cfg(desktop)]
     { 
         let mut app_data = state.lock().unwrap();
-        app_data.settings.autostart = autostart.unwrap_or(false);
+        app_data.settings.autostart = enable.unwrap_or(false);
         crate::desktop::setup_autostart(&app_handle, app_data.settings.autostart);
     }
 
