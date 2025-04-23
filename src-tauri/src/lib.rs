@@ -94,7 +94,7 @@ fn handle_deep_links(app: &AppHandle) {
             return;
         }
         if let Some(fragment) = url.fragment() {
-            let mut webview = app2.get_webview_window("main").expect("no main window");
+            let webview = app2.get_webview_window("main").expect("no main window");
 
             let mut base_url = webview.url().expect("Coudln't get the URL");
             base_url.set_path(url.path());
