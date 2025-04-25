@@ -1,7 +1,6 @@
 use base64::{engine::general_purpose, Engine};
 use data::FileType;
 use std::io::Read;
-use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_dialog::DialogExt;
@@ -79,6 +78,7 @@ pub fn run() {
             notification::add_notification,
             notification::start_notification_daemon,
             notification::set_time_to_notify_today_tasks,
+            #[cfg(desktop)]
             notification::set_autostart,
             close_app,
         ])

@@ -208,12 +208,12 @@ pub async fn start_notification_daemon(
     return Ok(());
 }
 
+#[cfg(desktop)]
 #[tauri::command]
 pub async fn set_autostart(
     app_handle: tauri::AppHandle, 
     state: tauri::State<'_, Mutex<data::AppData>>,
     enable: Option<bool>) -> Result<(), ()> {
-    #[cfg(desktop)]
     { 
         let mut app_data = state.lock().await;
         app_data.settings.autostart = enable.unwrap_or(false);
