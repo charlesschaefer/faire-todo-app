@@ -20,16 +20,25 @@ li.task-item.priority-high:hover,
 li.task-item.priority-high:focus {
     box-shadow: 0 0 0 2px #ffcdd2;
     border-left: 6px solid #e53935;
+    background-color: #ffebee; // light red
 }
 li.task-item.priority-medium:hover,
 li.task-item.priority-medium:focus {
     box-shadow: 0 0 0 2px #ffe0b2;
     border-left: 6px solid #fb8c00;
+    background-color: #fff3e0; // light orange
 }
 li.task-item.priority-low:hover,
 li.task-item.priority-low:focus {
     box-shadow: 0 0 0 2px #bbdefb;
     border-left: 6px solid #1976d2;
+    background-color: #e3f2fd; // light blue
+}
+
+// Neutral hover for tasks without priority
+li.task-item:not(.priority-high):not(.priority-medium):not(.priority-low):hover,
+li.task-item:not(.priority-high):not(.priority-medium):not(.priority-low):focus {
+    background-color: var(--p-gray-50);
 }
 
 li.task-item,

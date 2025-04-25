@@ -70,9 +70,20 @@ export class TaskService extends ServiceAbstract<Tasks> {
     }
 
     orderTasks(tasks: TaskDto[]) {
+        // Priority order: high (0), medium (1), low (2), null/undefined (3)
+        const priorityRank = (priority: string | null | undefined) => {
+            if (priority === 'high') return 0;
+            if (priority === 'medium') return 1;
+            if (priority === 'low') return 2;
+            return 3;
+        };
         tasks.sort((a, b) => {
+            const pa = priorityRank(a.priority);
+            const pb = priorityRank(b.priority);
+            if (pa !== pb) return pa - pb;
             if (a.order > b.order) return 1;
-            return -1;
+            if (a.order < b.order) return -1;
+            return 0;
         });
         return tasks;
     }
