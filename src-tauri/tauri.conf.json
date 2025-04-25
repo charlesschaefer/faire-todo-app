@@ -1,6 +1,6 @@
 {
   "productName": "Faire Todo App",
-  "version": "0.0.57",
+  "version": "0.0.58",
   "identifier": "com.fairetodoapp",
   "build": {
     "beforeDevCommand": "npm run apply-supabase-url && npm run start -- --host localhost --public-host localhost",

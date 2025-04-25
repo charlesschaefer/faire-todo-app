@@ -53,7 +53,7 @@ pub fn run() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_sharetarget::init())
-        .manage(Mutex::new(data::AppData::default()))
+        .manage(tokio::sync::Mutex::new(data::AppData::default()))
         .setup(|app| {
             #[cfg(desktop)]
             {

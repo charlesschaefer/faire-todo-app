@@ -31,7 +31,8 @@ pub struct AppData {
     pub tasks_duing_now: TasksDuingNow,
     pub tasks_duing_today: TasksDuingToday,
     pub settings: Settings,
-    pub thread_handle: Option<std::thread::JoinHandle<()>>,
+    //pub thread_handle: Option<std::thread::JoinHandle<()>>,
+    pub thread_handle: Option<tauri::async_runtime::JoinHandle<()>>,
 }
 
 #[derive(Deserialize, Serialize)]

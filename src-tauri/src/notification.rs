@@ -1,5 +1,6 @@
 use chrono::{Local, Timelike};
-use std::sync::Mutex;
+//use std::sync::Mutex;
+use tokio::sync::Mutex;
 use tauri::{Emitter, Manager};
 use tauri_plugin_notification::NotificationExt;
 
@@ -38,36 +39,36 @@ pub fn add_notification(app_handle: tauri::AppHandle, title: String, body: Strin
 }
 
 #[tauri::command]
-pub fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TasksDuingNow) {
+pub async fn set_due_tasks(app_handle: tauri::AppHandle, due_tasks: data::TasksDuingNow) {
     let app_data = app_handle.state::<Mutex<data::AppData>>();
-    let mut app_data = app_data.lock().unwrap();
+    let mut app_data = app_data.lock().await;
     app_data.tasks_duing_now = due_tasks;
 }
 
 #[tauri::command]
-pub fn set_today_tasks(app_handle: tauri::AppHandle, today_tasks: data::TasksDuingToday) {
+pub async fn set_today_tasks(app_handle: tauri::AppHandle, today_tasks: data::TasksDuingToday) {
     let app_data = app_handle.state::<Mutex<data::AppData>>();
-    let mut app_data = app_data.lock().unwrap();
+    let mut app_data = app_data.lock().await;
     app_data.tasks_duing_today = today_tasks;
 }
 
 #[tauri::command]
-pub fn set_time_to_notify_today_tasks(
+pub async fn set_time_to_notify_today_tasks(
     app_handle: tauri::AppHandle,
     time_to_notify_today_tasks: [u32; 2],
 ) {
     let app_data = app_handle.state::<Mutex<data::AppData>>();
-    let mut app_data = app_data.lock().unwrap();
+    let mut app_data = app_data.lock().await;
     app_data.settings.time_to_notify_today_tasks = time_to_notify_today_tasks;
 }
 
 #[tauri::command]
-pub fn start_notification_daemon(
+pub async fn start_notification_daemon(
     app: tauri::AppHandle,
     state: tauri::State<'_, Mutex<data::AppData>>,
     settings: data::Settings,
-) {
-    let mut app_data = state.lock().unwrap();
+) -> Result<(), ()> {
+    let mut app_data = state.lock().await;
     app_data.settings = settings;
     let create_thread = true;
 
@@ -79,7 +80,7 @@ pub fn start_notification_daemon(
     if !app_data.settings.send_notifications {
         println!("Not sending notifications");
         drop(app_data);
-        return;
+        return Ok(());
     }
 
     // Check if there's already a thread running
@@ -89,7 +90,7 @@ pub fn start_notification_daemon(
             app_data.thread_handle.is_some()
         );
         drop(app_data);
-        return;
+        return Ok(());
     }
 
     println!("Sending notifications");
@@ -122,15 +123,17 @@ pub fn start_notification_daemon(
     }
 
     if !create_thread {
-        return;
+        return Ok(());
     }
 
     // Spawn background thread only if none exists
-    app_data.thread_handle = Some(std::thread::spawn(move || {
+    //app_data.thread_handle = Some(std::thread::spawn(move || {
+    let thread_handle = tauri::async_runtime::spawn(async move {
+
         println!("Starting notification daemon");
         loop {
             let app_data = app.state::<Mutex<data::AppData>>();
-            let app_data = app_data.lock().unwrap();
+            let app_data = app_data.lock().await;
 
             println!("Checking for due tasks");
             // send to frontend the event to check for due tasks
@@ -138,8 +141,8 @@ pub fn start_notification_daemon(
             app.emit("get-today-tasks", "").unwrap();
 
             // get the due tasks and notify the user
+            println!("Due tasks: {:?}", app_data.tasks_duing_now.tasks);
             if !app_data.tasks_duing_now.tasks.is_empty() {
-                println!("Due tasks: {:?}", app_data.tasks_duing_now.tasks);
                 app_data.tasks_duing_now.tasks.iter().for_each(|task| {
                     let local_app = app.clone();
                     let body = app_data
@@ -192,23 +195,31 @@ pub fn start_notification_daemon(
             }
             drop(app_data);
             println!("Waiting {} second", NOTIFICATION_DAEMON_SLEEP_TIME);
-            std::thread::sleep(std::time::Duration::from_secs(
+            //std::thread::sleep(std::time::Duration::from_secs(
+            let sleep = tokio::time::sleep(std::time::Duration::from_secs(
                 NOTIFICATION_DAEMON_SLEEP_TIME,
             ));
+            sleep.await;
         }
-    }));
+
+    });
+
+    app_data.thread_handle = Some(thread_handle);
+    return Ok(());
 }
 
 #[tauri::command]
-pub fn set_autostart(
+pub async fn set_autostart(
     app_handle: tauri::AppHandle, 
     state: tauri::State<'_, Mutex<data::AppData>>,
-    enable: Option<bool>) {
+    enable: Option<bool>) -> Result<(), ()> {
     #[cfg(desktop)]
     { 
-        let mut app_data = state.lock().unwrap();
+        let mut app_data = state.lock().await;
         app_data.settings.autostart = enable.unwrap_or(false);
         crate::desktop::setup_autostart(&app_handle, app_data.settings.autostart);
+
+        Ok(())
     }
 
 }
