@@ -64,6 +64,7 @@ export class TaskEditComponent implements OnInit, OnDestroy {
     
     private fb = inject(FormBuilder);
     taskForm!: FormGroup;
+    priorityOptions!: any[];
 
     showTaskAddOverlay$ = new Subject<Event>();
 
@@ -102,7 +103,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             project_uuid: [this.task.project_uuid != null ? this.task.project_uuid : ''],
             // parent: [this.task.parent_uuid || ''],
             parent_uuid: [this.task.parent_uuid || ''],
-            recurring: [this.task.recurring || '0']
+            recurring: [this.task.recurring || '0'],
+            priority: [this.task.priority || null] // Add priority field
         });
         
         this.dynamicDialogConfig.data.saveSubject$.subscribe(() => {
@@ -144,6 +146,13 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             RecurringType.WEEKDAY,
             RecurringType.MONTHLY,
             RecurringType.YEARLY
+        ];
+
+        this.priorityOptions = [
+            { label: this.translate.translate('No priority'), value: null },
+            { label: this.translate.translate('High'), value: 'high' },
+            { label: this.translate.translate('Medium'), value: 'medium' },
+            { label: this.translate.translate('Low'), value: 'low' }
         ];
     }
 
@@ -198,7 +207,8 @@ export class TaskEditComponent implements OnInit, OnDestroy {
             uuid: this.task.uuid,
             user_uuid: this.task.user_uuid,
             project_uuid: form.project_uuid || '',
-            parent_uuid: this.task.parent_uuid
+            parent_uuid: this.task.parent_uuid,
+            priority: form.priority || null // Add priority
         };
 
         this.taskService.edit(this.task.uuid, saveData).subscribe({

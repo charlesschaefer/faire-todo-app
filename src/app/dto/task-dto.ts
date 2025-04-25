@@ -26,6 +26,7 @@ export interface TaskDto extends Updatable {
     recurring: 'daily' | 'weekly' | 'monthly' | 'yearly' | 'weekday' | null;
     updated_at?: Date;
     originalDueDate: Date | null; // Add originalDueDate
+    priority?: 'high' | 'medium' | 'low' | null; // Add priority
 }
 
 export type TaskAddDto = Omit<TaskDto, "id" > & UserBound;

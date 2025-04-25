@@ -80,7 +80,8 @@ export class TaskAddComponent implements OnInit {
         project_uuid: [this.project()?.uuid || ''],
         // parent: [this.parent || null],
         parent_uuid: [this.parent || null],
-        recurring: [null]
+        recurring: [null],
+        priority: [null] // Add priority field
     });
 
     projects!: ProjectDto[];
@@ -92,6 +93,13 @@ export class TaskAddComponent implements OnInit {
     attachments = signal<Partial<TaskAttachmentDto>[]>([]);
 
     currentLanguage = this.translate.getActiveLang();
+
+    priorityOptions = [
+        { label: this.translate.translate('No priority'), value: null },
+        { label: this.translate.translate('High'), value: 'high' },
+        { label: this.translate.translate('Medium'), value: 'medium' },
+        { label: this.translate.translate('Low'), value: 'low' }
+    ];
 
     constructor(
         private taskAddService: TaskService,
@@ -197,7 +205,8 @@ export class TaskAddComponent implements OnInit {
             parent_uuid: this.parent?.uuid || '',
             recurring: recurring || null,
             uuid: randomUUID(),
-            user_uuid: this.authService.currentUser?.id as string
+            user_uuid: this.authService.currentUser?.id as string,
+            priority: form.priority || null // Add priority
         };
 
         this.taskAddService.add(saveData as TaskAddDto & UserBound).subscribe({
@@ -236,7 +245,8 @@ export class TaskAddComponent implements OnInit {
             project_uuid: this.parent?.project_uuid || this.project()?.uuid || '',
             // parent: this.parent || null,
             parent_uuid: this.parent || '',
-            recurring: this.recurringOptions[0]
+            recurring: this.recurringOptions[0],
+            priority: null // Reset priority
         });
         return true;
     }

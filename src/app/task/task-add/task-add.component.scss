@@ -1,4 +1,3 @@
-
 .task-add-description {
     min-height: 50px;
 }
@@ -74,6 +73,11 @@
             color: var(--p-primary-color);
         }
     }
+}
+
+::ng-deep .task-add-priority {
+    margin: 5px 0 5px 2px;
+    font-size: var(--p-inputtext-sm-font-size);
 }
 
 .task-add-datepicker-panel {

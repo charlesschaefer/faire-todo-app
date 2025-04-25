@@ -1,5 +1,35 @@
 li.task-item {
     background-color: white;
+    border-left: 4px solid transparent;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+// Priority borders
+li.task-item.priority-high {
+    border-left: 4px solid #e53935;
+}
+li.task-item.priority-medium {
+    border-left: 4px solid #fb8c00;
+}
+li.task-item.priority-low {
+    border-left: 4px solid #1976d2;
+}
+
+// Priority hover effects
+li.task-item.priority-high:hover,
+li.task-item.priority-high:focus {
+    box-shadow: 0 0 0 2px #ffcdd2;
+    border-left: 6px solid #e53935;
+}
+li.task-item.priority-medium:hover,
+li.task-item.priority-medium:focus {
+    box-shadow: 0 0 0 2px #ffe0b2;
+    border-left: 6px solid #fb8c00;
+}
+li.task-item.priority-low:hover,
+li.task-item.priority-low:focus {
+    box-shadow: 0 0 0 2px #bbdefb;
+    border-left: 6px solid #1976d2;
 }
 
 li.task-item,

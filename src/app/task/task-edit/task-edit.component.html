@@ -111,6 +111,14 @@
           id="recurring"
           dropdownIcon="pi pi-history"
         />
+        <p-select 
+          [options]="priorityOptions"
+          formControlName="priority"
+          name="priority"
+          [placeholder]="'Priority' | transloco"
+          class="task-add-priority"
+          dropdownIcon="pi pi-flag"
+        />
       </div>
         
       <p-divider />

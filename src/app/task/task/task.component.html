@@ -1,7 +1,13 @@
 @let Task = taskData();
 
 <ng-template #taskItem>
-<li class="task-item" cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" appNgxCdkDnDScrollFixer tabindex="0">
+<li class="task-item"
+    [ngClass]="{
+      'priority-high': Task?.priority === 'high',
+      'priority-medium': Task?.priority === 'medium',
+      'priority-low': Task?.priority === 'low'
+    }"
+    cdkDrag [cdkDragStartDelay]="isMobile ? 500 : 100" appNgxCdkDnDScrollFixer tabindex="0">
   <div class="task-item-drag-placeholder" *cdkDragPlaceholder>
   </div>
   <div class="task-item-handle"><i class="pi pi-equals"></i></div>

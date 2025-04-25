@@ -48,3 +48,8 @@
 :host ::ng-deep .task-add-list-subtasks .p-accordionpanel {
     border-bottom: none;
 }
+
+:host ::ng-deep .task-add-priority {
+    margin: 5px 0 5px 2px;
+    font-size: var(--p-inputtext-sm-font-size);
+}
