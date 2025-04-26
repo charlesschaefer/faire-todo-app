@@ -6,10 +6,13 @@
     "types": [
       "@angular/localize",
       "jasmine"
-    ],
+    ]
   },
-  "files": ["src/main.ts"],
+  "files": [
+    "src/test.ts"
+  ],
   "include": [
-    "src/**/*.spec.ts"
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
   ]
 }
