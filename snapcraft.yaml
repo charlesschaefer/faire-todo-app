@@ -3,7 +3,7 @@ base: core22
 architectures:
   - build-on: [arm64]
   - build-on: [amd64]
-version: '0.0.59'
+version: '0.0.60'
 summary: An offline first, multiplatform todo app # 79 char long summary
 description: |
   Faire is an offline OpenSource multiplatform todo app, created with Tauri and Angular. 
