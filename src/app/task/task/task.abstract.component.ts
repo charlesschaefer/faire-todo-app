@@ -1,26 +1,34 @@
-import { Component, computed, ElementRef, EventEmitter, inject, input, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { TranslocoService } from '@jsverse/transloco';
-import { DateTime } from 'luxon';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
-import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { firstValueFrom, Observable, Subject } from 'rxjs';
+import {
+    Component,
+    computed,
+    ElementRef,
+    EventEmitter,
+    inject,
+    input,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+} from "@angular/core";
+import { TranslocoService } from "@jsverse/transloco";
+import { DateTime } from "luxon";
+import { ConfirmationService, MenuItem, MessageService } from "primeng/api";
+import { DialogService, DynamicDialogRef } from "primeng/dynamicdialog";
+import { firstValueFrom, Observable, Subject } from "rxjs";
 
+import { ProjectDto } from "../../dto/project-dto";
+import { TaskDto, TaskTree } from "../../dto/task-dto";
+import { UndoItem, UndoService } from "../../services/undo.service";
+import { TaskService } from "../task.service";
 
-import { ProjectDto } from '../../dto/project-dto';
-import { TaskDto, TaskTree } from '../../dto/task-dto';
-import { UndoItem, UndoService } from '../../services/undo.service';
-import { TaskService } from '../task.service';
-
-import { isMobile } from '../../../utils/functions';
-
+import { isMobile } from "../../../utils/functions";
 
 @Component({
-    selector: 'app-task',
+    selector: "app-task",
     standalone: true,
-    templateUrl: './task.abstract.component.html',
+    templateUrl: "./task.abstract.component.html",
 })
 export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
-    
     task = input.required<TaskDto>();
     _changedTask?: TaskDto;
     taskData = computed(() => {
@@ -31,9 +39,9 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         }
         return this.task();
     });
-    
+
     projects = input.required<Map<string, ProjectDto>>();
-    
+
     @Input() attachmentCount?: number;
     @Input() subtasksCount?: number;
 
@@ -98,14 +106,16 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         this.countSubtasks();
 
         this.isMobile = isMobile();
-        this.isTouch = window.matchMedia('(pointer: coarse)').matches;
+        this.isTouch = window.matchMedia("(pointer: coarse)").matches;
     }
 
     countSubtasks() {
-        this.taskService.countSubtasksByCompletion(this.task()).subscribe(subtasksCount => {
-            this.subtasksCount = subtasksCount.subtasks;
-            this.subtasksCompletedCount = subtasksCount.completed;
-        });
+        this.taskService
+            .countSubtasksByCompletion(this.task())
+            .subscribe((subtasksCount) => {
+                this.subtasksCount = subtasksCount.subtasks;
+                this.subtasksCompletedCount = subtasksCount.completed;
+            });
     }
 
     checkTaskIsDue() {
@@ -118,10 +128,10 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
             this.due = true;
             return;
         }
-        
+
         const dueDate = DateTime.fromJSDate(task.dueDate);
         const today = DateTime.fromJSDate(this.today);
-        if (dueDate.diff(today).as('days') >= 1) {
+        if (dueDate.diff(today).as("days") >= 1) {
             this.future = true;
             return;
         }
@@ -137,21 +147,21 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 items: [
                     {
                         label: this.translate.translate(`Delete`),
-                        icon: 'pi pi-trash',
+                        icon: "pi pi-trash",
                         command: () => {
                             this.confirmDeleteTask();
-                        }
+                        },
                     } as MenuItem,
                     {
                         label: this.translate.translate(`Edit`),
-                        icon: 'pi pi-pencil',
+                        icon: "pi pi-pencil",
                         command: () => {
                             this.showTaskEditDialog(this.task());
                         },
-                    } as MenuItem
-                ]
-            }  as MenuItem
-        ]
+                    } as MenuItem,
+                ],
+            } as MenuItem,
+        ];
     }
 
     abstract showTaskEditDialog(task: TaskDto): Promise<void>;
@@ -159,72 +169,84 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
     async confirmDeleteTask() {
         this.confirmationService.confirm({
             header: this.translate.translate(`Are you sure?`),
-            message: this.translate.translate(`Are you sure you want to delete this task? All subtasks will also be deleted!`),
+            message: this.translate.translate(
+                `Are you sure you want to delete this task? All subtasks will also be deleted!`,
+            ),
             icon: "pi pi-exclamation-triangle",
             acceptIcon: "none",
             rejectIcon: "none",
             accept: () => {
                 this.deleteTask();
-            }
+            },
         });
     }
 
     async deleteTask() {
-        const taskAndChild = await firstValueFrom(this.taskService.getTaskTree(this.task()));
+        const taskAndChild = await firstValueFrom(
+            this.taskService.getTaskTree(this.task()),
+        );
         // gets all the task's subtasks to store as an undo queue item
         const undoData = Object.assign({}, taskAndChild);
         const undo: UndoItem = {
-            type: 'task.delete',
-            data: undoData
+            type: "task.delete",
+            data: undoData,
         };
         // removes task and it's subtasks
         this.taskService.removeTaskTree(this.task()).subscribe({
             complete: async () => {
                 this.messageService.add({
                     summary: this.translate.translate(`Removed`),
-                    detail: this.translate.translate(`Task removed successfully`),
+                    detail: this.translate.translate(
+                        `Task removed successfully`,
+                    ),
                     severity: "success",
-                    key: 'task'
+                    key: "task",
                 });
                 this.onTaskRemoved.emit(this.task().uuid);
-                this.undoService.register(undo).subscribe(data => {
+                this.undoService.register(undo).subscribe((data) => {
                     this.undoDelete(data);
                 });
-            }, 
+            },
             error: async (err) => {
                 this.messageService.add({
                     summary: this.translate.translate(`Error`) + err,
-                    detail: this.translate.translate(`Error removing task.`) + err,
+                    detail:
+                        this.translate.translate(`Error removing task.`) + err,
                     severity: "error",
-                    key: 'task'
-                })
-            }
-        })
+                    key: "task",
+                });
+            },
+        });
     }
 
     undoDelete(undoData: UndoItem) {
-        if (undoData.type == 'task.delete') {
+        if (undoData.type == "task.delete") {
             const task = undoData.data as TaskTree;
             // reinserts the task and it's subtasks, recursivelly
             this.taskService.addTaskTree(task).subscribe({
                 complete: async () => {
                     this.messageService.add({
                         summary: this.translate.translate(`Undone`),
-                        detail: this.translate.translate(`Your delete action was undone successfully.`),
+                        detail: this.translate.translate(
+                            `Your delete action was undone successfully.`,
+                        ),
                         severity: "success",
-                        key: "task"
+                        key: "task",
                     });
                     this.onEditTask.emit();
-                }, 
+                },
                 error: async (err) => {
                     this.messageService.add({
                         summary: this.translate.translate(`Error`) + err,
-                        detail: this.translate.translate(`Error trying to recover task.`) + err,
+                        detail:
+                            this.translate.translate(
+                                `Error trying to recover task.`,
+                            ) + err,
                         severity: "error",
-                        key: "task"
+                        key: "task",
                     });
                     this.onEditTask.emit();
-                }
+                },
             });
         }
     }
@@ -233,49 +255,62 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
         const task = this.task();
         const undoData = Object.assign({}, task);
         const undo: UndoItem = {
-            type: 'task.markComplete',
-            data: undoData
+            type: "task.markComplete",
+            data: {
+                oldTask: undoData,
+                newTask: {},
+            },
         };
         task.completed = this.completed ? 1 : 0;
-        const successMsg = async () => this.messageService.add({
-            summary: this.translate.translate(`Marked as complete`),
-            detail: this.translate.translate(`Task marked as complete`),
-            severity: 'success',
-            key: 'task',
-        });
+        const successMsg = async () =>
+            this.messageService.add({
+                summary: this.translate.translate(`Marked as complete`),
+                detail: this.translate.translate(`Task marked as complete`),
+                severity: "success",
+                key: "task",
+            });
 
-        const errorMsg = async (err: any) => this.messageService.add({
-            summary: this.translate.translate(`Error`),
-            detail: this.translate.translate(`Error marking task as complete.`) + err,
-            severity: 'error',
-            key: 'task'
-        });
+        const errorMsg = async (err: any) =>
+            this.messageService.add({
+                summary: this.translate.translate(`Error`),
+                detail:
+                    this.translate.translate(
+                        `Error marking task as complete.`,
+                    ) + err,
+                severity: "error",
+                key: "task",
+            });
         if (task.completed) {
             this.taskService.markTaskComplete(task).subscribe({
+                next: (newTask) => {
+                    undo.data.newTask = newTask;
+                },
                 complete: async () => {
                     // await successMsg();
                     this.messageService.add({
                         summary: this.translate.translate(`Marked as complete`),
-                        detail: this.translate.translate(`Task marked as complete`),
-                        severity: 'success',
-                        key: 'task',
-                    })
-                    console.log("emiting Task.onEditTask()")
+                        detail: this.translate.translate(
+                            `Task marked as complete`,
+                        ),
+                        severity: "success",
+                        key: "task",
+                    });
+                    console.log("emiting Task.onEditTask()");
                     this.onEditTask.emit();
-                    
+
                     this.undoService.register(undo).subscribe((data) => {
                         this.undoMarkAsComplete(data);
                     });
                 },
                 error: async (err) => {
                     await errorMsg(err);
-                }
-            })
+                },
+            });
         } else {
             this.taskService.edit(task.uuid, task).subscribe({
                 complete: async () => {
                     await successMsg();
-                    console.log("emiting Task.onEditTask()")
+                    console.log("emiting Task.onEditTask()");
                     this.onEditTask.emit();
                     this.undoService.register(undo).subscribe((data) => {
                         this.undoMarkAsComplete(data);
@@ -283,43 +318,53 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                 },
                 error: async (err) => {
                     errorMsg(err);
-                }
-            })
-        }
-    }
-
-    undoMarkAsComplete(undoData: UndoItem) {
-        if (undoData.type == 'task.markComplete') {
-            const task = undoData.data as TaskDto;
-            console.log("Lets save the task again");
-            this.taskService.edit(task.uuid, task).subscribe({
-                complete: async () => {
-                    console.log("undoMarkAsComplete().complete")
-                    this.messageService.add({
-                        summary: this.translate.translate(`Undone`),
-                        detail: this.translate.translate(`Task got back to it's initial state`),
-                        severity: 'success',
-                        key: "task"
-                    });
-                    console.log("Emiting onEditTask")
-                    this.onEditTask.emit();
                 },
-                error: async (err) => {
-                    console.log("undoMarkAsComplete().error")
-                    this.messageService.add({
-                        summary: this.translate.translate(`Error`),
-                        detail: this.translate.translate(`Error trying to undo marking task as complete.`) + err,
-                        severity: 'error',
-                        key: "task"
-                    });
-                    this.onEditTask.emit();
-                }
             });
         }
     }
 
+    undoMarkAsComplete(undoData: UndoItem) {
+        if (undoData.type == "task.markComplete") {
+            const task = undoData.data.oldTask as TaskDto;
+            console.log("Lets save the task again");
+            this.taskService
+                .undoMarkTaskComplete(
+                    undoData.data.oldTask,
+                    undoData.data.newTask.uuid ? undoData.data.newTask : null,
+                )
+                .subscribe({
+                    complete: async () => {
+                        console.log("undoMarkAsComplete().complete");
+                        this.messageService.add({
+                            summary: this.translate.translate(`Undone`),
+                            detail: this.translate.translate(
+                                `Task got back to it's initial state`,
+                            ),
+                            severity: "success",
+                            key: "task",
+                        });
+                        console.log("Emiting onEditTask");
+                        this.onEditTask.emit();
+                    },
+                    error: async (err: any) => {
+                        console.log("undoMarkAsComplete().error");
+                        this.messageService.add({
+                            summary: this.translate.translate(`Error`),
+                            detail:
+                                this.translate.translate(
+                                    `Error trying to undo marking task as complete.`,
+                                ) + err,
+                            severity: "error",
+                            key: "task",
+                        });
+                        this.onEditTask.emit();
+                    },
+                });
+        }
+    }
+
     onSwipeLeft() {
-        console.log("Swipe Left")
+        console.log("Swipe Left");
         this.confirmDeleteTask();
     }
 

@@ -260,12 +260,22 @@ export class TaskService extends ServiceAbstract<Tasks> {
                             success$.complete();
                         },
                         next: (newTaskUuid) => {
+                            // Move the attachments to the new task
                             this.taskAttachmentService.getByField('task_uuid', old_uuid).then(attachments => {
                                 attachments.forEach(attachment => {
                                     const {task_uuid, ...attachment_data} = {...attachment};
                                     this.taskAttachmentService.edit(attachment.uuid, {...attachment_data, task_uuid: newTaskUuid});
                                 })
-                            })
+                            });
+
+                            // Move the subtasks to the new task
+                            this.getByField('parent_uuid', old_uuid).then(subtasks => {
+                                subtasks.forEach(subtask => {
+                                    const {parent_uuid, ...subtask_data} = {...subtask};
+                                    this.edit(subtask.uuid, {...subtask_data, parent_uuid: newTaskUuid});
+                                });
+                            });
+                            success$.next({...newTask, uuid: newTaskUuid});
                         },
                         error: (err) => {
                             success$.error(err);
@@ -286,6 +296,52 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 }]);
             }
         });
+        return success$;
+    }
+
+    undoMarkTaskComplete(task: TaskDto, newTask?: TaskDto) {
+        const success$ = new Subject();
+        task.completed = 0;
+        from(this.edit(task.uuid, task)).subscribe({
+            complete: () => {
+                if (newTask) {
+                    // move the attachments to the old task again
+                    this.taskAttachmentService.getByField('task_uuid', newTask.uuid).then(attachments => {
+                        attachments.forEach(attachment => {
+                            const {task_uuid, ...attachment_data} = {...attachment};
+                            this.taskAttachmentService.edit(attachment.uuid, {...attachment_data, task_uuid: task.uuid});
+                        })
+                    });
+
+                    // move the subtasks to the old task again
+                    this.getByField('parent_uuid', newTask.uuid).then(subtasks => {
+                        subtasks.forEach(subtask => {
+                            const {parent_uuid, ...subtask_data} = {...subtask};
+                            this.edit(subtask.uuid, {...subtask_data, parent_uuid: task.uuid});
+                        });
+                    });
+
+                    // remove the new task
+                    this.remove(newTask.uuid).subscribe(() => {
+                        success$.complete();
+                    });
+                } else {
+                    success$.complete();
+                }
+            },
+            error: (err) => {
+                success$.error(err);
+            }
+        });
+        this.dataUpdatedService.next([{
+            type: DatabaseChangeType.Update,
+            key: 'uuid',
+            table: 'task',
+            mods: task,
+            obj: task,
+            oldObj: task
+        }]);
+
         return success$;
     }
 
