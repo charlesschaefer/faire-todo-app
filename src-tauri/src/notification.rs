@@ -20,7 +20,8 @@ pub fn notify(app_handle: tauri::AppHandle, title: String, body: String, channel
         .builder()
         .channel_id(channel)
         .title(title)
-        .large_body(body)
+        .large_body(body.clone())
+        .body(body)
         .show();
 
     match results {
