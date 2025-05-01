@@ -1,0 +1,161 @@
+<div *ngIf="showOnboarding()" class="onboarding-overlay">
+  <div class="onboarding-backdrop" (click)="$event.stopPropagation()"></div>
+
+  <div class="onboarding-container" [ngClass]="steps[currentStep()].position">
+    <div class="onboarding-content">
+      <div class="onboarding-header">
+        <div class="onboarding-icon" [ngClass]="'feature-' + currentStep()">
+          <i [class]="getStepIcon(currentStep())"></i>
+        </div>
+        <h2>{{ steps[currentStep()].title }}</h2>
+      </div>
+
+      <div class="onboarding-body">
+        <p>{{ steps[currentStep()].description }}</p>
+
+        <div *ngIf="steps[currentStep()].image" class="onboarding-image">
+          <img [src]="steps[currentStep()].image" alt="Feature illustration" />
+        </div>
+
+        <!-- Feature-specific illustrations -->
+        <div
+          *ngIf="currentStep() === 2"
+          class="feature-illustration recurring-tasks"
+        >
+          <div
+            class="recurring-option"
+            *ngFor="let option of ['Daily', 'Weekly', 'Monthly', 'Yearly']"
+          >
+            <i class="pi pi-calendar-plus"></i>
+            <span>{{ option }}</span>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentStep() === 3"
+          class="feature-illustration priority-levels"
+        >
+          <div class="priority-option high">
+            <i class="pi pi-flag-fill"></i>
+            <span>{{ "High" | transloco }}</span>
+          </div>
+          <div class="priority-option medium">
+            <i class="pi pi-flag-fill"></i>
+            <span>{{ "Medium" | transloco }}</span>
+          </div>
+          <div class="priority-option low">
+            <i class="pi pi-flag-fill"></i>
+            <span>{{ "Low" | transloco }}</span>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentStep() === 6"
+          class="feature-illustration sync-options"
+        >
+          <div class="sync-option">
+            <i class="pi pi-wifi"></i>
+            <span>{{ "Local Network" | transloco }}</span>
+          </div>
+          <div class="sync-option">
+            <i class="pi pi-google"></i>
+            <span>{{ "Google Sign-in" | transloco }}</span>
+          </div>
+        </div>
+
+        <div
+          *ngIf="currentStep() === 7"
+          class="feature-illustration theme-modes"
+        >
+          <div class="theme-mode light">
+            <i class="pi pi-sun"></i>
+            <span>{{ "Light" | transloco }}</span>
+          </div>
+          <div class="theme-mode dark">
+            <i class="pi pi-moon"></i>
+            <span>{{ "Dark" | transloco }}</span>
+          </div>
+          <div class="theme-mode-hint">
+            <i class="pi pi-cog"></i>
+            <span
+              >{{ "Settings" | transloco }} → {{ "Theme" | transloco }}</span
+            >
+          </div>
+        </div>
+
+        <div *ngIf="currentStep() === 8" class="feature-illustration languages">
+          <div
+            class="language-option"
+            *ngFor="
+              let lang of ['English', 'Español', 'Français', 'Deutsch', '中文']
+            "
+          >
+            <span>{{ lang }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="onboarding-navigation">
+        <div class="onboarding-progress">
+          <span
+            *ngFor="let step of steps; let i = index"
+            [ngClass]="{
+              active: i === currentStep(),
+              completed: i < currentStep(),
+            }"
+            (click)="goToStep(i)"
+          >
+          </span>
+        </div>
+
+        <div class="onboarding-buttons">
+          <p-button
+            *ngIf="currentStep() > 0"
+            icon="pi pi-arrow-left"
+            label="{{ 'Previous' | transloco }}"
+            (onClick)="previousStep()"
+            styleClass="p-button-outlined p-button-secondary"
+          >
+          </p-button>
+
+          <p-button
+            *ngIf="currentStep() < steps.length - 1"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            label="{{ 'Next' | transloco }}"
+            (onClick)="nextStep()"
+          >
+          </p-button>
+
+          <p-button
+            *ngIf="currentStep() === steps.length - 1"
+            icon="pi pi-check"
+            iconPos="right"
+            label="{{ 'Get Started' | transloco }}"
+            (onClick)="completeOnboarding()"
+          >
+          </p-button>
+        </div>
+      </div>
+
+      <div class="onboarding-skip">
+        <button
+          *ngIf="currentStep() < steps.length - 1"
+          class="skip-button"
+          (click)="skipOnboarding()"
+        >
+          {{ "Skip Tour" | transloco }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    *ngIf="showSpotlight() && currentElementRect"
+    class="onboarding-spotlight"
+    [style.top.px]="currentElementRect.top - 10"
+    [style.left.px]="currentElementRect.left - 10"
+    [style.width.px]="currentElementRect.width + 20"
+    [style.height.px]="currentElementRect.height + 20"
+  ></div>
+</div>

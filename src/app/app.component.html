@@ -4,35 +4,35 @@
       <!-- <h2 class="title">{{ title }}</h2> -->
       <a routerLink="/">
         <img src="assets/logo.png" id="logo" alt="logo" aria-label="label" />
-        <img src="assets/icon.svg" id="logo-icon" alt="logo svg" aria-label="logo svg" />
+        <img
+          src="assets/icon.svg"
+          id="logo-icon"
+          alt="logo svg"
+          aria-label="logo svg"
+        />
       </a>
     </div>
     <div class="p-toolbar-group-center text-sm">
       @if (this.currentUser()) {
-      <strong>{{"Sync Status" | transloco}}: </strong> <span>{{this.syncStatus}}</span>
+        <strong>{{ "Sync Status" | transloco }}: </strong>
+        <span>{{ this.syncStatus }}</span>
       }
     </div>
     <div class="p-toolbar-group-end">
-      <app-sidemenu [(showSidebar)]="showSidebar" [syncStatus]="syncStatus" [currentUser]="currentUser()" #sideMenu />
+      <app-sidemenu
+        [(showSidebar)]="showSidebar"
+        [syncStatus]="syncStatus"
+        [currentUser]="currentUser()"
+        #sideMenu
+      />
     </div>
   </p-toolbar>
 </header>
-
 <section class="main">
-  <div class="content">
-    <router-outlet 
-      (activate)="onActivate($event)"
-    />
-  </div>
-  <div class="menu-swipe-opener" (swipeleft)="showSidebarOnSwipe()">
-    
-  </div>
+  <div class="content"><router-outlet (activate)="onActivate($event)" /></div>
+  <div class="menu-swipe-opener" (swipeleft)="showSidebarOnSwipe()"></div>
 </section>
-
-<footer class="footer">
-  <app-version />
-</footer>
-
+<footer class="footer"><app-version /></footer>
 <!-- <p-toast position="bottom-left" /> -->
 <p-toast position="bottom-left" #toast>
   <ng-template let-message #headless let-closeFn="closeFn">
@@ -42,28 +42,36 @@
       </span>
       <div class="p-toast-message-text w-full">
         <div class="p-toast-summary">
-          <span class="">
-            {{ message.summary }}
-          </span>
+          <span class=""> {{ message.summary }} </span>
         </div>
         <div class="flex flex-column gap-3 p-toast-detail">
-          <div class="h-3-rem">
-            {{ message.detail }}
-          </div>
+          <div class="h-3-rem">{{ message.detail }}</div>
           <div class="text-right">
-            <p-button severity="info" size="small" (onClick)="undo($event); closeFn($event)">{{ 'Undo' | transloco }}</p-button>
+            <p-button
+              severity="info"
+              size="small"
+              (onClick)="undo($event); closeFn($event)"
+              >{{ "Undo" | transloco }}</p-button
+            >
           </div>
         </div>
       </div>
-      <p-button [rounded]="true" variant="text" styleClass="p-toast-close-button" icon="pi pi-times" (onClick)="closeFn($event)" />
+      <p-button
+        [rounded]="true"
+        variant="text"
+        styleClass="p-toast-close-button"
+        icon="pi pi-times"
+        (onClick)="closeFn($event)"
+      />
     </div>
   </ng-template>
 </p-toast>
-
 <p-toast [key]="'task'" [position]="'top-right'" />
-
 <p-toast [key]="'auth-messages'" [position]="'top-center'" />
+<app-keyboard-shortcuts
+  [(showShortcuts)]="showShortcuts"
+  (onClose)="closeShortcuts()"
+/>
 
-<app-keyboard-shortcuts [(showShortcuts)]="showShortcuts" (onClose)="closeShortcuts()" />
-
-
+<!-- Add onboarding component at the end of the template -->
+<app-onboarding />

@@ -40,6 +40,7 @@ import { TaskService } from './task/task.service';
 import { VersionComponent } from './version/version.component';
 import { KeyboardShortcutsComponent } from './keyboard-shortcuts/keyboard-shortcuts.component';
 import { KeyboardShortcutService, Shortcut } from './services/keyboard-shortcut.service';
+import { OnboardingComponent } from "./onboarding/onboarding.component";
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -51,22 +52,23 @@ export enum NotificationType {
     selector: 'app-root',
     standalone: true,
     imports: [
-        CommonModule,
-        RouterOutlet,
-        ToolbarModule,
-        ButtonModule,
-        MenuModule,
-        ToastModule,
-        TranslocoModule,
-        DialogModule,
-        CheckboxModule,
-        FormsModule,
-        MessageModule,
-        RouterLink,
-        SidemenuComponent,
-        VersionComponent,
-        KeyboardShortcutsComponent,
-    ],
+    CommonModule,
+    RouterOutlet,
+    ToolbarModule,
+    ButtonModule,
+    MenuModule,
+    ToastModule,
+    TranslocoModule,
+    DialogModule,
+    CheckboxModule,
+    FormsModule,
+    MessageModule,
+    RouterLink,
+    SidemenuComponent,
+    VersionComponent,
+    KeyboardShortcutsComponent,
+    OnboardingComponent
+],
     providers: [
         MessageService
     ],
