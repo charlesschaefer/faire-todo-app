@@ -1,5 +1,5 @@
 li.task-item {
-    background-color: white;
+    background-color: var(--faire-background-color);
     border-left: 4px solid transparent;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
