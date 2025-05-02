@@ -1,1 +1,7 @@
-*.{js,ts,html,desktop,json} text=true eol=lf
+#*.js text=true eol=lf 
+#*.ts text=true eol=lf 
+#*.html text=true eol=lf
+*.desktop text=true eol=lf
+#*.json text=true eol=lf
+#*.toml text=true eol=lf 
+#*.lock text=true eol=lf
