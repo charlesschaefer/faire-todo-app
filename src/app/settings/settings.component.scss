@@ -1,3 +1,13 @@
 .settings label .settings-item-checkbox {
     margin-right: 10px;
 }
+
+.settings-container {
+    background-color: var(--faire-background-color);
+    border: 1px solid var(--faire-border-color, var(--p-content-border-color));
+}
+
+.settings-section {
+    background-color: var(--faire-background-color);
+    border-bottom: 1px solid var(--faire-border-color, var(--p-content-border-color));
+}

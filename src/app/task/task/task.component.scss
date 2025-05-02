@@ -1,44 +1,53 @@
 li.task-item {
-    background-color: var(--faire-background-color);
+    background-color: var(--faire-background);
     border-left: 4px solid transparent;
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 // Priority borders
 li.task-item.priority-high {
-    border-left: 4px solid #e53935;
+    border-left: 4px solid var(--faire-high-border);// --p-button-danger-border-color);//#e53935;
 }
 li.task-item.priority-medium {
-    border-left: 4px solid #fb8c00;
+    border-left: 4px solid var(--faire-medium-border);//#fb8c00;
 }
 li.task-item.priority-low {
-    border-left: 4px solid #1976d2;
+    border-left: 4px solid var(--faire-low-border);//#1976d2;
 }
 
 // Priority hover effects
 li.task-item.priority-high:hover,
 li.task-item.priority-high:focus {
     box-shadow: 0 0 0 2px #ffcdd2;
-    border-left: 6px solid #e53935;
-    background-color: #ffebee; // light red
+    border-left: 6px solid var(--faire-high-hover-border);//#e53935;
+    background-color: var(--faire-high-background);//color-mix(in srgb, red, white 95%);//#ffebee; // light red
+    color: var(--faire-hover-text-color);
+    --p-text-muted-color: var(--p-gray-800);
+    --p-red-500: var(--p-red-700);
 }
 li.task-item.priority-medium:hover,
 li.task-item.priority-medium:focus {
     box-shadow: 0 0 0 2px #ffe0b2;
-    border-left: 6px solid #fb8c00;
-    background-color: #fff3e0; // light orange
+    border-left: 6px solid var(--faire-medium-hover-border);//#fb8c00;
+    background-color: var(--faire-medium-background);//#fff3e0; // light orange
+    color: var(--faire-hover-text-color);
+    --p-text-muted-color: var(--p-gray-800);
+    --p-green-500: var(--p-green-800);
 }
 li.task-item.priority-low:hover,
 li.task-item.priority-low:focus {
     box-shadow: 0 0 0 2px #bbdefb;
-    border-left: 6px solid #1976d2;
-    background-color: #e3f2fd; // light blue
+    border-left: 6px solid var(--faire-low-hover-border);//#1976d2;
+    background-color: var(--faire-low-background);//#e3f2fd; // light blue
+    color: var(--faire-hover-text-color);
+    --p-text-muted-color: var(--p-gray-800);
+    ---blue-700: var(--p-blue-900);
 }
 
 // Neutral hover for tasks without priority
 li.task-item:not(.priority-high):not(.priority-medium):not(.priority-low):hover,
 li.task-item:not(.priority-high):not(.priority-medium):not(.priority-low):focus {
-    background-color: var(--p-gray-50);
+    background-color: var(--faire-hover-background);
 }
 
 li.task-item,

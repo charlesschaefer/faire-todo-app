@@ -1,3 +1,40 @@
+::ng-deep :root  {
+    --faire-background: white;
+    --faire-hover-background: var(--p-gray-50);
+    --faire-hover-text-color: var(--p-primary-contrast);
+    --faire-border-color: #e0e0e0;
+    --faire-highlight-color: #f59e0b;
+    --faire-highlight-bg: rgba(245, 158, 11, 0.1);
+    
+    --faire-high-border: var(--p-button-danger-border-color);
+    --faire-medium-border: var(--p-button-warn-border-color);
+    --faire-low-border: var(--p-button-info-border-color);
+    
+    --faire-high-hover-border: var(--p-button-danger-hover-border-color);
+    --faire-high-background: var(--p-toast-error-background);
+    
+    --faire-medium-hover-border: var(--p-button-warn-hover-border-color);
+    --faire-medium-background: var(--p-toast-warn-background);
+    
+    --faire-low-hover-border: var(--p-button-info-hover-border-color);
+    --faire-low-background: var(--p-toast-info-background);
+
+
+}
+
+::ng-deep .dark-mode {
+    --faire-background: #1e1e1e;
+    --faire-hover-background: color-mix(in srgb, #1e1e1e, white 20%);
+    --faire-hover-text-color: var(--p-gray-100);
+    --faire-border-color: #333;
+    --faire-highlight-color: #fbbf24;
+    --faire-highlight-bg: rgba(251, 191, 36, 0.15);
+    --faire-high-background: var(--p-toast-error-color);
+    --faire-medium-background: var(--p-toast-warn-color);
+    --faire-low-background: var(--p-toast-info-color);
+}
+
+
 body {
     font-size: 14px;
 }
@@ -26,7 +63,7 @@ p-toolbar {
     display: flex;
     justify-content: center;
     min-height: calc(100% - 61px);
-    background-color: #f5f5f5;
+    background-color: color-mix(in srgb, var(--p-toast-contrast-color), #ffffff 3%);//#f5f5f5;
 }
 
 .content {
@@ -36,7 +73,7 @@ p-toolbar {
 }
 
 footer {
-    background-color: #f5f5f5;
+    background-color: color-mix(in srgb, var(--p-toast-contrast-color), #ffffff 3%);//#f5f5f5;
     display: flex;
     align-items: center;
     flex-direction: column;

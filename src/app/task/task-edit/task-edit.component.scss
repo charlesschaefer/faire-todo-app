@@ -53,3 +53,19 @@
     margin: 5px 0 5px 2px;
     font-size: var(--p-inputtext-sm-font-size);
 }
+
+.task-edit {
+    background-color: var(--faire-background-color);
+}
+
+.task-edit-title-input {
+    background-color: var(--faire-background-color);
+    color: var(--p-text-color);
+    border: 1px solid var(--faire-border-color, var(--p-content-border-color));
+}
+
+.task-edit-description textarea {
+    background-color: var(--faire-background-color);
+    color: var(--p-text-color);
+    border: 1px solid var(--faire-border-color, var(--p-content-border-color));
+}

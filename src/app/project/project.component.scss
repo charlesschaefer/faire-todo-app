@@ -28,12 +28,13 @@ ul.project-items {
 
 li.project-item {
     list-style: none;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--faire-border-color, var(--p-content-border-color));
     display: flex;
     width: calc(100% - 20px);
     align-items: center;
     padding: 15px 0px;
     cursor: pointer;
+    background-color: var(--faire-background-color);
     color: var(--p-text-color);
     line-height: 40px;
 }

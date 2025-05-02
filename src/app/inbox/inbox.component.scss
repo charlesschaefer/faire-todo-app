@@ -57,6 +57,19 @@
     margin-right: 12px;
 }
 
+.inbox-container {
+    background-color: var(--faire-background-color);
+}
+
+.inbox-header {
+    background-color: var(--faire-background-color);
+    border-bottom: 1px solid var(--faire-border-color, var(--p-content-border-color));
+}
+
+.inbox-list {
+    background-color: var(--faire-background-color);
+}
+
 @media (max-width: 600px) {
     ::ng-deep .task-list-speeddial {
         display: flex;
