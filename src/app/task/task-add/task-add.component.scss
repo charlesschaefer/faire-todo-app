@@ -30,7 +30,7 @@
     flex-wrap: wrap;
     align-items: center;
     column-gap: 2px;
-    border-top: 1px solid var(--faire-border-color, var(--p-content-border-color));
+    //border-top: 1px solid var(--faire-border-color, var(--p-content-border-color));
 }
 
 .task-add-menu p-calendar,
@@ -45,7 +45,7 @@
     font-size: var(--p-inputtext-sm-font-size);
     background-color: var(--faire-background-color);
     color: var(--p-text-color);
-    border: 1px solid var(--faire-border-color, var(--p-content-border-color));
+    //border: 1px solid var(--faire-border-color, var(--p-content-border-color));
 
     .p-inputtext {
         font-size: var(--p-inputtext-sm-font-size);
@@ -64,7 +64,7 @@
     font-size: var(--p-inputtext-sm-font-size);
     background-color: var(--faire-background-color);
     color: var(--p-text-color);
-    border: 1px solid var(--faire-border-color, var(--p-content-border-color));
+    //border: 1px solid var(--faire-border-color, var(--p-content-border-color));
 
     .p-inputtext {
         font-size: var(--p-inputtext-sm-font-size);

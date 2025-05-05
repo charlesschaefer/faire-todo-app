@@ -41,6 +41,7 @@ import { VersionComponent } from './version/version.component';
 import { KeyboardShortcutsComponent } from './keyboard-shortcuts/keyboard-shortcuts.component';
 import { KeyboardShortcutService, Shortcut } from './services/keyboard-shortcut.service';
 import { OnboardingComponent } from "./onboarding/onboarding.component";
+import { ThemeService } from './services/theme.service';
 
 export const TAURI_BACKEND = typeof (window as any).__TAURI_INTERNALS__ !== 'undefined';
 export enum NotificationType {
@@ -103,6 +104,8 @@ export class AppComponent implements OnInit {
         private syncService: SyncService,
         public authService: AuthService,
         private keyboardShortcutService: KeyboardShortcutService,
+        private themeService: ThemeService,
+
     ) {
         translate.setDefaultLang('en');
         //translate.setActiveLang('en');

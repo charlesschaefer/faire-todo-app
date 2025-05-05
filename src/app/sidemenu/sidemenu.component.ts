@@ -252,4 +252,13 @@ export class SidemenuComponent implements OnInit {
             this.setupMenu();
         });
     }
+
+    
+    toggleTheme() {
+        this.themeService.switchTheme();
+    }
+
+    isDarkMode() {
+        return this.themeService.getCurrentTheme() === "dark";
+    }
 }

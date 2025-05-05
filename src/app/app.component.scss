@@ -19,7 +19,8 @@
     --faire-low-hover-border: var(--p-button-info-hover-border-color);
     --faire-low-background: var(--p-toast-info-background);
 
-
+    --faire-theme-switcher-text: var(--p-gray-500);
+    --faire-theme-switcher-hover-text: var(--p-gray-200);
 }
 
 ::ng-deep .dark-mode {
@@ -32,6 +33,9 @@
     --faire-high-background: var(--p-toast-error-color);
     --faire-medium-background: var(--p-toast-warn-color);
     --faire-low-background: var(--p-toast-info-color);
+
+    --faire-theme-switcher-text: var(--p-yellow-200);
+    --faire-theme-switcher-hover-text: var(--p-yellow-900);
 }
 
 

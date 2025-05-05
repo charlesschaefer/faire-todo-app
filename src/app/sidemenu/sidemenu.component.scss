@@ -181,3 +181,25 @@
     background-color: var(--faire-background-color);
     border-bottom: 1px solid var(--faire-border-color, var(--p-content-border-color));
 }
+
+
+::ng-deep .theme-toggle-button {
+    border-radius: 100%;
+    width: 25px;
+    height: 25px;
+    border: none;
+    margin-right: 10px;
+    color: var(--faire-theme-switcher-text);
+    background: var(--faire-border-color);
+    padding: 5px;
+
+    &:hover {
+        background: var(--faire-highlight-color);//var(--faire-hover-background);
+        color: var(--faire-theme-switcher-hover-text);
+    }
+
+    button {
+        width: 25px;
+        height: 25px;
+    }
+}
