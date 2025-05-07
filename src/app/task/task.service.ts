@@ -5,8 +5,8 @@ import { Observable, Subject, from, map, zip } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { RecurringType, TaskAddDto, TaskDto, TaskTree } from '../dto/task-dto';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { DbService } from '../services/db.service';
+import { DataUpdatedService } from '../db/data-updated.service';
+import { DbService } from '../db/db.service';
 import { ServiceAbstract } from '../services/service.abstract';
 import { TaskAttachmentDto } from '../dto/task-attachment-dto';
 import { TaskAttachmentService } from '../services/task-attachment.service';
@@ -151,11 +151,11 @@ export class TaskService extends ServiceAbstract<Tasks> {
         return countMap;
     }
 
-    getTaskSubtasks(task: TaskDto) {
+    getTaskSubtasks(task: TaskDto, onlyIncomplete = true) {
         return from(this.table
             .where('parent_uuid')
             .equals(task.uuid)
-            .and((task) => task.completed == 0)
+            .and((task) => onlyIncomplete ? task.completed == 0 : true)
             .toArray()
         ) as Observable<TaskDto[]>;
     }
@@ -194,13 +194,16 @@ export class TaskService extends ServiceAbstract<Tasks> {
         ) as Observable<TaskDto[]>;
     }
 
+    treeRecursive = 0;
     removeTaskTree(task: TaskDto) {
+        console.log("Removing task tree ", ++this.treeRecursive);
         const removal$ = new Subject();
         this.remove(task.uuid).subscribe({
             complete: () => {
-                this.getTaskSubtasks(task).subscribe({
+                this.getTaskSubtasks(task, false).subscribe({
                     next: (tasks) => {
-                        tasks.forEach(task => {
+                        for (const task of tasks) {
+                        //tasks.forEach(task => {
                             this.removeTaskTree(task as TaskDto).subscribe({
                                 error: (err) => {
                                     removal$.error(err);
@@ -214,7 +217,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                                     oldObj: task
                                 }])
                             });
-                        });
+                        }//);
                         removal$.complete();
                     }
                 })
@@ -379,10 +382,12 @@ export class TaskService extends ServiceAbstract<Tasks> {
         const children: TaskTree[] = [];
         const taskTree = { ...task, children } as TaskTree;
         const resultDispatcher = new Subject<TaskTree>();
+        console.log("Entrou no getTaskTree");
         from(this.table.where({
             parent_uuid: task.uuid
         }).toArray()).pipe(
             map(subtasks => {
+                console.log("Entrou no pipe.map")
                 const afterPush = new Subject<TaskTree>();
                 if (!subtasks.length) {
                     setTimeout(() => {
@@ -392,8 +397,11 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     return afterPush;
                 }
                 const total = subtasks.length;
+                console.log("Total de subtasks: ", total )
                 subtasks.reduce((prev: TaskTree, current, idx) => {
+                    console.log("===== Chamando o getTaskTree interno")
                     this.getTaskTree(current as TaskDto).subscribe(subtaskTree => {
+                        console.log("===== entrou no getTaskTree.subscribe")
                         prev.children.push(subtaskTree);
                         if (idx == total - 1) {
                             afterPush.next(prev);
@@ -405,6 +413,7 @@ export class TaskService extends ServiceAbstract<Tasks> {
                 return afterPush;
             })
         ).subscribe(afterPush => afterPush.subscribe(taskAndTree => {
+            console.log("Encerrou o primeiro subscribe");
             resultDispatcher.next(taskAndTree);
             resultDispatcher.complete();
         }));
@@ -417,20 +426,9 @@ export class TaskService extends ServiceAbstract<Tasks> {
 
         task['updated_at'] = new Date();
 
-        this.table.add(task as TaskDto).then((result) => {
-            if (!children || !children.length) {
-                if (!internal) {
-                    this.dataUpdatedService.next([{
-                        key: 'uuid',
-                        table: 'task',
-                        type: DatabaseChangeType.Create,
-                        obj: task
-                    }] as IDatabaseChange[]);
-                }
-                return return$.next(result);
-            }
-            children.map((child, index) => this.addTaskTree(child, true).subscribe(result => {
-                if (index == children.length - 1) {
+        this.add(task as TaskDto).subscribe({
+            next: (result) => {
+                if (!children || !children.length) {
                     if (!internal) {
                         this.dataUpdatedService.next([{
                             key: 'uuid',
@@ -439,10 +437,28 @@ export class TaskService extends ServiceAbstract<Tasks> {
                             obj: task
                         }] as IDatabaseChange[]);
                     }
-                    return$.next(result);
+                    return return$.next(result);
+                    
                 }
-            }))
-        }).catch(error => return$.error(error));
+                for (const [index, child] of children.entries()) {
+                    const subscribable = this.addTaskTree(child, true);
+                    subscribable.subscribe(result => {
+                        if (index == (children.length - 1)) {
+                            if (!internal) {
+                                this.dataUpdatedService.next([{
+                                    key: 'uuid',
+                                    table: 'task',
+                                    type: DatabaseChangeType.Create,
+                                    obj: task
+                                }] as IDatabaseChange[]);
+                            }
+                            return return$.next(result);
+                        }
+                    })
+                }
+            },
+            error: (error) => return$.error(error)
+        });
         return return$.asObservable();
     }
 

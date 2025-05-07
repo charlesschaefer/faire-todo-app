@@ -3,17 +3,33 @@ import { ActivatedRoute } from '@angular/router';
 import { Collection, PromiseExtended, Table, WhereClause } from 'dexie';
 import { DatabaseChangeType } from 'dexie-observable/api';
 import { DateTime } from 'luxon';
-import { Observable, of, Subject } from 'rxjs';
+import { from, Observable, of, Subject, toArray } from 'rxjs';
 
 import { DEBUG } from '../app.debug';
 import { AuthService } from '../auth/auth.service';
 import { RecurringType, TaskDto, TaskTree } from '../dto/task-dto';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { DbService } from '../services/db.service';
+import { DataUpdatedService } from '../db/data-updated.service';
+import { DbService } from '../db/db.service';
 import { TaskAttachmentService } from '../services/task-attachment.service';
 import { TaskService } from './task.service';
 
 describe('TaskService', () => {
+
+    // jasmine.getEnv().configure({
+    //     random: false,
+    //     autoCleanClosures: false,
+    //     stopSpecOnExpectationFailure: false,
+    //     stopOnSpecFailure: false,
+    //     failSpecWithNoExpectations: false,
+    //     hideDisabled: false,
+    //     seed: 4321,
+    //     specFilter: (spec) => {
+    //         //console.log('specFilter', spec.name, spec.description);
+    //         // return spec.description == 'should get task tree';
+    //         return true;
+    //     },
+    // });
+
     let service: TaskService;
     let mockDbService: jasmine.SpyObj<DbService>;
     let mockAuthService: jasmine.SpyObj<AuthService>;
@@ -75,6 +91,15 @@ describe('TaskService', () => {
     };
 
     beforeEach(() => {
+        jasmine.getEnv().addReporter({
+            specStarted: (result, done) => {
+                if (done) {
+                    console.log("Started the spec: ", result.description);
+                    done();
+                }
+            }
+        })
+        
         mockTable = {
             add: jasmine.createSpy('add').and.resolveTo('new-uuid'),
             where: jasmine.createSpy('where').and.returnValue({
@@ -147,21 +172,28 @@ describe('TaskService', () => {
     });
 
     it('should add task tree', (done) => {
-        const mockTaskTree = { ...mockTask, children: [mockSubtask] } as TaskTree;
-
-        spyOn(service, 'add').and.returnValue(of('new-uuid'));
-
+        const mockTaskTree = { ...mockTask, children: [{...mockSubtask, children: []}] } as TaskTree;
+        
+        const prom = new Promise((resolve, reject) => setTimeout(() => resolve('new-uuid'), 1));
+        const prom2 = new Promise((resolve, reject) => setTimeout(() => resolve('new-subtask-uuid'), 1));
+        spyOn(service, 'add').and.returnValues(from(prom), from(prom2)); 
+        
         service.addTaskTree(mockTaskTree).subscribe({
-            next: () => {
+            next: (ret) => {
                 const { children, ...task1 } = { ...mockTaskTree };
-                expect((service as any).table.add).toHaveBeenCalled();
+                expect(service.add).toHaveBeenCalled();
+                expect((service as any).addTaskTree).toHaveBeenCalledTimes(1);
                 done();
+            },
+            complete: () => {
+                console.log("Deu complete")
             },
             error: () => {
                 fail('Expected the addTaskTree to succeed');
                 done();
             }
         });
+        spyOn(service, 'addTaskTree').and.returnValue(of(mockTask)); 
     });
 
     it('should get task tree', (done) => {
@@ -169,8 +201,14 @@ describe('TaskService', () => {
         mockTable.where.and.returnValue({
             toArray: jasmine.createSpy('toArray').and.resolveTo(subtasks)
         });
+        console.log("Vamos chamar o getTaskTree");
 
-        service.getTaskTree(mockTask).subscribe((taskTree: TaskTree) => {
+        const prom = new Promise<TaskTree>((resolve, reject) => setTimeout(() => resolve({...mockSubtask, children: []} as TaskTree), 1));
+        
+        const obs = service.getTaskTree(mockTask)
+        spyOn(service, 'getTaskTree').and.returnValue(from(prom));
+        
+        obs.subscribe((taskTree: TaskTree) => {
             expect(taskTree).toBeDefined();
             expect(taskTree.children.length).toBe(1);
             done();
@@ -393,13 +431,13 @@ describe('TaskService', () => {
     describe('removeTaskTree', () => {
         it('should remove a task and its subtasks', (done) => {
             spyOn(service, 'remove').and.returnValue(of(1));
-            spyOn(service, 'getTaskSubtasks').and.returnValue(of([mockSubtask]));
+            spyOn(service, 'getTaskSubtasks').and.returnValues(of([mockSubtask]), of([]));
             spyOn(service, 'removeTaskTree').and.callThrough();
 
             service.removeTaskTree(mockTask).subscribe({
                 complete: () => {
                     expect(service.remove).toHaveBeenCalledWith(mockTask.uuid);
-                    expect(service.getTaskSubtasks).toHaveBeenCalledWith(mockTask);
+                    expect(service.getTaskSubtasks).toHaveBeenCalledWith(mockTask, false);
                     expect(service.removeTaskTree).toHaveBeenCalledWith(mockSubtask);
                     done();
                 }
