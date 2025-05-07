@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthService } from '../auth/auth.service';
-import { DbService } from './db.service';
+import { DbService } from '../db/db.service';
 import { ServiceAbstract } from './service.abstract';
 // import { MockInstance, MockService } from 'ng-mocks';
 

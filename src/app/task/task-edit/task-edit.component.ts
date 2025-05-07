@@ -18,7 +18,7 @@ import { ProjectDto } from '../../dto/project-dto';
 import { RecurringType, TaskDto } from '../../dto/task-dto';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
 import { ProjectService } from '../../project/project.service';
-import { DataUpdatedService } from '../../services/data-updated.service';
+import { DataUpdatedService } from '../../db/data-updated.service';
 // eslint-disable-next-line import/no-cycle
 import { SubtaskComponent } from '../subtask/subtask.component';
 import { TaskAddComponent } from '../task-add/task-add.component';

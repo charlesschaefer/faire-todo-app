@@ -6,13 +6,13 @@ import { v4 } from "uuid";
 //     randomUUID = crypto.randomUUID;
 // }
 
-import { ProjectDto } from "./dto/project-dto";
-import { SettingsAddDto, SettingsDto } from "./dto/settings-dto";
-import { TagDto } from "./dto/tag-dto";
-import { TaskDto } from "./dto/task-dto";
-import { TaskTagDto } from "./dto/task-tag-dto";
-import { UserDto } from "./dto/user-dto";
-import { TaskAttachmentDto, AttachmentType } from "./dto/task-attachment-dto";
+import { ProjectDto } from "../dto/project-dto";
+import { SettingsAddDto, SettingsDto } from "../dto/settings-dto";
+import { TagDto } from "../dto/tag-dto";
+import { TaskDto } from "../dto/task-dto";
+import { TaskTagDto } from "../dto/task-tag-dto";
+import { UserDto } from "../dto/user-dto";
+import { TaskAttachmentDto, AttachmentType } from "../dto/task-attachment-dto";
 
 const randomUUID: any = v4;
 

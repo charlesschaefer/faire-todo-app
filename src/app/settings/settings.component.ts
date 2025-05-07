@@ -17,7 +17,7 @@ import { v4 } from 'uuid';
 
 
 import { SettingsDto } from '../dto/settings-dto';
-import { DataUpdatedService } from '../services/data-updated.service';
+import { DataUpdatedService } from '../db/data-updated.service';
 import { SettingsService } from './settings.service';
 import { isMobile } from '../../utils/functions';
 

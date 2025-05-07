@@ -32,7 +32,7 @@ import { SettingsAddDto, SettingsDto } from './dto/settings-dto';
 import { TaskDto } from './dto/task-dto';
 import { InboxComponent } from './inbox/inbox.component';
 import { NotificationService } from './services/notification.service';
-import { SyncService } from './services/sync.service';
+import { SyncService } from './db/sync.service';
 import { UndoService } from './services/undo.service';
 import { SettingsService } from './settings/settings.service';
 import { SidemenuComponent } from "./sidemenu/sidemenu.component";

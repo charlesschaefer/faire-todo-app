@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { DbService } from '../services/db.service';
+import { DataUpdatedService } from '../db/data-updated.service';
+import { DbService } from '../db/db.service';
 import { ServiceAbstract } from '../services/service.abstract';
 
 @Injectable({

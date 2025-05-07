@@ -15,8 +15,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { AuthComponent } from '../auth/auth.component';
 import { AuthService } from '../auth/auth.service';
 import { ProjectService } from '../project/project.service';
-import { DataUpdatedService } from '../services/data-updated.service';
-import { SyncService } from '../services/sync.service';
+import { DataUpdatedService } from '../db/data-updated.service';
+import { SyncService } from '../db/sync.service';
 import { ThemeService } from '../services/theme.service';
 
 

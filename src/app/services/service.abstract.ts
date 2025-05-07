@@ -7,8 +7,8 @@ import { BehaviorSubject, Observable, from } from "rxjs";
 import { AuthService } from "../auth/auth.service";
 import { Updatable } from "../dto/updatable";
 import { UserBound } from "../dto/user-bound";
-import { Changes, DataUpdatedService } from "./data-updated.service";
-import { DbService } from "./db.service";
+import { Changes, DataUpdatedService } from "../db/data-updated.service";
+import { DbService } from "../db/db.service";
 
 @Injectable({ providedIn: 'root' })
 export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBound)) > {
@@ -35,7 +35,7 @@ export abstract class ServiceAbstract<T extends (Updatable & (Updatable | UserBo
     setTable() {
         console.log("Construindo o table do ", this.storeName)
         this.table = this.dbService.getTable(this.storeName) as EntityTable<T>;
-        console.log(this.table);
+        console.log(`table ${this.storeName}: `, this.table);
     }
 
     /**

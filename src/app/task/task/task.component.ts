@@ -18,7 +18,7 @@ import { NgxCdkDnDScrollFixerDirective } from '../../directives/ngx-cdk-dn-dscro
 import { TaskDto } from '../../dto/task-dto';
 import { DateShortenerPipe } from '../../pipes/date-shortener.pipe';
 import { LinkifyPipe } from '../../pipes/linkify.pipe';
-import { DataUpdatedService } from '../../services/data-updated.service';
+import { DataUpdatedService } from '../../db/data-updated.service';
 import { UndoService } from '../../services/undo.service';
 import { TaskEditFooterComponent } from '../task-edit/task-edit-footer/task-edit-footer.component';
 import { TaskEditComponent } from '../task-edit/task-edit.component';

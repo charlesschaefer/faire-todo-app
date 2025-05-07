@@ -10,11 +10,11 @@ import { provideSwipeMenu, SwipeMenuConfig } from 'ngx-swipe-menu';
 import 'hammerjs';
 
 import { environment } from '../environments/environment';
-import { AppDb } from "./app.db";
+import { AppDb } from "./db/app.db";
 import { DEBUG } from "./app.debug";
 import { routes } from "./app.routes";
 import { AppTheme } from "./app.theme";
-import { SyncService } from './services/sync.service';
+import { SyncService } from './db/sync.service';
 import { TranslocoHttpLoader } from './transloco-loader';
 
 const debugTracing = [];

@@ -19,7 +19,7 @@ import { v4 } from 'uuid';
 
 import { ProjectAddDto, ProjectDto } from '../dto/project-dto';
 import { TaskDto } from '../dto/task-dto';
-import { Changes, DataUpdatedService } from '../services/data-updated.service';
+import { Changes, DataUpdatedService } from '../db/data-updated.service';
 import { TaskService } from '../task/task.service';
 import { ProjectService } from './project.service';
 

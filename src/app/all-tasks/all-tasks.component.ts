@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { TaskDto } from '../dto/task-dto';
 import { InboxComponent } from '../inbox/inbox.component';
 import { SubtitlePipe } from '../pipes/subtitle.pipe';
-import { DataUpdatedService } from '../services/data-updated.service';
+import { DataUpdatedService } from '../db/data-updated.service';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskListComponent } from '../task/task-list/task-list.component';
 import { TaskService } from '../task/task.service';

@@ -9,7 +9,7 @@ import { InputTextModule } from 'primeng/inputtext';
 
 import { TaskDto } from '../dto/task-dto';
 import { InboxComponent } from '../inbox/inbox.component';
-import { DataUpdatedService } from '../services/data-updated.service';
+import { DataUpdatedService } from '../db/data-updated.service';
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskService } from '../task/task.service';
 

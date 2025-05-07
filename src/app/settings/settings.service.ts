@@ -3,8 +3,8 @@ import { from, map, mergeMap, of, zip } from "rxjs";
 
 import { AuthService } from "../auth/auth.service";
 import { SettingsAddDto, SettingsDto } from "../dto/settings-dto";
-import { DataUpdatedService } from "../services/data-updated.service";
-import { DbService } from "../services/db.service";
+import { DataUpdatedService } from "../db/data-updated.service";
+import { DbService } from "../db/db.service";
 import { ServiceAbstract } from "../services/service.abstract";
 
 @Injectable({

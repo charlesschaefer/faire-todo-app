@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { from, Observable } from 'rxjs';
-import { AppDb } from '../app.db';
+import { AppDb } from '../db/app.db';
 import { TaskAttachmentDto, TaskAttachmentAddDto } from '../dto/task-attachment-dto';
 import { ServiceAbstract } from './service.abstract';
-import { DbService } from './db.service';
+import { DbService } from '../db/db.service';
 import { AuthService } from '../auth/auth.service';
-import { DataUpdatedService } from './data-updated.service';
+import { DataUpdatedService } from '../db/data-updated.service';
 import { TaskDto } from '../dto/task-dto';
 
 @Injectable({
