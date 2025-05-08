@@ -8,33 +8,35 @@ on:
 
 jobs:
   build-snapcraft:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: setup node
-      uses: actions/setup-node@v4
-      with:
-          node-version: lts/*
-          #cache: 'npm'
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+            node-version: lts/*
+            #cache: 'npm'
     
-    - name: Installs shelljs
-      run: npm i shelljs
+      - name: Installs shelljs
+        run: npm i shelljs
 
-    - name: generate environment files
-      run: npm run generate-env
-      env: 
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      - name: generate environment files
+        run: npm run generate-env
+        env: 
+            SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+            SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
-    - name: Build Snap package
-      uses: snapcore/action-build@v1
-      id: build
+      - name: Build Snap package
+        uses: snapcore/action-build@v1
+        id: build
     
-    - name: Publish to snap store
-      uses: snapcore/action-publish@v1
-      env:
-        SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
-      with:
-        snap: ${{ steps.build.outputs.snap }}
-        release: edge
+      - name: Publish to snap store
+        uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
+        with:
+          snap: ${{ steps.build.outputs.snap }}
+          release: edge
