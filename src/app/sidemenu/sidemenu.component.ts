@@ -18,6 +18,7 @@ import { ProjectService } from '../project/project.service';
 import { DataUpdatedService } from '../db/data-updated.service';
 import { SyncService } from '../db/sync.service';
 import { ThemeService } from '../services/theme.service';
+import { AVAILABLE_LANGS, AVAILABLE_LANGS_LABELS, TranslocoAvailableLangs } from '../app.config';
 
 
 @Component({
@@ -106,6 +107,13 @@ export class SidemenuComponent implements OnInit {
 
         this.menuItems = menuItems;
 
+        const translationMenuItems = AVAILABLE_LANGS.map((lang) => {
+            return {
+                label: this.translate.translate(AVAILABLE_LANGS_LABELS[lang]),
+                command: () => this.switchLanguage(lang)
+            } as MenuItem;
+        });
+
         this.settingsMenuItems = [
             {
                 label: this.translate.translate("Settings"),
@@ -131,16 +139,7 @@ export class SidemenuComponent implements OnInit {
             {
                 label: this.translate.translate("Language"),
                 icon: "pi pi-flag",
-                items: [
-                    {
-                        label: this.translate.translate("English"),
-                        command: () => this.switchLanguage('en')
-                    },
-                    {
-                        label: this.translate.translate("Portuguese"),
-                        command: () => this.switchLanguage('pt-br')
-                    }
-                ]
+                items: translationMenuItems
             } as MenuItem
         ];
         if (this.currentUser && this.currentUser?.id) {
@@ -192,7 +191,7 @@ export class SidemenuComponent implements OnInit {
         localStorage.setItem('theme', currentTheme);
     }
 
-    switchLanguage(language: 'en' | 'pt-br') {
+    switchLanguage(language: TranslocoAvailableLangs) {
         
         const availableLangs: any[] = this.translate.getAvailableLangs();
         
