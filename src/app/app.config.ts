@@ -20,6 +20,10 @@ import { TranslocoHttpLoader } from './transloco-loader';
 const debugTracing = [];
 void (DEBUG ? debugTracing.push(withDebugTracing()) : null);
 
+export type TranslocoAvailableLangs = 'en' | 'pt-br' | 'es';
+export const AVAILABLE_LANGS = ['en', 'pt-br', 'es'] as TranslocoAvailableLangs[];
+export const AVAILABLE_LANGS_LABELS = {'en': 'English', 'pt-br': 'Portuguese', 'es': 'Spanish'};
+
 class SwipeOverride extends SwipeMenuConfig {
     override overrides = {
         "swipe": { enabled: true },
@@ -75,7 +79,7 @@ export const appConfig: ApplicationConfig = {
         importProvidersFrom(TranslocoModule), 
         provideTransloco({
             config: { 
-                availableLangs: ['en', 'pt-br'],
+                availableLangs: AVAILABLE_LANGS,
                 defaultLang: 'en',
                 fallbackLang: 'en',
                 // Remove this option if your application doesn't support changing language in runtime.
