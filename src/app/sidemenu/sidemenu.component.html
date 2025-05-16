@@ -50,12 +50,12 @@
             }
             <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
         </div>
-        <p-menu #menuSettings [model]="settingsMenuItems" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="'body'" />
+        <p-menu #menuSettings [model]="settingsMenuItems()" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="'body'" />
     </ng-template>
     <ng-template pTemplate="content" >
         <app-auth></app-auth>
 
-        <p-menu #menu [model]="menuItems" class="side-bar-menu" (onShow)="(showSidebar=false)">
+        <p-menu #menu [model]="menuItems()" class="side-bar-menu" (onShow)="(showSidebar=false)">
         </p-menu>
     </ng-template>
 </p-drawer>
