@@ -1091,7 +1091,7 @@ dependencies = [
 
 [[package]]
 name = "faire-todo-app"
-version = "0.0.65"
+version = "0.0.66"
 dependencies = [
  "base64 0.22.1",
  "bytes",
