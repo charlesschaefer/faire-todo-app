@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, signal, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { provideTranslocoScope, TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { User } from '@supabase/supabase-js';
@@ -46,8 +46,8 @@ export class SidemenuComponent implements OnInit {
     private _showSidebar = false;
     @Output() showSidebarChange = new EventEmitter();
 
-    menuItems!: MenuItem[];
-    settingsMenuItems!: MenuItem[];
+    menuItems = signal<MenuItem[]>([]);
+    settingsMenuItems = signal<MenuItem[]>([]);
 
     @Input() currentUser: User | null = null;
 
@@ -105,7 +105,7 @@ export class SidemenuComponent implements OnInit {
             menuItems.push(item);
         }
 
-        this.menuItems = menuItems;
+        this.menuItems.set(menuItems);
 
         const translationMenuItems = AVAILABLE_LANGS.map((lang) => {
             return {
@@ -114,7 +114,7 @@ export class SidemenuComponent implements OnInit {
             } as MenuItem;
         });
 
-        this.settingsMenuItems = [
+        const settingsMenuItems = [
             {
                 label: this.translate.translate("Settings"),
                 items: [
@@ -143,7 +143,7 @@ export class SidemenuComponent implements OnInit {
             } as MenuItem
         ];
         if (this.currentUser && this.currentUser?.id) {
-            this.settingsMenuItems.push({
+            settingsMenuItems.push({
                 label: this.translate.translate("Synchronization"),
                 icon: "pi pi-sync",
                 items: [
@@ -154,6 +154,8 @@ export class SidemenuComponent implements OnInit {
                 ]
             })
         }
+
+        this.settingsMenuItems.set(settingsMenuItems);
     }
 
     async getProjectMenuItems(): Promise<MenuItem[]> {
