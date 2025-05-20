@@ -132,7 +132,7 @@ jobs:
             - name: Build app bundle
               run: npm run tauri android build 
               env:
-                  NDK_HOME: ${{ env.ANDROID_HOME }}/ndk/27.0.11902837
+                  NDK_HOME: ${{ github.workspace }}/android-sdk/ndk/27.0.11902837
 
             - name: Create gradle cache
               uses: actions/cache/save@v4
