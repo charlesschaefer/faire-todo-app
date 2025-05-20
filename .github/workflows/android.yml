@@ -160,10 +160,10 @@ jobs:
 
             - name: Get Node project version
               id: package-version
-              uses: martinbeentjes/npm-get-version-action@v1.3.1
+              uses: martinbeentjes/npm-get-version-action
 
             - name: Publish
-              uses: softprops/action-gh-release@v1
+              uses: softprops/action-gh-release
               with:
                   draft: true
                   name: App v${{ steps.package-version.outputs.current-version}} (Android)
