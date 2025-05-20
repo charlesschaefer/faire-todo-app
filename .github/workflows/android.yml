@@ -163,7 +163,7 @@ jobs:
               uses: martinbeentjes/npm-get-version-action
 
             - name: Publish
-              uses: softprops/action-gh-release
+              uses: softprops/action-gh-release@39ba0b9d81217c984acfad95ddcc7db226387497
               with:
                   draft: true
                   name: App v${{ steps.package-version.outputs.current-version}} (Android)
