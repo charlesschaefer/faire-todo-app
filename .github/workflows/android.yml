@@ -160,7 +160,7 @@ jobs:
 
             - name: Get Node project version
               id: package-version
-              uses: martinbeentjes/npm-get-version-action
+              uses: martinbeentjes/npm-get-version-action@3cf273023a0dda27efcd3164bdfb51908dd46a5b
 
             - name: Publish
               uses: softprops/action-gh-release@39ba0b9d81217c984acfad95ddcc7db226387497
