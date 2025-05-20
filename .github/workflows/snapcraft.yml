@@ -30,11 +30,11 @@ jobs:
             SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
       - name: Build Snap package
-        uses: snapcore/action-build@v1
+        uses: snapcore/action-build
         id: build
     
       - name: Publish to snap store
-        uses: snapcore/action-publish@v1
+        uses: snapcore/action-publish
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_TOKEN }}
         with:
