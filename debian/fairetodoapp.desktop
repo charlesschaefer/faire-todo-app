@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=FaireToDo App
+Comment=Um aplicativo de lista de tarefas com Tauri
+Exec=fairetodoapp
+Icon=fairetodoapp
+Terminal=false
+Type=Application
+Categories=Utility;Productivity;
+StartupNotify=true

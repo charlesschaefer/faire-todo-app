@@ -1,0 +1,11 @@
+fairetodoapp (0.0.66-2) jammy; urgency=medium
+
+  * Rebuild for new PPA upload.
+
+ -- charles <charlesschaefer@gmail.com>  Tue, 20 May 2025 22:30:30 -0300
+
+fairetodoapp (0.0.66-1) jammy; urgency=medium
+
+  * Initial release.
+
+ -- charles <charlesschaefer@gmail.com>  Tue, 20 May 2025 22:30:28 -0300
