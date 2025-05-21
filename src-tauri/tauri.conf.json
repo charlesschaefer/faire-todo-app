@@ -6,7 +6,8 @@
     "beforeDevCommand": "npm run apply-supabase-url && npm run start -- --host localhost --public-host localhost",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "npm run apply-supabase-url && npm run build",
-    "frontendDist": "../dist/faire-todo-app/browser"
+    "frontendDist": "../dist/faire-todo-app/browser",
+    "removeUnusedCommands": true
   },
   "app": {
     "windows": [
