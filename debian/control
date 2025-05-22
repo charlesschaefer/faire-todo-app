@@ -11,8 +11,7 @@ Build-Depends: debhelper-compat (= 13),
                libgtk-3-dev,
                libappindicator3-dev,
                pkg-config,
-               libssl-dev,
-               dh-cargo
+               libssl-dev
 Standards-Version: 4.6.0
 Homepage: https://launchpad.net/fairetodoapp
 Vcs-Browser: https://git.launchpad.net/~charlesschaefer/+git/fairetodoapp

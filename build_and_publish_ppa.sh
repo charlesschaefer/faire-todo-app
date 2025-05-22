@@ -49,7 +49,7 @@ command_exists gpg || error_exit "gpg não está instalado. Necessário para ass
 # Instalar dependências de build localmente (para que dpkg-checkbuilddeps não falhe)
 echo "--- Instalando/Verificando dependências de build localmente..."
 sudo apt update
-sudo apt install -y dh-cargo nodejs npm rustc cargo libwebkit2gtk-4.1-dev libgtk-3-dev pkg-config libssl-dev build-essential devscripts dpkg-dev gnupg || error_exit "Falha ao instalar dependências de build. Verifique se os nomes dos pacotes estão corretos."
+sudo apt install -y nodejs npm rustc cargo libwebkit2gtk-4.1-dev libgtk-3-dev pkg-config libssl-dev build-essential devscripts dpkg-dev gnupg || error_exit "Falha ao instalar dependências de build. Verifique se os nomes dos pacotes estão corretos."
 
 # Verificar GPG Key (simples, assume que já está configurada com o Launchpad)
 if ! gpg --list-secret-keys --keyid-format LONG | grep -q "$MAINTAINER_EMAIL"; then
@@ -87,8 +87,7 @@ Build-Depends: debhelper-compat (= 13),
                libgtk-3-dev,
                libappindicator3-dev,
                pkg-config,
-               libssl-dev,
-               dh-cargo
+               libssl-dev
 Standards-Version: 4.6.0
 Homepage: https://launchpad.net/${APP_NAME}
 Vcs-Browser: https://git.launchpad.net/~${LAUNCHPAD_USER}/+git/${APP_NAME}
@@ -144,21 +143,19 @@ EOF
 # export DH_VERBOSE = 1
 
 %:
-	dh \$@ --with cargo --buildsystem=cargo --skip-missing-doc --skip-systemd-service
+	dh \$@ --skip-missing-doc --skip-systemd-service
 
 # NOVO: Regra para limpar o projeto Cargo/Tauri
 override_dh_auto_clean:
 	# Limpa o projeto Cargo/Tauri dentro de src-tauri
 	(cd src-tauri && cargo clean)
 	# Limpa dependências e caches do Node.js
-	npm cache clean --force || true
-	# Limpeza padrão do debhelper
-	#dh_auto_clean
+	npm cache clean || true
 
 override_dh_auto_build:
 	# Limpa caches e instala dependências do Node.js
-	npm cache clean --force || true
-	npm install --silent --no-progress
+	npm clean-install --include prod --include dev --include peer
+	npm install --save-dev @tauri-apps/cli @tauri-apps/api rollup
 	# Build do frontend Angular (se estiver em 'src')
 	# Certifique-se que o output do build do Angular vá para a pasta 'dist' ou similar,
 	# que o Tauri espera.
@@ -166,7 +163,7 @@ override_dh_auto_build:
 	# npm run build -- --output-path "\$(CURDIR)/dist"
 
 	# Compila o aplicativo Tauri
-	cargo tauri build --release --target x86_64-unknown-linux-gnu
+	cargo tauri build --release --target x86_64-unknown-linux-gnu --no-bundle
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos
@@ -218,8 +215,8 @@ EOF
     CURRENT_DIR=$(pwd)
     cd "$PROJECT_ROOT_DIR"
     echo "Rodando o dch para gerar o changes: "
-    echo "dch --create -v \"${APP_VERSION}-1\" --package \"${APP_NAME}\" \"Initial release.\" --distribution \"jammy\""
-    dch --create -v "${APP_VERSION}-1" --package "${APP_NAME}" "Initial release." --distribution "jammy"
+    echo "dch --create -v \"${APP_VERSION}-1\" --package \"${APP_NAME}\" \"Initial release.\" --distribution \"noble\""
+    dch --create -v "${APP_VERSION}-1" --package "${APP_NAME}" "Initial release." --distribution "noble"
     cd "$CURRENT_DIR" # Voltar para o diretório de construção temporário
     success_msg "Criado ${DEBIAN_DIR_IN_PROJECT}/changelog com a versão ${APP_VERSION}-1."
 
@@ -292,11 +289,12 @@ if [ -n "$LAST_CHANGELOG_VERSION" ]; then
     if [ "$LAST_CHANGELOG_VERSION" == "$APP_VERSION" ]; then
         # Mesma versão do app, incrementa a revisão Debian
         NEW_DEB_REVISION=$((LAST_CHANGELOG_REV + 1))
-        dch -v "${APP_VERSION}-${NEW_DEB_REVISION}" "Rebuild for new PPA upload." --distribution "jammy"
+        dch -v "${APP_VERSION}-${NEW_DEB_REVISION}" "Rebuild for new PPA upload." --distribution "noble"
         DEB_CHANGES_FILE="${DEB_CHANGES_FILE_BASENAME}-${NEW_DEB_REVISION}_source.changes"
+	wget -O "$TEMP_BUILD_ROOT_DIR/${APP_NAME}_${APP_VERSION}.orig.tar.gz" "https://launchpad.net/~charlesschaefer/+archive/ubuntu/${PPA_IDENTIFIER}/+sourcefiles/${APP_NAME}/${APP_VERSION}-2/${APP_NAME}_${APP_VERSION}.orig.tar.gz"
     else
         # Nova versão do app, nova entrada no changelog
-        dch -v "${APP_VERSION}-1" "New upstream release of ${APP_NAME}." --distribution "jammy"
+        dch -v "${APP_VERSION}-1" "New upstream release of ${APP_NAME}." --distribution "noble"
         DEB_CHANGES_FILE="${DEB_CHANGES_FILE_BASENAME}-1_source.changes"
     fi
 else 
