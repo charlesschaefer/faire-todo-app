@@ -1,7 +1,7 @@
 Source: fairetodoapp
 Section: utils
 Priority: optional
-Maintainer: Charles Schaefer <charlesschaefer@gmail.com>
+Maintainer: Charles Schaefer <>
 Build-Depends: debhelper-compat (= 13),
                nodejs,
                npm,

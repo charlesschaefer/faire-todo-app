@@ -2,13 +2,15 @@
 
 # --- Configurações Iniciais ---
 APP_NAME="fairetodoapp" # Nome do seu aplicativo (minúsculo, sem espaços)
+EXECUTABLE_NAME="faire-todo-app"
 PPA_IDENTIFIER="faire-todo-app" # O nome do seu PPA no Launchpad, ex: ppa:SEU_USUARIO/meuapp
 LAUNCHPAD_USER="charlesschaefer" # Seu nome de usuário do Launchpad
 MAINTAINER_NAME="Charles Schaefer" # Seu nome para o Maintainer do pacote
 MAINTAINER_EMAIL="charlesschaefer@gmail.com" # Seu e-mail para o Maintainer do pacote (deve corresponder ao do Launchpad)
 
 # Diretório raiz do seu projeto (onde este script está e onde package.json está)
-PROJECT_ROOT_DIR="$(dirname "$0")"
+#PROJECT_ROOT_DIR="$(dirname "$0")"
+PROJECT_ROOT_DIR="$(pwd)"
 
 # Diretório onde os arquivos debian/ estão ou serão criados
 DEBIAN_DIR_IN_PROJECT="${PROJECT_ROOT_DIR}/debian"
@@ -153,23 +155,18 @@ override_dh_auto_clean:
 	npm cache clean || true
 
 override_dh_auto_build:
-	# Limpa caches e instala dependências do Node.js
-	npm clean-install --include prod --include dev --include peer
-	npm install --save-dev @tauri-apps/cli @tauri-apps/api rollup
-	# Build do frontend Angular (se estiver em 'src')
-	# Certifique-se que o output do build do Angular vá para a pasta 'dist' ou similar,
-	# que o Tauri espera.
-	# Exemplo: (pode variar dependendo dos seus scripts em package.json)
-	# npm run build -- --output-path "\$(CURDIR)/dist"
+	(cd src-tauri && tar -zxvf ../debian/vendor.tar.gz)
+	tar -zxvf debian/node_modules.tar.gz
+	rm debian/vendor.tar.gz debian/node_modules.tar.gz
 
 	# Compila o aplicativo Tauri
-	cargo tauri build --release --target x86_64-unknown-linux-gnu --no-bundle
+	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen)
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos
 	# Ajuste conforme o nome real do seu executável gerado pelo Tauri
-	TAURI_BUILD_DIR=\$(CURDIR)/src-tauri/target/release
-	APP_EXECUTABLE_NAME=\$(echo ${APP_NAME} | tr '[:upper:]' '[:lower:]')
+	TAURI_BUILD_DIR=\$(pwd)/src-tauri/target/x86_64-unknown-linux-gnu/release
+	APP_EXECUTABLE_NAME=\$(echo ${EXECUTABLE_NAME} | tr '[:upper:]' '[:lower:]')
 
 	# Cria os diretórios de destino
 	mkdir -p \$(DESTDIR)/usr/bin
@@ -182,13 +179,13 @@ override_dh_auto_install:
 	chmod +x "\$(DESTDIR)/usr/bin/\${APP_EXECUTABLE_NAME}"
 
 	# Copia o arquivo .desktop
-	cp debian/${APP_NAME}.desktop \$(DESTDIR)/usr/share/applications/
+	cp debian/${APP_NAME}.desktop \$(DESTDIR)/usr/share/applications/\${APP_EXECUTABLE_NAME}.desktop
 
 	# Copia ícones (verifique onde estão seus ícones no projeto - images/icon.svg, images/icon_256x256.png)
 	# Verifique se o arquivo images/icon.svg existe no seu projeto.
 	# Ou comente se você não tem esses ícones ou se o Tauri os empacota de outra forma.
-	[ -f images/icon.svg ] && cp images/icon.svg \$(DESTDIR)/usr/share/icons/hicolor/scalable/apps/${APP_NAME}.svg
-	[ -f images/icon_256x256.png ] && cp images/icon_256x256.png \$(DESTDIR)/usr/share/icons/hicolor/256x256/apps/${APP_NAME}.png
+	[ -f images/icon.svg ] && cp images/icon.svg \$(DESTDIR)/usr/share/icons/hicolor/scalable/apps/\${APP_EXECUTABLE_NAME}.svg
+	[ -f images/icon_256x256.png ] && cp images/icon_256x256.png \$(DESTDIR)/usr/share/icons/hicolor/256x256/apps/\${APP_EXECUTABLE_NAME}.png
 
 	# Limpar arquivos de build
 	dh_clean
@@ -210,6 +207,25 @@ StartupNotify=true
 EOF
     success_msg "Criado ${DEBIAN_DIR_IN_PROJECT}/${APP_NAME}.desktop"
 
+    cat <<EOF > "${DEBIAN_DIR_IN_PROJECT}/cargo.config"
+[source.crates-io]
+replace-with = vendored-sources
+
+[source.vendored-sources]
+directory = "vendor"
+EOF
+    success_msg "Criado o arquivo ${DEBIAN_DIR_IN_PROJECT}/cargo.config"
+
+	mkdir "${DEBIAN_DIR_IN_PROJECT}/source"
+
+    echo "3.0 (quilt)" > "${DEBIAN_DIR_IN_PROJECT}/source/format"
+    success_msg "Criado o arquivo ${DEBIAN_DIR_IN_PROJECT}/source/format"
+
+    cat <<EOF > "${DEBIAN_DIR_IN_PROJECT}/source/include-binaries"
+debian/vendor.tar.gz
+debian/node_modules.tar.gz
+EOF
+
     # Criar debian/changelog (apenas a primeira entrada)
     # Voltar para o diretório raiz do projeto para o dch
     CURRENT_DIR=$(pwd)
@@ -226,6 +242,18 @@ EOF
     echo "Pressione Enter para continuar após a revisão (ou Ctrl+C para abortar e ajustar)."
     read -r
 fi
+
+# --- 3.1 Gerar o diretório de vendors do cargo, empacotar dentro de debian e deopis remover novamente
+cd $PROJECT_ROOT_DIR/src-tauri
+cargo vendor || error_exit "Não foi possível gerar o diretório de libs vendors do cargo"
+tar -czf "${DEBIAN_DIR_IN_PROJECT}/vendor.tar.gz" vendor || error_exit "Não foi possível empacotar o diretório de vendors"
+rm -Rf vendor/
+
+# --- 3.2 Gerar o diretório node_modules atualizado, empacotar dentro de debian e depois remover novamente
+cd $PROJECT_ROOT_DIR
+npm clean-install
+tar -czf "${DEBIAN_DIR_IN_PROJECT}/node_modules.tar.gz" node_modules || error_exit "Não foi possível empacotar o diretório node_modules"
+rm -Rf node_modules
 
 # --- 4. Limpar e Preparar Diretório de Construção Temporário ---
 echo "--- Limpando e preparando diretório de construção temporário ($TEMP_BUILD_ROOT_DIR)..."

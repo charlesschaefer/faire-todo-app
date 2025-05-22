@@ -10,27 +10,21 @@ override_dh_auto_clean:
 	# Limpa o projeto Cargo/Tauri dentro de src-tauri
 	(cd src-tauri && cargo clean)
 	# Limpa dependências e caches do Node.js
-	npm cache clean --force || true
-	# Limpeza padrão do debhelper
+	npm cache clean || true
 
 override_dh_auto_build:
-	# Limpa caches e instala dependências do Node.js
-	npm clean-install --include prod --include dev --include peer
-	npm install --save-dev @tauri-apps/cli @tauri-apps/api rollup
-	# Build do frontend Angular (se estiver em 'src')
-	# Certifique-se que o output do build do Angular vá para a pasta 'dist' ou similar,
-	# que o Tauri espera.
-	# Exemplo: (pode variar dependendo dos seus scripts em package.json)
-	# npm run build -- --output-path "$(CURDIR)/dist"
+	(cd src-tauri && tar -zxvf ../debian/vendor.tar.gz)
+	tar -zxvf debian/node_modules.tar.gz
+	rm debian/vendor.tar.gz debian/node_modules.tar.gz
 
 	# Compila o aplicativo Tauri
-	cargo tauri build --release --target x86_64-unknown-linux-gnu --no-bundle
+	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen)
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos
 	# Ajuste conforme o nome real do seu executável gerado pelo Tauri
-	TAURI_BUILD_DIR=$(CURDIR)/src-tauri/target/release
-	APP_EXECUTABLE_NAME=$(echo fairetodoapp | tr '[:upper:]' '[:lower:]')
+	TAURI_BUILD_DIR=$(pwd)/src-tauri/target/x86_64-unknown-linux-gnu/release
+	APP_EXECUTABLE_NAME=$(echo faire-todo-app | tr '[:upper:]' '[:lower:]')
 
 	# Cria os diretórios de destino
 	mkdir -p $(DESTDIR)/usr/bin
@@ -43,13 +37,13 @@ override_dh_auto_install:
 	chmod +x "$(DESTDIR)/usr/bin/${APP_EXECUTABLE_NAME}"
 
 	# Copia o arquivo .desktop
-	cp debian/fairetodoapp.desktop $(DESTDIR)/usr/share/applications/
+	cp debian/fairetodoapp.desktop $(DESTDIR)/usr/share/applications/${APP_EXECUTABLE_NAME}.desktop
 
 	# Copia ícones (verifique onde estão seus ícones no projeto - images/icon.svg, images/icon_256x256.png)
 	# Verifique se o arquivo images/icon.svg existe no seu projeto.
 	# Ou comente se você não tem esses ícones ou se o Tauri os empacota de outra forma.
-	[ -f images/icon.svg ] && cp images/icon.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/fairetodoapp.svg
-	[ -f images/icon_256x256.png ] && cp images/icon_256x256.png $(DESTDIR)/usr/share/icons/hicolor/256x256/apps/fairetodoapp.png
+	[ -f images/icon.svg ] && cp images/icon.svg $(DESTDIR)/usr/share/icons/hicolor/scalable/apps/${APP_EXECUTABLE_NAME}.svg
+	[ -f images/icon_256x256.png ] && cp images/icon_256x256.png $(DESTDIR)/usr/share/icons/hicolor/256x256/apps/${APP_EXECUTABLE_NAME}.png
 
 	# Limpar arquivos de build
 	dh_clean
