@@ -152,7 +152,7 @@ override_dh_auto_clean:
 	# Limpa o projeto Cargo/Tauri dentro de src-tauri
 	(cd src-tauri && cargo clean)
 	# Limpa dependências e caches do Node.js
-	npm cache clean || true
+	#npm cache clean || true
 
 override_dh_auto_build:
 	(cd src-tauri && tar -zxvf ../debian/vendor.tar.gz)
@@ -252,6 +252,7 @@ rm -Rf vendor/
 # --- 3.2 Gerar o diretório node_modules atualizado, empacotar dentro de debian e depois remover novamente
 cd $PROJECT_ROOT_DIR
 npm clean-install
+
 tar -czf "${DEBIAN_DIR_IN_PROJECT}/node_modules.tar.gz" node_modules || error_exit "Não foi possível empacotar o diretório node_modules"
 rm -Rf node_modules
 
