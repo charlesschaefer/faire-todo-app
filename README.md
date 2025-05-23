@@ -59,6 +59,45 @@ npm run tauri android build
 Check [Tauri Dependencies](https://v2.tauri.app/start/prerequisites/) to know what to install before building. And check [Android Code Signing](https://v2.tauri.app/distribute/signing/android/) to know how to set up keys to sign your APK.
 
 
+## Building flatpak packages
+
+Our build process uses the same approach from Tauri documentation - we download the latest .deb package from github and use it's files to build the package.
+
+In order to build flatpak packages, you need to install `flatpak` and `flatpak-builder`:
+```bash
+apt install flatpak flatpak-builder
+```
+
+Then, before building you need to add a git submodule to be able to build libayatana-appindicator, that is used by tray-icon:
+```bash
+git submodule add https://github.com/flathub/shared-modules.git
+```
+
+Now you can build and run the package:
+```bash
+flatpak-builder --force-clean  build-dir net.charlesschaefer.fairetodoapp.yml
+flatpak-builder --run build-dir/ net.charlesschaefer.fairetodoapp.yml faire-todo-app
+```
+
+Now you can test the app installation:
+```bash
+# creates a repository 'local-flatpak-repo'
+mkdir -p local-flatpak-repo
+flatpak build-export local-flatpak-repo build-dir
+# adds 'repo' directory created previously as a repository named 'faire-local'
+flatpak remote-add --user --if-not-exists --no-gpg-verify faire-local local-flatpak-repo
+# removes the gpg verification in case the repository was pre-existing
+flatpak remote-modify --user faire-local --no-gpg-verify
+# installs the package
+flatpak install faire-local net.charlesschaefer.fairetodoapp.yml
+```
+
+**Attention**: after building, remove the submodule directory:
+```bash
+git submodule deinit -f shared-modules
+rm shared-modules/ -Rf
+```
+
 # Install android dependencies
 
 ```

@@ -1,32 +1,48 @@
 id: net.charlesschaefer.fairetodoapp
-
 runtime: org.gnome.Platform
 runtime-version: '46'
 sdk: org.gnome.Sdk
-
 command: faire-todo-app
 finish-args:
-  - --socket=wayland # Permission needed to show the window
-  - --socket=fallback-x11 # Permission needed to show the window
-  - --device=dri # OpenGL, noct necessary for all projects
   - --share=ipc
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --talk-name=org.ayatana.AppIndicator
+  - --socket=system-bus # Para acessar o barramento de sistema onde o AppIndicator pode estar
+  - --own-name=org.ayatana.AppIndicator # Se seu app for o provedor do serviço (raro)
+  - --env=LD_LIBRARY_PATH=/app/lib
+  - --env=FLATPAK_ENV=1
+  - --filesystem=home
+  - --talk-name=org.freedesktop.Notifications
 
 modules:
-  - name: binary
+  - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
+  - shared-modules/libcanberra/libcanberra.json
+  - name: faire-todo-app
     buildsystem: simple
+    build-options:
+      build-args: ["--share=network"]
+    build-commands: # E esta linha também, 4 espaços de indentação
+        - curl --location -o latest "https://github.com/charlesschaefer/faire-todo-app/releases/latest"
+        - cat latest | sed -n -e "/App v/ {s/.*App v\([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/gp;q}"
+        - export VERSION=$(cat latest | sed -n -e "/App v/ {s/.*App v\([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/gp;q}");
+          echo "Version=$VERSION";
+          echo "curl --location -o fairetodoapp.deb \"https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v"$VERSION"/Faire.Todo.App_"$VERSION"_amd64.deb\"";
+          curl --location -o fairetodoapp.deb "https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v"$VERSION"/Faire.Todo.App_"$VERSION"_amd64.deb"
+        - ar -x fairetodoapp.deb
+        - tar -xf data.tar.gz
+        - 'install -Dm755 usr/bin/faire-todo-app /app/bin/faire-todo-app'
+        - install -Dm644 usr/share/applications/Faire\ Todo\ App.desktop /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
+        - sed -i -e "s|Icon=faire-todo-app|Icon=net.charlesschaefer.fairetodoapp|g" /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
+        - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/net.charlesschaefer.fairetodoapp.png
+        - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/net.charlesschaefer.fairetodoapp.png
+        - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/net.charlesschaefer.fairetodoapp.png
+        - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/faire-todo-app.png
+        - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/faire-todo-app.png
+        - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/faire-todo-app.png
+        #- install -Dm644 net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.rosary.metainfo.xml
     sources:
-      - type: file
-        url: https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v0.0.5/Faire.Todo.App_0.0.5_amd64.deb
-        sha256: 0f6b2b80a56c204a10eff08101dc6487bf5db450a1332b2eac0341ed12ff98ff # This is required if you are using a remote source
-        only-arches: [x86_64] #This source is only used on x86_64 Computers
-        # This path points to the binary file which was created in the .deb bundle.
-        # Tauri also creates a folder which corresponds to the content of the unpacked .deb.
-    build-commands:
-      - ar -x *.deb
-      - tar -xf data.tar.gz
-      - 'install -Dm755 usr/bin/faire-todo-app /app/bin/faire-todo-app'
-      - install -Dm644 usr/share/applications/Faire\ Todo\ App.desktop /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
-      - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/net.charlesschaefer.fairetodoapp.png
-      - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/net.charlesschaefer.fairetodoapp.png
-      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/net.charlesschaefer.fairetodoapp.png
-      #- install -Dm644 net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.rosary.metainfo.xml
+      - type: dir
+        path: .
