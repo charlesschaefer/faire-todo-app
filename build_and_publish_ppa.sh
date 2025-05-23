@@ -252,7 +252,7 @@ rm -Rf vendor/
 # --- 3.2 Gerar o diretório node_modules atualizado, empacotar dentro de debian e depois remover novamente
 cd $PROJECT_ROOT_DIR
 npm clean-install
-
+npm install @tauri-apps/cli @tauri-apps/api rollup ts-node @angular/cli tsx
 tar -czf "${DEBIAN_DIR_IN_PROJECT}/node_modules.tar.gz" node_modules || error_exit "Não foi possível empacotar o diretório node_modules"
 rm -Rf node_modules
 
@@ -361,7 +361,7 @@ debsign "$DEB_CHANGES_FILE" -m $MAINTAINER_NAME -e $MAINTAINER_EMAIL
 # dput envia o pacote. Você precisará digitar sua senha GPG.
 dput "ppa:${LAUNCHPAD_USER}/${PPA_IDENTIFIER}" "$DEB_CHANGES_FILE" || error_exit "Erro ao enviar o pacote para o PPA. Verifique suas credenciais e o status do Launchpad."
 
-cp "$TEMP_BUILD_ROOT_DIR/$DEB_SOURCE_DIR/debian/*" "$PROJECT_ROOT_DIR/debian/"
+cp "$TEMP_BUILD_ROOT_DIR/$DEB_SOURCE_DIR/debian/changelog" "$PROJECT_ROOT_DIR/debian/"
 
 success_msg "Processo concluído!"
 echo "Verifique o status da build em https://launchpad.net/~${LAUNCHPAD_USER}/+archive/ubuntu/${PPA_IDENTIFIER}"
