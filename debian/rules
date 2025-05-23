@@ -18,7 +18,7 @@ override_dh_auto_build:
 	rm debian/vendor.tar.gz debian/node_modules.tar.gz
 
 	# Compila o aplicativo Tauri
-	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen)
+	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen  -Znext-lockfile-bump)
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos

@@ -160,7 +160,7 @@ override_dh_auto_build:
 	rm debian/vendor.tar.gz debian/node_modules.tar.gz
 
 	# Compila o aplicativo Tauri
-	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen)
+	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen  -Znext-lockfile-bump)
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos
@@ -245,6 +245,7 @@ fi
 
 # --- 3.1 Gerar o diretório de vendors do cargo, empacotar dentro de debian e deopis remover novamente
 cd $PROJECT_ROOT_DIR/src-tauri
+rm Cargo.lock
 cargo vendor || error_exit "Não foi possível gerar o diretório de libs vendors do cargo"
 tar -czf "${DEBIAN_DIR_IN_PROJECT}/vendor.tar.gz" vendor || error_exit "Não foi possível empacotar o diretório de vendors"
 rm -Rf vendor/

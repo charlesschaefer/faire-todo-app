@@ -1,3 +1,9 @@
+fairetodoapp (0.0.66-9) noble; urgency=medium
+
+  * Rebuild for new PPA upload.
+
+ -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 08:06:37 -0300
+
 fairetodoapp (0.0.66-8) noble; urgency=medium
 
   * Rebuild for new PPA upload.
