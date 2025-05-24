@@ -1,17 +1,15 @@
 Source: fairetodoapp
 Section: utils
 Priority: optional
-Maintainer: Charles Schaefer <>
+Maintainer: Charles Schaefer <charlesschaefer@gmail.com>
 Build-Depends: debhelper-compat (= 13),
-               nodejs,
-               npm,
-               rustc-1.80,
-               cargo-1.80,
+               binutils,
+               tar,
                libwebkit2gtk-4.1-dev,
                libgtk-3-dev,
+               libsoup-3.0-dev,
                libappindicator3-dev,
-               pkg-config,
-               libssl-dev
+               pkg-config
 Standards-Version: 4.6.0
 Homepage: https://launchpad.net/fairetodoapp
 Vcs-Browser: https://git.launchpad.net/~charlesschaefer/+git/fairetodoapp
@@ -24,5 +22,5 @@ Depends: ${shlibs:Depends}, ${misc:Depends},
          libgtk-3-0,
          libappindicator3-1
 Description: Um aplicativo de lista de tarefas simples e eficiente (Tauri).
- Este é o aplicativo FaireToDo, construído com Tauri, projetado para ajudar
- você a organizar suas tarefas diárias com uma interface moderna.
+ Este pacote fornece o aplicativo FaireToDo pré-compilado, construído com Tauri,
+ projetado para ajudar você a organizar suas tarefas diárias com uma interface moderna.

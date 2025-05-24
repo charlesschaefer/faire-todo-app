@@ -2,8 +2,8 @@
 Version=1.0
 Name=FaireToDo App
 Comment=Um aplicativo de lista de tarefas com Tauri
-Exec=fairetodoapp
-Icon=fairetodoapp
+Exec=faire-todo-app
+Icon=faire-todo-app
 Terminal=false
 Type=Application
 Categories=Utility;Productivity;

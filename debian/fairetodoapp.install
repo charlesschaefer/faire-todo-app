@@ -1,0 +1,5 @@
+src-tauri/target/usr/bin/faire-todo-app usr/bin
+src-tauri/target/usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png usr/share/icons/hicolor/256x256@2/apps
+src-tauri/target/usr/share/icons/hicolor/128x128/apps/faire-todo-app.png usr/share/icons/hicolor/128x128/apps
+src-tauri/target/usr/share/icons/hicolor/32x32/apps/faire-todo-app.png usr/share/icons/hicolor/32x32/apps
+src-tauri/target/usr/share/applications/faire-todo-app.desktop usr/share/applications
