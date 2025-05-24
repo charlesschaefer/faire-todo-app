@@ -1,143 +1,155 @@
-fairetodoapp (0.0.66-24) noble; urgency=medium
+fairetodoapp (0.0.66-26) jammy; urgency=medium
+
+  * Rebuild for new PPA upload (pre-built binary).
+
+ -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 07:57:29 -0300
+
+fairetodoapp (0.0.66-25) noble; urgency=medium
+
+  * Rebuild for new PPA upload (pre-built binary).
+
+ -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 07:54:14 -0300
+
+fairetodoapp (0.0.66-24) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 07:21:31 -0300
 
-fairetodoapp (0.0.66-23) noble; urgency=medium
+fairetodoapp (0.0.66-23) jammy; urgency=medium
 
-  * Rebuild for new PPA upload (pre-built binary) for noble and jammy.
+  * Rebuild for new PPA upload (pre-built binary) for jammy and jammy.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 07:06:36 -0300
 
 
-fairetodoapp (0.0.66-22) noble; urgency=medium
+fairetodoapp (0.0.66-22) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 06:45:00 -0300
 
-fairetodoapp (0.0.66-21) noble; urgency=medium
+fairetodoapp (0.0.66-21) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 06:37:35 -0300
 
-fairetodoapp (0.0.66-20) noble; urgency=medium
+fairetodoapp (0.0.66-20) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 06:24:17 -0300
 
-fairetodoapp (0.0.66-19) noble; urgency=medium
+fairetodoapp (0.0.66-19) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 05:20:16 -0300
 
-fairetodoapp (0.0.66-18) noble; urgency=medium
+fairetodoapp (0.0.66-18) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 05:14:58 -0300
 
-fairetodoapp (0.0.66-17) noble; urgency=medium
+fairetodoapp (0.0.66-17) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 05:02:05 -0300
 
-fairetodoapp (0.0.66-16) noble; urgency=medium
+fairetodoapp (0.0.66-16) jammy; urgency=medium
 
   * Rebuild for new PPA upload (pre-built binary).
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 04:57:52 -0300
 
-fairetodoapp (0.0.66-15) noble; urgency=medium
+fairetodoapp (0.0.66-15) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 03:02:41 -0300
 
-fairetodoapp (0.0.66-14) noble; urgency=medium
+fairetodoapp (0.0.66-14) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 02:55:47 -0300
 
-fairetodoapp (0.0.66-13) noble; urgency=medium
+fairetodoapp (0.0.66-13) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 02:23:21 -0300
 
-fairetodoapp (0.0.66-12) noble; urgency=medium
+fairetodoapp (0.0.66-12) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Sat, 24 May 2025 02:20:47 -0300
 
-fairetodoapp (0.0.66-11) noble; urgency=medium
+fairetodoapp (0.0.66-11) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 09:32:58 -0300
 
-fairetodoapp (0.0.66-10) noble; urgency=medium
+fairetodoapp (0.0.66-10) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 09:12:52 -0300
 
-fairetodoapp (0.0.66-9) noble; urgency=medium
+fairetodoapp (0.0.66-9) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 08:06:37 -0300
 
-fairetodoapp (0.0.66-8) noble; urgency=medium
+fairetodoapp (0.0.66-8) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 03:00:28 -0300
 
-fairetodoapp (0.0.66-7) noble; urgency=medium
+fairetodoapp (0.0.66-7) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 02:48:14 -0300
 
-fairetodoapp (0.0.66-6) noble; urgency=medium
+fairetodoapp (0.0.66-6) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 02:45:29 -0300
 
-fairetodoapp (0.0.66-5) noble; urgency=medium
+fairetodoapp (0.0.66-5) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Fri, 23 May 2025 01:42:53 -0300
 
-fairetodoapp (0.0.66-4) noble; urgency=medium
+fairetodoapp (0.0.66-4) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- Charles Schaefer <charlesschaefer@gmail.com>  Thu, 22 May 2025 12:12:58 -0300
 
-fairetodoapp (0.0.66-3) noble; urgency=medium
+fairetodoapp (0.0.66-3) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- charles <charlesschaefer@gmail.com>  Wed, 21 May 2025 16:26:18 -0300
 
-fairetodoapp (0.0.66-2) noble; urgency=medium
+fairetodoapp (0.0.66-2) jammy; urgency=medium
 
   * Rebuild for new PPA upload.
 
  -- charles <charlesschaefer@gmail.com>  Wed, 21 May 2025 16:06:29 -0300
 
-fairetodoapp (0.0.66-1) noble; urgency=medium
+fairetodoapp (0.0.66-1) jammy; urgency=medium
 
   * Initial release.
 

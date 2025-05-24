@@ -262,7 +262,7 @@ EOF
     cd "$PROJECT_ROOT_DIR"
     echo "Rodando o dch para gerar o changes: "
     echo "dch --create -v \"${APP_VERSION}-1\" --package \"${APP_NAME}\" \"Initial release.\" --distribution \"noble\""
-    dch --create -v "${APP_VERSION}-1" --package "${APP_NAME}" "Initial release." --distribution "noble"
+    dch --create -v "${APP_VERSION}-1" --package "${APP_NAME}" "Initial release." --distribution "jammy"
     cd "$CURRENT_DIR" # Voltar para o diretório de construção temporário
     success_msg "Criado ${DEBIAN_DIR_IN_PROJECT}/changelog com a versão ${APP_VERSION}-1."
 
@@ -358,7 +358,7 @@ echo "APP_VERSION: $APP_VERSION"
 # Se for a mesma, incrementamos a revisão Debian.
 if [ "$LAST_CHANGELOG_VERSION" != "$APP_VERSION" ]; then
     # Nova versão do upstream, reinicia revisão Debian
-    dch -v "${APP_VERSION}-1" "New upstream release of ${APP_NAME} (pre-built binary)." --distribution "noble"
+    dch -v "${APP_VERSION}-1" "New upstream release of ${APP_NAME} (pre-built binary)." --distribution "jammy"
     DEB_CHANGES_FILE="${DEB_CHANGES_FILE_BASENAME}-1_source.changes"
     # Para a primeira vez com uma nova versão upstream, sempre incluímos o .orig.tar.gz
     DEBUILD_FLAGS="-S -sa"
@@ -366,7 +366,7 @@ if [ "$LAST_CHANGELOG_VERSION" != "$APP_VERSION" ]; then
 else
     # Mesma versão do upstream, incrementa revisão Debian
     NEW_DEB_REVISION=$((LAST_CHANGELOG_REV + 1))
-    dch -v "${APP_VERSION}-${NEW_DEB_REVISION}" "Rebuild for new PPA upload (pre-built binary)." --distribution "noble"
+    dch -v "${APP_VERSION}-${NEW_DEB_REVISION}" "Rebuild for new PPA upload (pre-built binary)." --distribution "jammy"
     DEB_CHANGES_FILE="${DEB_CHANGES_FILE_BASENAME}-${NEW_DEB_REVISION}_source.changes"
     # Para revisões da mesma versão upstream, não precisamos incluir o .orig.tar.gz
     DEBUILD_FLAGS="-S -sd"
