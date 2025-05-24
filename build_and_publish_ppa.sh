@@ -51,7 +51,7 @@ command_exists gpg || error_exit "gpg não está instalado. Necessário para ass
 # Instalar dependências de build localmente (para que dpkg-checkbuilddeps não falhe)
 echo "--- Instalando/Verificando dependências de build localmente..."
 sudo apt update
-sudo apt install -y nodejs npm rustc cargo libwebkit2gtk-4.1-dev libgtk-3-dev pkg-config libssl-dev build-essential devscripts dpkg-dev gnupg || error_exit "Falha ao instalar dependências de build. Verifique se os nomes dos pacotes estão corretos."
+sudo apt install -y nodejs npm rustc-1.80 cargo-1.80 libwebkit2gtk-4.1-dev libgtk-3-dev pkg-config libssl-dev build-essential devscripts dpkg-dev gnupg || error_exit "Falha ao instalar dependências de build. Verifique se os nomes dos pacotes estão corretos."
 
 # Verificar GPG Key (simples, assume que já está configurada com o Launchpad)
 if ! gpg --list-secret-keys --keyid-format LONG | grep -q "$MAINTAINER_EMAIL"; then
@@ -83,8 +83,8 @@ Maintainer: ${MAINTAINER_NAME} <${MATAINER_EMAIL}>
 Build-Depends: debhelper-compat (= 13),
                nodejs,
                npm,
-               rustc,
-               cargo,
+               rustc-1.80,
+               cargo-1.80,
                libwebkit2gtk-4.1-dev,
                libgtk-3-dev,
                libappindicator3-dev,
@@ -147,18 +147,37 @@ EOF
 %:
 	dh \$@ --skip-missing-doc --skip-systemd-service
 
+# Regra para instalar o cargo 1.82
+override_dh_auto_configure:
+	add-apt-repository ppa:liushuyu-011/rust-updates-1.82
+	apt update
+	apt install cargo-1.82 rustc-1.82
+	ln -s /usr/bin/cargo-1.82 /usr/bin/cargo
+	ln -s /usr/bin/rustc-1.82 /usr/bin/rustc
+
 # NOVO: Regra para limpar o projeto Cargo/Tauri
 override_dh_auto_clean:
 	# Limpa o projeto Cargo/Tauri dentro de src-tauri
-	(cd src-tauri && cargo clean)
-	# Limpa dependências e caches do Node.js
-	#npm cache clean || true
+	if [[command -v "cargo" > /dev/null 2>&1]]; then 
+		(cd src-tauri && cargo clean);
+	else 
+		echo "Não existe o comando cargo ainda"; 
+		if [[ command -v "cargo-1.82" > /dev/null 2>&1]]; then
+			echo "Porém, já existe o comando cargo-1.82";
+		fi
+	fi
+
 
 override_dh_auto_build:
+	add-apt-repository ppa:liushuyu-011/rust-updates-1.82
+	apt update
+	apt install cargo-1.82 rustc-1.82
+	apt install 
 	(cd src-tauri && tar -zxvf ../debian/vendor.tar.gz)
 	tar -zxvf debian/node_modules.tar.gz
 	rm debian/vendor.tar.gz debian/node_modules.tar.gz
-
+	ln -s /usr/bin/cargo-1.82 /usr/bin/cargo
+	ln -s /usr/bin/rustc-1.82 /usr/bin/rustc
 	# Compila o aplicativo Tauri
 	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen  -Znext-lockfile-bump)
 
