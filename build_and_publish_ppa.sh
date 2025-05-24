@@ -147,39 +147,30 @@ EOF
 %:
 	dh \$@ --skip-missing-doc --skip-systemd-service
 
-# Regra para instalar o cargo 1.82
-override_dh_auto_configure:
-	add-apt-repository ppa:liushuyu-011/rust-updates-1.82
-	apt update
-	apt install cargo-1.82 rustc-1.82
-	ln -s /usr/bin/cargo-1.82 /usr/bin/cargo
-	ln -s /usr/bin/rustc-1.82 /usr/bin/rustc
-
-# NOVO: Regra para limpar o projeto Cargo/Tauri
+# NOVO: Regra para limpar o projeto Cargo/Tauri. Antes, instala o cargo
 override_dh_auto_clean:
+	command -v "cargo" > /dev/null 2>&1 || ( \
+		add-apt-repository -s "deb https://ppa.launchpadcontent.net/liushuyu-011/rust-updates-1.82/ubuntu/ noble main" -y && \
+		apt install cargo-1.82 rustc-1.82 && \
+		ln -s /usr/bin/cargo-1.82 /usr/bin/cargo && \
+		ln -s /usr/bin/rustc-1.82 /usr/bin/rustc \
+	)
 	# Limpa o projeto Cargo/Tauri dentro de src-tauri
-	if [[command -v "cargo" > /dev/null 2>&1]]; then 
-		(cd src-tauri && cargo clean);
-	else 
-		echo "Não existe o comando cargo ainda"; 
-		if [[ command -v "cargo-1.82" > /dev/null 2>&1]]; then
-			echo "Porém, já existe o comando cargo-1.82";
-		fi
-	fi
-
+	command -v "cargo-1.82" > /dev/null 2>&1 && echo "Já existe o comando cargo-1.82" || echo "Não tem cargo-1.82"
+	command -v "cargo" > /dev/null 2>&1 || (echo "Não existe o comando cargo ainda" && exit);
+	(cd src-tauri && cargo clean)
 
 override_dh_auto_build:
-	add-apt-repository ppa:liushuyu-011/rust-updates-1.82
+	add-apt-repository -s "deb https://ppa.launchpadcontent.net/liushuyu-011/rust-updates-1.82/ubuntu/ noble main" -y
 	apt update
 	apt install cargo-1.82 rustc-1.82
-	apt install 
+	rm /usr/bin/cargo && ln -s /usr/bin/cargo-1.82 /usr/bin/cargo
+	rm /usr/bin/rustc && ln -s /usr/bin/rustc-1.82 /usr/bin/rustc
 	(cd src-tauri && tar -zxvf ../debian/vendor.tar.gz)
 	tar -zxvf debian/node_modules.tar.gz
 	rm debian/vendor.tar.gz debian/node_modules.tar.gz
-	ln -s /usr/bin/cargo-1.82 /usr/bin/cargo
-	ln -s /usr/bin/rustc-1.82 /usr/bin/rustc
 	# Compila o aplicativo Tauri
-	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen  -Znext-lockfile-bump)
+	(cd src-tauri && npm run tauri build -- --no-bundle --target x86_64-unknown-linux-gnu -- --frozen)
 
 override_dh_auto_install:
 	# Caminho onde o Tauri coloca o executável e outros arquivos
