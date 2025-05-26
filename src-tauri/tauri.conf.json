@@ -15,7 +15,10 @@
         "title": "Faire - Your todo app",
         "width": 500,
         "height": 750,
-        "center": true
+        "center": true,
+        "contentProtected": true,
+        "backgroundThrottling": "throttle",
+        "shadow": true
       }
     ],
     "security": {
@@ -32,7 +35,14 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "createUpdaterArtifacts": true
+    "createUpdaterArtifacts": true,
+    "category": "Productivity",
+    "homepage": "https://fairetodo.app/",
+    "licenseFile": "LICENSE",
+    "license": "MIT",
+    "publisher": "Charles Schaefer",
+    "shortDescription": "An open-source task management application that helps you organize your life across all your devices.",
+    "longDescription": "Faire ToDo - Your Simple, Open-Source To-Do List App\n\nOrganize your tasks effortlessly with Faire ToDo, a minimalist yet powerful to-do list app designed for productivity without the clutter. Whether you're managing daily chores, work projects, or personal goals, Faire ToDo helps you stay on track with a clean, intuitive interface—completely free and open-source!\nKey Features:\n\n✔ Simple & Lightweight - No unnecessary features, just a straightforward way to manage tasks.\n✔ Open-Source & Privacy-Focused - Your data stays yours—no tracking, no ads, no subscriptions.\n✔ Cross-Platform Sync - Access your tasks seamlessly across devices (Windows, macOS, Linux, Android, and more).\n✔ Keyboard Shortcuts - Boost productivity with quick shortcuts for adding and managing tasks.\n✔ Dark/Light Mode - Choose a theme that suits your preference.\n✔ Local Storage (Offline-First) - Works without an internet connection, with optional cloud sync.\n✔ Customizable & Extensible - Built with flexibility in mind, allowing for future integrations."
   },
   "plugins": {
     "deep-link": {
