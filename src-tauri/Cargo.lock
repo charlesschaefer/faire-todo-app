@@ -1104,7 +1104,6 @@ dependencies = [
  "local-ip-addr",
  "mdns-sd",
  "serde",
- "serde_json",
  "tauri",
  "tauri-build",
  "tauri-plugin-autostart",
