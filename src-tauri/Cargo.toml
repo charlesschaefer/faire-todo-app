@@ -4,9 +4,15 @@
 [package]
 name        = "faire-todo-app"
 version = "0.0.66"
-description = "Faire Todo App"
+description = "Faire Todo App - An open-source task management application that helps you organize your life across all your devices."
 authors     = ["Charles Schaefer"]
 edition     = "2021"
+keywords     = ["tasks", "todo", "productivity", "tauri", "angular", "rust"]
+homepage     = "https://fairetodo.app"
+license      = "MIT"
+license-file = "../LICENSE"
+readme       = "../README.md"
+repository   = "https://github.com/charlesschaefer/faire-todo-app.git"
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

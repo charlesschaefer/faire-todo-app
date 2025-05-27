@@ -48,6 +48,7 @@
     "deep-link": {
       "mobile": [
         { "host": "charlesschaefer.net", "pathPrefix": ["/faire-todo-app"] },
+        { "host": "fairetodo.app", "pathPrefix": ["/auth"] },
         { "host": "tauri.localhost" }
       ],
       "desktop": {

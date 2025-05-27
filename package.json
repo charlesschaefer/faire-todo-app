@@ -1,6 +1,18 @@
 {
   "name": "faire-todo-app",
   "version": "0.0.66",
+  "author": {
+    "name": "Charles Schaefer"
+  },
+  "description": "Faire Todo App - An open-source task management application that helps you organize your life across all your devices.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/charlesschaefer/faire-todo-app.git"
+  },
+  "license": "MIT",
+  "homepage": "https://fairetodo.app",
+  "keywords": ["tasks", "todo", "productivity", "tauri", "angular", "rust"],
+  "icon": "./src-tauri/icons/128x128.png",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
