@@ -4,18 +4,20 @@ runtime-version: '46'
 sdk: org.gnome.Sdk
 command: faire-todo-app
 finish-args:
-  - --share=ipc
-  - --share=network
-  - --socket=wayland
-  - --socket=fallback-x11
-  - --device=dri
-  - --talk-name=org.ayatana.AppIndicator
-  - --socket=system-bus # Para acessar o barramento de sistema onde o AppIndicator pode estar
-  - --own-name=org.ayatana.AppIndicator # Se seu app for o provedor do serviço (raro)
   - --env=LD_LIBRARY_PATH=/app/lib
   - --env=FLATPAK_ENV=1
-  - --filesystem=home
+  - --device=dri
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=session-bus # Permission needed to access the session DBus bus
+  - --share=ipc
+  - --share=network # Permission needed to access the network
+  - --filesysem=home # Permission to access the home directory
+  - --talk-name=org.freedesktop.portal.Notification.* # Permission to send notifications
   - --talk-name=org.freedesktop.Notifications
+  - --talk-name=org.com_fairetodoapp.*
+  - --talk-name=com.fairetodoapp.*
+  #- --own-name=org.ayatana.AppIndicator # Se seu app for o provedor do serviço (raro)
 
 modules:
   - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
