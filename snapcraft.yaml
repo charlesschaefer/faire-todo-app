@@ -94,7 +94,12 @@ parts:
       fi
       cp $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop $SNAPCRAFT_PART_INSTALL/usr/share/applications/faire-todo-app.desktop
 slots:
-  dbus-daemon:
+  faire-single-instance:
     interface: dbus
     bus: session
-    name: com.fairetodoapp
+    name: org.com_fairetodoapp.SingleInstance
+plugs:
+  faire-single-instance:
+    interface: dbus
+    bus: session
+    name: org.com_fairetodoapp.SingleInstance
