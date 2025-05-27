@@ -20,6 +20,10 @@ layout:
     symlink: $SNAP/usr/libexec/webkit2gtk-4.1
   /usr/lib/x86_64-linux-gnu/webkit2gtk-4.1:
     symlink: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1
+  /usr/lib/x86_64-linux-gnu/webkitgtk-6.0:
+    symlink: $SNAP/usr/lib/x86_64-linux-gnu/webkitgtk-6.0
+  # /usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess:
+  #   symlink: $SNAP/usr/lib/x86_64-linux-gnu/webkit2gtk-4.1/WebKitNetworkProcess
   /usr/lib/aarch64-linux-gnu/webkit2gtk-4.1:
     symlink: $SNAP/usr/lib/aarch64-linux-gnu/webkit2gtk-4.1
   /usr/lib/webkit2gtk-4.1/injected-bundle:
@@ -39,7 +43,7 @@ apps:
      - gnome
     command: usr/bin/faire-todo-app
     desktop: usr/share/applications/faire-todo-app.desktop
-    plugs: 
+    plugs:
       - wayland
       - x11
       - home
@@ -48,6 +52,10 @@ apps:
       - network
       - network-bind
       - network-status
+      - faire-todo-app
+    slots:
+      - dbus-daemon
+      
 
 package-repositories:
   - type: apt
@@ -94,12 +102,13 @@ parts:
       fi
       cp $SNAPCRAFT_PART_INSTALL/usr/share/applications/Faire\ Todo\ App.desktop $SNAPCRAFT_PART_INSTALL/usr/share/applications/faire-todo-app.desktop
 slots:
-  faire-single-instance:
+  dbus-daemon:
     interface: dbus
     bus: session
     name: org.com_fairetodoapp.SingleInstance
+
 plugs:
-  faire-single-instance:
+  faire-todo-app:
     interface: dbus
     bus: session
-    name: org.com_fairetodoapp.SingleInstance
+    name: org.freedesktop.DBus
