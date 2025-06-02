@@ -1,50 +1,92 @@
 id: net.charlesschaefer.fairetodoapp
 runtime: org.gnome.Platform
-runtime-version: '46'
+runtime-version: '48'
 sdk: org.gnome.Sdk
 command: faire-todo-app
 finish-args:
-  - --env=LD_LIBRARY_PATH=/app/lib
-  - --env=FLATPAK_ENV=1
   - --device=dri
+  - --device=shm
   - --socket=wayland
   - --socket=fallback-x11
-  - --socket=session-bus # Permission needed to access the session DBus bus
   - --share=ipc
-  - --share=network # Permission needed to access the network
-  - --filesysem=home # Permission to access the home directory
-  - --talk-name=org.freedesktop.portal.Notification.* # Permission to send notifications
+  - --share=network
+  #- --socket=session-bus # To use app dbus namespace to send notifications and force singleinstance
+  - --talk-name=org.freedesktop.impl.portal.Notification
+  - --talk-name=org.freedesktop.portal.Desktop
+  - --talk-name=org.freedesktop.portal.Documents
+  - --talk-name=org.freedesktop.portal.Background
+  - --talk-name=org.freedesktop.portal.Flatpak
+  - --talk-name=org.freedesktop.impl.portal.FileChooser
+  - --talk-name=org.freedesktop.portal.IBus
   - --talk-name=org.freedesktop.Notifications
-  - --talk-name=org.com_fairetodoapp.*
-  - --talk-name=com.fairetodoapp.*
-  #- --own-name=org.ayatana.AppIndicator # Se seu app for o provedor do serviço (raro)
+  - --talk-name=org.freedesktop.FileManager1
+  - --talk-name=org.freedesktop.Flatpak
+  - --talk-name=org.freedesktop.IBus
+  - --talk-name=org.freedesktop.systemd1
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=org.ayatana.*
+  - --talk-name=com.canonical.dbusmenu.*
+  - --talk-name=org.gnome.Mutter.*
+  - --talk-name=org.gnome.Shell.*
+  - --talk-name=org.gnome.ArchiveManager1
+  - --talk-name=org.gnome.Desktop
+  - --talk-name=org.gtk.Notifications
+  - --talk-name=org.gtk.vfs.*
+  - --talk-name=org.gnome.Nautilus
+
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.gnome.SessionManager
+  - --talk-name=org.freedesktop.ScreenSaver
+  - --talk-name=org.gnome.Mutter.IdleMonitor
+  - --system-talk-name=org.freedesktop.RealtimeKit1
+  - --system-talk-name=org.freedesktop.login1
+  - --system-talk-name=org.freedesktop.UPower
+  - --system-talk-name=org.freedesktop.timedate1
+  # Wi-Fi scanner
+  - --system-talk-name=org.freedesktop.NetworkManager
+
+  - --own-name=org.com_fairetodoapp.*
+  - --own-name=com.fairetodoapp.*
+  - --own-name=net.charlesschaefer.fairetodoapp.*
+
+  - --filesystem=xdg-run/pipewire-0
+  - --filesystem=home
+  - --filesystem=xdg-download
 
 modules:
-  - shared-modules/libayatana-appindicator/libayatana-appindicator-gtk3.json
+  - shared-modules/libappindicator/libappindicator-gtk3-12.10.json
   - shared-modules/libcanberra/libcanberra.json
+
   - name: faire-todo-app
     buildsystem: simple
-    build-options:
-      build-args: ["--share=network"]
-    build-commands: # E esta linha também, 4 espaços de indentação
-        - curl --location -o latest "https://github.com/charlesschaefer/faire-todo-app/releases/latest"
-        - cat latest | sed -n -e "/App v/ {s/.*App v\([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/gp;q}"
-        - export VERSION=$(cat latest | sed -n -e "/App v/ {s/.*App v\([[:digit:]]\+.[[:digit:]]\+.[[:digit:]]\+\).*/\1/gp;q}");
-          echo "Version=$VERSION";
-          echo "curl --location -o fairetodoapp.deb \"https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v"$VERSION"/Faire.Todo.App_"$VERSION"_amd64.deb\"";
-          curl --location -o fairetodoapp.deb "https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v"$VERSION"/Faire.Todo.App_"$VERSION"_amd64.deb"
-        - ar -x fairetodoapp.deb
-        - tar -xf data.tar.gz
-        - 'install -Dm755 usr/bin/faire-todo-app /app/bin/faire-todo-app'
-        - install -Dm644 usr/share/applications/Faire\ Todo\ App.desktop /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
-        - sed -i -e "s|Icon=faire-todo-app|Icon=net.charlesschaefer.fairetodoapp|g" /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
-        - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/net.charlesschaefer.fairetodoapp.png
-        - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/net.charlesschaefer.fairetodoapp.png
-        - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/net.charlesschaefer.fairetodoapp.png
-        - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/faire-todo-app.png
-        - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/faire-todo-app.png
-        - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/faire-todo-app.png
-        #- install -Dm644 net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.rosary.metainfo.xml
+    build-commands:
+      - VERSION=0.0.66
+      - ar -x fairetodoapp.deb
+      - tar -xf data.tar.gz
+      - install -Dm755 usr/bin/faire-todo-app /app/bin/faire-todo-app
+      - install -Dm644 usr/share/applications/Faire\ Todo\ App.desktop /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
+      - desktop-file-edit --set-icon="net.charlesschaefer.fairetodoapp" /app/share/applications/net.charlesschaefer.fairetodoapp.desktop
+      - ls -al 
+      #- install -Dm644 faire-todo-app/bundle-scripts/net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.metainfo.xml
+      - install -Dm644 net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.metainfo.xml
+      #- install -Dm644 faire-todo-app/bundle-scripts/net.charlesschaefer.fairetodoapp.metainfo.xml /app/share/metainfo/net.charlesschaefer.fairetodoapp.metainfo.xml
+      #- install -Dm644 faire-todo-app/src-tauri/app-icon.svg /app/share/icons/hicolor/scalable/apps/net.charlesschaefer.fairetodoapp.svg
+      - install -Dm644 usr/share/icons/hicolor/32x32/apps/faire-todo-app.png /app/share/icons/hicolor/32x32/apps/net.charlesschaefer.fairetodoapp.png
+      - install -Dm644 usr/share/icons/hicolor/128x128/apps/faire-todo-app.png /app/share/icons/hicolor/128x128/apps/net.charlesschaefer.fairetodoapp.png
+      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/net.charlesschaefer.fairetodoapp.png
+      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/faire-todo-app.png /app/share/icons/hicolor/256x256@2/apps/faire-todo-app.png
     sources:
+      - type: "git"
+        url: "https://github.com/charlesschaefer/faire-todo-app.git"
+        #tag: "app-v0.0.16"
+        #commit: "089aec3f53b47b10472041bc00edfbcd56563284"
+        branch: release
+        dest: faire-todo-app
+      - type: "file"
+        url: "https://github.com/charlesschaefer/faire-todo-app/releases/download/app-v0.0.66/Faire.Todo.App_0.0.66_amd64.deb?te"
+        sha256: "a3d2497631894b35f4b69c03395a71d523627410f626fda46d489189a24e395d"
+        dest-filename: fairetodoapp.deb
+        only-arches: 
+          - x86_64
       - type: dir
-        path: .
+        path: ./
