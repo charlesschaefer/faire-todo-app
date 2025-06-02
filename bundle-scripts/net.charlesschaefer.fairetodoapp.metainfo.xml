@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>net.charlesschaefer.fairetodoapp</id>
+
+  <developer_name>Charles Schaefer</developer_name>
+
+  <name>Faire Todo App</name>
+  <summary>An open-source task management application that helps you organize your life across all your devices.</summary>
+  
+  <url type="homepage">https://fairetodoapp.app/</url>
+  <url type="contribute">https://github.com/charlesschaefer/faire-todo-app</url>
+  <url type="vcs-browser">https://github.com/charlesschaefer/faire-todo-app</url>
+  <categories>
+    <category>Productivity</category>
+  </categories>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <!-- Desktop AND mobile supported -->
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>touch</control>
+  </supports>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+  
+  <description>
+     <h3>
+      Everything you need to stay organized
+    </h3>
+
+    <p>Faire is designed to help you manage tasks efficiently across all aspects of your life.</p>
+  <ul>
+    <li>
+      Project Organization - Organize your tasks into projects like Health, Work, and Personal to keep everything neatly categorized. You can create as many projects as you need and customize them to fit your life.
+    </li>
+    <li>
+      Time-Based Views - View your tasks by Inbox, Today, or Upcoming to focus on what matters now and plan for the future. You can also define both date and time for your tasks and choose the recurrence of your tasks (daily, only on weekdays, weekly, monthly, etc).
+    </li>
+    <li>
+      Subtasks Support - Break down complex tasks into manageable subtasks to track progress more effectively. All the features of tasks are available to subtasks as well, like recurrence, attachments, due date and time, etc.
+    </li>
+    <li>
+      Cross-Device Sync - Synchronize your tasks across all your devices to access your to-dos wherever you are. You can sync your tasks offline, on your local area, or sign in with Google to sync with the cloud.
+    </li>
+  </description>
+
+  <keywords>
+    <keyword>Todo</keyword>
+    <keyword>Productivity</keyword>
+    <keyword>Tasks</keyword>
+    <keyword>Projects</keyword>
+    <keyword>Organization</keyword>
+  </keywords>
+  
+  <launchable type="desktop-id">net.charlesschaefer.fairetodoapp.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://fairetodo.app/screenshots/inbox.png</image>
+      <caption> Manage all your incoming tasks in one place </caption>
+    </screenshot>
+    <screenshot>
+      <image>https://fairetodoapp.app/screenshots/today.png</image>
+      <caption>Focus on tasks that need to be completed today</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://fairetodoapp.app/screenshots/task-order.png</image>
+      <caption>Reorganize or prioritize tasks with ease</caption>
+    </screenshot>
+  </screenshots>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0.0" date="2024-05-28">
+      <description>
+        <p>First stable version of Faire Todo App after released the new Design.</p>
+      </description>
+    </release>
+  </releases>
+</component>
