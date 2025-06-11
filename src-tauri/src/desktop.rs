@@ -25,7 +25,7 @@ pub fn setup_system_tray_icon(app: &mut App) {
     });
 
     // creates the tray icon
-    let tray = TrayIconBuilder::with_id("com.fairetodoapp.tray_icon")
+    let _ = TrayIconBuilder::with_id("com.fairetodoapp.tray_icon")
         .tooltip("Faire Todo App")
         .icon(app.default_window_icon().unwrap().clone())
         .title("Faire Todo App")

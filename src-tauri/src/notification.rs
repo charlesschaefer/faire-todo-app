@@ -206,7 +206,7 @@ pub async fn start_notification_daemon(
     });
 
     app_data.thread_handle = Some(thread_handle);
-    return Ok(());
+    Ok(())
 }
 
 #[cfg(desktop)]

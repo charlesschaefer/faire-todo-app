@@ -1,7 +1,7 @@
 use base64::{engine::general_purpose, Engine};
 use data::FileType;
 use std::io::Read;
-use tauri::{webview, AppHandle, Manager, Url};
+use tauri::{AppHandle, Manager, Url};
 use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::{FsExt, OpenOptions};
@@ -35,14 +35,14 @@ pub fn run() {
                     dbg!("Args: {:?}", &_args);
                     dbg!("CWD: {:?}", _cwd);
 
-                    let new_url: Url;
-                    if _args.is_empty() || _args.len() <= 1 {
+                    
+                    let new_url = if _args.is_empty() || _args.len() <= 1 {
                         // If no arguments are passed, navigate to the default URL.
-                        new_url = Url::parse("tauri://localhost/today").expect("Invalid URL");
+                        Url::parse("tauri://localhost/today").expect("Invalid URL")
                     } else {
                         // If arguments are passed, use the first argument as the URL.
-                        new_url = Url::parse(&_args[1]).expect("Invalid URL");
-                    }
+                        Url::parse(&_args[1]).expect("Invalid URL")
+                    };
                     // new_url.set_scheme(current_url.scheme()).expect("Couldn't set scheme for the new URL");
                     // new_url.set_host(Some(current_url.as_str())).expect("Couldn't set host for the new URL");
                     // dbg!("Navigating to: {}", &new_url);
@@ -76,7 +76,7 @@ pub fn run() {
                 desktop::setup_system_tray_icon(app);
             }
 
-            #[cfg(all(desktop))]
+            #[cfg(desktop)]
             app.deep_link().register("fairetodoapp")?;
 
             handle_deep_links(app.handle());
@@ -158,7 +158,7 @@ fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData,
 
     // Gets the file name
     let fpath_str = file_path.clone().to_string();
-    let fname = app_handle.path().file_name(&fpath_str.as_str()).unwrap();
+    let fname = app_handle.path().file_name(fpath_str.as_str()).unwrap();
     // let fname = Path::new(fpath_str.as_str())
     //     .file_name()
     //     .unwrap()
@@ -169,11 +169,11 @@ fn encode_file_to_base64(app_handle: tauri::AppHandle) -> Result<data::FileData,
     let base64_data = general_purpose::STANDARD.encode(&buffer);
     let extension = fname.split(".").last().unwrap();
     let file_type = match extension.to_lowercase().clone().as_str() {
-        "png" => FileType::PNG,
-        "jpg" => FileType::JPG,
-        "jpeg" => FileType::JPG,
-        "pdf" => FileType::PDF,
-        _ => FileType::PNG,
+        "png" => FileType::Png,
+        "jpg" => FileType::Jpg,
+        "jpeg" => FileType::Jpg,
+        "pdf" => FileType::Pdf,
+        _ => FileType::Png,
     };
 
     let ret = data::FileData {
