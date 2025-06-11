@@ -52,7 +52,6 @@ apps:
       - network
       - network-bind
       - network-status
-      - network-control
       - faire-single-instance
     slots:
       - single-instance
