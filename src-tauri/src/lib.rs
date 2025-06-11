@@ -1,7 +1,7 @@
 use base64::{engine::general_purpose, Engine};
 use data::FileType;
 use std::io::Read;
-use tauri::{AppHandle, Manager};
+use tauri::{webview, AppHandle, Manager, Url};
 use tauri_plugin_deep_link::DeepLinkExt;
 use tauri_plugin_dialog::DialogExt;
 use tauri_plugin_fs::{FsExt, OpenOptions};
@@ -20,22 +20,36 @@ pub fn run() {
     //mdns::discover_service();
     //mdns::broadcast_service();
 
-    let mut builder = tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_dialog::init());
-
+    let mut builder = tauri::Builder::default();
+        
     #[cfg(desktop)]
     {
         use tauri_plugin_autostart::MacosLauncher;
-        if !cfg!(dev) {
+        //if !cfg!(dev) {
             builder = builder
                 .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
                     // ...
                     let webview = app.get_webview_window("main").expect("no main window");
                     webview.set_focus().expect("Can't focus the main window");
+                    dbg!("Single instance plugin activated, focusing the main window.");
+                    dbg!("Args: {:?}", &_args);
+                    dbg!("CWD: {:?}", _cwd);
+
+                    let new_url: Url;
+                    if _args.is_empty() || _args.len() <= 1 {
+                        // If no arguments are passed, navigate to the default URL.
+                        new_url = Url::parse("tauri://localhost/today").expect("Invalid URL");
+                    } else {
+                        // If arguments are passed, use the first argument as the URL.
+                        new_url = Url::parse(&_args[1]).expect("Invalid URL");
+                    }
+                    // new_url.set_scheme(current_url.scheme()).expect("Couldn't set scheme for the new URL");
+                    // new_url.set_host(Some(current_url.as_str())).expect("Couldn't set host for the new URL");
+                    // dbg!("Navigating to: {}", &new_url);
+                    // webview.navigate(new_url).expect("Couldn't navigate to the new URL");
+                    redirect_webview(webview, &new_url, new_url.fragment().unwrap_or(""));
                 }));
-        }
+        //}
 
         builder = builder
             .plugin(tauri_plugin_autostart::init(
@@ -46,6 +60,9 @@ pub fn run() {
     }
 
     builder
+        .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(tauri_plugin_os::init())
         .plugin(tauri_plugin_shell::init())
@@ -59,7 +76,7 @@ pub fn run() {
                 desktop::setup_system_tray_icon(app);
             }
 
-            #[cfg(all(desktop, dev))]
+            #[cfg(all(desktop))]
             app.deep_link().register("fairetodoapp")?;
 
             handle_deep_links(app.handle());
@@ -89,22 +106,29 @@ pub fn run() {
 fn handle_deep_links(app: &AppHandle) {
     let app2 = app.clone();
     app.deep_link().on_open_url(move |event| {
-        let url = &event.urls()[0];
+        let urls = event.urls();
+        dbg!("Received deep link: {:?}", &urls);
+        let url = &urls[0];
         if url.path() != "/auth/callback/" {
             return;
         }
         if let Some(fragment) = url.fragment() {
             let webview = app2.get_webview_window("main").expect("no main window");
-
-            let mut base_url = webview.url().expect("Coudln't get the URL");
-            base_url.set_path(url.path());
-            base_url.set_fragment(Some(fragment));
-
-            webview
-                .navigate(base_url)
-                .expect("Couldn't navigate to the new URL");
+            redirect_webview(webview, url, fragment);
+            
         }
     });
+}
+
+fn redirect_webview(webview: tauri::WebviewWindow, url: &Url, fragment: &str) {
+    let mut base_url = webview.url().expect("Coudln't get the URL");
+        base_url.set_path(url.path());
+        base_url.set_fragment(Some(fragment));
+
+    dbg!("Redirecting webview to: {}", &base_url);
+    webview
+        .navigate(base_url)
+        .expect("Couldn't navigate to the new URL");
 }
 
 #[tauri::command]

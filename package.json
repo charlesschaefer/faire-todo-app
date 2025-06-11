@@ -1,6 +1,6 @@
 {
   "name": "faire-todo-app",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "author": {
     "name": "Charles Schaefer"
   },
@@ -11,7 +11,14 @@
   },
   "license": "MIT",
   "homepage": "https://fairetodo.app",
-  "keywords": ["tasks", "todo", "productivity", "tauri", "angular", "rust"],
+  "keywords": [
+    "tasks",
+    "todo",
+    "productivity",
+    "tauri",
+    "angular",
+    "rust"
+  ],
   "icon": "./src-tauri/icons/128x128.png",
   "scripts": {
     "ng": "ng",
