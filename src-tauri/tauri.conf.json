@@ -38,7 +38,7 @@
     "createUpdaterArtifacts": true,
     "category": "Productivity",
     "homepage": "https://fairetodo.app/",
-    "licenseFile": "LICENSE",
+    "licenseFile": "../LICENSE",
     "license": "MIT",
     "publisher": "Charles Schaefer",
     "shortDescription": "An open-source task management application that helps you organize your life across all your devices.",
