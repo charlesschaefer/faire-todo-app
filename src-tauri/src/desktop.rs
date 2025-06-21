@@ -25,11 +25,10 @@ pub fn setup_system_tray_icon(app: &mut App) {
     });
 
     // creates the tray icon
-    let _ = TrayIconBuilder::with_id("com.fairetodoapp.tray_icon")
+    let _ = TrayIconBuilder::new() //with_id("com.fairetodoapp.tray_icon")
         .tooltip("Faire Todo App")
         .icon(app.default_window_icon().unwrap().clone())
-        .title("Faire Todo App")
-        .temp_dir_path(app.path().cache_dir().expect("Couldn't get cache dir to save the tray icon"))
+        .temp_dir_path(app.path().app_cache_dir().expect("Couldn't get cache dir to save the tray icon"))
         .menu(&menu)
         .on_tray_icon_event(|tray_icon, event| match event {
             TrayIconEvent::Click {
