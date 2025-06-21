@@ -10,7 +10,7 @@ edition     = "2021"
 keywords     = ["tasks", "todo", "productivity", "tauri", "angular", "rust"]
 homepage     = "https://fairetodo.app"
 license      = "MIT"
-license-file = "../LICENSE"
+#license-file = "../LICENSE"
 readme       = "../README.md"
 repository   = "https://github.com/charlesschaefer/faire-todo-app.git"
 
@@ -32,8 +32,8 @@ hostname                  = "0.4.0"
 local-ip-addr             = "0.1.1"
 hyper                     = { version = "1.6.0", features = ["full"] }
 http-body-util            = "0.1.2"
-hyper-util                = { version = "0.1.10", features = ["full"] }
-tokio                     = { version = "1.44.2", features = ["net", "rt-multi-thread", "sync"] } #"full"] }
+hyper-util                = { version = "0.1", features = ["full"] }
+tokio                     = { version = "1", features = ["net", "rt-multi-thread", "sync"] } #"full"] }
 bytes                     = { version = "1.10.1", default-features = false }
 lazy_static               = "1.5.0"
 chrono                    = "0.4.40"
@@ -47,13 +47,16 @@ tauri-plugin-os           = "2"
 tauri-plugin-sharetarget  = "0.1.6"
 tauri-plugin-shell        = "2"
 base64                    = "0.22.1"
-serde_json                = "1.0.140"
+serde_json                = { version = "1", features = ["std"] }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-autostart       = "2"
 tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
 tauri-plugin-updater         = "2"
 
+[features]
+flatpak = []
+snap    = []
 
 
 [profile.dev]
@@ -72,3 +75,29 @@ strip = true
 opt-level = 3
 
 #codegen-backend = "cranelift"
+
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+rustflags = [
+    "-Zthreads=8",
+    "-C",
+    # Mold only supports x86_64
+    "link-arg=-fuse-ld=/usr/bin/mold",
+    "-Zcodegen-backend=cranelift",
+    # "-Zshare-generics=y",
+]
+
+[target.arm64-linux-android]
+rustflags = [
+    "-Zthreads=8",
+    "-C",
+    # Mold only supports x86_64
+    "link-arg=-fuse-ld=/usr/bin/mold",
+]
+[target.aarch64-linux-android]
+rustflags = [
+    "-Zthreads=8",
+    "-C",
+    # Mold only supports x86_64
+    "link-arg=-fuse-ld=/usr/bin/mold",
+]

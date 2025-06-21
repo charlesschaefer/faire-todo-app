@@ -54,3 +54,4 @@ src-tauri/capabilities/opener-permissions.json
 debian/node_modules.tar.gz
 src-tauri/vendor
 debian/vendor.tar.gz
+bundle-scripts/.flatpak-builder/
