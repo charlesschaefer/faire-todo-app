@@ -98,6 +98,7 @@ pub fn run() {
             #[cfg(desktop)]
             notification::set_autostart,
             close_app,
+            updateable,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -190,4 +191,19 @@ fn decode_base64_to_binary(blob: String) -> Result<Vec<u8>, String> {
     let data = general_purpose::STANDARD.decode(blob);
 
     Ok(data.unwrap())
+}
+
+#[tauri::command]
+fn updateable() -> Result<bool, ()> {
+    let mut updateable = false;
+    #[cfg(not(mobile))]
+    {
+        updateable = true;
+    }
+    #[cfg(any(feature="snap", feature="flatpak"))]
+    {
+        updateable = false;
+    }
+
+    Ok(updateable)
 }
