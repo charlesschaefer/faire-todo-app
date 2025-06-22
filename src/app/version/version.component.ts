@@ -9,6 +9,7 @@ import { TranslocoService } from '@jsverse/transloco';
 // eslint-disable-next-line import/extensions
 import packageJson from '../../../package.json';
 import { isMobile } from '../../utils/functions';
+import { invoke } from '@tauri-apps/api/core';
 
 
 @Component({
@@ -43,19 +44,25 @@ export class VersionComponent implements OnInit {
             return;
         }
 
-        this.checkNewVersions().then((update) => {
-            if (!update)
+        invoke<boolean>("updateable").then(updateable => {
+            if (!updateable) {
+                console.log("Won't update because this is not an updateable bundle of the app.");
                 return;
+            }
+            this.checkNewVersions().then((update) => {
+                if (!update)
+                    return;
 
-            this.confirmationService.confirm({
-                closable: true,
-                closeOnEscape: true,
-                header: this.translate.translate('New version available'),
-                message: this.translate.translate('Do you want to download and install the new version {{version}}?', { version: update?.version }),
-                accept: () => {
-                    this.downloadAndInstall(update);
-                }
-            })
+                this.confirmationService.confirm({
+                    closable: true,
+                    closeOnEscape: true,
+                    header: this.translate.translate('New version available'),
+                    message: this.translate.translate('Do you want to download and install the new version {{version}}?', { version: update?.version }),
+                    accept: () => {
+                        this.downloadAndInstall(update);
+                    }
+                })
+            });
         });
     }
 
