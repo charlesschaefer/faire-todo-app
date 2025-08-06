@@ -257,6 +257,8 @@ export class TaskService extends ServiceAbstract<Tasks> {
                     }
                     date = this.newDateForRecurringTask(task, date, DateTime.fromJSDate(newTask.dueDate as Date));
 
+                    // zeroes the time part of the date to avoid time issues
+                    date = date.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
                     newTask.dueDate = date.toJSDate();
                     from(this.table.add(newTask)).subscribe({
                         complete: () => {
