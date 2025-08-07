@@ -67,7 +67,7 @@
     "dexie-observable": "^4.0.1-beta.13",
     "dexie-syncable": "^4.0.1-beta.13",
     "linkify-html": "^4.2.0",
-    "linkifyjs": "^4.2.0",
+    "linkifyjs": "^4.3.2",
     "luxon": "^3.4.4",
     "ngx-swipe-menu": ">=0.0.5",
     "primeflex": "^3.3.1",
