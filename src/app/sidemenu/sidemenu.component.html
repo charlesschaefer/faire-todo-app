@@ -6,11 +6,12 @@
 } @else {
     <p-button icon="pi pi-bars" (click)="showSidebar = true"></p-button>
 }
-<p-drawer [(visible)]="showSidebar" position="right" header=" " class="sidebar-drawer" [closable]="false" #sidebar>
+<p-drawer [(visible)]="showSidebar" position="right" header=" " class="sidebar-drawer" [closable]="false" #sidebar class="">
     <ng-template pTemplate="header">
         <div class="user-profile flex flex-column">
+            <div class="p-drawer-header-edge-fix flex"></div>
             @if (currentUser) {
-            <div class="flex flex-row align-items-center justify-content-center gap-5 text-sm">
+            <div class="flex flex-row align-items-center justify-content-center gap-5 text-sm p-drawer-edge-content">
                 <div>
                     <a (click)="showSidebar = true" (keypress)="showSidebar = true" aria-hidden="true">
                         <p-avatar [image]="currentUser.user_metadata['avatar_url']" shape="circle" size="normal"></p-avatar>
@@ -27,7 +28,7 @@
                 </a>
             </div>
             } @else {
-            <div class="sidebar-login-banner">
+            <div class="sidebar-login-banner p-drawer-edge-content">
                 <p>{{ 'Save and access your tasks from anywhere' | transloco }}</p>
                 <p-button label="{{ 'Save tasks online' | transloco }}" (onClick)="showLoginDialog()"
                     severity="info"></p-button>
@@ -36,7 +37,7 @@
         </div>
     </ng-template>
     <ng-template pTemplate="footer">
-        <div class="flex align-items-center gap-2"
+        <div class="flex align-items-center gap-2 p-drawer-edge-content"
             [ngClass]="this.currentUser ? 'justify-content-around' : 'justify-content-between'">
             <!-- Theme toggle button -->
             <ng-container *ngTemplateOutlet="themeSwitcher"></ng-container>
@@ -50,6 +51,7 @@
             }
             <p-button icon="pi pi-wrench" (onClick)="menuSettings.toggle($event)" />
         </div>
+        <div class="p-drawer-footer-edge-fix"></div>
         <p-menu #menuSettings [model]="settingsMenuItems()" [popup]="true" styleClass="side-bar-footer-menu" [appendTo]="'body'" />
     </ng-template>
     <ng-template pTemplate="content" >
