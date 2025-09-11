@@ -74,7 +74,7 @@
     ::ng-deep .task-list-speeddial {
         display: flex;
         position: fixed;
-        bottom: 15px;
+        bottom: calc(env(safe-area-inset-bottom) + 20px);
         right: 15px;
     }
 }

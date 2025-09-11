@@ -66,7 +66,7 @@
     </div>
   </ng-template>
 </p-toast>
-<p-toast [key]="'task'" [position]="'top-right'" />
+<p-toast [key]="'task'" [position]="'top-right'" [breakpoints]="{'600px': {'top': 'env(safe-area-inset-top)'}}" />
 <p-toast [key]="'auth-messages'" [position]="'top-center'" />
 <app-keyboard-shortcuts
   [(showShortcuts)]="showShortcuts"
