@@ -99,6 +99,7 @@ pub fn run() {
             notification::set_autostart,
             close_app,
             updateable,
+            get_webview_version,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -206,4 +207,9 @@ fn updateable() -> Result<bool, ()> {
     }
 
     Ok(updateable)
+}
+
+#[tauri::command]
+fn get_webview_version() -> Result<String, String> {
+    tauri::webview_version().map_err(|e| e.to_string())
 }

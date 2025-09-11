@@ -189,6 +189,8 @@ export class AppComponent implements OnInit {
         this.listenForShareEvents();
 
         this.handleShortcutsKey();
+
+        this.handleEdgeToEdgeLayout();
     }
 
     undo(_event: any) {
@@ -452,6 +454,21 @@ export class AppComponent implements OnInit {
         ];
         // Register the shortcuts
         this.keyboardShortcutService.setShortcuts(shortcuts);
+    }
+
+    handleEdgeToEdgeLayout() {
+        if (!TAURI_BACKEND || platform() !== "android") return;
+        invoke('get_webview_version').then((version) => {
+            console.log("Changing edge to edge layout. Webview version: ", version);
+            let versionNumber = parseFloat(version as string);
+            if (isNaN(versionNumber)) versionNumber = 0;
+            if (versionNumber < 140) {
+                document.body.style.paddingTop = 'calc(env(safe-area-inset-top) + 45px)';
+                document.body.style.paddingBottom = 'calc(env(safe-area-inset-bottom) + 45px)';
+            }
+        }).catch(err => {
+            console.error("Error enabling edge to edge layout: ", err);
+        });
     }
 
     @HostListener('window:keydown', ['$event'])
