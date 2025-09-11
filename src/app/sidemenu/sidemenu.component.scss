@@ -97,6 +97,14 @@
     justify-content: center;
 }
 
+::ng-deep .p-drawer-header {
+    padding-top: env(safe-area-inset-top);
+}
+
+::ng-deep .p-drawer-footer {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 25px);
+}
+
 .sidebar-user-profile {
     display: flex;
     flex-direction: column;
