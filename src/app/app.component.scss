@@ -64,14 +64,25 @@ p-toolbar {
     z-index: 1;
 }
 
+header {
+    height: 62px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding-top: calc(env(safe-area-inset-top) + var(--faire-edge-padding));
+    background-color: var(--faire-edge-fix-background);
+    z-index: 2;
+}
+
 .main {
     padding-bottom: 40px;
-    padding-top: 82px;
+    padding-top: calc(82px + env(safe-area-inset-top) + var(--faire-edge-padding));
     padding-left: 5px;
     min-width: 300px;
     display: flex;
     justify-content: center;
-    min-height: calc(100% - 61px);
+    min-height: calc(100% - env(safe-area-inset-bottom) - var(--faire-edge-padding) - 80px);
     background-color: color-mix(in srgb, var(--p-toast-contrast-color), #ffffff 3%);//#f5f5f5;
 }
 
@@ -82,15 +93,24 @@ p-toolbar {
 }
 
 footer {
+    width: 100%;
     background-color: color-mix(in srgb, var(--p-toast-contrast-color), #ffffff 3%);//#f5f5f5;
     display: flex;
     align-items: center;
     flex-direction: column;
     width: 100%;
-    height: 60px;
+    height: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding) + 80px);
+    padding-top: 10px;
 
     ::ng-deep p {
         margin: 0;
+    }
+    .footer-edge-fix {
+        height: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding));
+        background-color: var(--faire-edge-fix-background);
+        width: 100%;
+        position: fixed;
+        bottom: 0;
     }
 }
 

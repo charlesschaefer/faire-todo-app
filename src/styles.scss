@@ -13,11 +13,11 @@ body {
 body {
   margin: 0;
   font-family: Poppins, Roboto, "Helvetica Neue", sans-serif;
-  padding-top: calc(constant(safe-area-inset-top) + var(--faire-edge-padding));
-  padding-top: calc(env(safe-area-inset-top) + var(--faire-edge-padding));
-  padding-bottom: calc(constant(safe-area-inset-bottom) + var(--faire-edge-padding));
-  padding-bottom: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding));
-  background-color: var(--faire-edge-background);
+//   padding-top: calc(constant(safe-area-inset-top) + var(--faire-edge-padding));
+//   padding-top: calc(env(safe-area-inset-top) + var(--faire-edge-padding));
+//   padding-bottom: calc(constant(safe-area-inset-bottom) + var(--faire-edge-padding));
+//   padding-bottom: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding));
+//   background-color: var(--faire-edge-background);
 }
 
 .field {
