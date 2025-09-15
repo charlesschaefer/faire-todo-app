@@ -106,7 +106,7 @@
 
 ::ng-deep .p-drawer-footer, 
 ::ng-deep .p-drawer-header {
-    padding: 0;
+    padding: 0 !important;
     div.p-drawer-edge-content {
         padding: var(--p-drawer-header-padding);
     }
@@ -118,12 +118,12 @@
 
 ::ng-deep .p-drawer-header-edge-fix {
     height: calc(env(safe-area-inset-top) + var(--faire-edge-padding));
-    background-color: var(--faire-edge-background);
+    background-color: var(--faire-edge-fix-background);
 }
 
 ::ng-deep .p-drawer-footer-edge-fix {
     height: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding));
-    background-color: var(--faire-edge-background);
+    background-color: var(--faire-edge-fix-background);
 }
 
 .sidebar-user-profile {

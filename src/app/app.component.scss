@@ -1,6 +1,7 @@
 ::ng-deep :root  {
     --faire-background: white;
     --faire-edge-background: #3c4ee5;
+    --faire-edge-fix-background: #242e85;
     --faire-edge-padding: 0px;
     --faire-hover-background: var(--p-gray-50);
     --faire-hover-text-color: var(--p-primary-contrast);
@@ -28,6 +29,7 @@
 ::ng-deep .dark-mode {
     --faire-background: #1e1e1e;
     --faire-edge-background: #3c4ee5;//var(--p-gray-50);
+    --faire-edge-fix-background: #242e85;//var(--p-gray-50);
     --faire-hover-background: color-mix(in srgb, #1e1e1e, white 20%);
     --faire-hover-text-color: var(--p-gray-100);
     --faire-border-color: #333;
