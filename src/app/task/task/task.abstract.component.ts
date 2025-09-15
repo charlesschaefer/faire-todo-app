@@ -294,6 +294,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                         ),
                         severity: "success",
                         key: "task",
+                        life: 300000
                     });
                     console.log("emiting Task.onEditTask()");
                     this.onEditTask.emit();

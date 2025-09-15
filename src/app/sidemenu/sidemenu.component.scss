@@ -95,7 +95,7 @@
 
 ::ng-deep .p-drawer {
     background-color: var(--faire-edge-background);
-    border: none;
+    border: none !important;
 }
 
 ::ng-deep .p-drawer-footer, 

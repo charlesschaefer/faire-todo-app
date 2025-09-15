@@ -32,7 +32,10 @@
   <div class="content"><router-outlet (activate)="onActivate($event)" /></div>
   <div class="menu-swipe-opener" (swipeleft)="showSidebarOnSwipe()"></div>
 </section>
-<footer class="footer"><app-version /></footer>
+<footer class="footer">
+  <app-version />
+  <div class="footer-edge-fix"></div>
+</footer>
 <!-- <p-toast position="bottom-left" /> -->
 <p-toast position="bottom-left" #toast>
   <ng-template let-message #headless let-closeFn="closeFn">
@@ -66,7 +69,7 @@
     </div>
   </ng-template>
 </p-toast>
-<p-toast [key]="'task'" [position]="'top-right'" [breakpoints]="{'600px': {'top': 'env(safe-area-inset-top)'}}" />
+<p-toast [key]="'task'" [position]="'top-right'" [breakpoints]="{'600px': {'top': 'calc(env(safe-area-inset-top) + var(--faire-edge-padding))'}}" />
 <p-toast [key]="'auth-messages'" [position]="'top-center'" />
 <app-keyboard-shortcuts
   [(showShortcuts)]="showShortcuts"
