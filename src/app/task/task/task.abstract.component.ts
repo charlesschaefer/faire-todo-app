@@ -293,8 +293,7 @@ export abstract class TaskAbstractComponent implements OnDestroy, OnInit {
                             `Task marked as complete`,
                         ),
                         severity: "success",
-                        key: "task",
-                        life: 300000
+                        key: "task"
                     });
                     console.log("emiting Task.onEditTask()");
                     this.onEditTask.emit();
