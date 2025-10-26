@@ -2,10 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, linkedSignal, OnInit, signal, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { PanelModule } from 'primeng/panel';
 import { firstValueFrom } from 'rxjs';
+import { CalendarComponent } from 'ngx-calendar-view';
 
 import { ProjectDto } from '../../dto/project-dto';
 import { TaskDto } from '../../dto/task-dto';
@@ -16,8 +19,7 @@ import { TaskAddComponent } from '../../task/task-add/task-add.component';
 import { TaskListComponent } from '../../task/task-list/task-list.component';
 import { TaskService } from '../../task/task.service';
 import { ProjectService } from '../project.service';
-import { BadgeModule } from 'primeng/badge';
-import { OverlayBadgeModule } from 'primeng/overlaybadge';
+import { CalendarService } from '../../services/calendar.service';
 
 
 @Component({
@@ -34,6 +36,7 @@ import { OverlayBadgeModule } from 'primeng/overlaybadge';
         PanelModule,
         BadgeModule,
         OverlayBadgeModule,
+        CalendarComponent,
     ],
     templateUrl: '../../inbox/inbox.component.html',
     styleUrl: '../../inbox/inbox.component.scss'
@@ -54,8 +57,9 @@ export class ProjectTasksComponent extends InboxComponent implements OnInit {
         protected override activatedRoute: ActivatedRoute,
         protected override dataUpdatedService: DataUpdatedService,
         protected translate: TranslocoService,
+        protected override calendarService: CalendarService,
     ) {
-        super(taskService, activatedRoute, dataUpdatedService);
+        super(taskService, activatedRoute, dataUpdatedService, calendarService);
     }
 
     override async ngOnInit() {
