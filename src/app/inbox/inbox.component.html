@@ -1,29 +1,76 @@
-<h2 class="page-title">{{ pageTitle | transloco }} <span [innerHTML]="pageSubtitle | subtitle:subtitleModifier " [style]="{'color': 'var(--p-surface-300)'}"></span></h2>
-@if (hasDueTask() && dueTasks()) {
-<p-panel class="due-task-list-accordion p-card" [toggleable]="true" toggler="header" [collapsed]="true">
-  <ng-template #header>
-    <div class="flex flex-row gap-3 align-content-center align-items-center justify-content-between w-full due-task-list">
-      <strong class="flex align-items-center gap-1">
-        <p-badge [value]="dueTasks().length" severity="danger" size="xlarge" class="due-tasks-badge" />
-        {{'Due tasks' | transloco }}</strong>
-      <p-button (onClick)="rescheduleDueTasksForToday($event)" >
-        {{'Reschedule for today' | transloco }}
-      </p-button>
+<h2 class="page-title">
+  <div class="flex flex-row gap-3 align-content-center align-items-center justify-content-between w-full">
+    <div>
+      {{ pageTitle | transloco }} 
+      <span [innerHTML]="pageSubtitle | subtitle:subtitleModifier " [style]="{'color': 'var(--p-surface-300)'}"></span>
     </div>
-  </ng-template>
-  <app-task-list [tasks]="dueTasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount"
-                 #dueTaskList [showAddTask]="false" />
-</p-panel>
+    <div>
+      <span class="view-toggle-buttons flex items-center gap-2 p-2" style="float: right; margin-left: 1rem;">
+        <button 
+          pButton 
+          icon="pi pi-list" 
+          styleClass="p-button-text p-button-rounded"
+          [class.p-button-secondary]="currentView() !== 'list'"
+          [class.p-button]="currentView() === 'list'"
+          [disabled]="currentView() === 'list'"
+          aria-label="List View"
+          (click)="switchToListView()">
+        </button>
+        <button 
+          pButton 
+          icon="pi pi-calendar"
+          styleClass="p-button-text p-button-rounded"
+          [class.p-button-secondary]="currentView() !== 'calendar'"
+          [class.p-button]="currentView() === 'calendar'"
+          [disabled]="currentView() === 'calendar'"
+          aria-label="Calendar View"
+          (click)="switchToCalendarView()">
+        </button>
+      </span>
+    </div>
+  </div>
+</h2>
 
+<!-- List View -->
+@if (currentView() === 'list') {
+  @if (hasDueTask() && dueTasks()) {
+  <p-panel class="due-task-list-accordion p-card" [toggleable]="true" toggler="header" [collapsed]="true">
+    <ng-template #header>
+      <div class="flex flex-row gap-3 align-content-center align-items-center justify-content-between w-full due-task-list">
+        <strong class="flex align-items-center gap-1">
+          <p-badge [value]="dueTasks().length" severity="danger" size="xlarge" class="due-tasks-badge" />
+          {{'Due tasks' | transloco }}</strong>
+        <p-button (onClick)="rescheduleDueTasksForToday($event)" >
+          {{'Reschedule for today' | transloco }}
+        </p-button>
+      </div>
+    </ng-template>
+    <app-task-list [tasks]="dueTasks()" (showTaskAdd)="onShowTaskAddOverlay($event)" (taskEditEvent)="onEditTask()" [subtasksCount]="subtasksCount"
+                   #dueTaskList [showAddTask]="false" />
+  </p-panel>
+
+  }
+  <app-task-list 
+    [tasks]="tasks()" 
+    (showTaskAdd)="onShowTaskAddOverlay($event)" 
+    (taskEditEvent)="onEditTask()" 
+    [subtasksCount]="subtasksCount"
+    [attachmentsCount]="attachmentsCount"
+    #appTaskList 
+  />
 }
-<app-task-list 
-  [tasks]="tasks()" 
-  (showTaskAdd)="onShowTaskAddOverlay($event)" 
-  (taskEditEvent)="onEditTask()" 
-  [subtasksCount]="subtasksCount"
-  [attachmentsCount]="attachmentsCount"
-  #appTaskList 
-/>
+
+<!-- Calendar View -->
+@if (currentView() === 'calendar') {
+  <ngx-calendar
+    [events]="calendarEvents()"
+    [projects]="calendarProjects()"
+    [config]="CALENDAR_CONFIG"
+    (newEvent)="onCalendarNewEvent($event)"
+    (clickEvent)="onCalendarEventClick($event)"
+    (moveEvent)="onCalendarEventMove($event)">
+  </ngx-calendar>
+}
 
 <!-- Task add overlay panel -->
 @if (project !== undefined) {

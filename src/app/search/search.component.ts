@@ -12,6 +12,7 @@ import { InboxComponent } from '../inbox/inbox.component';
 import { DataUpdatedService } from '../db/data-updated.service';
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskService } from '../task/task.service';
+import { CalendarService } from '../services/calendar.service';
 
 @Component({
     selector: 'app-search',
@@ -37,8 +38,9 @@ export class SearchComponent extends InboxComponent implements OnInit {
         protected override taskService: TaskService,
         protected override activatedRoute: ActivatedRoute,
         protected override dataUpdatedService: DataUpdatedService,
+        protected override calendarService: CalendarService,
     ) {
-        super(taskService, activatedRoute, dataUpdatedService);
+        super(taskService, activatedRoute, dataUpdatedService, calendarService);
     }
 
     override async ngOnInit() { 

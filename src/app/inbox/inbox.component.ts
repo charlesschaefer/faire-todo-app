@@ -19,6 +19,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { BadgeModule } from 'primeng/badge';
 import { OverlayBadgeModule } from 'primeng/overlaybadge';
 import { firstValueFrom, from, map, mergeMap, Subject, Subscription } from 'rxjs';
+import { CalendarComponent, CalendarEvent, CalendarProject } from 'ngx-calendar-view';
 
 import { ProjectDto } from '../dto/project-dto';
 import { TaskDto } from '../dto/task-dto';
@@ -27,6 +28,8 @@ import { DataUpdatedService } from '../db/data-updated.service';
 import { TaskAddComponent } from '../task/task-add/task-add.component';
 import { TaskListComponent } from "../task/task-list/task-list.component";
 import { TaskService } from '../task/task.service';
+import { CalendarService } from '../services/calendar.service';
+import { CALENDAR_CONFIG } from '../calendar.config';
 
 
 @Component({
@@ -55,6 +58,7 @@ import { TaskService } from '../task/task.service';
         PanelModule,
         BadgeModule,
         OverlayBadgeModule,
+        CalendarComponent,
     ],
     templateUrl: './inbox.component.html',
     styleUrl: './inbox.component.scss'
@@ -63,7 +67,8 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
     pageTitle = 'Inbox';
     pageSubtitle = '';
     subtitleModifier = '';
-
+    currentView = signal<'list' | 'calendar'>('list');
+    
     tasks = signal<TaskDto[]>([]);
     subtasksCount!: Map<string, number>;
     attachmentsCount!: Map<string, number>;
@@ -84,10 +89,16 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
     project?: WritableSignal<ProjectDto | undefined>;
 
+    // Calendar-related properties
+    calendarEvents = signal<CalendarEvent[]>([]);
+    calendarProjects = signal<CalendarProject[]>([]);
+    CALENDAR_CONFIG = CALENDAR_CONFIG;
+
     constructor(
         protected taskService: TaskService,
         protected activatedRoute: ActivatedRoute,
         protected dataUpdatedService: DataUpdatedService,
+        protected calendarService: CalendarService,
     ) { }
 
     /**
@@ -242,5 +253,85 @@ export class InboxComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.onShowTaskAddOverlay(clickEvent);
 
+    }
+
+    /**
+     * Switch to calendar view
+     */
+    switchToCalendarView() {
+        this.currentView.set('calendar');
+        this.loadCalendarData();
+    }
+
+    /**
+     * Switch to list view
+     */
+    switchToListView() {
+        this.currentView.set('list');
+    }
+
+    /**
+     * Load calendar data - loads ALL tasks regardless of current view context
+     */
+    private loadCalendarData() {
+        // Load all tasks for calendar (unified loading as requested)
+        this.calendarService.getAllTasksForCalendar().subscribe(events => {
+            this.calendarEvents.set(events);
+        });
+
+        // Load all projects for calendar
+        this.calendarService.getAllProjectsForCalendar().subscribe(projects => {
+            this.calendarProjects.set(projects);
+        });
+    }
+
+    /**
+     * Handle calendar event click (edit task)
+     */
+    onCalendarEventClick(event: CalendarEvent) {
+        // Find the task by UUID and open edit form
+        // this.taskService.getByField('uuid', event.id).then(tasks => {
+        //     if (tasks.length > 0) {
+        //         // Open task edit form - trigger the existing edit flow
+        //         this.onEditTask();
+        //     }
+        // });
+        console.log("onCalendarEventClick", event);
+    }
+
+    /**
+     * Handle calendar event move (update task date/time)
+     */
+    onCalendarEventMove(event: { event: CalendarEvent; newDate: DateTime; newTime?: DateTime }) {
+        // this.calendarService.updateTaskDateTime(
+        //     event.event.id, 
+        //     event.newDate, 
+        //     event.newTime
+        // ).subscribe({
+        //     next: () => {
+        //         // Refresh calendar data
+        //         this.loadCalendarData();
+        //         // Also refresh list data if in list view
+        //         if (this.currentView() === 'list') {
+        //             this.getTasks();
+        //         }
+        //     },
+        //     error: (error) => {
+        //         console.error('Failed to update task:', error);
+        //         // Handle error (show notification, etc.)
+        //     }
+        // });
+        console.log("onCalendarEventMove", event);
+    }
+
+    /**
+     * Handle new event creation from calendar
+     */
+    onCalendarNewEvent(_event: { date: DateTime; time?: DateTime }) {
+        // Create a new task with the selected date/time
+        // For now, just trigger the existing add task flow
+        // The task add component should handle prefilling the date/time
+        // this.onShowTaskAddOverlay(new Event('click'));
+        console.log("onCalendarNewEvent", _event);
     }
 }
