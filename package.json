@@ -49,7 +49,7 @@
     "@jsverse/transloco": "^7.5.0",
     "@primeng/themes": "^19",
     "@supabase/supabase-js": "~2.41.0",
-    "@tauri-apps/api": "^2.5.0",
+    "@tauri-apps/api": "^2.9.0",
     "@tauri-apps/plugin-autostart": ">=2.2.0",
     "@tauri-apps/plugin-deep-link": ">=2.2.0",
     "@tauri-apps/plugin-dialog": ">=2.2.0",
