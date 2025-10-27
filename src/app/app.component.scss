@@ -24,6 +24,92 @@
 
     --faire-theme-switcher-text: var(--p-gray-500);
     --faire-theme-switcher-hover-text: var(--p-gray-200);
+
+    /* Calendar Base Colors */
+    --calendar-primary: #2563eb;
+    --calendar-secondary: #64748b;
+    --calendar-background: #ffffff;
+    --calendar-surface: #f8fafc;
+    --calendar-border: #e2e8f0;
+    --calendar-text: #1e293b;
+    --calendar-text-secondary: #64748b;
+
+    /* Calendar Additional Colors */
+    --calendar-success: #10b981;
+    --calendar-warning: #f59e0b;
+    --calendar-error: #ef4444;
+    --calendar-info: #3b82f6;
+
+    /* Calendar Neutral Colors */
+    --calendar-gray-50: #f9fafb;
+    --calendar-gray-100: #f3f4f6;
+    --calendar-gray-200: #e5e7eb;
+    --calendar-gray-300: #d1d5db;
+    --calendar-gray-400: #9ca3af;
+    --calendar-gray-500: #6b7280;
+    --calendar-gray-600: #4b5563;
+    --calendar-gray-700: #374151;
+    --calendar-gray-800: #1f2937;
+    --calendar-gray-900: #111827;
+
+    /* Calendar Shadows */
+    --calendar-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --calendar-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --calendar-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --calendar-shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --calendar-shadow-2xl: 0 8px 25px rgba(0, 0, 0, 0.25);
+    --calendar-shadow-primary: 0 2px 4px rgba(37, 99, 235, 0.3);
+    --calendar-shadow-primary-lg: 0 4px 12px rgba(37, 99, 235, 0.3);
+    --calendar-shadow-inset: inset 0 0 0 2px rgba(59, 130, 246, 0.3);
+    --calendar-shadow-inset-hover: inset 0 0 0 2px rgba(59, 130, 246, 0.5);
+
+    /* Calendar Border Radius */
+    --calendar-radius-sm: 0.25rem;
+    --calendar-radius-md: 0.375rem;
+    --calendar-radius-lg: 0.5rem;
+    --calendar-radius-xl: 0.75rem;
+
+    /* Calendar Spacing */
+    --calendar-spacing-xs: 0.125rem;
+    --calendar-spacing-sm: 0.25rem;
+    --calendar-spacing-md: 0.5rem;
+    --calendar-spacing-lg: 0.75rem;
+    --calendar-spacing-xl: 1rem;
+    --calendar-spacing-2xl: 1.5rem;
+    --calendar-spacing-3xl: 2rem;
+
+    /* Calendar Typography */
+    --calendar-font-size-xs: 0.6875rem;
+    --calendar-font-size-sm: 0.75rem;
+    --calendar-font-size-base: 0.875rem;
+    --calendar-font-size-lg: 1rem;
+    --calendar-font-size-xl: 1.125rem;
+    --calendar-font-size-2xl: 1.25rem;
+    
+    --calendar-font-weight-normal: 400;
+    --calendar-font-weight-medium: 500;
+    --calendar-font-weight-semibold: 600;
+    --calendar-font-weight-bold: 700;
+    
+    --calendar-line-height-tight: 1.2;
+    --calendar-line-height-normal: 1.3;
+    --calendar-line-height-relaxed: 1.5;
+
+    /* Calendar Transitions */
+    --calendar-transition-fast: 0.15s ease;
+    --calendar-transition-normal: 0.2s ease;
+    --calendar-transition-slow: 0.3s ease;
+
+    /* Calendar Z-Index */
+    --calendar-z-dropdown: 10;
+    --calendar-z-sticky: 20;
+    --calendar-z-modal: 1000;
+    --calendar-z-popover: 9999;
+
+    /* Calendar Opacity */
+    --calendar-opacity-disabled: 0.5;
+    --calendar-opacity-hover: 0.9;
+    --calendar-opacity-drag: 0.7;
 }
 
 ::ng-deep .dark-mode {
@@ -41,6 +127,44 @@
 
     --faire-theme-switcher-text: var(--p-yellow-200);
     --faire-theme-switcher-hover-text: var(--p-yellow-900);
+
+    /* Calendar Base Colors - Dark Mode */
+    --calendar-primary: #3b82f6;
+    --calendar-secondary: #9ca3af;
+    --calendar-background: #1f2937;
+    --calendar-surface: #374151;
+    --calendar-border: #4b5563;
+    --calendar-text: #f9fafb;
+    --calendar-text-secondary: #d1d5db;
+
+    /* Calendar Additional Colors - Dark Mode */
+    --calendar-success: #34d399;
+    --calendar-warning: #fbbf24;
+    --calendar-error: #f87171;
+    --calendar-info: #60a5fa;
+
+    /* Calendar Neutral Colors - Dark Mode */
+    --calendar-gray-50: #111827;
+    --calendar-gray-100: #1f2937;
+    --calendar-gray-200: #374151;
+    --calendar-gray-300: #4b5563;
+    --calendar-gray-400: #6b7280;
+    --calendar-gray-500: #9ca3af;
+    --calendar-gray-600: #d1d5db;
+    --calendar-gray-700: #e5e7eb;
+    --calendar-gray-800: #f3f4f6;
+    --calendar-gray-900: #f9fafb;
+
+    /* Calendar Shadows - Dark Mode */
+    --calendar-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --calendar-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.4);
+    --calendar-shadow-lg: 0 2px 8px rgba(0, 0, 0, 0.5);
+    --calendar-shadow-xl: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --calendar-shadow-2xl: 0 8px 25px rgba(0, 0, 0, 0.6);
+    --calendar-shadow-primary: 0 2px 4px rgba(59, 130, 246, 0.4);
+    --calendar-shadow-primary-lg: 0 4px 12px rgba(59, 130, 246, 0.4);
+    --calendar-shadow-inset: inset 0 0 0 2px rgba(96, 165, 250, 0.4);
+    --calendar-shadow-inset-hover: inset 0 0 0 2px rgba(96, 165, 250, 0.6);
 }
 
 
