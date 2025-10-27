@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const DARK_MODE_SELECTOR = 'dark-mode';
+const ALTERNATIVE_DARK_MODE_SELECTOR = 'dark';
 
 @Injectable({
     providedIn: 'root'
@@ -14,8 +15,10 @@ export class ThemeService {
         if (theme) {
             if (theme == 'dark') {
                 themeLink.classList.add(DARK_MODE_SELECTOR);
+                themeLink.classList.add(ALTERNATIVE_DARK_MODE_SELECTOR);
             } else {
                 themeLink.classList.remove(DARK_MODE_SELECTOR)
+                themeLink.classList.remove(ALTERNATIVE_DARK_MODE_SELECTOR);
             }
             this.currentTheme = theme;
             return;
@@ -24,9 +27,11 @@ export class ThemeService {
         if (themeLink) {
             if (themeLink.className.match(DARK_MODE_SELECTOR)) {
                 themeLink.classList.remove(DARK_MODE_SELECTOR)
+                themeLink.classList.remove(ALTERNATIVE_DARK_MODE_SELECTOR);
                 this.currentTheme = 'light';
             } else {
                 themeLink.classList.add(DARK_MODE_SELECTOR);
+                themeLink.classList.add(ALTERNATIVE_DARK_MODE_SELECTOR);
                 this.currentTheme = 'dark';
             }
         }
