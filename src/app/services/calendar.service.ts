@@ -60,11 +60,11 @@ export class CalendarService {
 
         // Set time if available, otherwise it's an all-day event
         if (task.dueTime) {
-            const eventTime = DateTime.fromJSDate(task.dueTime);
-          calendarEvent.time = eventTime.set({
-            year: eventDate.year,
-            month: eventDate.month,
-            day: eventDate.day,
+          const calendarTime = DateTime.fromJSDate(task.dueTime);
+          calendarEvent.time = calendarTime.set({
+            year: calendarEvent.date.year,
+            month: calendarEvent.date.month,
+            day: calendarEvent.date.day
           });
         }
 
