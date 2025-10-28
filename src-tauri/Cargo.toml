@@ -3,7 +3,7 @@
 
 [package]
 name        = "faire-todo-app"
-version = "0.0.76"
+version = "0.0.77"
 description = "Faire Todo App - An open-source task management application that helps you organize your life across all your devices."
 authors     = ["Charles Schaefer"]
 edition     = "2021"
