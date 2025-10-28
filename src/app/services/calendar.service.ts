@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { DateTime } from 'luxon';
-import { Observable, map, switchMap, of, from } from 'rxjs';
 import { CalendarEvent, CalendarProject, CalendarRecurrenceType } from 'ngx-calendar-view';
+import { Observable, from, map, of, switchMap } from 'rxjs';
 
-import { TaskDto } from '../dto/task-dto';
-import { ProjectDto } from '../dto/project-dto';
-import { TaskService } from '../task/task.service';
-import { ProjectService } from '../project/project.service';
 import { CALENDAR_CONFIG } from '../calendar.config';
+import { ProjectDto } from '../dto/project-dto';
+import { TaskDto } from '../dto/task-dto';
+import { ProjectService } from '../project/project.service';
+import { TaskService } from '../task/task.service';
 
 @Injectable({
   providedIn: 'root'
@@ -47,11 +47,12 @@ export class CalendarService {
     return tasks
       .filter(task => !task.completed && task.dueDate) // Only incomplete tasks with dates
       .map(task => {
+          const eventDate = DateTime.fromJSDate(task.dueDate!);
         const calendarEvent: CalendarEvent = {
           id: task.uuid,
           title: task.title,
           description: task.description || undefined,
-          date: DateTime.fromJSDate(task.dueDate!),
+          date: eventDate,
           duration: CALENDAR_CONFIG.defaultDuration,
           project: this.getProjectName(task),
           recurrenceType: this.mapRecurrenceType(task.recurring)
@@ -59,7 +60,12 @@ export class CalendarService {
 
         // Set time if available, otherwise it's an all-day event
         if (task.dueTime) {
-          calendarEvent.time = DateTime.fromJSDate(task.dueTime);
+            const eventTime = DateTime.fromJSDate(task.dueTime);
+          calendarEvent.time = eventTime.set({
+            year: eventDate.year,
+            month: eventDate.month,
+            day: eventDate.day,
+          });
         }
 
         return calendarEvent;
