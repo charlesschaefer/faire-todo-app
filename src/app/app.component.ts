@@ -465,9 +465,9 @@ export class AppComponent implements OnInit {
             if (versionNumber < 140) {
                 // document.body.style.paddingTop = 'calc(env(safe-area-inset-top) + 45px)';
                 // document.body.style.paddingBottom = 'calc(env(safe-area-inset-bottom) + 45px)';
-                document.documentElement.style.setProperty('--faire-edge-padding', '45px');
-            } else {
                 document.documentElement.style.setProperty('--faire-edge-padding', '20px');
+            } else {
+                document.documentElement.style.setProperty('--faire-edge-padding', '0px');
             }
         }).catch(err => {
             console.error("Error enabling edge to edge layout: ", err);
