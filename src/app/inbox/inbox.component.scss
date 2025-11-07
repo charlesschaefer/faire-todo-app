@@ -75,7 +75,7 @@
         display: flex;
         position: fixed;
         // bottom: calc(env(safe-area-inset-bottom) + 20px);
-        bottom: calc(var(--faire-edge-padding) + 25px);
+        bottom: calc(env(safe-area-inset-bottom) + var(--faire-edge-padding) + 20px);
         right: 15px;
     }
 }
